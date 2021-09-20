@@ -1,0 +1,21 @@
+.panel {
+    margin: auto;
+    margin-top: 15%;
+    width: 25%;
+    background-color: #398adb;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.panel-title {
+    padding-top: 2vh;
+    font-size: 25px;
+    letter-spacing: 1.5px;
+    color: white;
+}
+
+.panel-button {
+    width: 50%;
+    margin-top: 2vh;
+    margin-bottom: 5vh;
+}

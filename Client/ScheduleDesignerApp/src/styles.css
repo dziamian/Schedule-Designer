@@ -1,0 +1,14 @@
+/*TODO: dev-notes: 1396x983*/
+
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html {
+    height: 100%;
+}
+body {
+    margin: 0;
+    line-height: 1.7 !important;
+    background-color: #cfcfcf;
+    font-family: "Rubik";
+    height: 100%;
+}

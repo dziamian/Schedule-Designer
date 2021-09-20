@@ -1,0 +1,72 @@
+.course {
+    height: 10.2vh;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Rubik";
+    overflow-y: auto;
+    cursor: grab;
+}
+
+.course.cdk-drag-preview {
+    border: 1px solid black;
+}
+
+.course.lecture {
+    background-color: #D9FFFF;
+}
+
+.course.lecture.locked {
+    background: repeating-linear-gradient(
+        -55deg,
+        #D9FFFF,
+        #D9FFFF 10px,
+        #FFFFFF 10px,
+        #FFFFFF 20px
+    );
+}
+
+.course.laboratory {
+    background-color: #FFECFF;
+}
+
+.course.laboratory.locked {
+    background: repeating-linear-gradient(
+        -55deg,
+        #FFECFF,
+        #FFECFF 10px,
+        #FFFFFF 10px,
+        #FFFFFF 20px
+    );
+}
+
+.course.project {
+    background-color: #FFFFEA;
+}
+
+.course.project.locked {
+    background: repeating-linear-gradient(
+        -55deg,
+        #FFFFEA,
+        #FFFFEA 10px,
+        #FFFFFF 10px,
+        #FFFFFF 20px
+    );
+}
+
+.course.exercise {
+    background-color: #E6FFE6;
+}
+
+.course.exercise.locked {
+    background: repeating-linear-gradient(
+        -55deg,
+        #E6FFE6,
+        #E6FFE6 10px,
+        #FFFFFF 10px,
+        #FFFFFF 20px
+    );
+}
+
+.course-field + .course-field {
+    margin-top: 0.8vh;
+}

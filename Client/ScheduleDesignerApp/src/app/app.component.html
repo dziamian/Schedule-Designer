@@ -1,0 +1,16 @@
+<div class="toolbar">
+    <div class="toolbar-left"></div>
+    <div class="toolbar-center">
+        <a routerLink="/">{{title}}</a>
+    </div>
+    <div class="toolbar-right">
+        <button *ngIf="IsAuthenticated()" class="toolbar-logout" mat-raised-button color="accent" (click)="Logout()">
+            Logout
+        </button>
+        <button *ngIf="IsAuthenticated()" class="toolbar-profile" mat-raised-button color="accent" (click)="Profile()">
+            <mat-icon>person</mat-icon>
+            Profile
+        </button>
+    </div>
+</div>
+<router-outlet></router-outlet>

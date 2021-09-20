@@ -1,0 +1,83 @@
+.tabContent {
+    margin-top: 2vh;
+    text-align: center;
+}
+
+.board {
+    height: 78vh;
+    margin-top: 2vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    margin-bottom: 2vh;
+}
+
+.your-courses {
+    border: 2px solid #008700;
+    box-sizing: border-box;
+    padding-bottom: 1vh;
+    width: 16%;
+    height: inherit;
+    float: left;
+}
+
+.your-courses-header {
+    height: 3%;
+    border-bottom: 2px solid #008700;
+    background-color: #81C781;
+}
+
+.your-courses-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    box-sizing: border-box;
+    height: 97%;
+    overflow-y: auto;
+}
+
+.course-field {
+    margin-left: 1vw;
+    width: 11.8vw;
+    border: 1px solid black;
+}
+
+.course-field + .course-field {
+    margin-top: 0.8vh;
+}
+
+.schedule {
+    border: 2px solid #000081;
+    box-sizing: border-box;
+    margin-left: 2%;
+    width: 82%;
+    height: inherit;
+    float: left;
+}
+
+.schedule-header {
+    height: 3%;
+    border-bottom: 2px solid #000081;
+    background-color: #9898E4;
+}
+
+.schedule-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    box-sizing: border-box;
+    height: 97%;
+    overflow-y: auto;
+}
+
+.schedule-content table {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    border-collapse: collapse;
+}
+
+.schedule-content table td, .schedule-content table th {
+    border: 1px solid #000000;
+}
+
+.schedule-content table td {
+    height: 10vh;
+    width: 11.8vw;
+}

@@ -1,0 +1,151 @@
+<!--
+<div class="schedule">
+    <div class="column">
+        <h3>New</h3>
+        <div 
+            cdkDropList
+            #new="cdkDropList"
+            [cdkDropListData]="newItems"
+            [cdkDropListConnectedTo]="[active]"
+            (cdkDropListDropped)="Dropped($event)"
+        >
+            <div *ngFor="let item of newItems" cdkDrag>{{item}}</div>
+        </div>
+    </div>
+
+    <div class="column">
+        <h3>Active</h3>
+        <div 
+            cdkDropList
+            #active="cdkDropList"
+            [cdkDropListData]="activeItems"
+            [cdkDropListConnectedTo]="[new, done]"
+            (cdkDropListDropped)="Dropped($event)"
+        >
+            <div *ngFor="let item of activeItems" cdkDrag>{{item}}</div>
+        </div>
+    </div>
+
+    <div class="column">
+        <h3>Done</h3>
+        <div 
+            cdkDropList
+            #done="cdkDropList"
+            [cdkDropListData]="doneItems"
+            [cdkDropListConnectedTo]="[active]"
+            (cdkDropListDropped)="Dropped($event)"
+        >
+            <div *ngFor="let item of doneItems" cdkDrag>{{item}}</div>
+        </div>
+    </div>
+</div>
+-->
+<div class="content">
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab *ngFor="let label of tabLabels" label="{{label}}">
+            <ng-container *ngTemplateOutlet="tabContent"></ng-container>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #tabContent>
+    <div class="tabContent">
+        <mat-slide-toggle color="primary">Personal schedule (read-only)</mat-slide-toggle>
+        <div class="board">
+            <div class="your-courses">
+                <div class="your-courses-header">Your courses</div>
+                <div class="your-courses-content"
+                    cdkDropList
+                    #drop1="cdkDropList"
+                    cdkDropListSortingDisabled
+                    [cdkDropListConnectedTo]="[drop2]"
+                    [cdkDropListData]="yourCourses"
+                    (cdkDropListDropped)="Drop($event)"
+                >
+                    <div *ngFor="let course of yourCourses" class="course-field">
+                        <app-course [course]="course"></app-course>
+                    </div>
+                </div>
+            </div>
+            <div class="schedule">
+                <div class="schedule-header">Schedule</div>
+                <div class="schedule-content" cdkScrollable>
+                    <table>
+                        <tr>
+                            <th class="label"></th>
+                            <th>08:00 - 10:00</th>
+                            <th>10:00 - 12:00</th>
+                            <th>12:00 - 14:00</th>
+                            <th>14:00 - 16:00</th>
+                            <th>16:00 - 18:00</th>
+                            <th>18:00 - 20:00</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Monday</b>
+                            </td>
+                            <td
+                                cdkDropList
+                                #drop2="cdkDropList"
+                                [cdkDropListConnectedTo]="[drop1]"
+                                [cdkDropListData]="schedule"
+                                (cdkDropListDropped)="Drop($event)"
+                            >
+                                <app-course *ngFor="let course of schedule" [course]="course"></app-course>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Tuesday</b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Wednesday</b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Thursday</b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Friday</b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
