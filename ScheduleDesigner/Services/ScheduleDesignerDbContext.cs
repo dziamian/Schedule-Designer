@@ -10,10 +10,84 @@ namespace ScheduleDesigner.Services
     public class ScheduleDesignerDbContext : DbContext
     {
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<Programme> Programmes { get; set; }
+        public DbSet<ProgrammeStage> ProgrammeStages { get; set; }
+        public DbSet<CourseType> CourseTypes { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<ProgrammeStageCourse> ProgrammeStageCourses { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<StudentGroup> StudentGroups { get; set; }
 
-        public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options)
+        public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //ProgrammeStage
+            modelBuilder.Entity<ProgrammeStage>()
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId });
 
+            modelBuilder.Entity<ProgrammeStage>()
+                .Property(e => e.ProgrammeStageId)
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn();
+            
+            //Course
+            modelBuilder.Entity<Course>()
+                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseTypeId });
+
+            modelBuilder.Entity<Course>()
+                .Property(e => e.CourseId)
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn();
+            
+            //ProgrammeStageCourse
+            modelBuilder.Entity<ProgrammeStageCourse>()
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId, e.CourseTypeId });
+
+            modelBuilder.Entity<ProgrammeStageCourse>()
+                .HasOne(e => e.ProgrammeStage)
+                .WithMany(e => e.ProgrammeStageCourses)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<ProgrammeStageCourse>()
+                .HasOne(e => e.Course)
+                .WithMany(e => e.ProgrammeStageCourses)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //Class
+            modelBuilder.Entity<Class>()
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId });
+
+            modelBuilder.Entity<Class>()
+                .Property(e => e.ClassId)
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn();
+
+            //Group
+            modelBuilder.Entity<Group>()
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId, e.GroupId });
+
+            modelBuilder.Entity<Group>()
+                .Property(e => e.GroupId)
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn();
+
+            //Student
+            modelBuilder.Entity<Student>()
+                .HasKey(e => e.StudentId);
+
+            modelBuilder.Entity<Student>()
+                .Property(e => e.StudentId)
+                .ValueGeneratedNever();
+
+            //StudentGroup
+            modelBuilder.Entity<StudentGroup>()
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId, e.GroupId, e.StudentId });
+
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
