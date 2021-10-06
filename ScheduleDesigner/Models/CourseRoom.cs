@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class ProgrammeStageCourse
+    public class CourseRoom
     {
         public int ProgrammeId { get; set; }
-
-        public int ProgrammeStageId { get; set; }
 
         public int CourseId { get; set; }
 
         public int CourseTypeId { get; set; }
 
-        
-        [ForeignKey("ProgrammeId,ProgrammeStageId")]
-        public ProgrammeStage ProgrammeStage { get; set; }
+        public int RoomId { get; set; }
+
 
         [ForeignKey("ProgrammeId,CourseId,CourseTypeId")]
         public Course Course { get; set; }
 
-        public virtual ICollection<GroupCourseEdition> Groups { get; set; }
+        [ForeignKey("RoomId")]
+        public Room Room { get; set; }
+
+        public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
     }
 }

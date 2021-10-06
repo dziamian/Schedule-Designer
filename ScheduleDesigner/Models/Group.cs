@@ -27,5 +27,7 @@ namespace ScheduleDesigner.Models
         public Class Class { get; set; }
 
         public virtual ICollection<StudentGroup> Students { get; set; }
+
+        public virtual ICollection<GroupCourseEdition> CourseEditions { get; set; }
     }
 }

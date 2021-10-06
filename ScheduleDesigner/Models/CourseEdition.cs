@@ -7,23 +7,31 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class ProgrammeStageCourse
+    public class CourseEdition
     {
         public int ProgrammeId { get; set; }
-
-        public int ProgrammeStageId { get; set; }
 
         public int CourseId { get; set; }
 
         public int CourseTypeId { get; set; }
 
-        
-        [ForeignKey("ProgrammeId,ProgrammeStageId")]
-        public ProgrammeStage ProgrammeStage { get; set; }
+        public int CourseEditionId { get; set; }
+
+
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; }
+
+        public int? LockUserId { get; set; }
+
 
         [ForeignKey("ProgrammeId,CourseId,CourseTypeId")]
         public Course Course { get; set; }
 
+        public virtual ICollection<CoordinatorCourseEdition> Coordinators { get; set; }
+        
         public virtual ICollection<GroupCourseEdition> Groups { get; set; }
+
+        public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
     }
 }

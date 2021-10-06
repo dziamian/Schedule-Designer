@@ -21,7 +21,7 @@ namespace ScheduleDesigner.Models
         public string Name { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
-        public int Units { get; set; }
+        public int UnitsMinutes { get; set; }
 
         
         [ForeignKey("ProgrammeId")]
@@ -31,5 +31,9 @@ namespace ScheduleDesigner.Models
         public CourseType CourseType { get; set; }
 
         public virtual ICollection<ProgrammeStageCourse> ProgrammeStageCourses { get; set; }
+
+        public virtual ICollection<CourseEdition> Editions { get; set; }
+
+        public virtual ICollection<CourseRoom> Rooms { get; set; }
     }
 }
