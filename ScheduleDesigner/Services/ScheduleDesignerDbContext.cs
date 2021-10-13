@@ -10,6 +10,7 @@ namespace ScheduleDesigner.Services
     public class ScheduleDesignerDbContext : DbContext
     {
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
         public DbSet<Programme> Programmes { get; set; }
         public DbSet<ProgrammeStage> ProgrammeStages { get; set; }
         public DbSet<CourseType> CourseTypes { get; set; }
@@ -134,9 +135,6 @@ namespace ScheduleDesigner.Services
                 .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseTypeId, e.RoomId });
 
             //SchedulePosition
-            modelBuilder.Entity<SchedulePosition>()
-                .HasKey(e => new { e.RoomId, e.TimestampId });
-
             modelBuilder.Entity<SchedulePosition>()
                 .HasOne(e => e.CourseRoom)
                 .WithMany(e => e.SchedulePositions)

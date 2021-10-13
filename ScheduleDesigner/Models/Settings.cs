@@ -13,11 +13,6 @@ namespace ScheduleDesigner.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(1024)]
-        [Url]
-        public string UsosBaseUrl { get; set; }
-
         [Range(1, 1440, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public int CourseDurationMinutes { get; set; }
 

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using ScheduleDesigner.Authentication;
 using ScheduleDesigner.Converters;
 using ScheduleDesigner.Repositories;
@@ -41,6 +42,16 @@ namespace ScheduleDesigner
                     options.JsonSerializerOptions.Converters.Add(new TimeSpanToStringConverter());
                 });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo 
+                {
+                    Version = "v1",
+                    Title = "Schedule Designer API",
+                    Description = "ASP.NET Core Web API for designing class schedule by many users simultaneously."
+                });
+            });
+
             services.AddScoped<ISettingsRepo, SqlSettingsRepo>();
 
             services.AddCors(options =>
@@ -55,7 +66,7 @@ namespace ScheduleDesigner
                 });
             });
 
-            services.AddSingleton(new UsosAuthenticationService("https://api.usos.tu.kielce.pl"));
+            services.AddSingleton(new UsosAuthenticationService(Configuration.GetSection("ApplicationInfo").GetValue<string>("BaseUsosUrl")));
             services
                 .AddAuthentication("Usos")
                 .AddScheme<UsosAuthenticationOptions, UsosAuthenticationHandler>("Usos", null);
@@ -67,6 +78,9 @@ namespace ScheduleDesigner
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseCors("CorsPolicy");
 

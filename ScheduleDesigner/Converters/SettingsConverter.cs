@@ -13,7 +13,6 @@ namespace ScheduleDesigner.Converters
         {
             return new SettingsReadDto
             {
-                UsosBaseUrl = settings.UsosBaseUrl,
                 CourseDurationMinutes = settings.CourseDurationMinutes,
                 StartTime = settings.StartTime,
                 EndTime = settings.EndTime,

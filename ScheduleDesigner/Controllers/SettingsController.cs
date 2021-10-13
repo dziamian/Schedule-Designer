@@ -124,7 +124,6 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
-                _settings.UsosBaseUrl = settings.UsosBaseUrl;
                 _settings.CourseDurationMinutes = settings.CourseDurationMinutes;
                 _settings.StartTime = settings.StartTime;
                 _settings.EndTime = settings.EndTime;
