@@ -22,11 +22,11 @@ export class LoginComponent implements OnInit {
         token.SaveRequest();
         
         this.usosApiService.Authorize(token.key).subscribe(data => {
-          console.log(data);
+          this.document.location.href = data.requestMessage.requestUri;
         },
         response => {
-          //it is treated as error because of CORS
-          this.document.location.href = response.url;
+          //here was the problem with cors
+          console.log(response.error);
         });
       },
       response => {

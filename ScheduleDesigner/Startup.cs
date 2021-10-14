@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ScheduleDesigner.Authentication;
 using ScheduleDesigner.Converters;
+using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Services;
@@ -33,7 +34,7 @@ namespace ScheduleDesigner
         {
             services.AddDbContext<ScheduleDesignerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DBConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddControllers()
@@ -54,6 +55,9 @@ namespace ScheduleDesigner
 
             services.AddScoped<ISettingsRepo, SqlSettingsRepo>();
 
+            services.Configure<ApplicationInfo>(Configuration.GetSection("ApplicationInfo"));
+            services.Configure<Consumer>(Configuration.GetSection("UsosConsumer"));
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
@@ -61,12 +65,11 @@ namespace ScheduleDesigner
                     builder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials()
-                        .SetIsOriginAllowed((host) => true);
+                        .WithOrigins(Configuration.GetSection("CorsPolicy:AllowedOriginsList").Get<string[]>());
                 });
             });
 
-            services.AddSingleton(new UsosAuthenticationService(Configuration.GetSection("ApplicationInfo").GetValue<string>("BaseUsosUrl")));
+            services.AddSingleton<UsosAuthenticationService>();
             services
                 .AddAuthentication("Usos")
                 .AddScheme<UsosAuthenticationOptions, UsosAuthenticationHandler>("Usos", null);

@@ -10,10 +10,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Authentication
 {
-    public class UsosAuthenticationOptions : AuthenticationSchemeOptions
-    {
-
-    }
+    public class UsosAuthenticationOptions : AuthenticationSchemeOptions { }
     
     public class UsosAuthenticationHandler : AuthenticationHandler<UsosAuthenticationOptions>
     {
@@ -26,7 +23,7 @@ namespace ScheduleDesigner.Authentication
             ISystemClock clock,
             UsosAuthenticationService usosService
         )
-            : base(options, logger, encoder, clock)
+            :base(options, logger, encoder, clock)
         {
             _usosService = usosService;
         }

@@ -48,9 +48,10 @@ export class UsosApiService {
     ).pipe(map(data => AccessToken.ParseToken(data.toString(), ['oauth_token=', 'oauth_token_secret='], '&')));
   }
 
-  public Authorize(oauth_token:string):Observable<Object> {
+  public Authorize(oauth_token:string):Observable<any> {
     const request = {
-      url: this.baseUrl + '/services/oauth/authorize',
+      //url: this.baseUrl + '/services/oauth/authorize',
+      url: 'http://localhost:5000/api/proxy/authorize',
       method: 'GET'
     };
 
