@@ -27,7 +27,9 @@ namespace ScheduleDesigner.Services
         public DbSet<Room> Rooms { get; set; }
         public DbSet<CourseRoom> CourseRooms { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
+        public DbSet<ScheduleSlot> ScheduleSlots { get; set; }
         public DbSet<SchedulePosition> SchedulePositions { get; set; }
+        public DbSet<ScheduledMove> ScheduledMoves { get; set; }
 
         public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
 
@@ -44,7 +46,7 @@ namespace ScheduleDesigner.Services
             
             //Course
             modelBuilder.Entity<Course>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseTypeId });
+                .HasKey(e => new { e.ProgrammeId, e.CourseId });
 
             modelBuilder.Entity<Course>()
                 .Property(e => e.CourseId)
@@ -53,7 +55,7 @@ namespace ScheduleDesigner.Services
             
             //ProgrammeStageCourse
             modelBuilder.Entity<ProgrammeStageCourse>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId, e.CourseTypeId });
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId });
 
             modelBuilder.Entity<ProgrammeStageCourse>()
                 .HasOne(e => e.ProgrammeStage)
@@ -105,7 +107,7 @@ namespace ScheduleDesigner.Services
 
             //CourseEdition
             modelBuilder.Entity<CourseEdition>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseTypeId, e.CourseEditionId });
+                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseEditionId });
 
             modelBuilder.Entity<CourseEdition>()
                 .Property(e => e.CourseEditionId)
@@ -114,11 +116,11 @@ namespace ScheduleDesigner.Services
 
             //CoordinatorCourseEdition
             modelBuilder.Entity<CoordinatorCourseEdition>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseTypeId, e.CourseEditionId, e.CoordinatorId });
+                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseEditionId, e.CoordinatorId });
 
             //GroupCourseEdition
             modelBuilder.Entity<GroupCourseEdition>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId, e.CourseTypeId, e.CourseEditionId, e.ClassId, e.GroupId });
+                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId, e.CourseEditionId, e.ClassId, e.GroupId });
 
             modelBuilder.Entity<GroupCourseEdition>()
                 .HasOne(e => e.Group)
@@ -132,13 +134,43 @@ namespace ScheduleDesigner.Services
 
             //CourseRoom
             modelBuilder.Entity<CourseRoom>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseTypeId, e.RoomId });
+                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.RoomId });
+
+            //Timestamp
+            modelBuilder.Entity<Timestamp>()
+                .HasIndex(p => new { p.SlotIndex, p.Day, p.Week })
+                .IsUnique(true);
+
+            //ScheduleSlot
+            modelBuilder.Entity<ScheduleSlot>()
+                .HasKey(e => new { e.RoomId, e.TimestampId });
+
+            modelBuilder.Entity<ScheduleSlot>()
+                .HasOne(e => e.SchedulePosition)
+                .WithOne(e => e.ScheduleSlot);
+
+            modelBuilder.Entity<ScheduleSlot>()
+                .HasMany(e => e.ScheduledMovesDestinations)
+                .WithOne(e => e.Destination)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //SchedulePosition
+            modelBuilder.Entity<SchedulePosition>()
+                .HasKey(e => new { e.RoomId, e.TimestampId });
+
             modelBuilder.Entity<SchedulePosition>()
                 .HasOne(e => e.CourseRoom)
                 .WithMany(e => e.SchedulePositions)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SchedulePosition>()
+                .HasMany(e => e.ScheduledMoves)
+                .WithOne(e => e.Origin)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //ScheduledMoves
+            modelBuilder.Entity<ScheduledMove>()
+                .HasKey(e => new { e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2 });
 
             //Staff
             modelBuilder.Entity<Staff>()

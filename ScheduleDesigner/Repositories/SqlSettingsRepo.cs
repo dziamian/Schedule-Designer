@@ -18,19 +18,20 @@ namespace ScheduleDesigner.Repositories
             _context = context;
         }
 
-        public async Task<int> AddSettings(Settings settings)
+        public async Task<int> AddSettingsAsync(Settings settings)
         {
             if (_context == null)
             {
                 return 0;
             }
+            
             await _context.Settings.AddAsync(settings);
             await _context.SaveChangesAsync();
 
             return settings.Id;
         }
 
-        public async Task<Settings> GetSettings()
+        public async Task<Settings> GetSettingsAsync()
         {
             if (_context == null)
             {
@@ -40,7 +41,7 @@ namespace ScheduleDesigner.Repositories
             return await _context.Settings.SingleOrDefaultAsync();
         }
 
-        public async Task<int> DeleteSettings()
+        public async Task<int> DeleteSettingsAsync()
         {
             if (_context == null)
             {
@@ -59,7 +60,7 @@ namespace ScheduleDesigner.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateSettings(Settings settings)
+        public async Task UpdateSettingsAsync(Settings settings)
         {
             if (_context == null)
             {
@@ -69,6 +70,11 @@ namespace ScheduleDesigner.Repositories
             _context.Entry(settings).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
         }
     }
 }

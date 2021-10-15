@@ -12,12 +12,10 @@ namespace ScheduleDesigner.Models
 
         public int CourseId { get; set; }
 
-        public int CourseTypeId { get; set; }
-
         public int RoomId { get; set; }
 
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId")]
+        [ForeignKey("ProgrammeId,CourseId")]
         public Course Course { get; set; }
 
         [ForeignKey("RoomId")]

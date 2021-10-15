@@ -20,6 +20,6 @@ namespace ScheduleDesigner.Models
         public int Week { get; set; }
 
 
-        public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
+        public virtual ICollection<ScheduleSlot> ScheduleSlots { get; set; }
     }
 }

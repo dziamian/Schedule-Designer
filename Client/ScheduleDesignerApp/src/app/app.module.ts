@@ -21,6 +21,7 @@ import { UsosApiService } from './services/UsosApiService/usos-api.service';
 import { ScheduleDesignerApiService } from './services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { AuthGuardService } from './services/AuthGuardService/auth-guard.service';
 import { CourseComponent } from './components/course/course.component';
+import { SignalrService } from './services/SignalrService/signalr.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ import { CourseComponent } from './components/course/course.component';
     DragDropModule,
     HttpClientModule
   ],
-  providers: [HttpClient, UsosApiService, ScheduleDesignerApiService, AuthGuardService],
+  providers: [HttpClient, UsosApiService, ScheduleDesignerApiService, SignalrService, AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

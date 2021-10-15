@@ -15,13 +15,11 @@ namespace ScheduleDesigner.Models
 
         public int CourseId { get; set; }
 
-        public int CourseTypeId { get; set; }
-
         
         [ForeignKey("ProgrammeId,ProgrammeStageId")]
         public ProgrammeStage ProgrammeStage { get; set; }
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId")]
+        [ForeignKey("ProgrammeId,CourseId")]
         public Course Course { get; set; }
 
         public virtual ICollection<GroupCourseEdition> Groups { get; set; }

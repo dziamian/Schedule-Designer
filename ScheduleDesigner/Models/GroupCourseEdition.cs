@@ -14,8 +14,6 @@ namespace ScheduleDesigner.Models
 
         public int CourseId { get; set; }
 
-        public int CourseTypeId { get; set; }
-
         public int CourseEditionId { get; set; }
 
         public int ClassId { get; set; }
@@ -26,10 +24,10 @@ namespace ScheduleDesigner.Models
         [ForeignKey("ProgrammeId,ProgrammeStageId,ClassId,GroupId")]
         public Group Group { get; set; }
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId,CourseEditionId")]
+        [ForeignKey("ProgrammeId,CourseId,CourseEditionId")]
         public CourseEdition CourseEdition { get; set; }
 
-        [ForeignKey("ProgrammeId,ProgrammeStageId,CourseId,CourseTypeId")]
+        [ForeignKey("ProgrammeId,ProgrammeStageId,CourseId")]
         public ProgrammeStageCourse ProgrammeStageCourse { get; set; }
     }
 }

@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using ScheduleDesigner.Converters;
+using ScheduleDesigner.Hubs;
+using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +15,16 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SettingsController : ControllerBase
+    [ODataRoutePrefix("Settings")]
+    public class SettingsController : ODataController
     {
         private readonly ISettingsRepo _settingsRepo;
+        private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
-        public SettingsController(ISettingsRepo settingsRepo)
+        public SettingsController(ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
         {
             _settingsRepo = settingsRepo;
+            _hubContext = hubContext;
         }
 
         private bool IsDataValid(Settings settings)
@@ -26,7 +33,8 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateSettings([FromBody] Settings settings)
+        [ODataRoute("")]
+        public async Task<IActionResult> CreateSettings([FromBody] Settings settings)
         {
             if (!IsDataValid(settings))
             {
@@ -40,15 +48,16 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _settingsRepo.GetSettingsAsync();
                 if (_settings != null)
                 {
                     return Conflict("Settings already exists.");
                 }
 
-                var id = await _settingsRepo.AddSettings(settings);
+                var id = await _settingsRepo.AddSettingsAsync(settings);
                 if (id > 0)
                 {
+                    await _hubContext.Clients.All.Test("test");
                     return Ok();
                 }
                 return NotFound();
@@ -60,56 +69,32 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetSettings()
+        [EnableQuery]
+        [ODataRoute("")]
+        public async Task<IActionResult> GetSettings()
         {
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _settingsRepo.GetSettingsAsync();
                 if (_settings == null)
                 {
                     return NotFound();
                 }
-                
-                return Ok(SettingsConverter.ToSettingsReadDto(_settings));
-            }
+
+                return Ok(_settings);
+            } 
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> DeleteSettings()
+        [HttpPatch]
+        [ODataRoute("")]
+        public async Task<IActionResult> UpdateSettings([FromBody] Delta<Settings> delta)
         {
             /// PLAN ZAJĘĆ MUSI BYĆ PUSTY !!
             /// if schedule table has elements -> BadRequest
-            
-            try
-            {
-                var result = await _settingsRepo.DeleteSettings();
-                if (result == 0)
-                {
-                    return NotFound();
-                }
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPut]
-        public async Task<ActionResult> UpdateSettings([FromBody] Settings settings)
-        {
-            /// PLAN ZAJĘĆ MUSI BYĆ PUSTY !!
-            /// if schedule table has elements -> BadRequest
-
-            if (!IsDataValid(settings))
-            {
-                ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
-            }
 
             if (!ModelState.IsValid)
             {
@@ -118,20 +103,46 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _settingsRepo.GetSettingsAsync();
                 if (_settings == null)
                 {
                     return NotFound();
                 }
 
-                _settings.CourseDurationMinutes = settings.CourseDurationMinutes;
-                _settings.StartTime = settings.StartTime;
-                _settings.EndTime = settings.EndTime;
-                _settings.TermDurationWeeks = settings.TermDurationWeeks;
+                delta.Patch(_settings);
 
-                await _settingsRepo.UpdateSettings(_settings);
+                if (!IsDataValid(_settings))
+                {
+                    ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
+                    return BadRequest(ModelState);
+                }
 
-                return Ok();
+                await _settingsRepo.SaveChangesAsync();
+
+                return Ok(_settings);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete]
+        [ODataRoute("")]
+        public async Task<IActionResult> DeleteSettings()
+        {
+            /// PLAN ZAJĘĆ MUSI BYĆ PUSTY !!
+            /// if schedule table has elements -> BadRequest
+
+            try
+            {
+                var result = await _settingsRepo.DeleteSettingsAsync();
+                if (result == 0)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
             }
             catch (Exception e)
             {

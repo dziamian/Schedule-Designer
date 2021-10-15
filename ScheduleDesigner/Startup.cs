@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,10 +13,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData.Edm;
 using Microsoft.OpenApi.Models;
 using ScheduleDesigner.Authentication;
 using ScheduleDesigner.Converters;
 using ScheduleDesigner.Helpers;
+using ScheduleDesigner.Hubs;
+using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Services;
@@ -43,6 +48,9 @@ namespace ScheduleDesigner
                     options.JsonSerializerOptions.Converters.Add(new TimeSpanToStringConverter());
                 });
 
+            services.AddOData();
+            services.AddSignalR();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo 
@@ -65,6 +73,7 @@ namespace ScheduleDesigner
                     builder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
+                        .AllowCredentials()
                         .WithOrigins(Configuration.GetSection("CorsPolicy:AllowedOriginsList").Get<string[]>());
                 });
             });
@@ -98,7 +107,19 @@ namespace ScheduleDesigner
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.Select().Filter().OrderBy().Count().Expand();
+                endpoints.MapODataRoute("api", "api", GetEdmModel());
+                endpoints.MapHub<ScheduleHub>("/scheduleHub");
             });
+        }
+
+        private IEdmModel GetEdmModel()
+        {
+            var builder = new ODataConventionModelBuilder();
+
+            builder.EntitySet<Settings>("Settings");
+
+            return builder.GetEdmModel();
         }
     }
 }

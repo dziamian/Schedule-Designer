@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
+import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 
 @Component({
@@ -18,9 +19,18 @@ export class ProfileComponent implements OnInit {
   public test1:string='';
   public test2:string='';
 
-  constructor(private usosApiService:UsosApiService, private apiService:ScheduleDesignerApiService, private snackBar:MatSnackBar, private router:Router) { }
+  constructor(
+    private usosApiService:UsosApiService, 
+    private apiService:ScheduleDesignerApiService, 
+    private signalrService:SignalrService,
+    private snackBar:MatSnackBar, 
+    private router:Router
+    ) 
+  { }
 
   ngOnInit(): void {
+    this.signalrService.initConnection();
+
     this.usosApiService.GetUser().subscribe(
       data => {
         this.user_id = data.id;
