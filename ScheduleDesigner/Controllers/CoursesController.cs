@@ -23,7 +23,7 @@ namespace ScheduleDesigner.Controllers
             _settingsRepo = settingsRepo;
         }
 
-        private bool IsDataValid(Course course, Settings settings)
+        private static bool IsDataValid(Course course, Settings settings)
         {
             return (course.UnitsMinutes % settings.CourseDurationMinutes == 0) || (course.UnitsMinutes * 2 / settings.CourseDurationMinutes % settings.TermDurationWeeks == 0);
         }

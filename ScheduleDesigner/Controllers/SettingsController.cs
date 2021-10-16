@@ -20,7 +20,7 @@ namespace ScheduleDesigner.Controllers
             _settingsRepo = settingsRepo;
         }
 
-        private bool IsDataValid(Settings settings)
+        private static bool IsDataValid(Settings settings)
         {
             return (settings.EndTime - settings.StartTime).TotalMinutes % settings.CourseDurationMinutes == 0;
         }

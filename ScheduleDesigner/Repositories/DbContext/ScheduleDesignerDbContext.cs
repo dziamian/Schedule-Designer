@@ -35,6 +35,17 @@ namespace ScheduleDesigner.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Staffs
+            //TEST ONLY
+            modelBuilder.Entity<Staff>()
+                .HasData(new Staff
+                {
+                    StaffId = 34527, 
+                    FirstName = "Damian", 
+                    LastName = "Ślusarczyk", 
+                    IsAdmin = true
+                });
+
             //Programme
             modelBuilder.Entity<Programme>()
                 .HasIndex(e => e.Name)

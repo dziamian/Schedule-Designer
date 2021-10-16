@@ -56,10 +56,26 @@ namespace ScheduleDesigner
             });
 
             services.AddScoped<ISettingsRepo, SqlSettingsRepo>();
+            services.AddScoped<IStaffRepo, SqlStaffRepo>();
             services.AddScoped<IProgrammeRepo, SqlProgrammeRepo>();
             services.AddScoped<IProgrammeStageRepo, SqlProgrammeStageRepo>();
             services.AddScoped<ICourseTypeRepo, SqlCourseTypeRepo>();
             services.AddScoped<ICourseRepo, SqlCourseRepo>();
+            services.AddScoped<IProgrammeStageCourseRepo, SqlProgrammeStageCourseRepo>();
+            services.AddScoped<IStudentRepo, SqlStudentRepo>();
+            services.AddScoped<IClassRepo, SqlClassRepo>();
+            services.AddScoped<IGroupRepo, SqlGroupRepo>();
+            services.AddScoped<IStudentGroupRepo, SqlStudentGroupRepo>();
+            services.AddScoped<ICourseEditionRepo, SqlCourseEditionRepo>();
+            services.AddScoped<ICoordinatorRepo, SqlCoordinatorRepo>();
+            services.AddScoped<ICoordinatorCourseEditionRepo, SqlCoordinatorCourseEdition>();
+            services.AddScoped<IGroupCourseEditionRepo, SqlGroupCourseEditionRepo>();
+            services.AddScoped<IRoomRepo, SqlRoomRepo>();
+            services.AddScoped<ICourseRoomRepo, SqlCourseRoomRepo>();
+            services.AddScoped<ITimestampRepo, SqlTimestampRepo>();
+            services.AddScoped<IScheduleSlotRepo, SqlScheduleSlotRepo>();
+            services.AddScoped<ISchedulePositionRepo, SqlSchedulePositionRepo>();
+            services.AddScoped<IScheduledMoveRepo, SqlScheduledMoveRepo>();
 
             services.Configure<ApplicationInfo>(Configuration.GetSection("ApplicationInfo"));
             services.Configure<Consumer>(Configuration.GetSection("UsosConsumer"));
