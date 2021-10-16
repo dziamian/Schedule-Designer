@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using ScheduleDesigner.Converters;
-using ScheduleDesigner.Hubs;
-using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
-using ScheduleDesigner.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +14,10 @@ namespace ScheduleDesigner.Controllers
     public class SettingsController : ODataController
     {
         private readonly ISettingsRepo _settingsRepo;
-        private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
-        public SettingsController(ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
+        public SettingsController(ISettingsRepo settingsRepo)
         {
             _settingsRepo = settingsRepo;
-            _hubContext = hubContext;
         }
 
         private bool IsDataValid(Settings settings)
@@ -36,29 +29,29 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public async Task<IActionResult> CreateSettings([FromBody] Settings settings)
         {
-            if (!IsDataValid(settings))
-            {
-                ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
-            }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (!IsDataValid(settings))
+            {
+                ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                var _settings = await _settingsRepo.GetSettingsAsync();
+                var _settings = await _settingsRepo.GetSettings();
                 if (_settings != null)
                 {
                     return Conflict("Settings already exists.");
                 }
 
-                var id = await _settingsRepo.AddSettingsAsync(settings);
-                if (id > 0)
+                _settings = await _settingsRepo.AddSettings(settings);
+                if (_settings != null)
                 {
-                    await _hubContext.Clients.All.Test("test");
-                    return Ok();
+                    return Created(_settings);
                 }
                 return NotFound();
             }
@@ -75,7 +68,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _settings = await _settingsRepo.GetSettingsAsync();
+                var _settings = await _settingsRepo.GetSettings();
                 if (_settings == null)
                 {
                     return NotFound();
@@ -93,8 +86,8 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public async Task<IActionResult> UpdateSettings([FromBody] Delta<Settings> delta)
         {
-            /// PLAN ZAJĘĆ MUSI BYĆ PUSTY !!
-            /// if schedule table has elements -> BadRequest
+            /// KURSY MUSZĄ BYĆ PUSTE !!
+            /// if course table has elements -> BadRequest
 
             if (!ModelState.IsValid)
             {
@@ -103,7 +96,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _settings = await _settingsRepo.GetSettingsAsync();
+                var _settings = await _settingsRepo.GetSettings();
                 if (_settings == null)
                 {
                     return NotFound();
@@ -117,7 +110,7 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest(ModelState);
                 }
 
-                await _settingsRepo.SaveChangesAsync();
+                await _settingsRepo.SaveChanges();
 
                 return Ok(_settings);
             }
@@ -131,13 +124,13 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public async Task<IActionResult> DeleteSettings()
         {
-            /// PLAN ZAJĘĆ MUSI BYĆ PUSTY !!
-            /// if schedule table has elements -> BadRequest
+            /// KURSY MUSZĄ BYĆ PUSTE !!
+            /// if course table has elements -> BadRequest
 
             try
             {
-                var result = await _settingsRepo.DeleteSettingsAsync();
-                if (result == 0)
+                var result = await _settingsRepo.DeleteSettings();
+                if (result < 0)
                 {
                     return NotFound();
                 }

@@ -88,9 +88,8 @@ export class UsosApiService {
     ).pipe(map(data => AccessToken.ParseToken(data.toString(), ['oauth_token=', 'oauth_token_secret='], '&')));
   }
 
-  public Deauthorize(snackBar:MatSnackBar):void {
+  public Deauthorize():void {
     AccessToken.Remove();
-    snackBar.open('Session expired. Please log in again.', 'Close');
   }
 
   public GetUser(user_id?:string):Observable<any> {

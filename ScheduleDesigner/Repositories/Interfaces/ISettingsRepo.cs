@@ -8,10 +8,10 @@ namespace ScheduleDesigner.Repositories.Interfaces
 {
     public interface ISettingsRepo
     {
-        Task<int> AddSettingsAsync(Settings settings);
-        Task<Settings> GetSettingsAsync();
-        Task<int> DeleteSettingsAsync();
-        Task UpdateSettingsAsync(Settings settings);
-        Task<int> SaveChangesAsync();
+        Task<Settings> GetSettings();
+        Task<Settings> AddSettings(Settings settings);
+        Task<Settings> UpdateSettings(Settings settings);
+        Task<int> DeleteSettings();
+        Task<int> SaveChanges();
     }
 }

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,11 @@ import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private usosApiService:UsosApiService, @Inject(DOCUMENT) private document: Document) { }
+  constructor(
+    private usosApiService:UsosApiService,
+    private snackBar:MatSnackBar,
+    @Inject(DOCUMENT) private document: Document
+  ) { }
 
   ngOnInit(): void {
 
@@ -24,13 +29,12 @@ export class LoginComponent implements OnInit {
         this.usosApiService.Authorize(token.key).subscribe(data => {
           this.document.location.href = data.requestMessage.requestUri;
         },
-        response => {
-          //here was the problem with cors
-          console.log(response.error);
+        () => {
+          this.snackBar.open('Connection to server failed. Please try again later.', 'OK');
         });
       },
-      response => {
-        console.log(response.error);
+      () => {
+        this.snackBar.open('Connection to server failed. Please try again later.', 'OK');
       }
     )
   }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ScheduleDesigner.Services
+namespace ScheduleDesigner.Repositories
 {
     public class ScheduleDesignerDbContext : DbContext
     {
@@ -35,6 +35,11 @@ namespace ScheduleDesigner.Services
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Programme
+            modelBuilder.Entity<Programme>()
+                .HasIndex(e => e.Name)
+                .IsUnique(true);
+
             //ProgrammeStage
             modelBuilder.Entity<ProgrammeStage>()
                 .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId });

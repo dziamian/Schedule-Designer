@@ -11,7 +11,6 @@ namespace ScheduleDesigner.Hubs
     {
         public override Task OnConnectedAsync()
         {
-            Console.WriteLine("Connected");
             return base.OnConnectedAsync();
         }
 

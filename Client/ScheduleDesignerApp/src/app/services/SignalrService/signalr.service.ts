@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,11 @@ export class SignalrService {
   readonly connectionUrl = 'http://localhost:5000/scheduleHub';
   connection:signalr.HubConnection;
 
-  constructor() { }
+  testMessage:BehaviorSubject<string>
+
+  constructor() {
+    this.testMessage = new BehaviorSubject<string>('');
+  }
 
   public initConnection(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -16,16 +21,22 @@ export class SignalrService {
         .withUrl(this.connectionUrl)
         .build();
 
+      this.setClientMethods();
+
       this.connection
         .start()
         .then(() => {
-          console.log(`Connection ID: ${this.connection.connectionId}`);
           resolve();
         })
         .catch((error) => {
-          console.log(`Connection Error: ${error}`);
-          reject();
+          reject(error);
         });
+    });
+  }
+
+  private setClientMethods(): void {
+    this.connection.on('Test', (message: string) => {
+      this.testMessage.next(message);
     });
   }
 }

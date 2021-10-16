@@ -1,9 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
-import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 
 @Component({
@@ -21,15 +20,13 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private usosApiService:UsosApiService, 
-    private apiService:ScheduleDesignerApiService, 
-    private signalrService:SignalrService,
-    private snackBar:MatSnackBar, 
-    private router:Router
-    ) 
+    private apiService:ScheduleDesignerApiService,
+    private router:Router,
+    private snackBar:MatSnackBar
+  ) 
   { }
 
   ngOnInit(): void {
-    this.signalrService.initConnection();
 
     this.usosApiService.GetUser().subscribe(
       data => {
@@ -39,7 +36,9 @@ export class ProfileComponent implements OnInit {
       },
       response => {
         if (response.status == 401) {
-          this.usosApiService.Deauthorize(this.snackBar);
+          this.usosApiService.Deauthorize();
+
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       }
@@ -51,7 +50,9 @@ export class ProfileComponent implements OnInit {
       },
       response => {
         if (response.status == 401) {
-          this.usosApiService.Deauthorize(this.snackBar);
+          this.usosApiService.Deauthorize();
+          
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       }
@@ -63,7 +64,9 @@ export class ProfileComponent implements OnInit {
       },
       response => {
         if (response.status == 401) {
-          this.usosApiService.Deauthorize(this.snackBar);
+          this.usosApiService.Deauthorize();
+          
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       }

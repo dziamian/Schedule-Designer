@@ -11,7 +11,10 @@ import { AccessToken } from './others/AccessToken';
 export class AppComponent {
   title:string = 'Schedule Designer';
 
-  constructor(private router:Router) { }
+
+  constructor(
+    private router:Router, 
+  ) { }
 
   public IsAuthenticated():boolean {
     return AccessToken.isAuthenticated();

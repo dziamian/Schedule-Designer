@@ -7,6 +7,6 @@ namespace ScheduleDesigner.Hubs.Interfaces
 {
     public interface IScheduleClient
     {
-        Task Test(string message);
+
     }
 }

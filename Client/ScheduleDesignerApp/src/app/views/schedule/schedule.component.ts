@@ -6,6 +6,7 @@ import { Course } from 'src/app/others/Course';
 import { CourseType } from 'src/app/others/CourseType';
 import { Group } from 'src/app/others/Group';
 import { Coordinator } from 'src/app/others/Coordinator';
+import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
 @Component({
   selector: 'app-schedule',
@@ -62,11 +63,21 @@ export class ScheduleComponent implements OnInit {
   ];
   schedule:Course[] = [];
 
-  constructor(private scheduleDesignerApiService:ScheduleDesignerApiService) { }
+  testMessage:string;
+
+  constructor(
+    private scheduleDesignerApiService:ScheduleDesignerApiService,
+    private signalrService:SignalrService
+  ) 
+  { }
 
   ngOnInit(): void {
+    this.signalrService.initConnection();
+    this.signalrService.testMessage.subscribe((testMessage: string) => {
+      this.testMessage = testMessage;
+    });
+
     this.setLabels();
-    
   }
 
   private setLabels() {

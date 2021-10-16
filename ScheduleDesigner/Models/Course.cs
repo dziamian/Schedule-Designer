@@ -13,6 +13,8 @@ namespace ScheduleDesigner.Models
 
         public int CourseId { get; set; }
 
+       
+        public int CourseTypeId { get; set; }
         
         [Required]
         [MaxLength(100)]
