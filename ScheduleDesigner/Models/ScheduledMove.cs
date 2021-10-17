@@ -16,6 +16,8 @@ namespace ScheduleDesigner.Models
 
         public int TimestampId_2 { get; set; }
 
+        public int CourseId { get; set; }
+
 
         public int UserId { get; set; }
 
@@ -24,10 +26,10 @@ namespace ScheduleDesigner.Models
         public DateTime ScheduledDate { get; set; }
 
         
-        [ForeignKey("RoomId_1,TimestampId_1")]
+        [ForeignKey("RoomId_1,TimestampId_1,CourseId")]
         public SchedulePosition Origin { get; set; }
 
-        [ForeignKey("RoomId_2,TimestampId_2")]
-        public ScheduleSlot Destination { get; set; }
+        [ForeignKey("RoomId_2,TimestampId_2,CourseId")]
+        public CourseRoomTimestamp Destination { get; set; }
     }
 }

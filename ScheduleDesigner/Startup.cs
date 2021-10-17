@@ -73,7 +73,7 @@ namespace ScheduleDesigner
             services.AddScoped<IRoomRepo, SqlRoomRepo>();
             services.AddScoped<ICourseRoomRepo, SqlCourseRoomRepo>();
             services.AddScoped<ITimestampRepo, SqlTimestampRepo>();
-            services.AddScoped<IScheduleSlotRepo, SqlScheduleSlotRepo>();
+            services.AddScoped<ICourseRoomTimestampRepo, SqlCourseRoomTimestampRepo>();
             services.AddScoped<ISchedulePositionRepo, SqlSchedulePositionRepo>();
             services.AddScoped<IScheduledMoveRepo, SqlScheduledMoveRepo>();
 
@@ -143,7 +143,7 @@ namespace ScheduleDesigner
             
             builder.EntitySet<Course>("Courses")
                 .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.CourseId });
+                .HasKey(e => new { e.CourseId });
 
             builder.EntitySet<ProgrammeStageCourse>("ProgrammeStageCourses")
                 .EntityType
@@ -171,11 +171,11 @@ namespace ScheduleDesigner
 
             builder.EntitySet<CourseEdition>("CourseEditions")
                 .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseEditionId });
+                .HasKey(e => new { e.CourseId, e.CourseEditionId });
             
             builder.EntitySet<CoordinatorCourseEdition>("CoordinatorCourseEditions")
                 .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseEditionId, e.CoordinatorId });
+                .HasKey(e => new { e.CourseId, e.CourseEditionId, e.CoordinatorId });
 
             builder.EntitySet<GroupCourseEdition>("GroupCourseEditions")
                 .EntityType
@@ -185,11 +185,11 @@ namespace ScheduleDesigner
             
             builder.EntitySet<CourseRoom>("CourseRooms")
                 .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.RoomId });
+                .HasKey(e => new { e.CourseId, e.RoomId });
 
             builder.EntitySet<Timestamp>("Timestamps");
             
-            builder.EntitySet<ScheduleSlot>("ScheduleSlots")
+            builder.EntitySet<CourseRoomTimestamp>("ScheduleSlots")
                 .EntityType
                 .HasKey(e => new { e.RoomId, e.TimestampId });
 

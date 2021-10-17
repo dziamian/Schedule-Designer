@@ -9,13 +9,10 @@ namespace ScheduleDesigner.Models
 {
     public class Course
     {
-        public int ProgrammeId { get; set; }
-
         public int CourseId { get; set; }
 
-       
         public int CourseTypeId { get; set; }
-        
+
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
@@ -23,9 +20,6 @@ namespace ScheduleDesigner.Models
         [Range(1, int.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public int UnitsMinutes { get; set; }
 
-        
-        [ForeignKey("ProgrammeId")]
-        public Programme Programme { get; set; }
         
         [ForeignKey("CourseTypeId")]
         public CourseType CourseType { get; set; }

@@ -18,7 +18,5 @@ namespace ScheduleDesigner.Models
 
 
         public virtual ICollection<CourseRoom> Courses { get; set; }
-
-        public virtual ICollection<ScheduleSlot> ScheduleSlots { get; set; }
     }
 }

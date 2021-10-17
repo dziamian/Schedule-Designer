@@ -7,7 +7,7 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
-    public interface IScheduleSlotRepo : IRepoBase<ScheduleSlot>
+    public interface ICourseRoomTimestampRepo : IRepoBase<CourseRoomTimestamp>
     {
     }
 }

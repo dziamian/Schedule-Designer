@@ -76,11 +76,11 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         [EnableQuery]
         [ODataRoute("({key1},{key2})")]
-        public IActionResult GetCourse([FromODataUri] int key1, [FromODataUri] int key2)
+        public IActionResult GetCourse([FromODataUri] int key1)
         {
             try
             {
-                var _course = _courseRepo.Get(e => e.ProgrammeId == key1 && e.CourseId == key2);
+                var _course = _courseRepo.Get(e => e.CourseId == key1);
                 if (!_course.Any())
                 {
                     return NotFound();
@@ -96,7 +96,7 @@ namespace ScheduleDesigner.Controllers
 
         [HttpPatch]
         [ODataRoute("({key1},{key2})")]
-        public async Task<IActionResult> UpdateCourse([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<Course> delta)
+        public async Task<IActionResult> UpdateCourse([FromODataUri] int key1, [FromBody] Delta<Course> delta)
         {
             if (!ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _course = await _courseRepo.GetFirst(e => e.ProgrammeId == key1 && e.CourseId == key2);
+                var _course = await _courseRepo.GetFirst(e => e.CourseId == key1);
                 if (_course == null)
                 {
                     return NotFound();
@@ -132,11 +132,11 @@ namespace ScheduleDesigner.Controllers
 
         [HttpDelete]
         [ODataRoute("({key1},{key2})")]
-        public async Task<IActionResult> DeleteCourse([FromODataUri] int key1, [FromODataUri] int key2)
+        public async Task<IActionResult> DeleteCourse([FromODataUri] int key1)
         {
             try
             {
-                var result = await _courseRepo.Delete(e => e.ProgrammeId == key1 && e.CourseId == key2);
+                var result = await _courseRepo.Delete(e => e.CourseId == key1);
                 if (result < 0)
                 {
                     return NotFound();

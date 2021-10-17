@@ -12,7 +12,7 @@ namespace ScheduleDesigner.Models
         public int TimestampId { get; set; }
 
 
-        public int SlotIndex { get; set; }
+        public int PeriodIndex { get; set; }
 
         [Range(1,5, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public int Day { get; set; }
@@ -20,6 +20,6 @@ namespace ScheduleDesigner.Models
         public int Week { get; set; }
 
 
-        public virtual ICollection<ScheduleSlot> ScheduleSlots { get; set; }
+        public virtual ICollection<CourseRoomTimestamp> ScheduleSlots { get; set; }
     }
 }

@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class ScheduleSlot
+    public class CourseRoomTimestamp
     {
         public int RoomId { get; set; }
 
         public int TimestampId { get; set; }
 
+        public int CourseId { get; set; }
+
         
-        [ForeignKey("RoomId")]
-        public Room Room { get; set; }
+        [ForeignKey("RoomId,CourseId")]
+        public CourseRoom CourseRoom { get; set; }
 
         [ForeignKey("TimestampId")]
         public Timestamp Timestamp { get; set; }

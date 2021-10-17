@@ -9,8 +9,6 @@ namespace ScheduleDesigner.Models
 {
     public class CourseEdition
     {
-        public int ProgrammeId { get; set; }
-
         public int CourseId { get; set; }
 
         public int CourseEditionId { get; set; }
@@ -23,7 +21,7 @@ namespace ScheduleDesigner.Models
         public int? LockUserId { get; set; }
 
 
-        [ForeignKey("ProgrammeId,CourseId")]
+        [ForeignKey("CourseId")]
         public Course Course { get; set; }
 
         public virtual ICollection<CoordinatorCourseEdition> Coordinators { get; set; }

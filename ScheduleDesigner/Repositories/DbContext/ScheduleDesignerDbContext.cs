@@ -27,7 +27,7 @@ namespace ScheduleDesigner.Repositories
         public DbSet<Room> Rooms { get; set; }
         public DbSet<CourseRoom> CourseRooms { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
-        public DbSet<ScheduleSlot> ScheduleSlots { get; set; }
+        public DbSet<CourseRoomTimestamp> CourseRoomTimestamps { get; set; }
         public DbSet<SchedulePosition> SchedulePositions { get; set; }
         public DbSet<ScheduledMove> ScheduledMoves { get; set; }
 
@@ -62,7 +62,7 @@ namespace ScheduleDesigner.Repositories
             
             //Course
             modelBuilder.Entity<Course>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId });
+                .HasKey(e => new { e.CourseId });
 
             modelBuilder.Entity<Course>()
                 .Property(e => e.CourseId)
@@ -123,7 +123,7 @@ namespace ScheduleDesigner.Repositories
 
             //CourseEdition
             modelBuilder.Entity<CourseEdition>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseEditionId });
+                .HasKey(e => new { e.CourseId, e.CourseEditionId });
 
             modelBuilder.Entity<CourseEdition>()
                 .Property(e => e.CourseEditionId)
@@ -132,7 +132,7 @@ namespace ScheduleDesigner.Repositories
 
             //CoordinatorCourseEdition
             modelBuilder.Entity<CoordinatorCourseEdition>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.CourseEditionId, e.CoordinatorId });
+                .HasKey(e => new { e.CourseId, e.CourseEditionId, e.CoordinatorId });
 
             //GroupCourseEdition
             modelBuilder.Entity<GroupCourseEdition>()
@@ -150,34 +150,30 @@ namespace ScheduleDesigner.Repositories
 
             //CourseRoom
             modelBuilder.Entity<CourseRoom>()
-                .HasKey(e => new { e.ProgrammeId, e.CourseId, e.RoomId });
+                .HasKey(e => new { e.CourseId, e.RoomId });
 
             //Timestamp
             modelBuilder.Entity<Timestamp>()
-                .HasIndex(p => new { p.SlotIndex, p.Day, p.Week })
+                .HasIndex(p => new {SlotIndex = p.PeriodIndex, p.Day, p.Week })
                 .IsUnique(true);
 
-            //ScheduleSlot
-            modelBuilder.Entity<ScheduleSlot>()
-                .HasKey(e => new { e.RoomId, e.TimestampId });
+            //CourseRoomTimestamp
+            modelBuilder.Entity<CourseRoomTimestamp>()
+                .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
 
-            modelBuilder.Entity<ScheduleSlot>()
+            modelBuilder.Entity<CourseRoomTimestamp>()
                 .HasOne(e => e.SchedulePosition)
-                .WithOne(e => e.ScheduleSlot);
+                .WithOne(e => e.CourseRoomTimestamp)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ScheduleSlot>()
+            modelBuilder.Entity<CourseRoomTimestamp>()
                 .HasMany(e => e.ScheduledMovesDestinations)
                 .WithOne(e => e.Destination)
                 .OnDelete(DeleteBehavior.Restrict);
 
             //SchedulePosition
             modelBuilder.Entity<SchedulePosition>()
-                .HasKey(e => new { e.RoomId, e.TimestampId });
-
-            modelBuilder.Entity<SchedulePosition>()
-                .HasOne(e => e.CourseRoom)
-                .WithMany(e => e.SchedulePositions)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
 
             modelBuilder.Entity<SchedulePosition>()
                 .HasMany(e => e.ScheduledMoves)
@@ -186,7 +182,7 @@ namespace ScheduleDesigner.Repositories
 
             //ScheduledMoves
             modelBuilder.Entity<ScheduledMove>()
-                .HasKey(e => new { e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2 });
+                .HasKey(e => new { e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
 
             //Staff
             modelBuilder.Entity<Staff>()
