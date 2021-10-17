@@ -88,6 +88,10 @@ export class UsosApiService {
     ).pipe(map(data => AccessToken.ParseToken(data.toString(), ['oauth_token=', 'oauth_token_secret='], '&')));
   }
 
+  public Logout(document:Document):void {
+    document.location.href = this.baseUrl + '/apps/logout';
+  }
+
   public Deauthorize(snackBar:MatSnackBar):void {
     AccessToken.Remove();
     snackBar.open('Session expired. Please log in again.', 'Close');
