@@ -7,6 +7,8 @@ import { CourseType } from 'src/app/others/CourseType';
 import { Group } from 'src/app/others/Group';
 import { Coordinator } from 'src/app/others/Coordinator';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogExampleComponent } from 'src/app/components/dialog-example/dialog-example.component';
 
 @Component({
   selector: 'app-schedule',
@@ -67,7 +69,8 @@ export class ScheduleComponent implements OnInit {
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
-    private signalrService:SignalrService
+    private signalrService:SignalrService,
+    private dialog:MatDialog
   ) 
   { }
 
@@ -90,7 +93,11 @@ export class ScheduleComponent implements OnInit {
     console.log("click");
   }
 
-  Drop(event:CdkDragDrop<Course[]>) {
+  async Drop(event:CdkDragDrop<Course[]>) {
+    const dialog = this.dialog.open(DialogExampleComponent);
+
+    await dialog.afterClosed().toPromise();
+    
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -106,5 +113,4 @@ export class ScheduleComponent implements OnInit {
       );
     }
   }
-
 }

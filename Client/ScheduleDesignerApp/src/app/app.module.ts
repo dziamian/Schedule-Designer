@@ -7,6 +7,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +23,7 @@ import { ScheduleDesignerApiService } from './services/ScheduleDesignerApiServic
 import { AuthGuardService } from './services/AuthGuardService/auth-guard.service';
 import { CourseComponent } from './components/course/course.component';
 import { SignalrService } from './services/SignalrService/signalr.service';
+import { DialogExampleComponent } from './components/dialog-example/dialog-example.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { SignalrService } from './services/SignalrService/signalr.service';
     AuthenticatedComponent,
     ScheduleComponent,
     ProfileComponent,
-    CourseComponent
+    CourseComponent,
+    DialogExampleComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { SignalrService } from './services/SignalrService/signalr.service';
     MatTabsModule,
     MatSlideToggleModule,
     DragDropModule,
+    MatDialogModule,
     HttpClientModule
   ],
   providers: [HttpClient, UsosApiService, ScheduleDesignerApiService, SignalrService, AuthGuardService],

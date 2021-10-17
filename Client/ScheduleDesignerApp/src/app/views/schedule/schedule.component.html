@@ -59,7 +59,7 @@
                     cdkDropList
                     #drop1="cdkDropList"
                     cdkDropListSortingDisabled
-                    [cdkDropListConnectedTo]="[drop2]"
+                    [cdkDropListConnectedTo]="[drop2,drop3]"
                     [cdkDropListData]="yourCourses"
                     (cdkDropListDropped)="Drop($event)"
                 >
@@ -88,13 +88,21 @@
                             <td
                                 cdkDropList
                                 #drop2="cdkDropList"
-                                [cdkDropListConnectedTo]="[drop1]"
+                                [cdkDropListConnectedTo]="[drop1,drop3]"
                                 [cdkDropListData]="schedule"
                                 (cdkDropListDropped)="Drop($event)"
                             >
                                 <app-course *ngFor="let course of schedule" [course]="course"></app-course>
                             </td>
-                            <td></td>
+                            <td
+                                cdkDropList
+                                #drop3="cdkDropList"
+                                [cdkDropListConnectedTo]="[drop1,drop2]"
+                                [cdkDropListData]="schedule"
+                                (cdkDropListDropped)="Drop($event)"
+                            >
+                                <app-course *ngFor="let course of schedule" [course]="course"></app-course>
+                            </td>
                             <td></td>
                             <td></td>
                             <td></td>

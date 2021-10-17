@@ -92,7 +92,7 @@ export class UsosApiService {
     document.location.href = this.baseUrl + '/apps/logout';
   }
 
-  public Deauthorize(snackBar:MatSnackBar):void {
+  public Deauthorize():void {
     AccessToken.Remove();
   }
 
