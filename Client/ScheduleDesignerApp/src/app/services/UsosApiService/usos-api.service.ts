@@ -35,7 +35,7 @@ export class UsosApiService {
     
     const request_data = new FormData();
     request_data.append('oauth_callback', 'http://localhost:4200/authenticated');
-    request_data.append('scopes', 'studies');
+    request_data.append('scopes', 'studies|offline_access');
     
     return this.http.request(
       request.method,
@@ -94,7 +94,6 @@ export class UsosApiService {
 
   public Deauthorize(snackBar:MatSnackBar):void {
     AccessToken.Remove();
-    snackBar.open('Session expired. Please log in again.', 'Close');
   }
 
   public GetUser(user_id?:string):Observable<any> {

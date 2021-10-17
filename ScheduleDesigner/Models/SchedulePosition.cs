@@ -9,31 +9,24 @@ namespace ScheduleDesigner.Models
 {
     public class SchedulePosition
     {
-        [Key]
-        public int SchedulePositionId { get; set; }
-
-        [Index("IX_RoomId_TimestampId", 1, IsUnique = true)]
         public int RoomId { get; set; }
 
-        [Index("IX_RoomId_TimestampId", 2, IsUnique = true)]
         public int TimestampId { get; set; }
-
-        public int ProgrammeId { get; set; }
 
         public int CourseId { get; set; }
 
-        public int CourseTypeId { get; set; }
-
+        
         public int CourseEditionId { get; set; }
 
+        public int? LockUserId { get; set; }
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId,CourseEditionId")]
+
+        [ForeignKey("CourseId,CourseEditionId")]
         public CourseEdition CourseEdition { get; set; }
 
-        [ForeignKey("TimestampId")]
-        public Timestamp Timestamp { get; set; }
+        [ForeignKey("RoomId,TimestampId,CourseId")]
+        public CourseRoomTimestamp CourseRoomTimestamp { get; set; }
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId,RoomId")]
-        public CourseRoom CourseRoom { get; set; }
+        public virtual ICollection<ScheduledMove> ScheduledMoves { get; set; }
     }
 }

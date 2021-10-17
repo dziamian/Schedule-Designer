@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AccessToken } from 'src/app/others/AccessToken';
@@ -18,9 +18,16 @@ export class ProfileComponent implements OnInit {
   public test1:string='';
   public test2:string='';
 
-  constructor(private usosApiService:UsosApiService, private apiService:ScheduleDesignerApiService, private snackBar:MatSnackBar, private router:Router) { }
+  constructor(
+    private usosApiService:UsosApiService, 
+    private apiService:ScheduleDesignerApiService,
+    private router:Router,
+    private snackBar:MatSnackBar
+  ) 
+  { }
 
   ngOnInit(): void {
+
     this.usosApiService.GetUser().subscribe(
       data => {
         this.user_id = data.id;
@@ -29,7 +36,9 @@ export class ProfileComponent implements OnInit {
       },
       response => {
         if (response.status == 401) {
-          this.usosApiService.Deauthorize(this.snackBar);
+          this.usosApiService.Deauthorize();
+
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       }
@@ -41,7 +50,9 @@ export class ProfileComponent implements OnInit {
       },
       response => {
         if (response.status == 401) {
-          this.usosApiService.Deauthorize(this.snackBar);
+          this.usosApiService.Deauthorize();
+          
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       }
@@ -53,7 +64,9 @@ export class ProfileComponent implements OnInit {
       },
       response => {
         if (response.status == 401) {
-          this.usosApiService.Deauthorize(this.snackBar);
+          this.usosApiService.Deauthorize();
+          
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       }

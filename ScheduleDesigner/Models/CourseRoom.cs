@@ -8,21 +8,17 @@ namespace ScheduleDesigner.Models
 {
     public class CourseRoom
     {
-        public int ProgrammeId { get; set; }
-
         public int CourseId { get; set; }
-
-        public int CourseTypeId { get; set; }
 
         public int RoomId { get; set; }
 
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId")]
+        [ForeignKey("CourseId")]
         public Course Course { get; set; }
 
         [ForeignKey("RoomId")]
         public Room Room { get; set; }
 
-        public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
+        public virtual ICollection<CourseRoomTimestamp> Timestamps { get; set; }
     }
 }

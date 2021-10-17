@@ -19,6 +19,8 @@ namespace ScheduleDesigner.Models
         [MaxLength(100)]
         public string LastName { get; set; }
 
+        public bool IsRepresentative { get; set; }
+
 
         public virtual ICollection<StudentGroup> Groups { get; set; }
     }

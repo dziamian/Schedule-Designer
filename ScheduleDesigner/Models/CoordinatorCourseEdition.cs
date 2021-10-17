@@ -8,11 +8,7 @@ namespace ScheduleDesigner.Models
 {
     public class CoordinatorCourseEdition
     {
-        public int ProgrammeId { get; set; }
-
         public int CourseId { get; set; }
-
-        public int CourseTypeId { get; set; }
 
         public int CourseEditionId { get; set; }
 
@@ -22,7 +18,7 @@ namespace ScheduleDesigner.Models
         [ForeignKey("CoordinatorId")]
         public Coordinator Coordinator { get; set; }
 
-        [ForeignKey("ProgrammeId,CourseId,CourseTypeId,CourseEditionId")]
+        [ForeignKey("CourseId,CourseEditionId")]
         public CourseEdition CourseEdition { get; set; }
     }
 }
