@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CDK_DROP_LIST, DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -48,7 +48,13 @@ import { DialogExampleComponent } from './components/dialog-example/dialog-examp
     MatDialogModule,
     HttpClientModule
   ],
-  providers: [HttpClient, UsosApiService, ScheduleDesignerApiService, SignalrService, AuthGuardService],
+  providers: [
+    HttpClient, 
+    UsosApiService, 
+    ScheduleDesignerApiService, 
+    SignalrService, 
+    AuthGuardService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

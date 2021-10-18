@@ -75,7 +75,7 @@ namespace ScheduleDesigner.Controllers
 
         [HttpGet]
         [EnableQuery]
-        [ODataRoute("({key1},{key2})")]
+        [ODataRoute("({key1})")]
         public IActionResult GetCourse([FromODataUri] int key1)
         {
             try
@@ -95,7 +95,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpPatch]
-        [ODataRoute("({key1},{key2})")]
+        [ODataRoute("({key1})")]
         public async Task<IActionResult> UpdateCourse([FromODataUri] int key1, [FromBody] Delta<Course> delta)
         {
             if (!ModelState.IsValid)
@@ -131,7 +131,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpDelete]
-        [ODataRoute("({key1},{key2})")]
+        [ODataRoute("({key1})")]
         public async Task<IActionResult> DeleteCourse([FromODataUri] int key1)
         {
             try

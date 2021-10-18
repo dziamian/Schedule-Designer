@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Course } from 'src/app/others/Course';
 import { CourseType } from 'src/app/others/CourseType';
 
@@ -10,10 +10,17 @@ import { CourseType } from 'src/app/others/CourseType';
 export class CourseComponent implements OnInit {
 
   @Input() course?:Course;
+  @Output() ctrlClick:EventEmitter<Course> = new EventEmitter<Course>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  CtrlClick(event:MouseEvent) {
+    if (event.ctrlKey) {
+      this.ctrlClick.emit(this.course);
+    }
   }
 
   public getCourseTypeName(type?:CourseType):string {

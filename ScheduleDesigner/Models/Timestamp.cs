@@ -20,6 +20,6 @@ namespace ScheduleDesigner.Models
         public int Week { get; set; }
 
 
-        public virtual ICollection<CourseRoomTimestamp> ScheduleSlots { get; set; }
+        public virtual ICollection<CourseRoomTimestamp> CourseRoomTimestamps { get; set; }
     }
 }

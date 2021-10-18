@@ -14,15 +14,35 @@ namespace ScheduleDesigner.Controllers
     public class SettingsController : ODataController
     {
         private readonly ISettingsRepo _settingsRepo;
+        private readonly ITimestampRepo _timestampRepo;
 
-        public SettingsController(ISettingsRepo settingsRepo)
+        public SettingsController(ISettingsRepo settingsRepo, ITimestampRepo timestampRepo)
         {
             _settingsRepo = settingsRepo;
+            _timestampRepo = timestampRepo;
         }
 
         private static bool IsDataValid(Settings settings)
         {
             return (settings.EndTime - settings.StartTime).TotalMinutes % settings.CourseDurationMinutes == 0;
+        }
+
+        private async Task AddTimestamps(Settings settings)
+        {
+            var numberOfSlots = (settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
+            Console.WriteLine(numberOfSlots);
+            var numberOfWeeks = settings.TermDurationWeeks;
+            for (int k = 0; k < numberOfWeeks; ++k)
+                for (int j = 0; j < 5; ++j)
+                    for (int i = 0; i < numberOfSlots; ++i)
+                    {
+                        await _timestampRepo.Add(new Timestamp { PeriodIndex = i + 1, Day = j + 1, Week = k + 1 });
+                    }
+        }
+
+        private void RemoveTimestamps()
+        {
+            _timestampRepo.GetAll().RemoveRange(_timestampRepo.GetAll().ToList());
         }
 
         [HttpPost]
@@ -49,11 +69,16 @@ namespace ScheduleDesigner.Controllers
                 }
 
                 _settings = await _settingsRepo.AddSettings(settings);
-                if (_settings != null)
+                if (_settings == null)
                 {
-                    return Created(_settings);
+                    return NotFound();
                 }
-                return NotFound();
+
+                await AddTimestamps(_settings);
+
+                await _timestampRepo.SaveChanges();
+
+                return Created(_settings);
             }
             catch (Exception e)
             {
@@ -110,6 +135,9 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest(ModelState);
                 }
 
+                RemoveTimestamps();
+                await AddTimestamps(_settings);
+
                 await _settingsRepo.SaveChanges();
 
                 return Ok(_settings);
@@ -134,6 +162,10 @@ namespace ScheduleDesigner.Controllers
                 {
                     return NotFound();
                 }
+
+                RemoveTimestamps();
+
+                await _timestampRepo.SaveChanges();
 
                 return NoContent();
             }

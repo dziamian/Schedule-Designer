@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, Inject, OnInit } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList, CDK_DROP_LIST, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { Course } from 'src/app/others/Course';
@@ -9,6 +9,7 @@ import { Coordinator } from 'src/app/others/Coordinator';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogExampleComponent } from 'src/app/components/dialog-example/dialog-example.component';
+import { Room } from 'src/app/others/Room';
 
 @Component({
   selector: 'app-schedule',
@@ -17,7 +18,7 @@ import { DialogExampleComponent } from 'src/app/components/dialog-example/dialog
 })
 export class ScheduleComponent implements OnInit {
 
-  termLength:number = 15;
+  numberOfWeeks:number = 15;
   tabLabels:string[] = ['Semester', 'Even Weeks', 'Odd Weeks'];
 
   yourCourses:Course[] = [
@@ -58,14 +59,32 @@ export class ScheduleComponent implements OnInit {
       15, 
       new Group("3ID12A"), 
       [
-        new Coordinator("Mariusz", "Bedla", "dr inż."), 
-        new Coordinator("Grzegorz", "Łukawski", "dr inż.")
+        new Coordinator("Mariusz", "Bedla", "dr inż."),
       ]
     ),
   ];
-  schedule:Course[] = [];
-
-  testMessage:string;
+  schedule:Course[][] = [[new Course(
+      "Systemy Operacyjne 2", 
+      CourseType.Lecture, 
+      15, 
+      new Group("3ID12A"), 
+      [
+        new Coordinator("Mariusz", "Bedla", "dr inż."), 
+        new Coordinator("Grzegorz", "Łukawski", "dr inż."),
+        new Coordinator("Antoni", "Antoniak", "dr inż.")
+      ]
+    ),
+    new Course(
+      "Systemy Operacyjne 2", 
+      CourseType.Lecture, 
+      15, 
+      new Group("3ID12A"), 
+      [
+        new Coordinator("Mariusz", "Bedla", "dr inż."), 
+        new Coordinator("Grzegorz", "Łukawski", "dr inż."),
+        new Coordinator("Antoni", "Antoniak", "dr inż.")
+      ]
+    )],[],[]];
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -76,28 +95,20 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.signalrService.initConnection();
-    this.signalrService.testMessage.subscribe((testMessage: string) => {
+    /*this.signalrService.testMessage.subscribe((testMessage: string) => {
       this.testMessage = testMessage;
-    });
+    });*/
 
     this.setLabels();
   }
 
   private setLabels() {
-    for (let i:number = 0; i < this.termLength; ++i) {
+    for (let i:number = 0; i < this.numberOfWeeks; ++i) {
       this.tabLabels.push('Week ' + (i + 1));
     }
   }
 
-  public click() {
-    console.log("click");
-  }
-
-  async Drop(event:CdkDragDrop<Course[]>) {
-    const dialog = this.dialog.open(DialogExampleComponent);
-
-    await dialog.afterClosed().toPromise();
-    
+  async DropInMyCourses(event:CdkDragDrop<Course[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -112,5 +123,67 @@ export class ScheduleComponent implements OnInit {
         event.currentIndex
       );
     }
+  }
+
+  async DropInSchedule(event:CdkDragDrop<Course[]>) {
+    if (event.previousContainer === event.container) {
+      return;
+    }
+
+    if (event.container.data.length == 1) {
+      //must be confirmed and not scheduled
+      if (event.previousContainer.id != 'your-courses') {
+        //different dialog
+        const dialog = this.dialog.open(DialogExampleComponent);
+        await dialog.afterClosed().toPromise();
+      } else {
+        const dialog = this.dialog.open(DialogExampleComponent);
+        await dialog.afterClosed().toPromise();
+      }
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      transferArrayItem(
+        event.container.data,
+        event.previousContainer.data,
+        1 - event.currentIndex,
+        event.previousIndex
+      );
+
+      return;
+    }
+
+    const dialog = this.dialog.open(DialogExampleComponent);
+
+    await dialog.afterClosed().toPromise();
+    //get room and set it
+    //console.log(event.previousContainer.data[event.previousIndex].room = new Room("New room"));
+
+    //if room has been chosen and accepted by API
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+    //otherwise if room has been chosen but is busy -> scheduledmove
+  }
+
+  ScheduleSlotEnterPredicate(course:CdkDrag<Course>, slot:CdkDropList<Course[]>) {
+    return slot.data.length < 2;
+  }
+
+  Reset(index:number, event:Course) {
+    transferArrayItem<Course>(
+      this.schedule[index],
+      this.yourCourses,
+      0,
+      this.yourCourses.length
+    );
   }
 }
