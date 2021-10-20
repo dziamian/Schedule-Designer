@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { CdkDrag, CdkDragDrop, CdkDropList, CDK_DROP_LIST, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList, DragRef, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { Course } from 'src/app/others/Course';
@@ -9,7 +9,7 @@ import { Coordinator } from 'src/app/others/Coordinator';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogExampleComponent } from 'src/app/components/dialog-example/dialog-example.component';
-import { Room } from 'src/app/others/Room';
+import { CourseComponent } from 'src/app/components/course/course.component';
 
 @Component({
   selector: 'app-schedule',
@@ -18,7 +18,11 @@ import { Room } from 'src/app/others/Room';
 })
 export class ScheduleComponent implements OnInit {
 
+  @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef>;
+  @ViewChildren(CourseComponent) courses : QueryList<CourseComponent>;
+
   numberOfWeeks:number = 15;
+  currentTabIndex:number = 0;
   tabLabels:string[] = ['Semester', 'Even Weeks', 'Odd Weeks'];
 
   yourCourses:Course[] = [
@@ -93,6 +97,12 @@ export class ScheduleComponent implements OnInit {
   ) 
   { }
 
+  private setLabels() {
+    for (let i:number = 0; i < this.numberOfWeeks; ++i) {
+      this.tabLabels.push('Week ' + (i + 1));
+    }
+  }
+
   ngOnInit(): void {
     this.signalrService.initConnection();
     /*this.signalrService.testMessage.subscribe((testMessage: string) => {
@@ -102,10 +112,8 @@ export class ScheduleComponent implements OnInit {
     this.setLabels();
   }
 
-  private setLabels() {
-    for (let i:number = 0; i < this.numberOfWeeks; ++i) {
-      this.tabLabels.push('Week ' + (i + 1));
-    }
+  OnTabChange(index:number) {
+    //load data
   }
 
   async DropInMyCourses(event:CdkDragDrop<Course[]>) {

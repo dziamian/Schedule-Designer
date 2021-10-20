@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { CdkDrag } from '@angular/cdk/drag-drop';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Course } from 'src/app/others/Course';
 import { CourseType } from 'src/app/others/CourseType';
 
@@ -9,6 +10,8 @@ import { CourseType } from 'src/app/others/CourseType';
 })
 export class CourseComponent implements OnInit {
 
+  @ViewChild(CdkDrag) cdkCourse : CdkDrag;
+
   @Input() course?:Course;
   @Output() ctrlClick:EventEmitter<Course> = new EventEmitter<Course>();
 
@@ -18,7 +21,7 @@ export class CourseComponent implements OnInit {
   }
 
   CtrlClick(event:MouseEvent) {
-    if (event.ctrlKey) {
+    if (!this.cdkCourse.disabled && event.ctrlKey) {
       this.ctrlClick.emit(this.course);
     }
   }
