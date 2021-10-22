@@ -40,7 +40,8 @@ namespace ScheduleDesigner
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
 
             services.AddOData();
             services.AddSignalR();
@@ -132,7 +133,9 @@ namespace ScheduleDesigner
             var builder = new ODataConventionModelBuilder();
 
             builder.EntitySet<Settings>("Settings");
+
             builder.EntitySet<Staff>("Staffs");
+
             builder.EntitySet<Programme>("Programmes");
             
             builder.EntitySet<ProgrammeStage>("ProgrammeStages")
@@ -197,10 +200,15 @@ namespace ScheduleDesigner
                 .EntityType
                 .HasKey(e => new { e.RoomId, e.TimestampId });
 
-
             builder.EntitySet<ScheduledMove>("ScheduledMoves")
                 .EntityType
                 .HasKey(e => new { e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2 });
+
+            
+            builder.Namespace = "ScheduleDesignerService";
+            builder.EntityType<Settings>().Collection
+                .Function("GetPeriods")
+                .Returns<string[]>();
 
 
             return builder.GetEdmModel();

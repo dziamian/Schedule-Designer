@@ -1,174 +1,61 @@
-<!--
-<div class="schedule">
-    <div class="column">
-        <h3>New</h3>
-        <div 
-            cdkDropList
-            #new="cdkDropList"
-            [cdkDropListData]="newItems"
-            [cdkDropListConnectedTo]="[active]"
-            (cdkDropListDropped)="Dropped($event)"
-        >
-            <div *ngFor="let item of newItems" cdkDrag>{{item}}</div>
-        </div>
-    </div>
-
-    <div class="column">
-        <h3>Active</h3>
-        <div 
-            cdkDropList
-            #active="cdkDropList"
-            [cdkDropListData]="activeItems"
-            [cdkDropListConnectedTo]="[new, done]"
-            (cdkDropListDropped)="Dropped($event)"
-        >
-            <div *ngFor="let item of activeItems" cdkDrag>{{item}}</div>
-        </div>
-    </div>
-
-    <div class="column">
-        <h3>Done</h3>
-        <div 
-            cdkDropList
-            #done="cdkDropList"
-            [cdkDropListData]="doneItems"
-            [cdkDropListConnectedTo]="[active]"
-            (cdkDropListDropped)="Dropped($event)"
-        >
-            <div *ngFor="let item of doneItems" cdkDrag>{{item}}</div>
-        </div>
-    </div>
-</div>
--->
-<div class="content">
+<div *ngIf="!loading" class="content">
     <mat-tab-group mat-align-tabs="center" 
         ([selectedIndex])="currentTabIndex"
         (selectedIndexChange)="OnTabChange($event)"
     >
-        <mat-tab *ngFor="let label of tabLabels" label="{{label}}">
-            <ng-container *ngTemplateOutlet="tabContent"></ng-container>
+        <mat-tab *ngFor="let label of tabLabels; let tabIndex = index" label="{{label}}">
+            <ng-template matTabContent>
+                <div class="tabContent">
+                    <mat-slide-toggle checked="true" color="primary">Personal schedule</mat-slide-toggle>
+                    <div class="board" cdkDropListGroup>
+                        <div class="your-courses">
+                            <div class="your-courses-header">Your courses</div>
+                            <div class="your-courses-content"
+                                cdkDropList
+                                id="your-courses"
+                                [cdkDropListData]="yourCourses"
+                                (cdkDropListDropped)="DropInMyCourses($event)"
+                            >
+                                <div *ngFor="let course of yourCourses" class="course-field">
+                                    <app-course [course]="course"></app-course>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="schedule">
+                            <div class="schedule-header">Schedule</div>
+                            <div class="schedule-content" cdkScrollable>
+                                <table>
+                                    <tr>
+                                        <th></th>
+                                        <th *ngFor="let timeLabel of scheduleTimeLabels">
+                                            {{timeLabel}}
+                                        </th>
+                                    </tr>
+                                    <tr *ngFor="let dayLabel of scheduleDayLabels; let dayIndex = index">
+                                        <td>
+                                            <b>{{dayLabel}}</b>
+                                        </td>
+                                        <td *ngFor="let timeLabel of scheduleTimeLabels; let timeIndex = index"
+                                            cdkDropList
+                                            #scheduleSlots="cdkDropList"
+                                            cdkDropListSortingDisabled
+                                            [cdkDropListDisabled]="IsScheduleSlotDisabled(dayIndex, timeIndex)"
+                                            [cdkDropListData]="schedule[dayIndex][timeIndex]"
+                                            [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
+                                            (cdkDropListEntered)="ScheduleSlotEnter($event)"
+                                            (cdkDropListDropped)="DropInSchedule($event)"
+                                        >
+                                            <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
+                                                <app-course [course]="course" (ctrlClick)="Reset(dayIndex, timeIndex, $event)" [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"></app-course>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
         </mat-tab>
     </mat-tab-group>
 </div>
-
-<ng-template #tabContent>
-    <div class="tabContent">
-        <mat-slide-toggle color="primary">Personal schedule (read-only)</mat-slide-toggle>
-        <div class="board" cdkDropListGroup>
-            <div class="your-courses">
-                <div class="your-courses-header">Your courses</div>
-                <div class="your-courses-content"
-                    cdkDropList
-                    id="your-courses"
-                    [cdkDropListData]="yourCourses"
-                    (cdkDropListDropped)="DropInMyCourses($event)"
-                >
-                <div *ngFor="let course of yourCourses" class="course-field">
-                    <app-course [course]="course"></app-course>
-                </div>
-                </div>
-            </div>
-            <div class="schedule">
-                <div class="schedule-header">Schedule</div>
-                <div class="schedule-content" cdkScrollable>
-                    <table>
-                        <tr>
-                            <th></th>
-                            <th>08:00 - 10:00</th>
-                            <th>10:00 - 12:00</th>
-                            <th>12:00 - 14:00</th>
-                            <th>14:00 - 16:00</th>
-                            <th>16:00 - 18:00</th>
-                            <th>18:00 - 20:00</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Monday</b>
-                            </td>
-                            <td
-                                cdkDropList
-                                #scheduleSlots="cdkDropList"
-                                cdkDropListSortingDisabled
-                                cdkDropListDisabled="schedule[0].length > 1"
-                                [cdkDropListData]="schedule[0]"
-                                [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
-                                (cdkDropListDropped)="DropInSchedule($event)"
-                            >
-                                <div *ngFor="let course of schedule[0]" class="schedule-course-field">
-                                    <app-course [course]="course" (ctrlClick)="Reset(0, $event)" class="not-grabbing"></app-course>
-                                </div>
-                            </td>
-                            <td
-                                cdkDropList
-                                #scheduleSlots="cdkDropList"
-                                cdkDropListSortingDisabled
-                                [cdkDropListData]="schedule[1]"
-                                [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
-                                (cdkDropListDropped)="DropInSchedule($event)"
-                            >
-                                <app-course *ngFor="let course of schedule[1]" [course]="course" (ctrlClick)="Reset(1, $event)"></app-course>
-                            </td>
-                            <td
-                                cdkDropList
-                                #scheduleSlots="cdkDropList"
-                                cdkDropListSortingDisabled
-                                [cdkDropListData]="schedule[2]"
-                                [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
-                                (cdkDropListDropped)="DropInSchedule($event)"
-                            >
-                                <app-course *ngFor="let course of schedule[2]" [course]="course" (ctrlClick)="Reset(2, $event)"></app-course>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Tuesday</b>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Wednesday</b>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Thursday</b>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Friday</b>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>

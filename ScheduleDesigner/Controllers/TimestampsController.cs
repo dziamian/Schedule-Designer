@@ -31,7 +31,7 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         [EnableQuery]
         [ODataRoute("({key})")]
-        public IActionResult GetCourse([FromODataUri] int key)
+        public IActionResult GetTimestamp([FromODataUri] int key)
         {
             try
             {

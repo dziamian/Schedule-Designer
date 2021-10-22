@@ -27,10 +27,14 @@ namespace ScheduleDesigner.Controllers
             return (settings.EndTime - settings.StartTime).TotalMinutes % settings.CourseDurationMinutes == 0;
         }
 
+        private static int GetNumberOfSlots(Settings settings)
+        {
+            return (int)(settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
+        }
+
         private async Task AddTimestamps(Settings settings)
         {
             var numberOfSlots = (settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
-            Console.WriteLine(numberOfSlots);
             var numberOfWeeks = settings.TermDurationWeeks;
             for (int k = 0; k < numberOfWeeks; ++k)
                 for (int j = 0; j < 5; ++j)
@@ -104,6 +108,37 @@ namespace ScheduleDesigner.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPeriods()
+        {
+            try
+            {
+                var _settings = await _settingsRepo.GetSettings();
+                if (_settings == null)
+                {
+                    return NotFound();
+                }
+
+                var numberOfPeriods = GetNumberOfSlots(_settings) + 1;
+                var currentPeriod = _settings.StartTime;
+                var periodsStrings = new string[numberOfPeriods];
+                var courseDuration = new TimeSpan(0, _settings.CourseDurationMinutes, 0);
+
+                periodsStrings[0] = currentPeriod.ToString(@"hh\:mm");
+                for (int i = 1; i < numberOfPeriods; ++i)
+                {
+                    currentPeriod = currentPeriod.Add(courseDuration);
+                    periodsStrings[i] = currentPeriod.ToString(@"hh\:mm");
+                }
+
+                return Ok(periodsStrings);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
             }
         }
 

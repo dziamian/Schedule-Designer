@@ -92,3 +92,7 @@
     width: inherit;
     border: none;
 }
+
+.schedule-content table td ::ng-deep .course-placeholder + .course {
+    border: 3px dotted #999;
+}

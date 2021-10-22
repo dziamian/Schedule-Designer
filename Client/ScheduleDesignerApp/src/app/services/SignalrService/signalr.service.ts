@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,22 +15,23 @@ export class SignalrService {
     this.testMessage = new BehaviorSubject<string>('');
   }
 
-  public initConnection(): Promise<void> {
-    return new Promise((resolve, reject) => {
+  public initConnection(): Observable<void> {
+    return new Observable((observer) => {
       this.connection = new signalr.HubConnectionBuilder()
         .withUrl(this.connectionUrl)
         .build();
 
-      this.setClientMethods();
+        this.setClientMethods();
 
-      this.connection
-        .start()
-        .then(() => {
-          resolve();
-        })
-        .catch(() => {
-          reject();
-        });
+        this.connection
+          .start()
+          .then(() => {
+            observer.next();
+            observer.complete();
+          })
+          .catch(() => {
+            observer.error();
+          });
     });
   }
 
