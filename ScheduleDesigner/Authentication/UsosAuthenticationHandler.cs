@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OAuth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,18 @@ namespace ScheduleDesigner.Authentication
         {
             try
             {
-                if (Request.Headers.ContainsKey("Authorization"))
+                if (Request.Headers.ContainsKey("AccessToken") && Request.Headers.ContainsKey("AccessTokenSecret"))
                 {
-                    var token = Request.Headers["Authorization"];
-                    var id = await _usosService.GetUserId(token);
+                    OAuthRequest client = OAuthRequest.ForProtectedResource(
+                        "POST",
+                        _usosService.UsosConsumer.Key,
+                        _usosService.UsosConsumer.Secret,
+                        Request.Headers["AccessToken"],
+                        Request.Headers["AccessTokenSecret"],
+                        OAuthSignatureMethod.HmacSha1
+                    );
+                    client.RequestUrl = $"{_usosService.ApplicationInfo.BaseUsosUrl}/services/users/user";
+                    var id = await _usosService.GetUserId(client.GetAuthorizationHeader());
                     return ValidateToken(id);
                 }
 

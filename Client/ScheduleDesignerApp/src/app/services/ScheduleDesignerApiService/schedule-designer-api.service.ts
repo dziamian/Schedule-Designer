@@ -12,17 +12,14 @@ import { Settings } from 'src/app/others/Settings';
 export class ScheduleDesignerApiService {
 
   readonly baseUrl:string = 'http://localhost:5000/api';
-  readonly oauth = new OAuth({
-    consumer: { key: 'Ru3DbQrGDhTTaWChm3ME', secret: 'LSMfqwmpvpvnhdK2GPRXDqzbx8uaPQLqUwWxuXuM' },
-    signature_method: 'PLAINTEXT'
-  })
 
   constructor(private http:HttpClient) { }
 
-  private GetAuthorizationHeader(request:any, token?:any):HttpHeaders {
-    return new HttpHeaders({
-      Authorization: this.oauth.toHeader(this.oauth.authorize(request, token)).Authorization
-    });
+  private GetAuthorizationHeader(token:any) {
+    return {
+      "AccessToken": token.key,
+      "AccessTokenSecret": token.secret
+    };
   }
 
   public GetSettings():Observable<Settings> {
@@ -33,7 +30,10 @@ export class ScheduleDesignerApiService {
     
     return this.http.request(
       request.method,
-      request.url
+      request.url,
+      {
+        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+      }
     ).pipe(map((response : any) => new Settings(
       response.CourseDurationMinutes,
       response.StartTime,
@@ -50,8 +50,26 @@ export class ScheduleDesignerApiService {
     
     return this.http.request(
       request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value)
+    );
+  }
+
+  public GetFreePeriods():Observable<number[]> {
+    const request = {
+      url: this.baseUrl + '/schedulePositions/ScheduleDesignerService.GetFreePeriods',
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
       request.url
-    ).pipe(map((response : any) => response.value)
+    ).pipe(
+      map((response : any) => response.value)
     );
   }
 
@@ -80,7 +98,7 @@ export class ScheduleDesignerApiService {
       request.method,
       request.url,
       {
-        headers: this.GetAuthorizationHeader(request, AccessToken.Retrieve()?.ToJson()),
+        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson()),
         responseType: 'text'
       }
     );

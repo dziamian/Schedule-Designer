@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;

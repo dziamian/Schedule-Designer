@@ -210,6 +210,9 @@ namespace ScheduleDesigner
                 .Function("GetPeriods")
                 .Returns<string[]>();
 
+            builder.EntityType<SchedulePosition>().Collection
+                .Function("GetFreePeriods")
+                .Returns<int[]>();
 
             return builder.GetEdmModel();
         }

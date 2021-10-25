@@ -1,4 +1,4 @@
-import { CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragRelease, CdkDragStart } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Course } from 'src/app/others/Course';
 import { CourseType } from 'src/app/others/CourseType';
@@ -10,10 +10,13 @@ import { CourseType } from 'src/app/others/CourseType';
 })
 export class CourseComponent implements OnInit {
 
-  @ViewChild(CdkDrag) cdkCourse : CdkDrag;
+  @ViewChild(CdkDrag) cdkCourse : CdkDrag<Course>;
 
   @Input() course?:Course;
+  
   @Output() ctrlClick:EventEmitter<Course> = new EventEmitter<Course>();
+  @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
+  @Output() release:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 
   constructor() { }
 
@@ -24,6 +27,14 @@ export class CourseComponent implements OnInit {
     if (!this.cdkCourse.disabled && event.ctrlKey) {
       this.ctrlClick.emit(this.course);
     }
+  }
+
+  OnStarted(event:CdkDragStart) {
+    this.start.emit(event);
+  }
+
+  OnReleased(event:CdkDragRelease) {
+    this.release.emit(event);
   }
 
   public getCourseTypeName(type?:CourseType):string {

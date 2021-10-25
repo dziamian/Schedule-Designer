@@ -1,6 +1,5 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDropList, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDropList, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { Course } from 'src/app/others/Course';
 import { CourseType } from 'src/app/others/CourseType';
@@ -13,6 +12,9 @@ import { CourseComponent } from 'src/app/components/course/course.component';
 import { Settings } from 'src/app/others/Settings';
 import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
+import { Router } from '@angular/router';
+import { skip } from 'rxjs/operators';
 
 @Component({
   selector: 'app-schedule',
@@ -21,10 +23,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ScheduleComponent implements OnInit {
 
-  @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef>;
+  @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef<Course>>;
   @ViewChildren(CourseComponent) courses : QueryList<CourseComponent>;
 
   loading:boolean = true;
+  connectionStatus:boolean = false;
   
   settings:Settings;
   currentTabIndex:number = 0;
@@ -79,7 +82,9 @@ export class ScheduleComponent implements OnInit {
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
+    private usosApiService:UsosApiService,
     private signalrService:SignalrService,
+    private router:Router,
     private snackBar:MatSnackBar,
     private dialog:MatDialog
   ) 
@@ -97,8 +102,22 @@ export class ScheduleComponent implements OnInit {
       this.initializeScheduleTable();
 
       this.loading = false;
-    }, () => {
-      this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
+    }, (error) => {
+      if (error?.status == 401) {
+        this.usosApiService.Deauthorize();
+
+        this.snackBar.open('Session expired. Please log in again.', 'OK');
+        this.router.navigate(['login']);
+      } else {
+        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
+      }
+    });
+
+    this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      this.connectionStatus = status;
+      if (!status) {
+        this.snackBar.open("Connection to server has been lost. Please refresh the page to possibly reconnect.", "OK");
+      }
     });
   }
 
@@ -201,26 +220,32 @@ export class ScheduleComponent implements OnInit {
     return this.schedule[dayIndex][slotIndex].length > 1;
   }
 
-  YourCoursesEnter(event:CdkDragEnter<Course[]>) {
-    //event.item.getPlaceholderElement().style.display = '';
-  }
-
-  ScheduleSlotEnter(event:CdkDragEnter<Course[]>) {
-    /*if (event.container == event.item.dropContainer) {
-      event.item.getPlaceholderElement().style.display = '';
-      return;
-    }
-    if (event.container.data.length > 0) {
-      event.item.getPlaceholderElement().style.display = 'none';
-    } else {
-      event.item.getPlaceholderElement().style.display = '';
-    }*/
-  }
-
   ScheduleSlotEnterPredicate(course:CdkDrag<Course>, slot:CdkDropList<Course[]>) {
-    //maybe let's do it after start dragging -> disable unacceptable slots and change style for acceptable
-    //check if slot is on acceptable list for course (took from API - free slots for groups and coordinators)
     return slot.data.length < 2;
+  }
+
+  async OnStartDragging(event:CdkDragStart) {
+    var freeSlots = await this.scheduleDesignerApiService.GetFreePeriods().toPromise();
+    var numberOfSlots = this.scheduleTimeLabels.length;
+    var freeSlotIndex = 0;
+    var scheduleSlots = this.scheduleSlots.toArray();
+    for (var i = 0; i < this.scheduleSlots.length; ++i) {
+      if (i == (freeSlots[freeSlotIndex] - 1) * numberOfSlots + (freeSlots[freeSlotIndex + 1] - 1)) {
+        scheduleSlots[i].enterPredicate = (drag, drop) => drop.data.length < 2;
+        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
+        element.nativeElement.setAttribute('selected', '');
+        freeSlotIndex += 2;
+      } else {
+        scheduleSlots[i].enterPredicate = () => false;
+      }
+    }
+  }
+
+  OnReleaseDragging(event:CdkDragRelease) {
+    this.scheduleSlots.forEach((slot) => {
+      var element = slot.element as ElementRef<HTMLElement>;
+      element.nativeElement.removeAttribute('selected');
+    });
   }
 
   Reset(dayIndex:number, slotIndex:number, event:Course) {

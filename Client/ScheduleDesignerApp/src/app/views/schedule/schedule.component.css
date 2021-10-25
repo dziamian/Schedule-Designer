@@ -15,7 +15,7 @@
     border: 2px solid #008700;
     box-sizing: border-box;
     padding-bottom: 1vh;
-    width: 16%;
+    width: 15%;
     height: inherit;
     float: left;
 }
@@ -54,7 +54,7 @@
     border: 2px solid #000081;
     box-sizing: border-box;
     margin-left: 2%;
-    width: 82%;
+    width: 83%;
     height: inherit;
     float: left;
 }
@@ -68,24 +68,29 @@
 .schedule-content {
     padding-top: 1vh;
     padding-bottom: 1vh;
+    margin-left: 1vw;
+    margin-right: 1vw;
     box-sizing: border-box;
     height: 97%;
+    overflow-x: auto;
     overflow-y: auto;
 }
 
 .schedule-content table {
-    margin-left: 1vw;
-    margin-right: 1vw;
     border-collapse: collapse;
 }
 
 .schedule-content table td, .schedule-content table th {
     border: 1px solid #000000;
+    min-width: 10.9vw;
 }
 
 .schedule-content table td {
     height: 10.2vh;
-    width: 11.8vw;
+}
+
+.schedule-content table td[selected] {
+    background-color: rgb(180, 180, 180);
 }
 
 .schedule-content table td ::ng-deep .course {
@@ -93,6 +98,11 @@
     border: none;
 }
 
-.schedule-content table td ::ng-deep .course-placeholder + .course {
-    border: 3px dotted #999;
+.spinner {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }

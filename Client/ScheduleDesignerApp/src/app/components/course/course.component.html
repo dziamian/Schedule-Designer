@@ -1,5 +1,8 @@
 <div class="course {{this.course?.type}}" 
     cdkDrag
+    [cdkDragData]="course"
+    (cdkDragStarted)="OnStarted($event)"
+    (cdkDragReleased)="OnReleased($event)"
     (click)="CtrlClick($event)"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>

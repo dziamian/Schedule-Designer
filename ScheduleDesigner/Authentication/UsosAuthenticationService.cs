@@ -13,18 +13,22 @@ namespace ScheduleDesigner.Authentication
 {
     public class UsosAuthenticationService
     {
-        private readonly IOptions<ApplicationInfo> _applicationInfo;
+        public readonly ApplicationInfo ApplicationInfo;
+        public readonly Consumer UsosConsumer;
+
         private readonly HttpClient _client;
 
-        public UsosAuthenticationService(IOptions<ApplicationInfo> applicationInfo)
+        public UsosAuthenticationService(IOptions<ApplicationInfo> applicationInfo, IOptions<Consumer> usosConsumer)
         {
-            _applicationInfo = applicationInfo;
+            ApplicationInfo = applicationInfo.Value;
+            UsosConsumer = usosConsumer.Value;
+
             _client = new HttpClient();
         }
 
         public async Task<string> GetUserId(string token)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_applicationInfo.Value.BaseUsosUrl}/services/users/user")
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{ApplicationInfo.BaseUsosUrl}/services/users/user")
             {
                 Content = new StringContent("{\"fields\": \"id\", \"format\": \"json\"}", Encoding.UTF8, "application/json")
             };

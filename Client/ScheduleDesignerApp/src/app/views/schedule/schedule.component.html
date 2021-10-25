@@ -1,4 +1,4 @@
-<div *ngIf="!loading" class="content">
+<div *ngIf="!loading && connectionStatus; else spinner" class="content">
     <mat-tab-group mat-align-tabs="center" 
         ([selectedIndex])="currentTabIndex"
         (selectedIndexChange)="OnTabChange($event)"
@@ -17,7 +17,11 @@
                                 (cdkDropListDropped)="DropInMyCourses($event)"
                             >
                                 <div *ngFor="let course of yourCourses" class="course-field">
-                                    <app-course [course]="course"></app-course>
+                                    <app-course 
+                                        [course]="course"
+                                        (start)="OnStartDragging($event)"
+                                        (release)="OnReleaseDragging($event)"
+                                    ></app-course>
                                 </div>
                             </div>
                         </div>
@@ -25,31 +29,39 @@
                             <div class="schedule-header">Schedule</div>
                             <div class="schedule-content" cdkScrollable>
                                 <table>
-                                    <tr>
-                                        <th></th>
-                                        <th *ngFor="let timeLabel of scheduleTimeLabels">
-                                            {{timeLabel}}
-                                        </th>
-                                    </tr>
-                                    <tr *ngFor="let dayLabel of scheduleDayLabels; let dayIndex = index">
-                                        <td>
-                                            <b>{{dayLabel}}</b>
-                                        </td>
-                                        <td *ngFor="let timeLabel of scheduleTimeLabels; let timeIndex = index"
-                                            cdkDropList
-                                            #scheduleSlots="cdkDropList"
-                                            cdkDropListSortingDisabled
-                                            [cdkDropListDisabled]="IsScheduleSlotDisabled(dayIndex, timeIndex)"
-                                            [cdkDropListData]="schedule[dayIndex][timeIndex]"
-                                            [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
-                                            (cdkDropListEntered)="ScheduleSlotEnter($event)"
-                                            (cdkDropListDropped)="DropInSchedule($event)"
-                                        >
-                                            <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
-                                                <app-course [course]="course" (ctrlClick)="Reset(dayIndex, timeIndex, $event)" [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"></app-course>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th *ngFor="let timeLabel of scheduleTimeLabels" not-empty>
+                                                {{timeLabel}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let dayLabel of scheduleDayLabels; let dayIndex = index">
+                                            <td>
+                                                <b>{{dayLabel}}</b>
+                                            </td>
+                                            <td *ngFor="let timeLabel of scheduleTimeLabels; let timeIndex = index"
+                                                cdkDropList
+                                                #scheduleSlots="cdkDropList"
+                                                cdkDropListSortingDisabled
+                                                [cdkDropListData]="schedule[dayIndex][timeIndex]"
+                                                [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
+                                                (cdkDropListDropped)="DropInSchedule($event)"
+                                            >
+                                                <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
+                                                    <app-course 
+                                                        [course]="course" 
+                                                        (start)="OnStartDragging($event)"
+                                                        (release)="OnReleaseDragging($event)"
+                                                        (ctrlClick)="Reset(dayIndex, timeIndex, $event)" 
+                                                        [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"
+                                                    ></app-course>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -59,3 +71,10 @@
         </mat-tab>
     </mat-tab-group>
 </div>
+<ng-template #spinner>
+    <mat-progress-spinner
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>
