@@ -9,12 +9,7 @@ namespace ScheduleDesigner.Models
 {
     public class Group
     {
-        public int ProgrammeId { get; set; }
-
-        public int ProgrammeStageId { get; set; }
-
-        public int ClassId { get; set; }
-
+        [Key]
         public int GroupId { get; set; }
 
 
@@ -22,9 +17,13 @@ namespace ScheduleDesigner.Models
         [MaxLength(100)]
         public string Name { get; set; }
 
+        public int? ParentGroupId { get; set; }
 
-        [ForeignKey("ProgrammeId,ProgrammeStageId,ClassId")]
-        public Class Class { get; set; }
+
+        [ForeignKey("ParentGroupId")]
+        public Group ParentGroup { get; set; }
+
+        public virtual ICollection<Group> SubGroups { get; set; }
 
         public virtual ICollection<StudentGroup> Students { get; set; }
 

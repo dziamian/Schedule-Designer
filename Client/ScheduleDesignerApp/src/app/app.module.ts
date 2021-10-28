@@ -24,7 +24,9 @@ import { ScheduleDesignerApiService } from './services/ScheduleDesignerApiServic
 import { AuthGuardService } from './services/AuthGuardService/auth-guard.service';
 import { CourseComponent } from './components/course/course.component';
 import { SignalrService } from './services/SignalrService/signalr.service';
-import { DialogExampleComponent } from './components/dialog-example/dialog-example.component';
+import { StoreModule } from '@ngrx/store';
+import { accountReducer } from './store/account.reducer';
+import { RoomSelectionComponent } from './components/room-selection/room-selection.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { DialogExampleComponent } from './components/dialog-example/dialog-examp
     ScheduleComponent,
     ProfileComponent,
     CourseComponent,
-    DialogExampleComponent
+    RoomSelectionComponent,
+    RoomSelectionComponent
   ],
   imports: [
     BrowserModule,
@@ -48,13 +51,13 @@ import { DialogExampleComponent } from './components/dialog-example/dialog-examp
     DragDropModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({ account: accountReducer})
   ],
   providers: [
     HttpClient, 
     UsosApiService, 
     ScheduleDesignerApiService, 
-    SignalrService, 
     AuthGuardService
   ],
   bootstrap: [AppComponent]

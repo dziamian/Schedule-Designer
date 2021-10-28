@@ -13,7 +13,7 @@ namespace ScheduleDesigner.Repositories.Base
         IQueryable<T> Get(Expression<Func<T, bool>> predicate);
         Task<T> GetFirst(Expression<Func<T, bool>> predicate);
         Task<T> Add(T entity);
-        Task<T> Update(T entity);
+        T Update(T entity);
         Task<int> Delete(Expression<Func<T, bool>> predicate);
         Task<int> SaveChanges();
     }

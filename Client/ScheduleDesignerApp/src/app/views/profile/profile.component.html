@@ -1,7 +1,15 @@
-<div style="text-align:center;">
-    {{user_id}}<br>
-    {{first_name}}<br>
-    {{last_name}}<br>
-    {{test1}}<br>
-    {{test2}}
+<div *ngIf="!loading; else spinner" style="text-align:center;">
+    {{account.UserId}}<br>
+    <b>{{account.Titles?.TitleBefore}} {{account.FirstName}} {{account.LastName}} {{account.Titles?.TitleAfter}}</b><br>
+    Student: {{account.Student}}<br>
+    Coordinator: {{account.Coordinator}}<br>
+    Staff: {{account.Staff}}<br>
+    Admin: {{account.Admin}}
 </div>
+<ng-template #spinner>
+    <mat-progress-spinner
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

@@ -12,26 +12,26 @@ using ScheduleDesigner.Repositories.Interfaces;
 
 namespace ScheduleDesigner.Controllers
 {
-    [ODataRoutePrefix("Students")]
-    public class StudentsController : ODataController
+    [ODataRoutePrefix("Staffs")]
+    public class StaffsController : ODataController
     {
         private readonly IUserRepo _userRepo;
-        private readonly IStudentRepo _studentRepo;
+        private readonly IStaffRepo _staffRepo;
 
-        public StudentsController(IUserRepo userRepo, IStudentRepo studentRepo)
+        public StaffsController(IUserRepo userRepo, IStaffRepo staffRepo)
         {
             _userRepo = userRepo;
-            _studentRepo = studentRepo;
+            _staffRepo = staffRepo;
         }
 
         private static bool IsDataValid(User user)
         {
-            return user.Coordinator != null || user.Staff != null;
+            return user.Student != null || user.Coordinator != null;
         }
 
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateStudent([FromBody] Student student)
+        public async Task<IActionResult> CreateStaff([FromBody] Staff staff)
         {
             if (!ModelState.IsValid)
             {
@@ -40,12 +40,12 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _student = await _studentRepo.Add(student);
+                var _staff = await _staffRepo.Add(staff);
 
-                if (_student != null)
+                if (_staff != null)
                 {
-                    await _studentRepo.SaveChanges();
-                    return Created(_student);
+                    await _staffRepo.SaveChanges();
+                    return Created(_staff);
                 }
                 return NotFound();
             }
@@ -58,25 +58,25 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         [EnableQuery(PageSize = 20)]
         [ODataRoute("")]
-        public IActionResult GetStudents()
+        public IActionResult GetStaffs()
         {
-            return Ok(_studentRepo.GetAll());
+            return Ok(_staffRepo.GetAll());
         }
 
         [HttpGet]
         [EnableQuery]
         [ODataRoute("({key})")]
-        public IActionResult GetStudent([FromODataUri] int key)
+        public IActionResult GetStaff([FromODataUri] int key)
         {
             try
             {
-                var _student = _studentRepo.Get(e => e.UserId == key);
-                if (!_student.Any())
+                var _staff = _staffRepo.Get(e => e.UserId == key);
+                if (!_staff.Any())
                 {
                     return NotFound();
                 }
 
-                return Ok(SingleResult.Create(_student));
+                return Ok(SingleResult.Create(_staff));
             }
             catch (Exception e)
             {
@@ -86,7 +86,7 @@ namespace ScheduleDesigner.Controllers
 
         [HttpPatch]
         [ODataRoute("({key})")]
-        public async Task<IActionResult> UpdateStudent([FromODataUri] int key, [FromBody] Delta<Student> delta)
+        public async Task<IActionResult> UpdateStaff([FromODataUri] int key, [FromBody] Delta<Staff> delta)
         {
             if (!ModelState.IsValid)
             {
@@ -95,17 +95,17 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _student = await _studentRepo.GetFirst(e => e.UserId == key);
-                if (_student == null)
+                var _staff = await _staffRepo.GetFirst(e => e.UserId == key);
+                if (_staff == null)
                 {
                     return NotFound();
                 }
 
-                delta.Patch(_student);
+                delta.Patch(_staff);
 
-                await _studentRepo.SaveChanges();
+                await _staffRepo.SaveChanges();
 
-                return Ok(_student);
+                return Ok(_staff);
             }
             catch (Exception e)
             {
@@ -115,7 +115,7 @@ namespace ScheduleDesigner.Controllers
 
         [HttpDelete]
         [ODataRoute("({key})")]
-        public async Task<IActionResult> DeleteStudent([FromODataUri] int key)
+        public async Task<IActionResult> DeleteStaff([FromODataUri] int key)
         {
             try
             {
@@ -130,13 +130,13 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest("You cannot remove the only existing role for this user.");
                 }
 
-                var result = await _studentRepo.Delete(e => e.UserId == key);
+                var result = await _staffRepo.Delete(e => e.UserId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _studentRepo.SaveChanges();
+                await _staffRepo.SaveChanges();
                 return NoContent();
             }
             catch (Exception e)

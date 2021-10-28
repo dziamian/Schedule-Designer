@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using OAuth;
+using ScheduleDesigner.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,33 +35,42 @@ namespace ScheduleDesigner.Authentication
             {
                 if (Request.Headers.ContainsKey("AccessToken") && Request.Headers.ContainsKey("AccessTokenSecret"))
                 {
-                    OAuthRequest client = OAuthRequest.ForProtectedResource(
-                        "POST",
-                        _usosService.UsosConsumer.Key,
-                        _usosService.UsosConsumer.Secret,
-                        Request.Headers["AccessToken"],
-                        Request.Headers["AccessTokenSecret"],
-                        OAuthSignatureMethod.HmacSha1
+                    var oauth = _usosService.GetOAuthRequest(
+                        Request.Headers["AccessToken"], 
+                        Request.Headers["AccessTokenSecret"]
                     );
-                    client.RequestUrl = $"{_usosService.ApplicationInfo.BaseUsosUrl}/services/users/user";
-                    var id = await _usosService.GetUserId(client.GetAuthorizationHeader());
-                    return ValidateToken(id);
+                    var userInfo = await _usosService.GetUserId(oauth);
+                    return ValidateToken(int.Parse(userInfo.Id));
                 }
 
                 return AuthenticateResult.NoResult();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return AuthenticateResult.Fail(ex.Message);
+                return AuthenticateResult.Fail(e.Message);
             }
         }
 
-        private AuthenticateResult ValidateToken(string userId)
+        private AuthenticateResult ValidateToken(int userId)
         {
+            var user = _usosService.GetUserFromDb(userId);
+
             var claims = new List<Claim>
             {
-                new Claim("user_id", userId)
+                new Claim("user_id", userId.ToString())
             };
+
+            if (user.Student != null)
+            {
+                claims.Add(new Claim("student", userId.ToString()));
+                foreach (var group in user.Student.Groups) claims.Add(new Claim("representative", group.GroupId.ToString()));
+            }
+            if (user.Coordinator != null) claims.Add(new Claim("coordinator", userId.ToString()));
+            if (user.Staff != null)
+            {
+                claims.Add(new Claim("staff", userId.ToString()));
+                if (user.Staff.IsAdmin) claims.Add(new Claim("admin", userId.ToString()));
+            }
 
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new System.Security.Principal.GenericPrincipal(identity, null);

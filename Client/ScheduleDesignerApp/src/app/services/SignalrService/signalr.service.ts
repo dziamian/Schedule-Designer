@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
@@ -6,7 +6,7 @@ import { AccessToken } from 'src/app/others/AccessToken';
 @Injectable({
   providedIn: 'root'
 })
-export class SignalrService {
+export class SignalrService implements OnDestroy {
   readonly connectionUrl = 'http://localhost:5000/scheduleHub';
   
   connection:signalr.HubConnection;
@@ -26,9 +26,11 @@ export class SignalrService {
     };
   }
 
-  public initConnection(): Observable<void> {
+  public InitConnection(): Observable<void> {
     return new Observable((observer) => {
       var accessToken = AccessToken.Retrieve();
+
+      console.log(accessToken);
 
       this.connection = new signalr.HubConnectionBuilder()
         .withUrl(this.connectionUrl, {
@@ -36,7 +38,7 @@ export class SignalrService {
           headers: this.GetAuthorizationHeader(accessToken),
         }).build();
 
-      this.setClientMethods();
+      this.SetClientMethods();
 
       this.connection
         .start()
@@ -51,12 +53,22 @@ export class SignalrService {
     });
   }
 
-  private setClientMethods(): void {
+  public Disconnect() {
+    if (this.connection.connectionId) {
+      this.connection.stop();
+    }
+  }
+
+  private SetClientMethods(): void {
     this.connection.onclose((error) => {
       this.isConnected.next(false);
     })
     this.connection.on('Test', (message: string) => {
       this.testMessage.next(message);
     });
+  }
+
+  ngOnDestroy() {
+    this.Disconnect();
   }
 }

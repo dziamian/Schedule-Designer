@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,21 +9,17 @@ namespace ScheduleDesigner.Models
 {
     public class Coordinator
     {
-        public int CoordinatorId { get; set; }
+        public int UserId { get; set; }
 
-        
-        [Required]
         [MaxLength(100)]
-        public string FirstName { get; set; }
+        public string TitleBefore { get; set; }
 
-        [Required]
         [MaxLength(100)]
-        public string LastName { get; set; }
+        public string TitleAfter { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Title { get; set; }
 
+        [ForeignKey("UserId")]
+        public User User { get; set; }
 
         public virtual ICollection<CoordinatorCourseEdition> CourseEditions { get; set; }
     }

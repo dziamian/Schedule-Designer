@@ -9,21 +9,19 @@ namespace ScheduleDesigner.Repositories
 {
     public class ScheduleDesignerDbContext : DbContext
     {
-        public DbSet<Settings> Settings { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<Staff> Staffs { get; set; }
-        public DbSet<Programme> Programmes { get; set; }
-        public DbSet<ProgrammeStage> ProgrammeStages { get; set; }
+        public DbSet<Settings> Settings { get; set; }
         public DbSet<CourseType> CourseTypes { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<ProgrammeStageCourse> ProgrammeStageCourses { get; set; }
-        public DbSet<Class> Classes { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<Student> Students { get; set; }
         public DbSet<StudentGroup> StudentGroups { get; set; }
-        public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<CourseEdition> CourseEditions { get; set; }
         public DbSet<CoordinatorCourseEdition> CoordinatorCourseEditions { get; set; }
         public DbSet<GroupCourseEdition> GroupCourseEditions { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<CourseRoom> CourseRooms { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
@@ -35,91 +33,70 @@ namespace ScheduleDesigner.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Staffs
-            //TEST ONLY
-            modelBuilder.Entity<Staff>()
-                .HasData(new Staff
-                {
-                    StaffId = 34527, 
-                    FirstName = "Damian", 
-                    LastName = "Ślusarczyk", 
-                    IsAdmin = true
-                });
+            //User
+            modelBuilder.Entity<User>()
+                .HasKey(e => e.UserId);
 
-            //Programme
-            modelBuilder.Entity<Programme>()
-                .HasIndex(e => e.Name)
-                .IsUnique(true);
-
-            //ProgrammeStage
-            modelBuilder.Entity<ProgrammeStage>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId });
-
-            modelBuilder.Entity<ProgrammeStage>()
-                .Property(e => e.ProgrammeStageId)
-                .ValueGeneratedOnAdd()
-                .UseIdentityColumn();
-            
-            //Course
-            modelBuilder.Entity<Course>()
-                .HasKey(e => new { e.CourseId });
-
-            modelBuilder.Entity<Course>()
-                .Property(e => e.CourseId)
-                .ValueGeneratedOnAdd()
-                .UseIdentityColumn();
-            
-            //ProgrammeStageCourse
-            modelBuilder.Entity<ProgrammeStageCourse>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId });
-
-            modelBuilder.Entity<ProgrammeStageCourse>()
-                .HasOne(e => e.ProgrammeStage)
-                .WithMany(e => e.ProgrammeStageCourses)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            modelBuilder.Entity<ProgrammeStageCourse>()
-                .HasOne(e => e.Course)
-                .WithMany(e => e.ProgrammeStageCourses)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //Class
-            modelBuilder.Entity<Class>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId });
-
-            modelBuilder.Entity<Class>()
-                .Property(e => e.ClassId)
-                .ValueGeneratedOnAdd()
-                .UseIdentityColumn();
-
-            //Group
-            modelBuilder.Entity<Group>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId, e.GroupId });
-
-            modelBuilder.Entity<Group>()
-                .Property(e => e.GroupId)
-                .ValueGeneratedOnAdd()
-                .UseIdentityColumn();
+            modelBuilder.Entity<User>()
+                .Property(e => e.UserId)
+                .ValueGeneratedNever();
 
             //Student
             modelBuilder.Entity<Student>()
-                .HasKey(e => e.StudentId);
+                .HasKey(e => e.UserId);
 
             modelBuilder.Entity<Student>()
-                .Property(e => e.StudentId)
+                .Property(e => e.UserId)
                 .ValueGeneratedNever();
-
-            //StudentGroup
-            modelBuilder.Entity<StudentGroup>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId, e.GroupId, e.StudentId });
 
             //Coordinator
             modelBuilder.Entity<Coordinator>()
-                .HasKey(e => e.CoordinatorId);
+                .HasKey(e => e.UserId);
 
             modelBuilder.Entity<Coordinator>()
-                .Property(e => e.CoordinatorId)
+                .Property(e => e.UserId)
                 .ValueGeneratedNever();
+
+            //Staff
+            modelBuilder.Entity<Staff>()
+                .HasKey(e => e.UserId);
+
+            modelBuilder.Entity<Staff>()
+                .Property(e => e.UserId)
+                .ValueGeneratedNever();
+
+            //TEST ONLY
+            modelBuilder.Entity<User>()
+                .HasData(new User
+                    {
+                        UserId = 34527,
+                        FirstName = "Damian",
+                        LastName = "Ślusarczyk"
+                    }
+                );
+            modelBuilder.Entity<Student>()
+                .HasData(new Student
+                    {
+                        UserId = 34527
+                    }
+                );
+            modelBuilder.Entity<Staff>()
+                .HasData(new Staff
+                    {
+                        UserId = 34527,
+                        IsAdmin = true
+                    }
+                );
+
+            //Group
+            modelBuilder.Entity<Group>()
+                .HasOne(e => e.ParentGroup)
+                .WithMany(e => e.SubGroups)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //StudentGroup
+            modelBuilder.Entity<StudentGroup>()
+                .HasKey(e => new { e.GroupId, e.StudentId });
 
             //CourseEdition
             modelBuilder.Entity<CourseEdition>()
@@ -136,17 +113,7 @@ namespace ScheduleDesigner.Repositories
 
             //GroupCourseEdition
             modelBuilder.Entity<GroupCourseEdition>()
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId, e.CourseEditionId, e.ClassId, e.GroupId });
-
-            modelBuilder.Entity<GroupCourseEdition>()
-                .HasOne(e => e.Group)
-                .WithMany(e => e.CourseEditions)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<GroupCourseEdition>()
-                .HasOne(e => e.CourseEdition)
-                .WithMany(e => e.Groups)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasKey(e => new { e.CourseId, e.CourseEditionId, e.GroupId });
 
             //CourseRoom
             modelBuilder.Entity<CourseRoom>()
@@ -154,7 +121,7 @@ namespace ScheduleDesigner.Repositories
 
             //Timestamp
             modelBuilder.Entity<Timestamp>()
-                .HasIndex(p => new {SlotIndex = p.PeriodIndex, p.Day, p.Week })
+                .HasIndex(p => new { SlotIndex = p.PeriodIndex, p.Day, p.Week })
                 .IsUnique(true);
 
             //CourseRoomTimestamp
@@ -180,17 +147,9 @@ namespace ScheduleDesigner.Repositories
                 .WithOne(e => e.Origin)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //ScheduledMoves
+            //ScheduledMove
             modelBuilder.Entity<ScheduledMove>()
-                .HasKey(e => new { e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
-
-            //Staff
-            modelBuilder.Entity<Staff>()
-                .HasKey(e => e.StaffId);
-
-            modelBuilder.Entity<Staff>()
-                .Property(e => e.StaffId)
-                .ValueGeneratedNever();
+                .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
 
 
             base.OnModelCreating(modelBuilder);

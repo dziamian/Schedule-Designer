@@ -12,6 +12,11 @@ namespace ScheduleDesigner.Models
 
         public int RoomId { get; set; }
 
+        public int? UserId { get; set; }
+
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
 
         [ForeignKey("CourseId")]
         public Course Course { get; set; }

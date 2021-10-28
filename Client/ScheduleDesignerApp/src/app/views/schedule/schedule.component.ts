@@ -1,29 +1,31 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDropList, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
-import { Course } from 'src/app/others/Course';
+import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType } from 'src/app/others/CourseType';
 import { Group } from 'src/app/others/Group';
 import { Coordinator } from 'src/app/others/Coordinator';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogExampleComponent } from 'src/app/components/dialog-example/dialog-example.component';
 import { CourseComponent } from 'src/app/components/course/course.component';
 import { Settings } from 'src/app/others/Settings';
 import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
+import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
+import { Room } from 'src/app/others/Room';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.css']
+  styleUrls: ['./schedule.component.css'],
+  providers: [SignalrService]
 })
 export class ScheduleComponent implements OnInit {
 
-  @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef<Course>>;
+  @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef<CourseEdition>>;
   @ViewChildren(CourseComponent) courses : QueryList<CourseComponent>;
 
   loading:boolean = true;
@@ -36,8 +38,8 @@ export class ScheduleComponent implements OnInit {
   scheduleTimeLabels:string[] = [];
   scheduleDayLabels:string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-  yourCourses:Course[] = [
-    new Course(
+  yourCourses:CourseEdition[] = [
+    new CourseEdition(
       "Systemy Operacyjne 2", 
       CourseType.Lecture, 
       15, 
@@ -48,7 +50,7 @@ export class ScheduleComponent implements OnInit {
         new Coordinator("Antoni", "Antoniak", "dr inż.")
       ]
     ),
-    new Course(
+    new CourseEdition(
       "Systemy Operacyjne 2", 
       CourseType.Laboratory, 
       15, 
@@ -58,7 +60,7 @@ export class ScheduleComponent implements OnInit {
         new Coordinator("Grzegorz", "Łukawski", "dr inż.")
       ]
     ),
-    new Course(
+    new CourseEdition(
       "Systemy Operacyjne 2", 
       CourseType.Project, 
       15, 
@@ -68,7 +70,7 @@ export class ScheduleComponent implements OnInit {
         new Coordinator("Grzegorz", "Łukawski", "dr inż.")
       ]
     ),
-    new Course(
+    new CourseEdition(
       "Systemy Operacyjne 2", 
       CourseType.Exercise, 
       15, 
@@ -78,7 +80,7 @@ export class ScheduleComponent implements OnInit {
       ]
     ),
   ];
-  schedule:Course[][][] = [];
+  schedule:CourseEdition[][][] = [];
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -92,7 +94,7 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     forkJoin([
-      this.signalrService.initConnection(),
+      this.signalrService.InitConnection(),
       this.scheduleDesignerApiService.GetSettings(),
       this.scheduleDesignerApiService.GetPeriods()
     ]).subscribe(([,settings,periods]) => {
@@ -113,12 +115,18 @@ export class ScheduleComponent implements OnInit {
       }
     });
 
-    this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+    let isConnectedSubscribtion = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;
       if (!status) {
-        this.snackBar.open("Connection to server has been lost. Please refresh the page to possibly reconnect.", "OK");
+        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
       }
     });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        isConnectedSubscribtion.unsubscribe();
+      }
+    })
   }
 
   private setLabels() {
@@ -150,7 +158,7 @@ export class ScheduleComponent implements OnInit {
     console.log(this.scheduleSlots);
   }
 
-  async DropInMyCourses(event:CdkDragDrop<Course[]>) {
+  async DropInMyCourses(event:CdkDragDrop<CourseEdition[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -164,24 +172,21 @@ export class ScheduleComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      event.container.data[event.currentIndex].room = null;
     }
   }
 
-  async DropInSchedule(event:CdkDragDrop<Course[]>) {
+  async DropInSchedule(event:CdkDragDrop<CourseEdition[]>) {
     if (event.previousContainer === event.container) {
       return;
     }
 
     if (event.container.data.length == 1) {
       //must be confirmed and not scheduled
-      if (event.previousContainer.id != 'your-courses') {
-        //different dialog
-        const dialog = this.dialog.open(DialogExampleComponent);
-        await dialog.afterClosed().toPromise();
-      } else {
-        const dialog = this.dialog.open(DialogExampleComponent);
-        await dialog.afterClosed().toPromise();
-      }
+      const dialog = this.dialog.open(RoomSelectionComponent);
+      await dialog.afterClosed().toPromise();
+
+      event.previousContainer.data[event.previousIndex].room = new Room("EXAMPLE");
 
       transferArrayItem(
         event.previousContainer.data,
@@ -189,6 +194,8 @@ export class ScheduleComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+
+      event.container.data[1 - event.currentIndex].room = null;
 
       transferArrayItem(
         event.container.data,
@@ -200,11 +207,11 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    const dialog = this.dialog.open(DialogExampleComponent);
+    const dialog = this.dialog.open(RoomSelectionComponent);
 
     await dialog.afterClosed().toPromise();
     //get room and set it
-    //console.log(event.previousContainer.data[event.previousIndex].room = new Room("New room"));
+    event.previousContainer.data[event.previousIndex].room = new Room("EXAMPLE");
 
     //if room has been chosen and accepted by API
     transferArrayItem(
@@ -220,7 +227,7 @@ export class ScheduleComponent implements OnInit {
     return this.schedule[dayIndex][slotIndex].length > 1;
   }
 
-  ScheduleSlotEnterPredicate(course:CdkDrag<Course>, slot:CdkDropList<Course[]>) {
+  ScheduleSlotEnterPredicate(course:CdkDrag<CourseEdition>, slot:CdkDropList<CourseEdition[]>) {
     return slot.data.length < 2;
   }
 
@@ -248,8 +255,8 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  Reset(dayIndex:number, slotIndex:number, event:Course) {
-    transferArrayItem<Course>(
+  Reset(dayIndex:number, slotIndex:number, event:CourseEdition) {
+    transferArrayItem<CourseEdition>(
       this.schedule[dayIndex][slotIndex],
       this.yourCourses,
       0,

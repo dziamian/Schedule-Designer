@@ -4,6 +4,7 @@ import * as OAuth from 'oauth-1.0a';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
+import { Account, Titles } from 'src/app/others/Accounts';
 import { Settings } from 'src/app/others/Settings';
 
 @Injectable({
@@ -20,6 +21,45 @@ export class ScheduleDesignerApiService {
       "AccessToken": token.key,
       "AccessTokenSecret": token.secret
     };
+  }
+
+  public GetMyAccount():Observable<Account> {
+    const request = {
+      url: this.baseUrl + '/users/Service.GetMyAccount()?$expand=Student,Coordinator,Staff',
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(map((response : any) => new Account(
+      response.UserId,
+      response.FirstName,
+      response.LastName,
+      response.Student != null,
+      response.Coordinator != null,
+      (response.Coordinator != null) ? new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter) : null,
+      response.Staff != null,
+      response.Staff?.IsAdmin ?? false
+    )));
+  }
+
+  public CreateMyAccount():Observable<any> {
+    const request = {
+      url: this.baseUrl + '/users/Service.CreateMyAccount()',
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+      }
+    );
   }
 
   public GetSettings():Observable<Settings> {
@@ -44,7 +84,7 @@ export class ScheduleDesignerApiService {
 
   public GetPeriods():Observable<string[]> {
     const request = {
-      url: this.baseUrl + '/settings/ScheduleDesignerService.GetPeriods',
+      url: this.baseUrl + '/settings/Service.GetPeriods()',
       method: 'GET'
     };
     
@@ -61,7 +101,7 @@ export class ScheduleDesignerApiService {
 
   public GetFreePeriods():Observable<number[]> {
     const request = {
-      url: this.baseUrl + '/schedulePositions/ScheduleDesignerService.GetFreePeriods',
+      url: this.baseUrl + '/schedulePositions/Service.GetFreePeriods()',
       method: 'GET'
     };
 
@@ -70,37 +110,6 @@ export class ScheduleDesignerApiService {
       request.url
     ).pipe(
       map((response : any) => response.value)
-    );
-  }
-
-  public Test1():Observable<string> {
-    const request = {
-      url: this.baseUrl + '/test/test1',
-      method: 'GET'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        responseType: 'text'
-      }
-    );
-  }
-
-  public Test2():Observable<string> {
-    const request = {
-      url: this.baseUrl + '/test/test2',
-      method: 'GET'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson()),
-        responseType: 'text'
-      }
     );
   }
 }

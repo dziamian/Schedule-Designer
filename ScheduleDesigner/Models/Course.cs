@@ -9,6 +9,7 @@ namespace ScheduleDesigner.Models
 {
     public class Course
     {
+        [Key]
         public int CourseId { get; set; }
 
         public int CourseTypeId { get; set; }
@@ -23,8 +24,6 @@ namespace ScheduleDesigner.Models
         
         [ForeignKey("CourseTypeId")]
         public CourseType CourseType { get; set; }
-
-        public virtual ICollection<ProgrammeStageCourse> ProgrammeStageCourses { get; set; }
 
         public virtual ICollection<CourseEdition> Editions { get; set; }
 

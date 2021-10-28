@@ -55,6 +55,7 @@ namespace ScheduleDesigner.Controllers
 
                 if (_course != null)
                 {
+                    await _courseRepo.SaveChanges();
                     return Created(_course);
                 }
                 return NotFound();
@@ -142,6 +143,7 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
+                await _courseRepo.SaveChanges();
                 return NoContent();
             }
             catch (Exception e)

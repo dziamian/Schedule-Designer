@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -16,11 +17,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OData.Edm;
 using Microsoft.OpenApi.Models;
 using ScheduleDesigner.Authentication;
+using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Services;
 
 namespace ScheduleDesigner
 {
@@ -44,7 +47,10 @@ namespace ScheduleDesigner
                 .AddNewtonsoftJson();
 
             services.AddOData();
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -57,20 +63,18 @@ namespace ScheduleDesigner
             });
 
             services.AddScoped<ISettingsRepo, SqlSettingsRepo>();
+            services.AddScoped<IUserRepo, SqlUserRepo>();
+            services.AddScoped<IStudentRepo, SqlStudentRepo>();
+            services.AddScoped<ICoordinatorRepo, SqlCoordinatorRepo>();
             services.AddScoped<IStaffRepo, SqlStaffRepo>();
-            services.AddScoped<IProgrammeRepo, SqlProgrammeRepo>();
-            services.AddScoped<IProgrammeStageRepo, SqlProgrammeStageRepo>();
             services.AddScoped<ICourseTypeRepo, SqlCourseTypeRepo>();
             services.AddScoped<ICourseRepo, SqlCourseRepo>();
-            services.AddScoped<IProgrammeStageCourseRepo, SqlProgrammeStageCourseRepo>();
-            services.AddScoped<IStudentRepo, SqlStudentRepo>();
-            services.AddScoped<IClassRepo, SqlClassRepo>();
             services.AddScoped<IGroupRepo, SqlGroupRepo>();
             services.AddScoped<IStudentGroupRepo, SqlStudentGroupRepo>();
             services.AddScoped<ICourseEditionRepo, SqlCourseEditionRepo>();
-            services.AddScoped<ICoordinatorRepo, SqlCoordinatorRepo>();
             services.AddScoped<ICoordinatorCourseEditionRepo, SqlCoordinatorCourseEdition>();
             services.AddScoped<IGroupCourseEditionRepo, SqlGroupCourseEditionRepo>();
+            services.AddScoped<IRoomTypeRepo, SqlRoomTypeRepo>();
             services.AddScoped<IRoomRepo, SqlRoomRepo>();
             services.AddScoped<ICourseRoomRepo, SqlCourseRoomRepo>();
             services.AddScoped<ITimestampRepo, SqlTimestampRepo>();
@@ -93,10 +97,15 @@ namespace ScheduleDesigner
                 });
             });
 
-            services.AddSingleton<UsosAuthenticationService>();
+            services.AddScoped<UsosAuthenticationService>();
             services
                 .AddAuthentication("Usos")
                 .AddScheme<UsosAuthenticationOptions, UsosAuthenticationHandler>("Usos", null);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("admin"));
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -108,6 +117,8 @@ namespace ScheduleDesigner
 
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.UseODataBatching();
 
             app.UseCors("CorsPolicy");
 
@@ -123,7 +134,12 @@ namespace ScheduleDesigner
             {
                 endpoints.MapControllers();
                 endpoints.Select().Filter().OrderBy().Count().Expand().MaxTop(100);
-                endpoints.MapODataRoute("api", "api", GetEdmModel());
+                endpoints.MapODataRoute(
+                    routeName: "api", 
+                    routePrefix: "api", 
+                    model: GetEdmModel(),
+                    batchHandler: new DefaultODataBatchHandler()
+                );
                 endpoints.MapHub<ScheduleHub>("/scheduleHub");
             });
         }
@@ -132,45 +148,33 @@ namespace ScheduleDesigner
         {
             var builder = new ODataConventionModelBuilder();
 
-            builder.EntitySet<Settings>("Settings");
-
-            builder.EntitySet<Staff>("Staffs");
-
-            builder.EntitySet<Programme>("Programmes");
-            
-            builder.EntitySet<ProgrammeStage>("ProgrammeStages")
+            builder.EntitySet<User>("Users")
                 .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId });
+                .HasKey(e => e.UserId);
 
-            builder.EntitySet<CourseType>("CourseTypes");
-            
-            builder.EntitySet<Course>("Courses")
+            builder.EntitySet<Staff>("Staffs")
                 .EntityType
-                .HasKey(e => new { e.CourseId });
-
-            builder.EntitySet<ProgrammeStageCourse>("ProgrammeStageCourses")
-                .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId });
-
-            builder.EntitySet<Class>("Classes")
-                .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId });
-
-            builder.EntitySet<Group>("Groups")
-                .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId, e.GroupId });
-            
-            builder.EntitySet<Student>("Students")
-                .EntityType
-                .HasKey(e => e.StudentId);
-
-            builder.EntitySet<StudentGroup>("StudentGroups")
-                .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.ClassId, e.GroupId, e.StudentId });
+                .HasKey(e => e.UserId);
 
             builder.EntitySet<Coordinator>("Coordinators")
                 .EntityType
-                .HasKey(e => e.CoordinatorId);
+                .HasKey(e => e.UserId);
+
+            builder.EntitySet<Student>("Students")
+                .EntityType
+                .HasKey(e => e.UserId);
+
+            builder.EntitySet<Settings>("Settings");
+
+            builder.EntitySet<CourseType>("CourseTypes");
+
+            builder.EntitySet<Course>("Courses");
+
+            builder.EntitySet<Group>("Groups");
+
+            builder.EntitySet<StudentGroup>("StudentGroups")
+                .EntityType
+                .HasKey(e => new { e.GroupId, e.StudentId });
 
             builder.EntitySet<CourseEdition>("CourseEditions")
                 .EntityType
@@ -182,8 +186,10 @@ namespace ScheduleDesigner
 
             builder.EntitySet<GroupCourseEdition>("GroupCourseEditions")
                 .EntityType
-                .HasKey(e => new { e.ProgrammeId, e.ProgrammeStageId, e.CourseId, e.CourseEditionId, e.ClassId, e.GroupId });
+                .HasKey(e => new { e.CourseId, e.CourseEditionId, e.GroupId });
 
+            builder.EntitySet<RoomType>("RoomTypes");
+            
             builder.EntitySet<Room>("Rooms");
             
             builder.EntitySet<CourseRoom>("CourseRooms")
@@ -192,23 +198,46 @@ namespace ScheduleDesigner
 
             builder.EntitySet<Timestamp>("Timestamps");
             
-            builder.EntitySet<CourseRoomTimestamp>("ScheduleSlots")
+            builder.EntitySet<CourseRoomTimestamp>("CourseRoomTimestamps")
                 .EntityType
-                .HasKey(e => new { e.RoomId, e.TimestampId });
+                .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
 
             builder.EntitySet<SchedulePosition>("SchedulePositions")
                 .EntityType
-                .HasKey(e => new { e.RoomId, e.TimestampId });
+                .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
 
             builder.EntitySet<ScheduledMove>("ScheduledMoves")
                 .EntityType
-                .HasKey(e => new { e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2 });
+                .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
 
             
-            builder.Namespace = "ScheduleDesignerService";
+            builder.Namespace = "Service";
             builder.EntityType<Settings>().Collection
                 .Function("GetPeriods")
                 .Returns<string[]>();
+
+            builder.EntityType<User>().Collection
+                .Function("GetMyAccount")
+                .ReturnsFromEntitySet<User>("Users");
+
+            builder.EntityType<User>().Collection
+                .Action("CreateMyAccount")
+                .ReturnsFromEntitySet<User>("Users");
+
+            builder.EntityType<User>().Collection
+                .Action("CreateAccountFromUsos")
+                .ReturnsFromEntitySet<User>("Users")
+                .Parameter<int>("UserId");
+
+            builder.EntityType<Group>()
+                .Function("GetGroupFullName")
+                .Returns<GroupFullName>();
+
+            builder.EntityType<CourseEdition>()
+                .Action("Lock");
+
+            builder.EntityType<CourseEdition>()
+                .Action("Unlock");
 
             builder.EntityType<SchedulePosition>().Collection
                 .Function("GetFreePeriods")

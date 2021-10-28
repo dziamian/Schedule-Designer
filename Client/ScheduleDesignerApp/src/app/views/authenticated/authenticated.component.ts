@@ -1,8 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { AccessToken } from 'src/app/others/AccessToken';
+import { Account } from 'src/app/others/Accounts';
+import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
+import { setAccount } from 'src/app/store/account.actions';
 
 @Component({
   selector: 'app-authenticated',
@@ -11,7 +15,13 @@ import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service
 })
 export class AuthenticatedComponent implements OnInit {
 
-  constructor(private router:Router, private activatedRoute: ActivatedRoute, private usosApiService:UsosApiService) { }
+  constructor(
+    private router:Router, 
+    private activatedRoute: ActivatedRoute, 
+    private usosApiService:UsosApiService,
+    private scheduleDesignerApiService:ScheduleDesignerApiService,
+    private store:Store<{account:Account}>
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -25,11 +35,23 @@ export class AuthenticatedComponent implements OnInit {
         token => {
           AccessToken.RemoveRequest();
           token.Save();
-          
-          this.router.navigate(['profile']);
-        },
-        response => {
-          console.log(response);
+
+          this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
+            this.store.dispatch(setAccount({account}));
+            this.router.navigate(['profile']);
+          }, () => {
+            this.scheduleDesignerApiService.CreateMyAccount().subscribe(() => {
+              this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
+                this.store.dispatch(setAccount({account}));
+                this.router.navigate(['profile']);
+              });
+            }, (error) => {
+              console.log(error);
+              this.router.navigate(['login']);
+            })
+          });
+        }, (error) => {
+          console.log(error);
           this.router.navigate(['login']);
         }
       )

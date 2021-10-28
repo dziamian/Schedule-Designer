@@ -7,7 +7,7 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
-    public interface IProgrammeStageCourseRepo : IRepoBase<ProgrammeStageCourse>
+    public interface IRoomTypeRepo : IRepoBase<RoomType>
     {
     }
 }

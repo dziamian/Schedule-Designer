@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragRelease, CdkDragStart } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { Course } from 'src/app/others/Course';
+import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType } from 'src/app/others/CourseType';
 
 @Component({
@@ -10,11 +10,11 @@ import { CourseType } from 'src/app/others/CourseType';
 })
 export class CourseComponent implements OnInit {
 
-  @ViewChild(CdkDrag) cdkCourse : CdkDrag<Course>;
+  @ViewChild(CdkDrag) cdkCourse : CdkDrag<CourseEdition>;
 
-  @Input() course?:Course;
+  @Input() course?:CourseEdition;
   
-  @Output() ctrlClick:EventEmitter<Course> = new EventEmitter<Course>();
+  @Output() ctrlClick:EventEmitter<CourseEdition> = new EventEmitter<CourseEdition>();
   @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() release:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 

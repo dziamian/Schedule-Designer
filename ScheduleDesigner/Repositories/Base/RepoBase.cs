@@ -54,12 +54,10 @@ namespace ScheduleDesigner.Repositories.Base
 
             var result = await _context.Set<T>().AddAsync(entity);
 
-            await _context.SaveChangesAsync();
-
             return result.Entity;
         }
 
-        public async Task<T> Update(T entity)
+        public T Update(T entity)
         {
             if (_context == null)
             {
@@ -67,8 +65,6 @@ namespace ScheduleDesigner.Repositories.Base
             }
 
             _context.Entry(entity).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
 
             return entity;
         }
@@ -89,7 +85,7 @@ namespace ScheduleDesigner.Repositories.Base
             }
 
             _context.Set<T>().Remove(result);
-            return await _context.SaveChangesAsync();
+            return 1;
         }
 
         public async Task<int> SaveChanges()

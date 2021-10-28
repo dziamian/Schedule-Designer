@@ -8,6 +8,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Dtos;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -36,6 +38,7 @@ namespace ScheduleDesigner.Controllers
 
                 if (_group != null)
                 {
+                    await _groupRepo.SaveChanges();
                     return Created(_group);
                 }
                 return NotFound();
@@ -56,13 +59,13 @@ namespace ScheduleDesigner.Controllers
 
         [HttpGet]
         [EnableQuery]
-        [ODataRoute("({key1},{key2},{key3},{key4})")]
-        public IActionResult GetGroup([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int key3, [FromODataUri] int key4)
+        [ODataRoute("({key})")]
+        public IActionResult GetGroup([FromODataUri] int key)
         {
             try
             {
                 var _group = _groupRepo
-                    .Get(e => e.ProgrammeId == key1 && e.ProgrammeStageId == key2 && e.ClassId == key3 && e.GroupId == key4);
+                    .Get(e => e.GroupId == key);
                 if (!_group.Any())
                 {
                     return NotFound();
@@ -76,9 +79,54 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetGroupFullName([FromODataUri] int key)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var _group = _groupRepo
+                    .Get(e => e.GroupId == key)
+                    .Include(e => e.ParentGroup);
+
+                if (!_group.Any())
+                {
+                    return NotFound();
+                }
+
+                var group = await _group.FirstAsync();
+                var fullGroupName = group.Name;
+                var groupIds = new List<int>() { group.GroupId };
+                var levels = 0;
+
+                while (group.ParentGroupId != null)
+                {
+                    ++levels;
+                    _group = _group.ThenInclude(e => e.ParentGroup);
+                    group = await _group.FirstAsync();
+                    for (var i = 0; i < levels; ++i)
+                    {
+                        group = group.ParentGroup;
+                    }
+                    fullGroupName = group.Name + fullGroupName;
+                    groupIds.Add(group.GroupId);
+                }
+
+                return Ok(new GroupFullName { FullName = fullGroupName, GroupIds = groupIds, Levels = levels });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPatch]
-        [ODataRoute("({key1},{key2},{key3},{key4})")]
-        public async Task<IActionResult> UpdateProgrammeStage([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int key3, [FromODataUri] int key4, [FromBody] Delta<Group> delta)
+        [ODataRoute("({key})")]
+        public async Task<IActionResult> UpdateGroup([FromODataUri] int key, [FromBody] Delta<Group> delta)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +136,7 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 var _group = await _groupRepo
-                    .GetFirst(e => e.ProgrammeId == key1 && e.ProgrammeStageId == key2 && e.ClassId == key3 && e.GroupId == key4);
+                    .GetFirst(e => e.GroupId == key);
                 if (_group == null)
                 {
                     return NotFound();
@@ -107,18 +155,19 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpDelete]
-        [ODataRoute("({key1},{key2},{key3},{key4})")]
-        public async Task<IActionResult> DeleteProgrammeStage([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int key3, [FromODataUri] int key4)
+        [ODataRoute("({key})")]
+        public async Task<IActionResult> DeleteGroup([FromODataUri] int key)
         {
             try
             {
                 var result = await _groupRepo
-                    .Delete(e => e.ProgrammeId == key1 && e.ProgrammeStageId == key2 && e.ClassId == key3 && e.GroupId == key4);
+                    .Delete(e => e.GroupId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
+                await _groupRepo.SaveChanges();
                 return NoContent();
             }
             catch (Exception e)

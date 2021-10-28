@@ -106,7 +106,7 @@ export class UsosApiService {
     if (user_id != undefined) {
       request_data.append('user_id', user_id);
     }
-    request_data.append('fields', 'id|first_name|last_name');
+    request_data.append('fields', 'id');
     request_data.append('format', 'json');
 
     return this.http.request(

@@ -7,7 +7,7 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
-    public interface IClassRepo : IRepoBase<Class>
+    public interface IUserRepo : IRepoBase<User>
     {
     }
 }
