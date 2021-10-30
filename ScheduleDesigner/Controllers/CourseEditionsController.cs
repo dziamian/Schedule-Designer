@@ -87,8 +87,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
-                var userId = 853;
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
 
                 var courseDurationMinutes = _settings.CourseDurationMinutes;
                 var totalMinutes = Frequency * courseDurationMinutes;
