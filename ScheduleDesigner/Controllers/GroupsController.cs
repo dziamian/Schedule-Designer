@@ -82,11 +82,6 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         public async Task<IActionResult> GetGroupFullName([FromODataUri] int key)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             try
             {
                 var _group = _groupRepo
@@ -116,7 +111,54 @@ namespace ScheduleDesigner.Controllers
                     groupIds.Add(group.GroupId);
                 }
 
-                return Ok(new GroupFullName { FullName = fullGroupName, GroupIds = groupIds, Levels = levels });
+                return Ok(new GroupFullName { FullName = fullGroupName, GroupsIds = groupIds, Levels = levels });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGroupsFullNames([FromODataUri] IEnumerable<int> GroupsIds)
+        {
+            try
+            {
+                var groupsFullNames = new List<GroupFullName>();
+
+                foreach (var _groupId in GroupsIds)
+                {
+                    var _group = _groupRepo
+                    .Get(e => e.GroupId == _groupId)
+                    .Include(e => e.ParentGroup);
+
+                    if (!_group.Any())
+                    {
+                        return NotFound();
+                    }
+
+                    var group = await _group.FirstAsync();
+                    var fullGroupName = group.Name;
+                    var groupIds = new List<int>() { group.GroupId };
+                    var levels = 0;
+
+                    while (group.ParentGroupId != null)
+                    {
+                        ++levels;
+                        _group = _group.ThenInclude(e => e.ParentGroup);
+                        group = await _group.FirstAsync();
+                        for (var i = 0; i < levels; ++i)
+                        {
+                            group = group.ParentGroup;
+                        }
+                        fullGroupName = group.Name + fullGroupName;
+                        groupIds.Add(group.GroupId);
+                    }
+
+                    groupsFullNames.Add(new GroupFullName { FullName = fullGroupName, GroupsIds = groupIds, Levels = levels });
+                }
+
+                return Ok(groupsFullNames);
             }
             catch (Exception e)
             {

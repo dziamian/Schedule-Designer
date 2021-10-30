@@ -12,7 +12,7 @@ import { Settings } from 'src/app/others/Settings';
 import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
@@ -20,8 +20,7 @@ import { Room } from 'src/app/others/Room';
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.css'],
-  providers: [SignalrService]
+  styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent implements OnInit {
 
@@ -29,7 +28,9 @@ export class ScheduleComponent implements OnInit {
   @ViewChildren(CourseComponent) courses : QueryList<CourseComponent>;
 
   loading:boolean = true;
+  tabLoading:boolean = true;
   connectionStatus:boolean = false;
+  snackBarDuration:number = 10 * 1000;
   
   settings:Settings;
   currentTabIndex:number = 0;
@@ -38,12 +39,16 @@ export class ScheduleComponent implements OnInit {
   scheduleTimeLabels:string[] = [];
   scheduleDayLabels:string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
+  courseTypes:Map<number, CourseType>;
+
   yourCourses:CourseEdition[] = [
     new CourseEdition(
       "Systemy Operacyjne 2", 
-      CourseType.Lecture, 
+      new CourseType(1, "Wykład", "#D9FFFF"), 
       15, 
-      new Group("3ID12A"), 
+      [
+        new Group("3ID12A")
+      ], 
       [
         new Coordinator("Mariusz", "Bedla", "dr inż."), 
         new Coordinator("Grzegorz", "Łukawski", "dr inż."),
@@ -52,9 +57,11 @@ export class ScheduleComponent implements OnInit {
     ),
     new CourseEdition(
       "Systemy Operacyjne 2", 
-      CourseType.Laboratory, 
+      new CourseType(2, "Laboratorium", "#FFECFF"), 
       15, 
-      new Group("3ID12A"), 
+      [
+        new Group("3ID12A")
+      ],
       [
         new Coordinator("Mariusz", "Bedla", "dr inż."), 
         new Coordinator("Grzegorz", "Łukawski", "dr inż.")
@@ -62,9 +69,11 @@ export class ScheduleComponent implements OnInit {
     ),
     new CourseEdition(
       "Systemy Operacyjne 2", 
-      CourseType.Project, 
+      new CourseType(3, "Projekt", "#FFFFEA"), 
       15, 
-      new Group("3ID12A"), 
+      [
+        new Group("3ID12A")
+      ],
       [
         new Coordinator("Mariusz", "Bedla", "dr inż."), 
         new Coordinator("Grzegorz", "Łukawski", "dr inż.")
@@ -72,9 +81,11 @@ export class ScheduleComponent implements OnInit {
     ),
     new CourseEdition(
       "Systemy Operacyjne 2", 
-      CourseType.Exercise, 
+      new CourseType(4, "Ćwiczenia", "#E6FFE6"), 
       15, 
-      new Group("3ID12A"), 
+      [
+        new Group("3ID12A")
+      ],
       [
         new Coordinator("Mariusz", "Bedla", "dr inż."),
       ]
@@ -93,13 +104,26 @@ export class ScheduleComponent implements OnInit {
   { }
 
   ngOnInit(): void {
+    let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      this.connectionStatus = status;
+      if (!status && !this.signalrService.connectionIntentionallyStopped) {
+        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK", {
+          duration: this.snackBarDuration
+        });
+      }
+    });
+
     forkJoin([
       this.signalrService.InitConnection(),
       this.scheduleDesignerApiService.GetSettings(),
-      this.scheduleDesignerApiService.GetPeriods()
-    ]).subscribe(([,settings,periods]) => {
+      this.scheduleDesignerApiService.GetPeriods(),
+      this.scheduleDesignerApiService.GetCourseTypes()
+    ]).subscribe(([,settings,periods,courseTypes]) => {
+      this.connectionStatus = true;
+      
       this.settings = settings;
       this.settings.periods = periods;
+      this.courseTypes = courseTypes;
       this.setLabels();
       this.initializeScheduleTable();
 
@@ -108,25 +132,16 @@ export class ScheduleComponent implements OnInit {
       if (error?.status == 401) {
         this.usosApiService.Deauthorize();
 
-        this.snackBar.open('Session expired. Please log in again.', 'OK');
+        this.snackBar.open('Session expired. Please log in again.', 'OK', {
+          duration: this.snackBarDuration
+        });
         this.router.navigate(['login']);
-      } else {
-        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
+      } else if (!isConnectedSubscription.closed) {
+        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK", {
+          duration: this.snackBarDuration
+        });
       }
     });
-
-    let isConnectedSubscribtion = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
-      this.connectionStatus = status;
-      if (!status) {
-        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
-      }
-    });
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        isConnectedSubscribtion.unsubscribe();
-      }
-    })
   }
 
   private setLabels() {

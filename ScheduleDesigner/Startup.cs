@@ -132,13 +132,18 @@ namespace ScheduleDesigner
 
             app.UseEndpoints(endpoints =>
             {
+                var defaultBatchHandler = new DefaultODataBatchHandler();
+                defaultBatchHandler.MessageQuotas.MaxNestingDepth = 2;
+                defaultBatchHandler.MessageQuotas.MaxOperationsPerChangeset = 10;
+                defaultBatchHandler.MessageQuotas.MaxReceivedMessageSize = 100;
+
                 endpoints.MapControllers();
                 endpoints.Select().Filter().OrderBy().Count().Expand().MaxTop(100);
                 endpoints.MapODataRoute(
                     routeName: "api", 
                     routePrefix: "api", 
                     model: GetEdmModel(),
-                    batchHandler: new DefaultODataBatchHandler()
+                    batchHandler: defaultBatchHandler
                 );
                 endpoints.MapHub<ScheduleHub>("/scheduleHub");
             });
@@ -233,11 +238,21 @@ namespace ScheduleDesigner
                 .Function("GetGroupFullName")
                 .Returns<GroupFullName>();
 
+            builder.EntityType<Group>().Collection
+                .Function("GetGroupsFullNames")
+                .ReturnsCollection<GroupFullName>()
+                .CollectionParameter<int>("GroupsIds");
+
             builder.EntityType<CourseEdition>()
                 .Action("Lock");
 
             builder.EntityType<CourseEdition>()
                 .Action("Unlock");
+
+            builder.EntityType<CourseEdition>().Collection
+                .Function("GetMyCourseEditions")
+                .ReturnsFromEntitySet<CourseEdition>("CourseEditions")
+                .Parameter<double>("Frequency");
 
             builder.EntityType<SchedulePosition>().Collection
                 .Function("GetFreePeriods")

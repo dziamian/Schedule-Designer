@@ -7,6 +7,7 @@ namespace ScheduleDesigner.Hubs.Interfaces
 {
     public interface IScheduleClient
     {
-
+        void UserUpdate();
+        void UserRemove();
     }
 }

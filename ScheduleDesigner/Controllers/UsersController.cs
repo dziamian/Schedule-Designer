@@ -7,7 +7,9 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using ScheduleDesigner.Hubs;
+using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Services;
@@ -234,6 +236,7 @@ namespace ScheduleDesigner.Controllers
                 }
 
                 await _userRepo.SaveChanges();
+
                 return NoContent();
             }
             catch (Exception e)

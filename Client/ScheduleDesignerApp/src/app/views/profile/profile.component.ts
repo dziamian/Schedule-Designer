@@ -2,10 +2,12 @@ import { Component, Inject, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { Account } from 'src/app/others/Accounts';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
+import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
+import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,14 +17,20 @@ import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApi
 export class ProfileComponent implements OnInit {
 
   loading:boolean = true;
+  connectionStatus:boolean = false;
+  snackBarDuration:number = 10 * 1000;
+
   account:Account;
 
   constructor(
     private store:Store<{account: Account}>,
+    private usosApiService:UsosApiService,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
+    private signalrService:SignalrService,
     private router:Router,
     private snackBar:MatSnackBar
   ) { 
+
     this.store.select('account').subscribe((account) => {
       if (account.UserId == 0) {
         return;
@@ -33,7 +41,33 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      this.connectionStatus = status;
+      if (!status && !this.signalrService.connectionIntentionallyStopped) {
+        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK", {
+          duration: this.snackBarDuration
+        });
+      }
+    });
+
+    forkJoin([
+      this.signalrService.InitConnection()
+    ]).subscribe(([]) => {
+      this.connectionStatus = true;
+    }, (error) => {
+      if (error?.status == 401) {
+        this.usosApiService.Deauthorize();
+
+        this.snackBar.open('Session expired. Please log in again.', 'OK', {
+          duration: this.snackBarDuration
+        });
+        this.router.navigate(['login']);
+      } else if (!isConnectedSubscription.closed) {
+        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK", {
+          duration: this.snackBarDuration
+        });
+      }
+    })
   }
 
 }

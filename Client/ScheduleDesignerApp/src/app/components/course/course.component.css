@@ -25,10 +25,6 @@
     box-sizing: border-box;
 }
 
-.course.lecture {
-    background-color: #D9FFFF;
-}
-
 .course.lecture.locked {
     background: repeating-linear-gradient(
         -55deg,
@@ -37,10 +33,6 @@
         #FFFFFF 10px,
         #FFFFFF 20px
     );
-}
-
-.course.laboratory {
-    background-color: #FFECFF;
 }
 
 .course.laboratory.locked {
@@ -53,10 +45,6 @@
     );
 }
 
-.course.project {
-    background-color: #FFFFEA;
-}
-
 .course.project.locked {
     background: repeating-linear-gradient(
         -55deg,
@@ -65,10 +53,6 @@
         #FFFFFF 10px,
         #FFFFFF 20px
     );
-}
-
-.course.exercise {
-    background-color: #E6FFE6;
 }
 
 .course.exercise.locked {

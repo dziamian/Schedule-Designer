@@ -1,6 +1,8 @@
-export enum CourseType {
-    Lecture = "lecture",
-    Laboratory = "laboratory",
-    Project = "project",
-    Exercise = "exercise"
+export class CourseType {
+    
+    constructor(
+        public id:number,
+        public name:string,
+        public color:string
+    ) {}
 }

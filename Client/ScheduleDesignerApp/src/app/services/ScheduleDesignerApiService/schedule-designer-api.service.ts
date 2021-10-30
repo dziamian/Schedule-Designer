@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { Account, Titles } from 'src/app/others/Accounts';
+import { CourseType } from 'src/app/others/CourseType';
 import { Settings } from 'src/app/others/Settings';
 
 @Injectable({
@@ -16,7 +17,7 @@ export class ScheduleDesignerApiService {
 
   constructor(private http:HttpClient) { }
 
-  private GetAuthorizationHeader(token:any) {
+  private GetAuthorizationHeaders(token:any) {
     return {
       "AccessToken": token.key,
       "AccessTokenSecret": token.secret
@@ -33,7 +34,7 @@ export class ScheduleDesignerApiService {
       request.method,
       request.url,
       {
-        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(map((response : any) => new Account(
       response.UserId,
@@ -57,7 +58,7 @@ export class ScheduleDesignerApiService {
       request.method,
       request.url,
       {
-        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     );
   }
@@ -72,7 +73,7 @@ export class ScheduleDesignerApiService {
       request.method,
       request.url,
       {
-        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(map((response : any) => new Settings(
       response.CourseDurationMinutes,
@@ -80,6 +81,29 @@ export class ScheduleDesignerApiService {
       response.EndTime,
       response.TermDurationWeeks
     )));
+  }
+
+  public GetCourseTypes():Observable<Map<number,CourseType>> {
+    const request = {
+      url: this.baseUrl + '/courseTypes',
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(map((response : any) => {
+      let map = new Map<number,CourseType>();
+      
+      response.value.forEach((element : any) => {
+        map.set(element.CourseTypeId, new CourseType(element.CourseTypeId, element.Name, element.Color));
+      });
+      
+      return map;
+    }));
   }
 
   public GetPeriods():Observable<string[]> {
@@ -92,7 +116,7 @@ export class ScheduleDesignerApiService {
       request.method,
       request.url,
       {
-        headers: this.GetAuthorizationHeader(AccessToken.Retrieve()?.ToJson())
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
       map((response : any) => response.value)
@@ -107,7 +131,10 @@ export class ScheduleDesignerApiService {
 
     return this.http.request(
       request.method,
-      request.url
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
     ).pipe(
       map((response : any) => response.value)
     );

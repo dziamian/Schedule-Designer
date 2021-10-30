@@ -1,4 +1,4 @@
-<div *ngIf="!loading; else spinner" style="text-align:center;">
+<div *ngIf="!loading && connectionStatus; else spinner" style="text-align:center;">
     {{account.UserId}}<br>
     <b>{{account.Titles?.TitleBefore}} {{account.FirstName}} {{account.LastName}} {{account.Titles?.TitleAfter}}</b><br>
     Student: {{account.Student}}<br>

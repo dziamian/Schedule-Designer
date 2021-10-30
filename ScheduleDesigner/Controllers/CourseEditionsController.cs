@@ -7,6 +7,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 
@@ -16,10 +17,12 @@ namespace ScheduleDesigner.Controllers
     public class CourseEditionsController : ODataController
     {
         private readonly ICourseEditionRepo _courseEditionRepo;
+        private readonly ISettingsRepo _settingsRepo;
 
-        public CourseEditionsController(ICourseEditionRepo courseEditionRepo)
+        public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo)
         {
             _courseEditionRepo = courseEditionRepo;
+            _settingsRepo = settingsRepo;
         }
 
         [HttpPost]
@@ -64,6 +67,44 @@ namespace ScheduleDesigner.Controllers
         {
             //Console.WriteLine(HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id"));
             return Ok();
+        }
+
+        [Authorize]
+        [EnableQuery]
+        [HttpGet]
+        public async Task<IActionResult> GetMyCourseEditions([FromODataUri] double Frequency)
+        {
+            var _settings = await _settingsRepo.GetSettings();
+            if (_settings == null)
+            {
+                return BadRequest("Application settings has not been specified.");
+            }
+
+            if (Frequency > _settings.TermDurationWeeks || Frequency <= 0)
+            {
+                return BadRequest("Frequency is invalid");
+            }
+
+            try
+            {
+                //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+                var userId = 853;
+
+                var courseDurationMinutes = _settings.CourseDurationMinutes;
+                var totalMinutes = Frequency * courseDurationMinutes;
+
+                var _courseEditions = _courseEditionRepo
+                    .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.Course.UnitsMinutes - e.SchedulePositions.Count * courseDurationMinutes >= totalMinutes)
+                    .Include(e => e.SchedulePositions)
+                    .Include(e => e.Course)
+                    .Include(e => e.Coordinators);
+
+                return Ok(_courseEditions);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]

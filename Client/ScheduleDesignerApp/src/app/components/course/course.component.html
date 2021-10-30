@@ -1,12 +1,22 @@
-<div class="course {{this.course?.type}}" 
+<div class="course {{course?.locked ? 'locked' : ''}}"
+    [style.background]="course?.locked ? 
+        'repeating-linear-gradient(
+            -55deg,' +
+            course?.type?.color + ',' +
+            course?.type?.color + ' 10px,' +
+        '#FFFFFF 10px,
+        #FFFFFF 20px
+    )' : course?.type?.color"
+    
     cdkDrag
+    [cdkDragDisabled]="course?.locked"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"
     (click)="CtrlClick($event)"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>
-    <i>{{getCourseTypeName(this.course?.type)}}, {{course?.amount}} zajęć</i>
+    <i>{{course?.type?.name}}, {{course?.amount}} zajęć</i>
     <br/>
     <b>{{course?.name}}</b>
     <br/>
@@ -14,5 +24,9 @@
         {{coordinator.lastName}} {{coordinator.firstName}} {{coordinator.title}}
         <br/>
     </div>
-    {{course?.group?.name}}{{(course?.room != undefined) ? (", " + course?.room?.name) : ""}}
+    <div *ngFor="let group of course?.groups">
+        {{group?.name}}
+        <br/>
+    </div>
+    {{(course?.room != undefined) ? (", " + course?.room?.name) : ""}}
 </div>

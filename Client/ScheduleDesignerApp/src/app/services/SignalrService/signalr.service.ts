@@ -10,13 +10,11 @@ export class SignalrService implements OnDestroy {
   readonly connectionUrl = 'http://localhost:5000/scheduleHub';
   
   connection:signalr.HubConnection;
+  connectionIntentionallyStopped:boolean = false;
   isConnected:BehaviorSubject<boolean>
-
-  testMessage:BehaviorSubject<string>
 
   constructor() {
     this.isConnected = new BehaviorSubject<boolean>(false);
-    this.testMessage = new BehaviorSubject<string>('');
   }
 
   private GetAuthorizationHeader(token:any) {
@@ -28,6 +26,13 @@ export class SignalrService implements OnDestroy {
 
   public InitConnection(): Observable<void> {
     return new Observable((observer) => {
+      this.connectionIntentionallyStopped = false;
+      
+      if (this.connection?.state == "Connected") {
+        observer.next();
+        observer.complete();
+        return;
+      }
       var accessToken = AccessToken.Retrieve();
 
       console.log(accessToken);
@@ -48,24 +53,23 @@ export class SignalrService implements OnDestroy {
           observer.complete();
         })
         .catch(() => {
-          observer.error();
+          observer.error({status: -1});
         });
     });
   }
 
   public Disconnect() {
-    if (this.connection.connectionId) {
+    if (this.connection?.state == "Connected") {
+      this.connectionIntentionallyStopped = true;
       this.connection.stop();
     }
   }
 
   private SetClientMethods(): void {
     this.connection.onclose((error) => {
+      this.connectionIntentionallyStopped = false;
       this.isConnected.next(false);
     })
-    this.connection.on('Test', (message: string) => {
-      this.testMessage.next(message);
-    });
   }
 
   ngOnDestroy() {

@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { AccessToken } from './others/AccessToken';
 import { Account } from './others/Accounts';
 import { ScheduleDesignerApiService } from './services/ScheduleDesignerApiService/schedule-designer-api.service';
+import { SignalrService } from './services/SignalrService/signalr.service';
 import { UsosApiService } from './services/UsosApiService/usos-api.service';
 import { setAccount } from './store/account.actions';
 
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
     private router:Router,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
     private usosApiService:UsosApiService, 
+    private signalrService:SignalrService,
     @Inject(DOCUMENT) private document:Document,
     private store:Store<{account:Account}>
   ) { }
@@ -38,6 +40,7 @@ export class AppComponent implements OnInit {
   }
 
   public Logout():void {
+    this.signalrService.Disconnect();
     AccessToken.Remove();
     this.router.navigate(['login']);
     this.usosApiService.Logout(document);

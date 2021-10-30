@@ -58,6 +58,7 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
     HttpClient, 
     UsosApiService, 
     ScheduleDesignerApiService, 
+    SignalrService,
     AuthGuardService
   ],
   bootstrap: [AppComponent]

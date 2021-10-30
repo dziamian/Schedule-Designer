@@ -14,7 +14,8 @@ namespace ScheduleDesigner.Hubs
         public override Task OnConnectedAsync()
         {
             //Console.WriteLine(Context.User.Claims.FirstOrDefault(claim => claim.Type == "user_id"));
-            Context.User.Claims.ToList().ForEach(Console.WriteLine);
+            //Context.User.Claims.ToList().ForEach(Console.WriteLine);
+            Console.WriteLine("\tConnected");
             return base.OnConnectedAsync();
         }
 

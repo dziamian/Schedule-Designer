@@ -8,7 +8,7 @@ namespace ScheduleDesigner.Dtos
     public class GroupFullName
     {
         public string FullName { get; set; }
-        public ICollection<int> GroupIds { get; set; }
+        public ICollection<int> GroupsIds { get; set; }
         public int Levels { get; set; }
     }
 }
