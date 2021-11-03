@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -59,7 +59,8 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
     UsosApiService, 
     ScheduleDesignerApiService, 
     SignalrService,
-    AuthGuardService
+    AuthGuardService,
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 10000 }}
   ],
   bootstrap: [AppComponent]
 })

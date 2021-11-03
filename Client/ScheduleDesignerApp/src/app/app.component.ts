@@ -19,8 +19,6 @@ import { setAccount } from './store/account.actions';
 export class AppComponent implements OnInit {
   title:string = 'Schedule Designer';
 
-  snackBarDuration:number = 10 * 1000;
-
   constructor(
     private router:Router,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -39,9 +37,7 @@ export class AppComponent implements OnInit {
         if (error?.status == 401) {
           this.usosApiService.Deauthorize();
   
-          this.snackBar.open('Session expired. Please log in again.', 'OK', {
-            duration: this.snackBarDuration
-          });
+          this.snackBar.open('Session expired. Please log in again.', 'OK');
           this.router.navigate(['login']);
         }
       });
