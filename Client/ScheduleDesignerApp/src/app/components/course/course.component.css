@@ -19,8 +19,7 @@
 }
 
 .course-placeholder {
-    background-color: #CCC;
-    border: 3px dotted #999;
+    border: 3px dotted rgb(102, 102, 102);
     height: 10.2vh;
     box-sizing: border-box;
 }

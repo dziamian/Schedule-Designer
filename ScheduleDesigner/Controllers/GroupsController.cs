@@ -124,10 +124,17 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var groupsFullNames = new List<GroupFullName>();
+                var groupsFullNamesList = new List<GroupFullName>();
+                var groupsFullNamesDictionary = new Dictionary<int, GroupFullName>();
 
                 foreach (var _groupId in GroupsIds)
                 {
+                    if (groupsFullNamesDictionary.TryGetValue(_groupId, out var groupFullName))
+                    {
+                        groupsFullNamesList.Add(groupFullName);
+                        continue;
+                    }
+
                     var _group = _groupRepo
                     .Get(e => e.GroupId == _groupId)
                     .Include(e => e.ParentGroup);
@@ -155,10 +162,12 @@ namespace ScheduleDesigner.Controllers
                         groupIds.Add(group.GroupId);
                     }
 
-                    groupsFullNames.Add(new GroupFullName { FullName = fullGroupName, GroupsIds = groupIds, Levels = levels });
+                    groupFullName = new GroupFullName {FullName = fullGroupName, GroupsIds = groupIds, Levels = levels};
+                    groupsFullNamesDictionary.Add(groupIds[0], groupFullName);
+                    groupsFullNamesList.Add(groupFullName);
                 }
 
-                return Ok(groupsFullNames);
+                return Ok(groupsFullNamesList);
             }
             catch (Exception e)
             {

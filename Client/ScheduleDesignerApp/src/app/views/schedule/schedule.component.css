@@ -11,7 +11,7 @@
     margin-bottom: 2vh;
 }
 
-.your-courses {
+.my-courses {
     border: 2px solid #008700;
     box-sizing: border-box;
     padding-bottom: 1vh;
@@ -20,13 +20,13 @@
     float: left;
 }
 
-.your-courses-header {
+.my-courses-header {
     height: 3%;
     border-bottom: 2px solid #008700;
     background-color: #81C781;
 }
 
-.your-courses-content {
+.my-courses-content {
     padding-top: 1vh;
     padding-bottom: 1vh;
     box-sizing: border-box;
@@ -42,11 +42,11 @@
     border-top: 1px solid black;
 }
 
-.your-courses-content ::ng-deep .course {
+.my-courses-content ::ng-deep .course {
     margin: auto;
 }
 
-.your-courses-content ::ng-deep .course-placeholder {
+.my-courses-content ::ng-deep .course-placeholder {
     margin: auto;
 }
 

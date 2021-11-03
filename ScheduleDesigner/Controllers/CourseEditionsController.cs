@@ -7,7 +7,10 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Hubs;
+using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 
@@ -18,11 +21,13 @@ namespace ScheduleDesigner.Controllers
     {
         private readonly ICourseEditionRepo _courseEditionRepo;
         private readonly ISettingsRepo _settingsRepo;
+        private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
-        public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo)
+        public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
         {
             _courseEditionRepo = courseEditionRepo;
             _settingsRepo = settingsRepo;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -56,8 +61,37 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("({key1},{key2})/Service.Lock")]
         public async Task<IActionResult> Lock([FromODataUri] int key1, [FromODataUri] int key2)
         {
-            //Console.WriteLine(HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id"));
-            return Ok();
+            try
+            {
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+                
+                var _courseEdition = _courseEditionRepo
+                    .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 && e.CourseEditionId == key2)
+                    .Include(e => e.Coordinators);
+
+                if (!_courseEdition.Any())
+                {
+                    return NotFound();
+                }
+
+                var courseEdition = await _courseEdition.FirstOrDefaultAsync();
+                if (courseEdition.LockUserId != null)
+                {
+                    return BadRequest("Course edition is already locked.");
+                }
+
+                courseEdition.LockUserId = userId;
+                _courseEditionRepo.Update(courseEdition);
+
+                await _courseEditionRepo.SaveChanges();
+                await _hubContext.Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [Authorize]
@@ -65,12 +99,41 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("({key1},{key2})/Service.Unlock")]
         public async Task<IActionResult> Unlock([FromODataUri] int key1, [FromODataUri] int key2)
         {
-            //Console.WriteLine(HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id"));
-            return Ok();
+            try
+            {
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+
+                var _courseEdition = _courseEditionRepo
+                    .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 && e.CourseEditionId == key2)
+                    .Include(e => e.Coordinators);
+
+                if (!_courseEdition.Any())
+                {
+                    return NotFound();
+                }
+
+                var courseEdition = await _courseEdition.FirstOrDefaultAsync();
+                if (courseEdition.LockUserId == null)
+                {
+                    return BadRequest("Course edition is already unlocked.");
+                }
+
+                courseEdition.LockUserId = null;
+                _courseEditionRepo.Update(courseEdition);
+
+                await _courseEditionRepo.SaveChanges();
+                await _hubContext.Clients.All.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [Authorize]
-        [EnableQuery]
+        [EnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
         public async Task<IActionResult> GetMyCourseEditions([FromODataUri] double Frequency)
         {

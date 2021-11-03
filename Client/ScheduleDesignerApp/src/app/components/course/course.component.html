@@ -1,32 +1,33 @@
-<div class="course {{course?.locked ? 'locked' : ''}}"
-    [style.background]="course?.locked ? 
+<div class="course {{course?.Locked ? 'locked' : ''}}"
+    [style.background]="course?.Locked ? 
         'repeating-linear-gradient(
             -55deg,' +
-            course?.type?.color + ',' +
-            course?.type?.color + ' 10px,' +
+            course?.Type?.Color + ',' +
+            course?.Type?.Color + ' 10px,' +
         '#FFFFFF 10px,
         #FFFFFF 20px
-    )' : course?.type?.color"
+    )' : course?.Type?.Color"
     
     cdkDrag
-    [cdkDragDisabled]="course?.locked"
+    [cdkDragDisabled]="course?.Locked"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"
     (click)="CtrlClick($event)"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>
-    <i>{{course?.type?.name}}, {{course?.amount}} zajęć</i>
+    <i>{{course?.Type?.Name}}, {{course?.Amount}} {{(course!.Amount > 4) ? 'zajęć' : 'zajęcia'}}</i>
     <br/>
-    <b>{{course?.name}}</b>
+    <b>{{course?.Name}}</b>
     <br/>
-    <div *ngFor="let coordinator of course?.coordinators">
-        {{coordinator.lastName}} {{coordinator.firstName}} {{coordinator.title}}
+    <div *ngFor="let coordinator of course?.Coordinators">
+        <span [style.text-decoration]="CheckIfItsMe(coordinator.UserId) ? 'underline' : 'none'">{{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleBefore}} {{coordinator.Titles.TitleAfter}}</span>
         <br/>
     </div>
-    <div *ngFor="let group of course?.groups">
-        {{group?.name}}
+    <div *ngFor="let group of course?.Groups">
+        {{group?.FullName}}
         <br/>
     </div>
-    {{(course?.room != undefined) ? (", " + course?.room?.name) : ""}}
+    {{course?.Room?.Name}}
+    <!--{{(course?.Room != undefined) ? (", " + course?.Room?.Name) : ""}}-->
 </div>

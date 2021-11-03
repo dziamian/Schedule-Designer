@@ -18,14 +18,11 @@ export class Titles {
     ) {}
 }
 
-export class Student {
-    
-}
-
 export class Coordinator {
-
-}
-
-export class Staff {
-
+    constructor(
+        public UserId:number,
+        public FirstName:string,
+        public LastName:string,
+        public Titles:Titles
+    ) { }
 }

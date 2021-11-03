@@ -1,5 +1,7 @@
 import { CdkDrag, CdkDragRelease, CdkDragStart } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Account } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 
 @Component({
@@ -17,7 +19,18 @@ export class CourseComponent implements OnInit {
   @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() release:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 
-  constructor() { }
+  account:Account;
+
+  constructor(
+    private store:Store<{account:Account}>
+  ) {
+    this.store.select('account').subscribe((account) => {
+      if (account.UserId == 0) {
+        return;
+      }
+      this.account = account;
+    });
+  }
 
   ngOnInit(): void {
   }
@@ -26,6 +39,10 @@ export class CourseComponent implements OnInit {
     if (!this.cdkCourse.disabled && event.ctrlKey) {
       this.ctrlClick.emit(this.course);
     }
+  }
+
+  CheckIfItsMe(id:number):boolean {
+    return this.account.UserId == id;
   }
 
   OnStarted(event:CdkDragStart) {

@@ -1,7 +1,7 @@
 export class Group {
-    readonly name:string;
+    FullName:string;
 
-    constructor(name:string) {
-        this.name = name;
-    }
+    constructor(
+        public GroupId:number,
+    ) { }
 }

@@ -7,7 +7,7 @@ namespace ScheduleDesigner.Hubs.Interfaces
 {
     public interface IScheduleClient
     {
-        void UserUpdate();
-        void UserRemove();
+        Task LockCourseEdition(int courseId, int courseEditionId);
+        Task UnlockCourseEdition(int courseId, int courseEditionId);
     }
 }

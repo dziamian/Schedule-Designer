@@ -11,10 +11,27 @@ export class SignalrService implements OnDestroy {
   
   connection:signalr.HubConnection;
   connectionIntentionallyStopped:boolean = false;
+  
   isConnected:BehaviorSubject<boolean>
+  lastLockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number}>
+  lastUnlockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number}>
 
   constructor() {
     this.isConnected = new BehaviorSubject<boolean>(false);
+    this.lastLockedCourseEdition = new BehaviorSubject<{
+      courseId:number, 
+      courseEditionId:number
+    }>({
+      courseId: -1,
+      courseEditionId: -1
+    });
+    this.lastUnlockedCourseEdition = new BehaviorSubject<{
+      courseId:number, 
+      courseEditionId:number
+    }>({
+      courseId: -1,
+      courseEditionId: -1
+    });
   }
 
   private GetAuthorizationHeader(token:any) {
@@ -69,7 +86,21 @@ export class SignalrService implements OnDestroy {
     this.connection.onclose((error) => {
       this.connectionIntentionallyStopped = false;
       this.isConnected.next(false);
-    })
+    });
+    
+    this.connection.on('LockCourseEdition', (courseId, courseEditionId) => {
+      this.lastLockedCourseEdition.next({
+        courseId: courseId,
+        courseEditionId: courseEditionId
+      });
+    });
+
+    this.connection.on('UnlockCourseEdition', (courseId, courseEditionId) => {
+      this.lastUnlockedCourseEdition.next({
+        courseId: courseId,
+        courseEditionId: courseEditionId
+      });
+    });
   }
 
   ngOnDestroy() {

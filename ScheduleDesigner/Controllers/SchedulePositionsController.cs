@@ -15,7 +15,11 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFreePeriods()
         {
-            return Ok(new int[] { 1, 1, 2, 2, 4, 4, 4, 5 });
+            Random random = new Random();
+            int x = random.Next() % 4 + 1;
+            int y = random.Next() % 3 + 1;
+
+            return Ok(new int[] { x, y, x + 1, y + 1 });
         }
     }
 }

@@ -1,22 +1,20 @@
-import { Coordinator } from "./Coordinator";
+import { Coordinator } from "./Accounts";
 import { CourseType } from "./CourseType";
 import { Group } from "./Group";
 import { Room } from "./Room";
 
 export class CourseEdition {
-    readonly name:string;
-    readonly type:CourseType;
-    readonly amount:number;
-    readonly groups:Group[];
-    readonly coordinators:Coordinator[];
-    room:Room|null = null;
-    locked:boolean = false;
+    Room:Room|null = null;
+    Optional:boolean = false;
+    Locked:boolean = false;
 
-    constructor(name:string, type:CourseType, amount:number, groups:Group[], coordinators:Coordinator[]) {
-        this.name = name;
-        this.type = type;
-        this.amount = amount;
-        this.groups = groups;
-        this.coordinators = coordinators;
-    }
+    constructor(
+        public CourseId:number,
+        public CourseEditionId:number,
+        public Name:string,
+        public Type:CourseType,
+        public Amount:number,
+        public Groups:Group[],
+        public Coordinators:Coordinator[]
+    ) {}
 }

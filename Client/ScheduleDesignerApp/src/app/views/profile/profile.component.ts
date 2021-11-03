@@ -30,7 +30,6 @@ export class ProfileComponent implements OnInit {
     private router:Router,
     private snackBar:MatSnackBar
   ) { 
-
     this.store.select('account').subscribe((account) => {
       if (account.UserId == 0) {
         return;
