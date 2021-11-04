@@ -165,21 +165,20 @@ export class ScheduleDesignerApiService {
             ));
           });
 
-          let courseEdition = new CourseEdition(
-            value.CourseId, 
-            value.CourseEditionId,
-            value.Course.Name,
-            courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
-            (roundUp) ? Math.ceil(frequency) : Math.floor(frequency),
-            groups,
-            coordinators
-          );
-          courseEdition.Locked = value.LockUserId;
-
           let coursesAmount = value.Course.UnitsMinutes - value['SchedulePositions@odata.count'] * settings.CourseDurationMinutes
           coursesAmount /= frequency * settings.CourseDurationMinutes;
           coursesAmount = Math.floor(coursesAmount);
           for (let i = 0; i < coursesAmount; ++i) {
+            let courseEdition = new CourseEdition(
+              value.CourseId, 
+              value.CourseEditionId,
+              value.Course.Name,
+              courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
+              (roundUp) ? Math.ceil(frequency) : Math.floor(frequency),
+              groups,
+              coordinators
+            );
+            courseEdition.Locked = value.LockUserId;
             myCourseEditions.push(courseEdition);
           }
         });
@@ -221,7 +220,7 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public UnlockCourseEdition(courseId:number, courseEditionId:number) {
+  public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
     const request = {
       url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.Unlock`,
       method: 'POST'

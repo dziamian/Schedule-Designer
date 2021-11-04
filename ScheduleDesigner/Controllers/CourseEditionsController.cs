@@ -23,6 +23,8 @@ namespace ScheduleDesigner.Controllers
         private readonly ISettingsRepo _settingsRepo;
         private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
+        private static readonly object LockObject = new object();
+
         public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
         {
             _courseEditionRepo = courseEditionRepo;
@@ -64,29 +66,38 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
-                
-                var _courseEdition = _courseEditionRepo
-                    .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 && e.CourseEditionId == key2)
-                    .Include(e => e.Coordinators);
 
-                if (!_courseEdition.Any())
+                lock (LockObject)
                 {
-                    return NotFound();
+                    var _courseEdition = _courseEditionRepo
+                        .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 &&
+                                  e.CourseEditionId == key2)
+                        .Include(e => e.Coordinators);
+
+                    if (!_courseEdition.Any())
+                    {
+                        return NotFound();
+                    }
+
+                    var courseEdition = _courseEdition.FirstOrDefault();
+                    if (courseEdition.LockUserId != null)
+                    {
+                        return BadRequest("Course edition is already locked.");
+                    }
+
+                    courseEdition.LockUserId = userId;
+                    _courseEditionRepo.Update(courseEdition);
+
+                    //byc moze w miedzyczasie ktos zrobil Locka i przez to courseEdition jest juz nieaktualne -> niepoprawna wersja, ktora jest juz w bazie danych
+                    var result = _courseEditionRepo.SaveChanges().Result;
+                    var result2 = _hubContext.Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+
+                    return Ok();
                 }
-
-                var courseEdition = await _courseEdition.FirstOrDefaultAsync();
-                if (courseEdition.LockUserId != null)
-                {
-                    return BadRequest("Course edition is already locked.");
-                }
-
-                courseEdition.LockUserId = userId;
-                _courseEditionRepo.Update(courseEdition);
-
-                await _courseEditionRepo.SaveChanges();
-                await _hubContext.Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
-
-                return Ok();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                return BadRequest(e.Message);
             }
             catch (Exception e)
             {
@@ -115,7 +126,12 @@ namespace ScheduleDesigner.Controllers
                 var courseEdition = await _courseEdition.FirstOrDefaultAsync();
                 if (courseEdition.LockUserId == null)
                 {
-                    return BadRequest("Course edition is already unlocked.");
+                    return BadRequest("This course edition is already unlocked.");
+                }
+
+                if (courseEdition.LockUserId != userId)
+                {
+                    return BadRequest("You cannot unlock this course edition.");
                 }
 
                 courseEdition.LockUserId = null;

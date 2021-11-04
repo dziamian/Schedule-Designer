@@ -18,7 +18,6 @@ export class ProfileComponent implements OnInit {
 
   loading:boolean = true;
   connectionStatus:boolean = false;
-  snackBarDuration:number = 10 * 1000;
 
   account:Account;
 
@@ -43,9 +42,7 @@ export class ProfileComponent implements OnInit {
     let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;
       if (!status && !this.signalrService.connectionIntentionallyStopped) {
-        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK", {
-          duration: this.snackBarDuration
-        });
+        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
       }
     });
 
@@ -57,16 +54,12 @@ export class ProfileComponent implements OnInit {
       if (error?.status == 401) {
         this.usosApiService.Deauthorize();
 
-        this.snackBar.open('Session expired. Please log in again.', 'OK', {
-          duration: this.snackBarDuration
-        });
+        this.snackBar.open('Session expired. Please log in again.', 'OK');
         this.router.navigate(['login']);
       } else if (!isConnectedSubscription.closed) {
-        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK", {
-          duration: this.snackBarDuration
-        });
+        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
       }
-    })
+    });
   }
 
 }

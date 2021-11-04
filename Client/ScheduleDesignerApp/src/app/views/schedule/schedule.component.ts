@@ -67,11 +67,12 @@ export class ScheduleComponent implements OnInit {
     });
 
     this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
-      const currentCourseEdition = this.currentDragEvent?.source.data;
+      //console.log(this.myCourses);
+      //console.log(this.schedule);
       this.myCourses.forEach((value) => {
-        if (value.CourseId == currentCourseEdition?.CourseId && value.CourseEditionId == currentCourseEdition?.CourseEditionId) {
+        /*if (value.CourseId == currentCourseEdition?.CourseId && value.CourseEditionId == currentCourseEdition?.CourseEditionId) {
           return;
-        }
+        }*/
         if (value.CourseId == courseId && value.CourseEditionId == courseEditionId) {
           value.Locked = true;
         }
@@ -189,10 +190,6 @@ export class ScheduleComponent implements OnInit {
     ];
   }
 
-  private openDialog() {
-
-  }
-
   OnTabChange(index:number) {
     console.log(this.scheduleSlots);
 
@@ -201,7 +198,6 @@ export class ScheduleComponent implements OnInit {
 
   async DropInMyCourses(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>) {
     if (this.isCanceled) {
-      this.isCanceled = false;
       return;
     }
 
@@ -221,24 +217,32 @@ export class ScheduleComponent implements OnInit {
       event.container.data[event.currentIndex].Room = null;
     }
     
-    const unlockResult = await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+    try {
+      await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      event.item.data.Locked = false;
+    } catch (error) {
+      
+    }
+    this.currentDragEvent = null;
   }
 
   async DropInSchedule(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>, dayIndex:number, slotIndex:number) {
+    this.isReleased = true;
+    
     const index = dayIndex * this.scheduleTimeLabels.length + slotIndex;
 
     if (this.isCanceled) {
-      this.isCanceled = false;
       return;
     }
 
-    /*if (!this.allowedSlotIndexes[index]) {
-      const unlockResult = await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
-      return;
-    }*/
-
     if (event.previousContainer === event.container) {
-      const unlockResult = await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      try {
+        await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        event.item.data.Locked = false;
+      } catch (error) {
+
+      }
+      this.currentDragEvent = null;
       return;
     }
 
@@ -248,7 +252,6 @@ export class ScheduleComponent implements OnInit {
       const result = await this.currentOpenedDialog.afterClosed().toPromise();
       this.currentOpenedDialog = null;
       if (result == false) {
-        this.isCanceled = false;
         return;
       } 
 
@@ -270,7 +273,13 @@ export class ScheduleComponent implements OnInit {
         this.myCourses.length
       );
 
-      const unlockResult = await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      try {
+        await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        event.item.data.Locked = false;
+      } catch(error) {
+      
+      }
+      this.currentDragEvent = null;
       return;
     }
 
@@ -278,7 +287,6 @@ export class ScheduleComponent implements OnInit {
     const result = await this.currentOpenedDialog.afterClosed().toPromise();
     this.currentOpenedDialog = null;
     if (result == false) {
-      this.isCanceled = false;
       return;
     } 
     
@@ -294,7 +302,13 @@ export class ScheduleComponent implements OnInit {
     );
     //otherwise if room has been chosen but is busy -> scheduledmove
 
-    const unlockResult = await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+    try {
+      await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      event.item.data.Locked = false;
+    } catch (error) {
+
+    }
+    this.currentDragEvent = null;
   }
 
   IsScheduleSlotDisabled(dayIndex:number, slotIndex:number) {
@@ -307,12 +321,18 @@ export class ScheduleComponent implements OnInit {
 
   async OnStartDragging(event:CdkDragStart<CourseEdition>) {
     this.isReleased = false;
+    this.isCanceled = false;
     this.currentDragEvent = event;
     
     event.source.dropContainer.connectedTo = ['my-courses', '0,0', '1,1', '3,3'];
     
     try {
-      await this.scheduleDesignerApiService.LockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+      if (!this.isReleased) {
+        await this.scheduleDesignerApiService.LockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        event.source.data.Locked = true;
+      } else {
+        return;
+      }
     } catch (error) {
       this.isCanceled = true;
       if (!this.isReleased) {
@@ -333,11 +353,13 @@ export class ScheduleComponent implements OnInit {
 
     let freeSlots = await this.scheduleDesignerApiService.GetFreePeriods().toPromise();
     //event.source.dropContainer.connectedTo = ['my-courses', '0,0', '1,1', '3,3'];
-    if (!this.isReleased) {
+    
+    /*if (!this.isReleased) {
       event.source.dropContainer._dropListRef.enter(
         event.source._dragRef, 0, 0
       );
-    }
+    }*/
+    
     let numberOfSlots = this.scheduleTimeLabels.length;
     let freeSlotIndex = 0;
     let scheduleSlots = this.scheduleSlots.toArray();
@@ -351,11 +373,21 @@ export class ScheduleComponent implements OnInit {
         element.nativeElement.removeAttribute('selected');
       }
     }
+    
+    if (this.isReleased) {
+      try {
+        await this.scheduleDesignerApiService.UnlockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        event.source.data.Locked = false;
+      } catch (error) {
+
+      }
+      this.currentDragEvent = null;
+    }
   }
 
   async OnReleaseDragging(event:CdkDragRelease<CourseEdition>) {
     this.isReleased = true;
-    this.currentDragEvent = null;
+    //this.currentDragEvent = null;
     //event.source.dropContainer.connectedTo = [];
     let scheduleSlots = this.scheduleSlots.toArray();
     for (let i = 0; i < this.scheduleSlots.length; ++i) {

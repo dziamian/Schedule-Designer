@@ -12,6 +12,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.OData.Edm;
+using ScheduleDesigner.Authentication;
 
 namespace ScheduleDesigner.Services
 {
@@ -23,10 +25,12 @@ namespace ScheduleDesigner.Services
         private readonly HttpClient _client;
         private readonly IUserRepo _userRepo;
         private readonly IStaffRepo _staffRepo;
+        private readonly IAuthorizationRepo _authorizationRepo;
 
         public UsosAuthenticationService(IOptions<ApplicationInfo> applicationInfo, IOptions<Consumer> usosConsumer, 
             IUserRepo userRepo,
-            IStaffRepo staffRepo)
+            IStaffRepo staffRepo,
+            IAuthorizationRepo authorizationRepo)
         {
             ApplicationInfo = applicationInfo.Value;
             UsosConsumer = usosConsumer.Value;
@@ -34,6 +38,7 @@ namespace ScheduleDesigner.Services
             _client = new HttpClient();
             _userRepo = userRepo;
             _staffRepo = staffRepo;
+            _authorizationRepo = authorizationRepo;
         }
 
         public OAuthRequest GetOAuthRequest(string accessToken, string accessTokenSecret)
@@ -56,6 +61,20 @@ namespace ScheduleDesigner.Services
             
             request.Headers.Add("Authorization", oauth.GetAuthorizationHeader());
             return await SendUserRequestAsync(request);
+        }
+
+        public async Task<int> GetUserId(string accessToken, string accessTokenSecret)
+        {
+            var _authorization = await _authorizationRepo
+                .Get(e => e.AccessToken == accessToken && e.AccessTokenSecret == accessTokenSecret)
+                .FirstOrDefaultAsync();
+
+            if (_authorization == null || _authorization.InsertedDateTime.AddMinutes(30) < DateTime.Now)
+            {
+                return -1;
+            }
+
+            return _authorization.UserId;
         }
 
         public async Task<UserInfo> GetUserInfo(OAuthRequest oauth, int? userId = null)
@@ -127,6 +146,51 @@ namespace ScheduleDesigner.Services
 
             await _userRepo.Add(user);
             return user;
+        }
+
+        public async Task<Authorization> CreateCredentials(int userId, string accessToken, string accessTokenSecret)
+        {
+            var _authorization = await _authorizationRepo
+                .Get(e => e.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (_authorization == null)
+            {
+                var authorization = new Authorization
+                {
+                    UserId = userId,
+                    AccessToken = accessToken,
+                    AccessTokenSecret = accessTokenSecret,
+                    InsertedDateTime = DateTime.Now
+                };
+                await _authorizationRepo.Add(authorization);
+                await _authorizationRepo.SaveChanges();
+
+                return authorization;
+            }
+
+            return null;
+        }
+
+        public async Task<Authorization> UpdateCredentials(int userId, string accessToken, string accessTokenSecret)
+        {
+            var _authorization = await _authorizationRepo
+                .Get(e => e.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (_authorization == null || _authorization.InsertedDateTime.AddMinutes(30) > DateTime.Now)
+            {
+                return null;
+            }
+            
+            _authorization.AccessToken = accessToken;
+            _authorization.AccessTokenSecret = accessTokenSecret;
+            _authorization.InsertedDateTime = DateTime.Now;
+
+            _authorizationRepo.Update(_authorization);
+            await _authorizationRepo.SaveChanges();
+
+            return _authorization;
         }
 
         private async Task<UserInfo> SendUserRequestAsync(HttpRequestMessage request)

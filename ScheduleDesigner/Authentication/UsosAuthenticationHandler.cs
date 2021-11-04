@@ -33,17 +33,29 @@ namespace ScheduleDesigner.Authentication
         {
             try
             {
-                if (Request.Headers.ContainsKey("AccessToken") && Request.Headers.ContainsKey("AccessTokenSecret"))
+                if (!Request.Headers.ContainsKey("AccessToken") || !Request.Headers.ContainsKey("AccessTokenSecret"))
                 {
-                    var oauth = _usosService.GetOAuthRequest(
-                        Request.Headers["AccessToken"], 
-                        Request.Headers["AccessTokenSecret"]
-                    );
-                    var userInfo = await _usosService.GetUserId(oauth);
-                    return ValidateToken(int.Parse(userInfo.Id));
+                    return AuthenticateResult.NoResult();
                 }
 
-                return AuthenticateResult.NoResult();
+                var accessToken = Request.Headers["AccessToken"];
+                var accessTokenSecret = Request.Headers["AccessTokenSecret"];
+
+                var userId = await _usosService.GetUserId(accessToken, accessTokenSecret);
+                if (userId != -1)
+                {
+                    return ValidateToken(userId);
+                }
+                
+                var oauth = _usosService.GetOAuthRequest(
+                    accessToken,
+                    accessTokenSecret
+                );
+                var userInfo = await _usosService.GetUserId(oauth);
+                userId = int.Parse(userInfo.Id);
+                await _usosService.UpdateCredentials(userId, accessToken, accessTokenSecret);
+                return ValidateToken(userId);
+
             }
             catch (Exception e)
             {
@@ -60,13 +72,13 @@ namespace ScheduleDesigner.Authentication
                 new Claim("user_id", userId.ToString())
             };
 
-            if (user.Student != null)
+            if (user?.Student != null)
             {
                 claims.Add(new Claim("student", userId.ToString()));
                 foreach (var group in user.Student.Groups) claims.Add(new Claim("representative", group.GroupId.ToString()));
             }
-            if (user.Coordinator != null) claims.Add(new Claim("coordinator", userId.ToString()));
-            if (user.Staff != null)
+            if (user?.Coordinator != null) claims.Add(new Claim("coordinator", userId.ToString()));
+            if (user?.Staff != null)
             {
                 claims.Add(new Claim("staff", userId.ToString()));
                 if (user.Staff.IsAdmin) claims.Add(new Claim("admin", userId.ToString()));

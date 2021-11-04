@@ -33,7 +33,7 @@ namespace ScheduleDesigner.Controllers
             return user.Student != null || user.Coordinator != null || user.Staff != null;
         }
 
-        [HttpPost]
+        /*[HttpPost]
         [ODataRoute("")]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
@@ -63,7 +63,7 @@ namespace ScheduleDesigner.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
+        }*/
 
         [Authorize]
         [HttpPost]
@@ -90,6 +90,7 @@ namespace ScheduleDesigner.Controllers
 
                 if (user != null)
                 {
+                    await _usosService.CreateCredentials(userId, accessToken, accessTokenSecret);
                     await _userRepo.SaveChanges();
                     return Created(user);
                 }
@@ -173,7 +174,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize]
         [EnableQuery]
         [HttpGet]
-        public IActionResult GetMyAccount()
+        public async Task<IActionResult> GetMyAccount()
         {
             try
             {
@@ -184,6 +185,15 @@ namespace ScheduleDesigner.Controllers
                 if (!_user.Any())
                 {
                     return NotFound();
+                }
+
+                var accessToken = HttpContext.Request.Headers["AccessToken"];
+                var accessTokenSecret = HttpContext.Request.Headers["AccessTokenSecret"];
+
+                var result = await _usosService.CreateCredentials(userId, accessToken, accessTokenSecret);
+                if (result != null)
+                {
+                    await _userRepo.SaveChanges();
                 }
 
                 return Ok(SingleResult.Create(_user));

@@ -63,6 +63,7 @@ namespace ScheduleDesigner
             });
 
             services.AddScoped<ISettingsRepo, SqlSettingsRepo>();
+            services.AddScoped<IAuthorizationRepo, SqlAuthorizationRepo>();
             services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<IStudentRepo, SqlStudentRepo>();
             services.AddScoped<ICoordinatorRepo, SqlCoordinatorRepo>();

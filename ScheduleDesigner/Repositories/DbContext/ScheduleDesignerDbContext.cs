@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ScheduleDesigner.Authentication;
 
 namespace ScheduleDesigner.Repositories
 {
     public class ScheduleDesignerDbContext : DbContext
     {
+        public DbSet<Authorization> Authorizations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Coordinator> Coordinators { get; set; }
@@ -33,6 +35,14 @@ namespace ScheduleDesigner.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Authorization
+            modelBuilder.Entity<Authorization>()
+                .HasKey(e => e.UserId);
+
+            modelBuilder.Entity<Authorization>()
+                .Property(e => e.UserId)
+                .ValueGeneratedNever();
+
             //User
             modelBuilder.Entity<User>()
                 .HasKey(e => e.UserId);
