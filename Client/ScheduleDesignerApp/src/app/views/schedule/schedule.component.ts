@@ -382,6 +382,10 @@ export class ScheduleComponent implements OnInit {
 
       }
       this.currentDragEvent = null;
+      for (let i = 0; i < this.scheduleSlots.length; ++i) {
+        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
+        element.nativeElement.removeAttribute('selected');
+      }
     }
   }
 
