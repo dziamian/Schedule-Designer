@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { AccessToken } from './others/AccessToken';
@@ -19,6 +19,8 @@ import { setAccount } from './store/account.actions';
 export class AppComponent implements OnInit {
   title:string = 'Schedule Designer';
 
+  isAccountSet:boolean = false;
+
   constructor(
     private router:Router,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -27,12 +29,23 @@ export class AppComponent implements OnInit {
     private snackBar:MatSnackBar,
     @Inject(DOCUMENT) private document:Document,
     private store:Store<{account:Account}>
-  ) { }
+  ) { 
+    this.router.events.subscribe((value) => {
+      if (!this.isAccountSet && value instanceof NavigationEnd) {
+        this.trySetAccount();
+      }
+    });
+  }
 
   ngOnInit() {
+    this.trySetAccount();
+  }
+
+  private trySetAccount() {
     if (this.IsAuthenticated()) {
       this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
         this.store.dispatch(setAccount({account}));
+        this.isAccountSet = true;
       }, (error) => {
         if (error?.status == 401) {
           this.usosApiService.Deauthorize();
