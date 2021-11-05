@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
@@ -23,7 +25,7 @@ namespace ScheduleDesigner.Controllers
         private readonly ISettingsRepo _settingsRepo;
         private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
-        private static readonly object LockObject = new object();
+        private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>> Locks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
 
         public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
         {
@@ -61,13 +63,18 @@ namespace ScheduleDesigner.Controllers
         [Authorize]
         [HttpPost]
         [ODataRoute("({key1},{key2})/Service.Lock")]
-        public async Task<IActionResult> Lock([FromODataUri] int key1, [FromODataUri] int key2)
+        public IActionResult Lock([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
             {
                 var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
 
-                lock (LockObject)
+                var courseEditionKey = new CourseEditionKey {CourseId = key1, CourseEditionId = key2};
+                var courseEditionQueue = Locks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
+
+                courseEditionQueue.Enqueue(new object());
+
+                lock (courseEditionQueue)
                 {
                     var _courseEdition = _courseEditionRepo
                         .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 &&
@@ -76,21 +83,38 @@ namespace ScheduleDesigner.Controllers
 
                     if (!_courseEdition.Any())
                     {
+                        courseEditionQueue.TryDequeue(out _);
+                        if (courseEditionQueue.IsEmpty)
+                        {
+                            Locks.TryRemove(courseEditionKey, out _);
+                        }
+
                         return NotFound();
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
                     if (courseEdition.LockUserId != null)
                     {
+                        courseEditionQueue.TryDequeue(out _);
+                        if (courseEditionQueue.IsEmpty)
+                        {
+                            Locks.TryRemove(courseEditionKey, out _);
+                        }
+
                         return BadRequest("Course edition is already locked.");
                     }
 
                     courseEdition.LockUserId = userId;
                     _courseEditionRepo.Update(courseEdition);
 
-                    //byc moze w miedzyczasie ktos zrobil Locka i przez to courseEdition jest juz nieaktualne -> niepoprawna wersja, ktora jest juz w bazie danych
                     var result = _courseEditionRepo.SaveChanges().Result;
                     var result2 = _hubContext.Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+
+                    courseEditionQueue.TryDequeue(out _);
+                    if (courseEditionQueue.IsEmpty)
+                    {
+                        Locks.TryRemove(courseEditionKey, out _);
+                    }
 
                     return Ok();
                 }
