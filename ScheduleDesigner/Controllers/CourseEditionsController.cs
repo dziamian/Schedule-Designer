@@ -60,7 +60,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "Coordinator")]
         [HttpPost]
         [ODataRoute("({key1},{key2})/Service.Lock")]
         public IActionResult Lock([FromODataUri] int key1, [FromODataUri] int key2)
@@ -129,7 +129,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "Coordinator")]
         [HttpPost]
         [ODataRoute("({key1},{key2})/Service.Unlock")]
         public async Task<IActionResult> Unlock([FromODataUri] int key1, [FromODataUri] int key2)

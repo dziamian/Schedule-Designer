@@ -106,6 +106,9 @@ namespace ScheduleDesigner
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("admin"));
+                options.AddPolicy("Coordinator", policy => policy.RequireClaim("coordinator"));
+                options.AddPolicy("Representative", policy => policy.RequireClaim("representative"));
+                options.AddPolicy("Staff", policy => policy.RequireClaim("staff"));
             });
         }
 
@@ -133,10 +136,15 @@ namespace ScheduleDesigner
 
             app.UseEndpoints(endpoints =>
             {
-                var defaultBatchHandler = new DefaultODataBatchHandler();
-                defaultBatchHandler.MessageQuotas.MaxNestingDepth = 2;
-                defaultBatchHandler.MessageQuotas.MaxOperationsPerChangeset = 10;
-                defaultBatchHandler.MessageQuotas.MaxReceivedMessageSize = 100;
+                var defaultBatchHandler = new DefaultODataBatchHandler
+                {
+                    MessageQuotas =
+                    {
+                        MaxNestingDepth = 2,
+                        MaxOperationsPerChangeset = 10,
+                        MaxReceivedMessageSize = 100
+                    }
+                };
 
                 endpoints.MapControllers();
                 endpoints.Select().Filter().OrderBy().Count().Expand().MaxTop(100);
