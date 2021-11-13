@@ -205,36 +205,6 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public LockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
-    const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.Lock`,
-      method: 'POST'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
-    const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.Unlock`,
-      method: 'POST'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
   public GetFreePeriods():Observable<number[]> {
     const request = {
       url: this.baseUrl + '/schedulePositions/Service.GetFreePeriods()',

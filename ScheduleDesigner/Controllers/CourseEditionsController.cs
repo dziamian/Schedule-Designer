@@ -25,8 +25,6 @@ namespace ScheduleDesigner.Controllers
         private readonly ISettingsRepo _settingsRepo;
         private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
-        private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>> Locks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
-
         public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
         {
             _courseEditionRepo = courseEditionRepo;
@@ -53,118 +51,6 @@ namespace ScheduleDesigner.Controllers
                     return Created(_courseEdition);
                 }
                 return NotFound();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize(Policy = "Coordinator")]
-        [HttpPost]
-        [ODataRoute("({key1},{key2})/Service.Lock")]
-        public IActionResult Lock([FromODataUri] int key1, [FromODataUri] int key2)
-        {
-            try
-            {
-                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
-
-                var courseEditionKey = new CourseEditionKey {CourseId = key1, CourseEditionId = key2};
-                var courseEditionQueue = Locks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
-
-                courseEditionQueue.Enqueue(new object());
-
-                lock (courseEditionQueue)
-                {
-                    var _courseEdition = _courseEditionRepo
-                        .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 &&
-                                  e.CourseEditionId == key2)
-                        .Include(e => e.Coordinators);
-
-                    if (!_courseEdition.Any())
-                    {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            Locks.TryRemove(courseEditionKey, out _);
-                        }
-
-                        return NotFound();
-                    }
-
-                    var courseEdition = _courseEdition.FirstOrDefault();
-                    if (courseEdition.LockUserId != null)
-                    {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            Locks.TryRemove(courseEditionKey, out _);
-                        }
-
-                        return BadRequest("Course edition is already locked.");
-                    }
-
-                    courseEdition.LockUserId = userId;
-                    _courseEditionRepo.Update(courseEdition);
-
-                    var result = _courseEditionRepo.SaveChanges().Result;
-                    var result2 = _hubContext.Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
-
-                    courseEditionQueue.TryDequeue(out _);
-                    if (courseEditionQueue.IsEmpty)
-                    {
-                        Locks.TryRemove(courseEditionKey, out _);
-                    }
-
-                    return Ok();
-                }
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize(Policy = "Coordinator")]
-        [HttpPost]
-        [ODataRoute("({key1},{key2})/Service.Unlock")]
-        public async Task<IActionResult> Unlock([FromODataUri] int key1, [FromODataUri] int key2)
-        {
-            try
-            {
-                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
-
-                var _courseEdition = _courseEditionRepo
-                    .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == key1 && e.CourseEditionId == key2)
-                    .Include(e => e.Coordinators);
-
-                if (!_courseEdition.Any())
-                {
-                    return NotFound();
-                }
-
-                var courseEdition = await _courseEdition.FirstOrDefaultAsync();
-                if (courseEdition.LockUserId == null)
-                {
-                    return BadRequest("This course edition is already unlocked.");
-                }
-
-                if (courseEdition.LockUserId != userId)
-                {
-                    return BadRequest("You cannot unlock this course edition.");
-                }
-
-                courseEdition.LockUserId = null;
-                _courseEditionRepo.Update(courseEdition);
-
-                await _courseEditionRepo.SaveChanges();
-                await _hubContext.Clients.All.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
-
-                return Ok();
             }
             catch (Exception e)
             {

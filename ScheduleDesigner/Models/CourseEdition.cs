@@ -20,7 +20,9 @@ namespace ScheduleDesigner.Models
 
         public int? LockUserId { get; set; }
 
-        
+        public string LockUserConnectionId { get; set; }
+
+
         [ForeignKey("LockUserId")]
         public User LockUser { get; set; }
 

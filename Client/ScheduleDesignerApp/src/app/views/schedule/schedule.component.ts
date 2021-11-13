@@ -218,7 +218,10 @@ export class ScheduleComponent implements OnInit {
     }
     
     try {
-      await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      if (result.statusCode >= 400) {
+        throw result;
+      }
       event.item.data.Locked = false;
     } catch (error) {
       
@@ -237,7 +240,10 @@ export class ScheduleComponent implements OnInit {
 
     if (event.previousContainer === event.container) {
       try {
-        await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        if (result.statusCode >= 400) {
+          throw result;
+        }
         event.item.data.Locked = false;
       } catch (error) {
 
@@ -274,7 +280,10 @@ export class ScheduleComponent implements OnInit {
       );
 
       try {
-        await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        if (result.statusCode >= 400) {
+          throw result;
+        }
         event.item.data.Locked = false;
       } catch(error) {
       
@@ -303,7 +312,10 @@ export class ScheduleComponent implements OnInit {
     //otherwise if room has been chosen but is busy -> scheduledmove
 
     try {
-      await this.scheduleDesignerApiService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      if (result.statusCode >= 400) {
+        throw result;
+      }
       event.item.data.Locked = false;
     } catch (error) {
 
@@ -328,7 +340,10 @@ export class ScheduleComponent implements OnInit {
     
     try {
       if (!this.isReleased) {
-        await this.scheduleDesignerApiService.LockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        const result = await this.signalrService.LockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        if (result.statusCode >= 400) {
+          throw result;
+        }
         event.source.data.Locked = true;
       } else {
         return;
@@ -376,7 +391,10 @@ export class ScheduleComponent implements OnInit {
     
     if (this.isReleased) {
       try {
-        await this.scheduleDesignerApiService.UnlockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        const result = await this.signalrService.UnlockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        if (result.statusCode >= 400) {
+          throw result;
+        }
         event.source.data.Locked = false;
       } catch (error) {
 

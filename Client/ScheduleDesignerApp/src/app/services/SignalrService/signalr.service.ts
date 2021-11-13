@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
 
 @Injectable({
@@ -66,6 +66,7 @@ export class SignalrService implements OnDestroy {
         .start()
         .then(() => {
           this.isConnected.next(true);
+          console.log(this.connection.connectionId);
           observer.next();
           observer.complete();
         })
@@ -73,6 +74,14 @@ export class SignalrService implements OnDestroy {
           observer.error({status: -1});
         });
     });
+  }
+
+  public LockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
+    return from(this.connection.invoke('LockCourseEdition', courseId, courseEditionId));
+  }
+
+  public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
+    return from(this.connection.invoke('UnlockCourseEdition', courseId, courseEditionId));
   }
 
   public Disconnect() {

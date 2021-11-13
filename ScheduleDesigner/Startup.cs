@@ -252,12 +252,6 @@ namespace ScheduleDesigner
                 .ReturnsCollection<GroupFullName>()
                 .CollectionParameter<int>("GroupsIds");
 
-            builder.EntityType<CourseEdition>()
-                .Action("Lock");
-
-            builder.EntityType<CourseEdition>()
-                .Action("Unlock");
-
             builder.EntityType<CourseEdition>().Collection
                 .Function("GetMyCourseEditions")
                 .ReturnsFromEntitySet<CourseEdition>("CourseEditions")
