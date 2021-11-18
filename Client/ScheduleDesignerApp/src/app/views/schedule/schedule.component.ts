@@ -49,7 +49,8 @@ export class ScheduleComponent implements OnInit {
 
   myCourses:CourseEdition[];
   schedule:CourseEdition[][][];
-
+  
+  scheduleSlotsValidity:boolean[][];
   isMoveValid:boolean|null = null;
 
   constructor(
@@ -126,21 +127,30 @@ export class ScheduleComponent implements OnInit {
 
       let allGroups = new Array<Group>();
       
-      this.myCourses.forEach((courseEdition) => {
-        courseEdition.Groups.forEach((group) => {
-          allGroups.push(group);
-        });
-      });
+      for (let i = 0; i < this.myCourses.length; ++i) {
+        for (let j = 0; j < this.myCourses[i].Groups.length; ++j) {
+          allGroups.push(this.myCourses[i].Groups[j]);
+        }
+      }
+      for (let i = 0; i < this.schedule.length; ++i) {
+        for (let j = 0; j < this.schedule[i].length; ++j) {
+          for (let k = 0; k < this.schedule[i][j].length; ++k) {
+            for (let l = 0; l < this.schedule[i][j][k].Groups.length; ++l) {
+              allGroups.push(this.schedule[i][j][k].Groups[l]);
+            }
+          }
+        }
+      }
 
       this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) => e.GroupId)).subscribe((groupsFullNames) => {
         for (let i = 0; i < groupsFullNames.length; ++i) {
           allGroups[i].FullName = groupsFullNames[i];
         }
+        
+        this.loading = false;
+        this.tabLoading = false;
       });
 
-      
-      this.loading = false;
-      this.tabLoading = false;
       //TEST
         /*setTimeout(() => {
           console.log("TEST");
@@ -192,15 +202,18 @@ export class ScheduleComponent implements OnInit {
     }
 
     this.schedule = [];
+    this.scheduleSlotsValidity = [];
     for (let j:number = 0; j < 5; ++j) {
       this.schedule.push([]);
+      this.scheduleSlotsValidity.push([]);
       for (let i:number = 0; i < numberOfSlots; ++i) {
         this.schedule[j].push([]);
+        this.scheduleSlotsValidity[j].push(false);
       }
     }
   }
 
-  private clearSchedule() {
+  private resetSchedule() {
     const numberOfSlots = this.settings.periods.length - 1;
 
     this.schedule = [];
@@ -224,12 +237,14 @@ export class ScheduleComponent implements OnInit {
     this.currentTabIndex = index;
     this.tabLoading = true;
 
-    this.clearSchedule();
+    this.resetSchedule();
     this.getMyCourseEditionsAndScheduleAsCoordinator(index);
   }
 
   async DropInMyCourses(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>) {
     if (this.isCanceled) {
+      this.currentDragEvent = null;
+      this.isMoveValid = null;
       return;
     }
 
@@ -247,6 +262,7 @@ export class ScheduleComponent implements OnInit {
         event.currentIndex
       );
       event.container.data[event.currentIndex].Room = null;
+      event.container.data[event.currentIndex].Amount = event.container.data[event.currentIndex].Weeks?.length ?? 0;
       event.container.data[event.currentIndex].Weeks = null;
     }
     
@@ -260,14 +276,17 @@ export class ScheduleComponent implements OnInit {
       
     }
     this.currentDragEvent = null;
+    this.isMoveValid = null;
   }
 
   async DropInSchedule(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>, dayIndex:number, slotIndex:number) {
     this.isReleased = true;
-    
+
     const index = dayIndex * this.scheduleTimeLabels.length + slotIndex;
 
     if (this.isCanceled) {
+      this.currentDragEvent = null;
+      this.isMoveValid = null;
       return;
     }
 
@@ -282,6 +301,7 @@ export class ScheduleComponent implements OnInit {
 
       }
       this.currentDragEvent = null;
+      this.isMoveValid = null;
       return;
     }
 
@@ -295,7 +315,7 @@ export class ScheduleComponent implements OnInit {
       } 
 
       event.previousContainer.data[event.previousIndex].Room = new Room(1, "EXAMPLE");
-      event.previousContainer.data[event.previousIndex].Weeks = [1];
+      event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
 
       transferArrayItem(
         event.previousContainer.data,
@@ -324,6 +344,7 @@ export class ScheduleComponent implements OnInit {
       
       }
       this.currentDragEvent = null;
+      this.isMoveValid = null;
       return;
     }
 
@@ -336,7 +357,7 @@ export class ScheduleComponent implements OnInit {
     
     //get room and set it
     event.previousContainer.data[event.previousIndex].Room = new Room(1, "EXAMPLE");
-    event.previousContainer.data[event.previousIndex].Weeks = [1];
+    event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
 
     //if room has been chosen and accepted by API
     transferArrayItem(
@@ -357,6 +378,7 @@ export class ScheduleComponent implements OnInit {
 
     }
     this.currentDragEvent = null;
+    this.isMoveValid = null;
   }
 
   IsScheduleSlotDisabled(dayIndex:number, slotIndex:number) {
@@ -368,12 +390,8 @@ export class ScheduleComponent implements OnInit {
   }
 
   OnScheduleSlotEnter(drag:CdkDragEnter<CourseEdition[]>) {
-    let element = drag.container.element as ElementRef<HTMLElement>;
-    if (element.nativeElement.getAttribute('selected')) {
-      this.isMoveValid = true;
-    } else {
-      this.isMoveValid = false;
-    }
+    const indexes = this.getIndexes(drag.container.id);
+    this.isMoveValid = this.scheduleSlotsValidity[indexes[0]][indexes[1]];
   }
 
   async OnStartDragging(event:CdkDragStart<CourseEdition>) {
@@ -416,17 +434,33 @@ export class ScheduleComponent implements OnInit {
     ).toPromise();
     let connectedTo = ['my-courses'];
     
-    let numberOfSlots = this.scheduleTimeLabels.length;
+    const numberOfSlots = this.scheduleTimeLabels.length;
     let busySlotIndex = 0;
     let scheduleSlots = this.scheduleSlots.toArray();
-    for (let i = 0; i < this.scheduleSlots.length; ++i) {
-      let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
-      connectedTo.push(element.nativeElement.id);
-      if (i != (busySlots[busySlotIndex]?.PeriodIndex - 1) * numberOfSlots + (busySlots[busySlotIndex]?.Day - 1)) {
-        element.nativeElement.setAttribute('selected', '');
-        ++busySlotIndex;
-      } else {
-        element.nativeElement.removeAttribute('selected');
+    
+    if (event.source.dropContainer.id != 'my-courses') {
+      for (let i = 0; i < this.scheduleSlots.length; ++i) {
+        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
+        connectedTo.push(element.nativeElement.id);
+        if (i != (busySlots[busySlotIndex]?.Day - 1) * numberOfSlots + (busySlots[busySlotIndex]?.PeriodIndex - 1)) {
+          this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = true;
+        } else {
+          this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
+          ++busySlotIndex;
+        }
+      }
+      const indexes = this.getIndexes(event.source.dropContainer.id);
+      this.scheduleSlotsValidity[indexes[0]][indexes[1]] = true;
+    } else {
+      for (let i = 0; i < this.scheduleSlots.length; ++i) {
+        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
+        if (i != (busySlots[busySlotIndex]?.Day - 1) * numberOfSlots + (busySlots[busySlotIndex]?.PeriodIndex - 1)) {
+          this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = true;
+          connectedTo.push(element.nativeElement.id);
+        } else {
+          this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
+          ++busySlotIndex;
+        }
       }
     }
 
@@ -450,22 +484,20 @@ export class ScheduleComponent implements OnInit {
       }
       this.currentDragEvent = null;
       for (let i = 0; i < this.scheduleSlots.length; ++i) {
-        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
-        element.nativeElement.removeAttribute('selected');
+        this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
       }
     }
   }
 
   async OnReleaseDragging(event:CdkDragRelease<CourseEdition>) {
     this.isReleased = true;
-    //this.currentDragEvent = null;
-    //event.source.dropContainer.connectedTo = [];
-    let scheduleSlots = this.scheduleSlots.toArray();
+    
+    event.source.dropContainer.connectedTo = [];
+
+    const numberOfSlots = this.scheduleTimeLabels.length;
     for (let i = 0; i < this.scheduleSlots.length; ++i) {
-      let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
-      element.nativeElement.removeAttribute('selected');
+      this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
     }
-    this.isMoveValid = null;
   }
 
   Reset(dayIndex:number, slotIndex:number, event:CourseEdition) {

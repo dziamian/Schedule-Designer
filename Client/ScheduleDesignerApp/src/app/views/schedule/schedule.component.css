@@ -93,7 +93,7 @@
     height: 10.2vh;
 }
 
-.schedule-content table td[selected] {
+.schedule-content table td[valid="true"] {
     background-color: rgb(180, 180, 180);
 }
 

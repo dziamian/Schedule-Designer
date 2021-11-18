@@ -21,6 +21,7 @@
                                 #myCoursesSlot="cdkDropList"
                                 id="my-courses"
                                 [cdkDropListData]="myCourses"
+                                [cdkDropListSortingDisabled]="true"
                                 (cdkDropListDropped)="DropInMyCourses($event)"
                             >
                                 <div *ngFor="let course of myCourses" class="course-field">
@@ -60,6 +61,8 @@
                                                 [cdkDropListDisabled]="IsScheduleSlotDisabled(dayIndex,timeIndex)"
                                                 (cdkDropListEntered)="OnScheduleSlotEnter($event)"
                                                 (cdkDropListDropped)="DropInSchedule($event, dayIndex, timeIndex)"
+
+                                                [attr.valid]="scheduleSlotsValidity[dayIndex][timeIndex]"
                                             >
                                                 <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
                                                     <app-course 
