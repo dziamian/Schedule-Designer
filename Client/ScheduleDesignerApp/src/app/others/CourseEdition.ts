@@ -4,6 +4,7 @@ import { Group } from "./Group";
 import { Room } from "./Room";
 
 export class CourseEdition {
+    Weeks:number[]|null = null;
     Room:Room|null = null;
     Optional:boolean = false;
     Locked:boolean = false;

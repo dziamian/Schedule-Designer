@@ -3,6 +3,10 @@
     text-align: center;
 }
 
+.move-description {
+    font-size: 15px;
+}
+
 .board {
     height: 78vh;
     margin-top: 2vh;

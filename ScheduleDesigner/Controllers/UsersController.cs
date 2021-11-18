@@ -178,7 +178,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
                 var _user = _userRepo
                     .Get(e => e.UserId == userId);
                 

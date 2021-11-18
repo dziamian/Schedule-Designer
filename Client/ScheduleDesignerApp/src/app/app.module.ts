@@ -9,6 +9,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -51,6 +52,7 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
     DragDropModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],

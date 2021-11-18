@@ -1,12 +1,18 @@
 <div *ngIf="!loading && connectionStatus; else spinner" class="content">
-    <mat-tab-group mat-align-tabs="center" 
+    <mat-tab-group mat-align-tabs="center"
+        animationDuration="0ms" 
         ([selectedIndex])="currentTabIndex"
         (selectedIndexChange)="OnTabChange($event)"
     >
         <mat-tab *ngFor="let label of tabLabels; let tabIndex = index" label="{{label}}">
             <ng-template matTabContent>
-                <div class="tabContent">
-                    <mat-slide-toggle checked="true" color="primary">Personal schedule</mat-slide-toggle>
+                <div *ngIf="!tabLoading && connectionStatus; else spinner" class="tabContent">
+                    <span class="move-description"
+                        [style.color]="isMoveValid ? 'green' : '#FF4800'">
+                        <b>{{(isMoveValid) ? 'This is valid move!' : 
+                            ((isMoveValid != null) ? 'This move will be scheduled!' : '')}}</b>
+                        <br>
+                    </span>
                     <div class="board">
                         <div class="my-courses">
                             <div class="my-courses-header">Your courses</div>
@@ -20,6 +26,7 @@
                                 <div *ngFor="let course of myCourses" class="course-field">
                                     <app-course 
                                         [course]="course"
+                                        [settings]="settings"
                                         (start)="OnStartDragging($event)"
                                         (release)="OnReleaseDragging($event)"
                                     ></app-course>
@@ -33,7 +40,7 @@
                                     <thead>
                                         <tr>
                                             <th></th>
-                                            <th *ngFor="let timeLabel of scheduleTimeLabels" not-empty>
+                                            <th *ngFor="let timeLabel of scheduleTimeLabels">
                                                 {{timeLabel}}
                                             </th>
                                         </tr>
@@ -50,11 +57,15 @@
                                                 cdkDropListSortingDisabled
                                                 [cdkDropListData]="schedule[dayIndex][timeIndex]"
                                                 [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
+                                                [cdkDropListDisabled]="IsScheduleSlotDisabled(dayIndex,timeIndex)"
+                                                (cdkDropListEntered)="OnScheduleSlotEnter($event)"
                                                 (cdkDropListDropped)="DropInSchedule($event, dayIndex, timeIndex)"
                                             >
                                                 <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
                                                     <app-course 
-                                                        [course]="course" 
+                                                        [course]="course"
+                                                        [settings]="settings"
+                                                        [weeksOnTab]="weeks[currentTabIndex]"
                                                         (start)="OnStartDragging($event)"
                                                         (release)="OnReleaseDragging($event)"
                                                         (ctrlClick)="Reset(dayIndex, timeIndex, $event)" 

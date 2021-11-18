@@ -8,6 +8,7 @@ import { Account, Coordinator, Titles } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType } from 'src/app/others/CourseType';
 import { Group } from 'src/app/others/Group';
+import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
 
 @Injectable({
@@ -127,7 +128,12 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetMyCourseEditions(frequency:number, courseTypes:Map<number,CourseType>, settings:Settings, roundUp:boolean = true):Observable<CourseEdition[]> {
+  public GetMyCourseEditions(
+    frequency:number, 
+    courseTypes:Map<number,CourseType>, 
+    settings:Settings, 
+    roundUp:boolean = true
+  ):Observable<CourseEdition[]> {
     const request = {
       url: this.baseUrl + `/courseEditions/Service.GetMyCourseEditions(Frequency=${frequency})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
@@ -188,6 +194,82 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetScheduleAsCoordinator(
+    weeks:number[], 
+    courseTypes:Map<number,CourseType>,
+    schedule:CourseEdition[][][]
+  ):Observable<CourseEdition[][][]> {
+    const request = {
+      url: this.baseUrl + `/schedulePositions/Service.GetScheduleAsCoordinator(Weeks=[${weeks.toString()}])?` +
+        '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups),' +
+        'CourseRoomTimestamp($expand=Timestamp)',
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        response.value.forEach((value : any) => {
+          let groups = new Array<Group>();
+          value.CourseEdition.Groups.forEach((element : any) => {
+            groups.push(new Group(
+              element.GroupId
+            ));
+          });
+          let coordinators = new Array<Coordinator>();
+          value.CourseEdition.Coordinators.forEach((element : any) => {
+            coordinators.push(new Coordinator(
+              element.Coordinator.UserId,
+              element.Coordinator.User.FirstName,
+              element.Coordinator.User.LastName,
+              new Titles(
+                element.Coordinator.TitleBefore,
+                element.Coordinator.TitleAfter
+              )
+            ));
+          });
+
+          const courseId = value.CourseId;
+          const courseEditionId = value.CourseEditionId;
+          const dayIndex = value.CourseRoomTimestamp.Timestamp.Day - 1;
+          const periodIndex = value.CourseRoomTimestamp.Timestamp.PeriodIndex - 1;
+          const week = value.CourseRoomTimestamp.Timestamp.Week;
+          let scheduleSlot = schedule[dayIndex][periodIndex];
+          let found = false;
+          for (let i = 0; i < scheduleSlot.length; ++i) {
+            let courseEdition = scheduleSlot[i];
+            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId) {
+              courseEdition.Weeks?.push(week);
+              found = true;
+            }
+          }
+
+          if (!found) {
+            const courseEdition = new CourseEdition(
+              value.CourseId, 
+              value.CourseEditionId,
+              value.CourseEdition.Course.Name,
+              courseTypes.get(value.CourseEdition.Course.CourseTypeId) ?? new CourseType(0, "", ""),
+              0,
+              groups,
+              coordinators
+            );
+            courseEdition.Locked = value.LockUserId;
+            courseEdition.Weeks = [week];
+            scheduleSlot.push(courseEdition);
+          }
+        });
+
+        return schedule;
+      })
+    );
+  }
+
   public GetGroupsFullNames(groupsIds:number[]):Observable<string[]> {
     const request = {
       url: this.baseUrl + `/groups/Service.GetGroupsFullNames(GroupsIds=[${groupsIds.toString()}])`,
@@ -205,9 +287,10 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetFreePeriods():Observable<number[]> {
+  public GetBusyPeriods(courseId:number, courseEditionId:number, weeks:number[]):Observable<ScheduleSlot[]> {
     const request = {
-      url: this.baseUrl + '/schedulePositions/Service.GetFreePeriods()',
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetBusyPeriods(Weeks=[${weeks.toString()}])?` +
+      `$apply=groupby((PeriodIndex,Day))`,
       method: 'GET'
     };
 
@@ -218,7 +301,9 @@ export class ScheduleDesignerApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
-      map((response : any) => response.value)
+      map((response : any) => response.map(
+        (element : any) => new ScheduleSlot(element.PeriodIndex, element.Day)
+      ))
     );
   }
 }

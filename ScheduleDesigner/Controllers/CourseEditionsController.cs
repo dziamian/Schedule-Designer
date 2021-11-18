@@ -22,14 +22,14 @@ namespace ScheduleDesigner.Controllers
     public class CourseEditionsController : ODataController
     {
         private readonly ICourseEditionRepo _courseEditionRepo;
+        private readonly ISchedulePositionRepo _schedulePositionRepo;
         private readonly ISettingsRepo _settingsRepo;
-        private readonly IHubContext<ScheduleHub, IScheduleClient> _hubContext;
 
-        public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISettingsRepo settingsRepo, IHubContext<ScheduleHub, IScheduleClient> hubContext)
+        public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISchedulePositionRepo schedulePositionRepo, ISettingsRepo settingsRepo)
         {
             _courseEditionRepo = courseEditionRepo;
+            _schedulePositionRepo = schedulePositionRepo;
             _settingsRepo = settingsRepo;
-            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -76,7 +76,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
                 var courseDurationMinutes = _settings.CourseDurationMinutes;
                 var totalMinutes = Frequency * courseDurationMinutes;
@@ -88,6 +88,50 @@ namespace ScheduleDesigner.Controllers
                     .Include(e => e.Coordinators);
 
                 return Ok(_courseEditions);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        
+        [HttpGet]
+        [EnableQuery]
+        [ODataRoute("({key1},{key2})/GetBusyPeriods(Weeks={Weeks})")]
+        public async Task<IActionResult> GetBusyPeriods([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] IEnumerable<int> Weeks)
+        {
+            try
+            {
+                var _courseEdition = _courseEditionRepo
+                    .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
+                    .Include(e => e.Coordinators)
+                    .Include(e => e.Groups);
+
+                if (!_courseEdition.Any())
+                {
+                    return NotFound();
+                }
+
+                var courseEdition = await _courseEdition.FirstOrDefaultAsync();
+
+                var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
+                var groupsIds = courseEdition.Groups.Select(e => e.GroupId).ToList();
+
+                var _timestamps = _schedulePositionRepo
+                    .Get(e => e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
+                              && e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))
+                              && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
+                    .Include(e => e.CourseEdition)
+                        .ThenInclude(e => e.Coordinators)
+                    .Include(e => e.CourseEdition)
+                        .ThenInclude(e => e.Groups)
+                    .Include(e => e.CourseRoomTimestamp)
+                        .ThenInclude(e => e.Timestamp)
+                    .Select(e => e.CourseRoomTimestamp.Timestamp);
+
+
+                return Ok((_timestamps.Any()) ? _timestamps : Enumerable.Empty<Timestamp>().AsQueryable());
             }
             catch (Exception e)
             {

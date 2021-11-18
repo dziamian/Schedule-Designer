@@ -14,7 +14,7 @@
     cursor: default;
 }
 
-.course.locked {
+.course.cdk-drag-disabled {
     cursor: default;
 }
 
@@ -22,4 +22,16 @@
     border: 3px dotted rgb(102, 102, 102);
     height: 10.2vh;
     box-sizing: border-box;
+}
+
+.pin-field {
+    text-align: left;
+}
+
+.pin {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    padding-top: 2px;
+    padding-left: 2px;
 }

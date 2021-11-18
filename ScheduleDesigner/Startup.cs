@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ using ScheduleDesigner.Authentication;
 using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs;
+using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.Interfaces;
@@ -45,6 +47,8 @@ namespace ScheduleDesigner
 
             services.AddControllers()
                 .AddNewtonsoftJson();
+
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
             services.AddOData();
             services.AddSignalR(options =>
@@ -257,9 +261,16 @@ namespace ScheduleDesigner
                 .ReturnsFromEntitySet<CourseEdition>("CourseEditions")
                 .Parameter<double>("Frequency");
 
+            builder.EntityType<CourseEdition>()
+                .Function("GetBusyPeriods")
+                .ReturnsCollectionFromEntitySet<Timestamp>("Timestamps")
+                .CollectionParameter<int>("Weeks");
+            
+
             builder.EntityType<SchedulePosition>().Collection
-                .Function("GetFreePeriods")
-                .Returns<int[]>();
+                .Function("GetScheduleAsCoordinator")
+                .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions")
+                .CollectionParameter<int>("Weeks");
 
             return builder.GetEdmModel();
         }

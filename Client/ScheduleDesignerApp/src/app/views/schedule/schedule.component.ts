@@ -32,10 +32,12 @@ export class ScheduleComponent implements OnInit {
   isCanceled:boolean = false;
 
   loading:boolean = true;
+  tabLoading:boolean = true;
   connectionStatus:boolean = false;
   
   settings:Settings;
   frequencies:number[];
+  weeks:number[][];
   
   currentTabIndex:number = 0;
   
@@ -46,7 +48,9 @@ export class ScheduleComponent implements OnInit {
   courseTypes:Map<number, CourseType>;
 
   myCourses:CourseEdition[];
-  schedule:CourseEdition[][][] = [];
+  schedule:CourseEdition[][][];
+
+  isMoveValid:boolean|null = null;
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -67,12 +71,7 @@ export class ScheduleComponent implements OnInit {
     });
 
     this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
-      //console.log(this.myCourses);
-      //console.log(this.schedule);
       this.myCourses.forEach((value) => {
-        /*if (value.CourseId == currentCourseEdition?.CourseId && value.CourseEditionId == currentCourseEdition?.CourseEditionId) {
-          return;
-        }*/
         if (value.CourseId == courseId && value.CourseEditionId == courseEditionId) {
           value.Locked = true;
         }
@@ -99,10 +98,10 @@ export class ScheduleComponent implements OnInit {
       this.settings.periods = periods;
       this.courseTypes = courseTypes;
       this.setLabels();
-      this.setFrequencies();
+      this.setFrequenciesAndWeeks();
       this.initializeScheduleTable();
 
-      this.getMyCourseEditions(0);
+      this.getMyCourseEditionsAndScheduleAsCoordinator(0);
     }, (error) => {
       if (error?.status == 401) {
         this.usosApiService.Deauthorize();
@@ -115,13 +114,18 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  private getMyCourseEditions(index:number) {
+  private getMyCourseEditionsAndScheduleAsCoordinator(index:number) {
     let roundUp = (index != 1);
 
-    this.scheduleDesignerApiService.GetMyCourseEditions(this.frequencies[index], this.courseTypes, this.settings, roundUp).subscribe((myCourses) => {
+    forkJoin([
+      this.scheduleDesignerApiService.GetMyCourseEditions(this.frequencies[index], this.courseTypes, this.settings, roundUp),
+      this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.weeks[index], this.courseTypes, this.schedule)
+    ]).subscribe(([myCourses, mySchedule]) => {
       this.myCourses = myCourses;
-      
+      this.schedule = mySchedule;
+
       let allGroups = new Array<Group>();
+      
       this.myCourses.forEach((courseEdition) => {
         courseEdition.Groups.forEach((group) => {
           allGroups.push(group);
@@ -134,7 +138,9 @@ export class ScheduleComponent implements OnInit {
         }
       });
 
+      
       this.loading = false;
+      this.tabLoading = false;
       //TEST
         /*setTimeout(() => {
           console.log("TEST");
@@ -158,22 +164,46 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
-  private setFrequencies() {
+  private setFrequenciesAndWeeks() {
     this.frequencies = [this.settings.TermDurationWeeks, this.settings.TermDurationWeeks / 2, this.settings.TermDurationWeeks / 2];
+    this.weeks = [[],[],[]];
+
     for (let i:number = 0; i < this.settings.TermDurationWeeks; ++i) {
       this.frequencies.push(1);
+      const weekNumber = i + 1;
+      this.weeks[0].push(weekNumber);
+      this.weeks.push([weekNumber]);
+      if (weekNumber % 2 == 0) {
+        this.weeks[1].push(weekNumber);
+      } else {
+        this.weeks[2].push(weekNumber);
+      }
     }
   }
 
   private initializeScheduleTable() {
-    let periods = this.settings.periods;
-    let numberOfSlots = this.settings.periods.length - 1;
+    const periods = this.settings.periods;
+    const numberOfSlots = this.settings.periods.length - 1;
+    
     for (let i:number = 0; i < numberOfSlots; ++i) {
       this.scheduleTimeLabels.push(
         periods[i] + ' - ' + periods[i + 1]
       );
     }
 
+    this.schedule = [];
+    for (let j:number = 0; j < 5; ++j) {
+      this.schedule.push([]);
+      for (let i:number = 0; i < numberOfSlots; ++i) {
+        this.schedule[j].push([]);
+      }
+    }
+  }
+
+  private clearSchedule() {
+    const numberOfSlots = this.settings.periods.length - 1;
+
+    this.schedule = [];
     for (let j:number = 0; j < 5; ++j) {
       this.schedule.push([]);
       for (let i:number = 0; i < numberOfSlots; ++i) {
@@ -191,9 +221,11 @@ export class ScheduleComponent implements OnInit {
   }
 
   OnTabChange(index:number) {
-    console.log(this.scheduleSlots);
+    this.currentTabIndex = index;
+    this.tabLoading = true;
 
-    this.getMyCourseEditions(index);
+    this.clearSchedule();
+    this.getMyCourseEditionsAndScheduleAsCoordinator(index);
   }
 
   async DropInMyCourses(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>) {
@@ -215,6 +247,7 @@ export class ScheduleComponent implements OnInit {
         event.currentIndex
       );
       event.container.data[event.currentIndex].Room = null;
+      event.container.data[event.currentIndex].Weeks = null;
     }
     
     try {
@@ -262,6 +295,7 @@ export class ScheduleComponent implements OnInit {
       } 
 
       event.previousContainer.data[event.previousIndex].Room = new Room(1, "EXAMPLE");
+      event.previousContainer.data[event.previousIndex].Weeks = [1];
 
       transferArrayItem(
         event.previousContainer.data,
@@ -271,6 +305,7 @@ export class ScheduleComponent implements OnInit {
       );
 
       event.container.data[1 - event.currentIndex].Room = null;
+      event.container.data[1 - event.currentIndex].Weeks = null;
 
       transferArrayItem(
         event.container.data,
@@ -301,6 +336,7 @@ export class ScheduleComponent implements OnInit {
     
     //get room and set it
     event.previousContainer.data[event.previousIndex].Room = new Room(1, "EXAMPLE");
+    event.previousContainer.data[event.previousIndex].Weeks = [1];
 
     //if room has been chosen and accepted by API
     transferArrayItem(
@@ -328,15 +364,22 @@ export class ScheduleComponent implements OnInit {
   }
 
   ScheduleSlotEnterPredicate(drag:CdkDrag<CourseEdition>, drop:CdkDropList<CourseEdition[]>) {
-    return drop.data.length < 2;
+    return drop.data.length < 1;
+  }
+
+  OnScheduleSlotEnter(drag:CdkDragEnter<CourseEdition[]>) {
+    let element = drag.container.element as ElementRef<HTMLElement>;
+    if (element.nativeElement.getAttribute('selected')) {
+      this.isMoveValid = true;
+    } else {
+      this.isMoveValid = false;
+    }
   }
 
   async OnStartDragging(event:CdkDragStart<CourseEdition>) {
     this.isReleased = false;
     this.isCanceled = false;
     this.currentDragEvent = event;
-    
-    event.source.dropContainer.connectedTo = ['my-courses', '0,0', '1,1', '3,3'];
     
     try {
       if (!this.isReleased) {
@@ -366,27 +409,33 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    let freeSlots = await this.scheduleDesignerApiService.GetFreePeriods().toPromise();
-    //event.source.dropContainer.connectedTo = ['my-courses', '0,0', '1,1', '3,3'];
+    let busySlots = await this.scheduleDesignerApiService.GetBusyPeriods(
+      event.source.data.CourseId, 
+      event.source.data.CourseEditionId,
+      this.weeks[this.currentTabIndex]
+    ).toPromise();
+    let connectedTo = ['my-courses'];
     
-    /*if (!this.isReleased) {
+    let numberOfSlots = this.scheduleTimeLabels.length;
+    let busySlotIndex = 0;
+    let scheduleSlots = this.scheduleSlots.toArray();
+    for (let i = 0; i < this.scheduleSlots.length; ++i) {
+      let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
+      connectedTo.push(element.nativeElement.id);
+      if (i != (busySlots[busySlotIndex]?.PeriodIndex - 1) * numberOfSlots + (busySlots[busySlotIndex]?.Day - 1)) {
+        element.nativeElement.setAttribute('selected', '');
+        ++busySlotIndex;
+      } else {
+        element.nativeElement.removeAttribute('selected');
+      }
+    }
+
+    event.source.dropContainer.connectedTo = connectedTo;
+    
+    if (!this.isReleased) {
       event.source.dropContainer._dropListRef.enter(
         event.source._dragRef, 0, 0
       );
-    }*/
-    
-    let numberOfSlots = this.scheduleTimeLabels.length;
-    let freeSlotIndex = 0;
-    let scheduleSlots = this.scheduleSlots.toArray();
-    for (let i = 0; i < this.scheduleSlots.length; ++i) {
-      if (i == (freeSlots[freeSlotIndex] - 1) * numberOfSlots + (freeSlots[freeSlotIndex + 1] - 1)) {
-        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
-        element.nativeElement.setAttribute('selected', '');
-        freeSlotIndex += 2; 
-      } else {
-        let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
-        element.nativeElement.removeAttribute('selected');
-      }
     }
     
     if (this.isReleased) {
@@ -416,6 +465,7 @@ export class ScheduleComponent implements OnInit {
       let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
       element.nativeElement.removeAttribute('selected');
     }
+    this.isMoveValid = null;
   }
 
   Reset(dayIndex:number, slotIndex:number, event:CourseEdition) {

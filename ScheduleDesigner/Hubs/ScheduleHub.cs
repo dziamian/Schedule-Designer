@@ -19,8 +19,6 @@ namespace ScheduleDesigner.Hubs
         private readonly IUserRepo _userRepo;
         private readonly ICourseEditionRepo _courseEditionRepo;
 
-        private static readonly ConnectionMapping<int> _connections = new ConnectionMapping<int>();
-
         private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>> CourseEditionLocks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
 
         public ScheduleHub(IUserRepo userRepo, ICourseEditionRepo courseEditionRepo)
@@ -34,7 +32,7 @@ namespace ScheduleDesigner.Hubs
         {
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
                 var courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 var courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -102,7 +100,7 @@ namespace ScheduleDesigner.Hubs
         {
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
                 var courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 var courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -178,7 +176,6 @@ namespace ScheduleDesigner.Hubs
         {
             var id = int.Parse(Context.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value!);
 
-            _connections.Add(id, Context.ConnectionId);
             //Context.User.Claims.ToList().ForEach(Console.WriteLine);
             Console.WriteLine("\tConnected");
             return base.OnConnectedAsync();
@@ -192,6 +189,11 @@ namespace ScheduleDesigner.Hubs
                 .Select(e => e.LockedCourseEditions);
 
             var courseEditionCollection = _user.FirstOrDefaultAsync().Result;
+            if (courseEditionCollection == null)
+            {
+                return;
+            }
+
             foreach (var courseEdition in courseEditionCollection)
             {
                 UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
@@ -202,7 +204,6 @@ namespace ScheduleDesigner.Hubs
         {
             var id = int.Parse(Context.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value!);
 
-            _connections.Remove(id, Context.ConnectionId);
             Console.WriteLine("Disconnected");
             RemoveAllClientLocks(id, Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
