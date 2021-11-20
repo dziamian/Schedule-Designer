@@ -256,6 +256,11 @@ namespace ScheduleDesigner
                 .ReturnsCollection<GroupFullName>()
                 .CollectionParameter<int>("GroupsIds");
 
+            builder.EntityType<Room>().Collection
+                .Function("GetRoomsNames")
+                .ReturnsCollection<RoomName>()
+                .CollectionParameter<int>("RoomsIds");
+
             builder.EntityType<CourseEdition>().Collection
                 .Function("GetMyCourseEditions")
                 .ReturnsFromEntitySet<CourseEdition>("CourseEditions")

@@ -1,4 +1,5 @@
 .course {
+    position: relative;
     height: 10.2vh;
     width: 10.9vw;
     text-align: center;

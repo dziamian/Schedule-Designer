@@ -63,6 +63,7 @@
                                                 (cdkDropListDropped)="DropInSchedule($event, dayIndex, timeIndex)"
 
                                                 [attr.valid]="scheduleSlotsValidity[dayIndex][timeIndex]"
+                                                [attr.current]="this.currentDragEvent?.source?.dropContainer?.id === dayIndex + ',' + timeIndex"
                                             >
                                                 <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
                                                     <app-course 

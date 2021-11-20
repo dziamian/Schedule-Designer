@@ -97,6 +97,23 @@
     background-color: rgb(180, 180, 180);
 }
 
+.schedule-content table td[current="true"] {
+    background-color: rgb(255, 255, 255);
+    animation: currentDrop 1.25s infinite;
+}
+
+@keyframes currentDrop {
+    0% {
+        background-color: rgb(255, 255, 255);
+    }
+    50% {
+        background-color: rgb(180, 180, 180);
+    }
+    100% {
+        background-color: rgb(255, 255, 255);
+    }
+}
+
 .schedule-content table td ::ng-deep .course {
     width: inherit;
     border: none;

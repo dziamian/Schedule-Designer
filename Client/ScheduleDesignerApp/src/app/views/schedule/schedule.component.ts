@@ -100,7 +100,7 @@ export class ScheduleComponent implements OnInit {
       this.courseTypes = courseTypes;
       this.setLabels();
       this.setFrequenciesAndWeeks();
-      this.initializeScheduleTable();
+      this.initializeValues();
 
       this.getMyCourseEditionsAndScheduleAsCoordinator(0);
     }, (error) => {
@@ -120,12 +120,13 @@ export class ScheduleComponent implements OnInit {
 
     forkJoin([
       this.scheduleDesignerApiService.GetMyCourseEditions(this.frequencies[index], this.courseTypes, this.settings, roundUp),
-      this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.weeks[index], this.courseTypes, this.schedule)
+      this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.weeks[index], this.courseTypes, this.settings)
     ]).subscribe(([myCourses, mySchedule]) => {
       this.myCourses = myCourses;
       this.schedule = mySchedule;
 
       let allGroups = new Array<Group>();
+      let allRooms = new Array<Room>();
       
       for (let i = 0; i < this.myCourses.length; ++i) {
         for (let j = 0; j < this.myCourses[i].Groups.length; ++j) {
@@ -138,13 +139,21 @@ export class ScheduleComponent implements OnInit {
             for (let l = 0; l < this.schedule[i][j][k].Groups.length; ++l) {
               allGroups.push(this.schedule[i][j][k].Groups[l]);
             }
+            allRooms.push(this.schedule[i][j][k].Room!);
           }
         }
       }
 
-      this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) => e.GroupId)).subscribe((groupsFullNames) => {
+      forkJoin([
+        this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) => e.GroupId)),
+        this.scheduleDesignerApiService.GetRoomsNames(allRooms.map((e) => e.RoomId))
+      ]).subscribe(([groupsFullNames, roomsNames]) => {
         for (let i = 0; i < groupsFullNames.length; ++i) {
           allGroups[i].FullName = groupsFullNames[i];
+        }
+
+        for (let i = 0; i < roomsNames.length; ++i) {
+          allRooms[i].Name = roomsNames[i];
         }
         
         this.loading = false;
@@ -157,7 +166,7 @@ export class ScheduleComponent implements OnInit {
           console.log(this.myCoursesSlot);
           console.log(this.scheduleSlots);
           if (this.currentDragEvent != null) {
-            const numberOfSlots = this.scheduleTimeLabels.length;
+            const numberOfSlots = this.settings.periods.length - 1;
             this.currentDragEvent.source.dropContainer.connectedTo = ['1,1', '1,4', '1,3'];
             console.log(this.currentDragEvent.source.dropContainer.connectedTo);
             this.currentDragEvent.source.dropContainer._dropListRef.enter(
@@ -191,7 +200,7 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
-  private initializeScheduleTable() {
+  private initializeValues() {
     const periods = this.settings.periods;
     const numberOfSlots = this.settings.periods.length - 1;
     
@@ -201,13 +210,10 @@ export class ScheduleComponent implements OnInit {
       );
     }
 
-    this.schedule = [];
     this.scheduleSlotsValidity = [];
     for (let j:number = 0; j < 5; ++j) {
-      this.schedule.push([]);
       this.scheduleSlotsValidity.push([]);
       for (let i:number = 0; i < numberOfSlots; ++i) {
-        this.schedule[j].push([]);
         this.scheduleSlotsValidity[j].push(false);
       }
     }
@@ -314,7 +320,9 @@ export class ScheduleComponent implements OnInit {
         return;
       } 
 
-      event.previousContainer.data[event.previousIndex].Room = new Room(1, "EXAMPLE");
+      const room = new Room(1);
+      room.Name = "EXAMPLE";
+      event.previousContainer.data[event.previousIndex].Room = room;
       event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
 
       transferArrayItem(
@@ -356,7 +364,9 @@ export class ScheduleComponent implements OnInit {
     } 
     
     //get room and set it
-    event.previousContainer.data[event.previousIndex].Room = new Room(1, "EXAMPLE");
+    const room = new Room(1);
+    room.Name = "EXAMPLE";
+    event.previousContainer.data[event.previousIndex].Room = room;
     event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
 
     //if room has been chosen and accepted by API
@@ -434,7 +444,7 @@ export class ScheduleComponent implements OnInit {
     ).toPromise();
     let connectedTo = ['my-courses'];
     
-    const numberOfSlots = this.scheduleTimeLabels.length;
+    const numberOfSlots = this.settings.periods.length - 1;
     let busySlotIndex = 0;
     let scheduleSlots = this.scheduleSlots.toArray();
     
@@ -494,7 +504,7 @@ export class ScheduleComponent implements OnInit {
     
     event.source.dropContainer.connectedTo = [];
 
-    const numberOfSlots = this.scheduleTimeLabels.length;
+    const numberOfSlots = this.settings.periods.length - 1;
     for (let i = 0; i < this.scheduleSlots.length; ++i) {
       this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
     }

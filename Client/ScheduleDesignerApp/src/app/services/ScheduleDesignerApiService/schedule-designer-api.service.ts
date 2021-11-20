@@ -8,6 +8,7 @@ import { Account, Coordinator, Titles } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType } from 'src/app/others/CourseType';
 import { Group } from 'src/app/others/Group';
+import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
 
@@ -197,7 +198,7 @@ export class ScheduleDesignerApiService {
   public GetScheduleAsCoordinator(
     weeks:number[], 
     courseTypes:Map<number,CourseType>,
-    schedule:CourseEdition[][][]
+    settings:Settings
   ):Observable<CourseEdition[][][]> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetScheduleAsCoordinator(Weeks=[${weeks.toString()}])?` +
@@ -214,6 +215,15 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
+        const numberOfSlots = settings.periods.length - 1;
+        let schedule:CourseEdition[][][] = [];
+        for (let j:number = 0; j < 5; ++j) {
+          schedule.push([]);
+          for (let i:number = 0; i < numberOfSlots; ++i) {
+            schedule[j].push([]);
+          }
+        }
+
         response.value.forEach((value : any) => {
           let groups = new Array<Group>();
           value.CourseEdition.Groups.forEach((element : any) => {
@@ -236,6 +246,7 @@ export class ScheduleDesignerApiService {
 
           const courseId = value.CourseId;
           const courseEditionId = value.CourseEditionId;
+          const roomId = value.RoomId;
           const dayIndex = value.CourseRoomTimestamp.Timestamp.Day - 1;
           const periodIndex = value.CourseRoomTimestamp.Timestamp.PeriodIndex - 1;
           const week = value.CourseRoomTimestamp.Timestamp.Week;
@@ -243,7 +254,8 @@ export class ScheduleDesignerApiService {
           let found = false;
           for (let i = 0; i < scheduleSlot.length; ++i) {
             let courseEdition = scheduleSlot[i];
-            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId) {
+            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
+              && courseEdition.Room!.RoomId == roomId) {
               courseEdition.Weeks?.push(week);
               found = true;
             }
@@ -259,6 +271,7 @@ export class ScheduleDesignerApiService {
               groups,
               coordinators
             );
+            courseEdition.Room = new Room(roomId);
             courseEdition.Locked = value.LockUserId;
             courseEdition.Weeks = [week];
             scheduleSlot.push(courseEdition);
@@ -267,6 +280,23 @@ export class ScheduleDesignerApiService {
 
         return schedule;
       })
+    );
+  }
+
+  public GetRoomsNames(roomsIds:number[]):Observable<string[]> {
+    const request = {
+      url: this.baseUrl + `/rooms/Service.GetRoomsNames(RoomsIds=[${roomsIds.toString()}])`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => element.Name))
     );
   }
 

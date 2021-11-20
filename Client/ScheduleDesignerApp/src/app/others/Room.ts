@@ -1,7 +1,7 @@
 export class Room {
-    
+    Name:string
+
     constructor(
-        public RoomId:number,
-        public Name:string
+        public RoomId:number
     ) { }
 }
