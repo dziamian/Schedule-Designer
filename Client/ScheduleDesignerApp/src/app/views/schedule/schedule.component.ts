@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
+import { RoomSelectionDialogData } from 'src/app/others/RoomSelectionDialog';
 
 @Component({
   selector: 'app-schedule',
@@ -311,55 +312,30 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    if (event.container.data.length == 1) {
-      //must be confirmed and not scheduled
-      this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent);
-      const result = await this.currentOpenedDialog.afterClosed().toPromise();
-      this.currentOpenedDialog = null;
-      if (result == false) {
-        return;
-      } 
-
-      const room = new Room(1);
-      room.Name = "EXAMPLE";
-      event.previousContainer.data[event.previousIndex].Room = room;
-      event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
-
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-
-      event.container.data[1 - event.currentIndex].Room = null;
-      event.container.data[1 - event.currentIndex].Weeks = null;
-
-      transferArrayItem(
-        event.container.data,
-        this.myCourses,
-        1 - event.currentIndex,
-        this.myCourses.length
-      );
-
+    this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
+      disableClose: true,
+      data: new RoomSelectionDialogData(
+        event.item.data.CourseId,
+        event.item.data.CourseEditionId,
+        this.getIndexes(event.container.id),
+        this.weeks[this.currentTabIndex]
+      )
+    });
+    const result = await this.currentOpenedDialog.afterClosed().toPromise();
+    console.log(result);
+    this.currentOpenedDialog = null;
+    if (result == false) {
       try {
         const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
         if (result.statusCode >= 400) {
           throw result;
         }
         event.item.data.Locked = false;
-      } catch(error) {
-      
+      } catch (error) {
+  
       }
       this.currentDragEvent = null;
       this.isMoveValid = null;
-      return;
-    }
-
-    this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent);
-    const result = await this.currentOpenedDialog.afterClosed().toPromise();
-    this.currentOpenedDialog = null;
-    if (result == false) {
       return;
     } 
     

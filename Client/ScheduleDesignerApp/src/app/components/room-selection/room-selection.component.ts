@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RoomSelectionDialogData, RoomSelectionDialogResult } from 'src/app/others/RoomSelectionDialog';
 
 @Component({
   selector: 'app-room-selection',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoomSelectionComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data:RoomSelectionDialogData,
+    public dialogRef:MatDialogRef<RoomSelectionComponent>
+  ) { }
 
   ngOnInit(): void {
+    this.dialogRef.backdropClick().subscribe(event => {
+      this.dialogRef.close(RoomSelectionDialogResult.FAILED);
+    });
   }
-
 }
