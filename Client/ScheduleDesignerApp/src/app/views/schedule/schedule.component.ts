@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
-import { RoomSelectionDialogData } from 'src/app/others/RoomSelectionDialog';
+import { RoomSelectionDialogData, RoomSelectionDialogResult } from 'src/app/others/RoomSelectionDialog';
 
 @Component({
   selector: 'app-schedule',
@@ -73,6 +73,10 @@ export class ScheduleComponent implements OnInit {
     });
 
     this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
+      if (!this.myCourses) {
+        return;
+      }
+
       this.myCourses.forEach((value) => {
         if (value.CourseId == courseId && value.CourseEditionId == courseEditionId) {
           value.Locked = true;
@@ -81,6 +85,10 @@ export class ScheduleComponent implements OnInit {
     });
 
     this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
+      if (!this.myCourses) {
+        return;
+      }
+
       this.myCourses.forEach((value) => {
         if (value.CourseId == courseId && value.CourseEditionId == courseEditionId) {
           value.Locked = false;
@@ -275,12 +283,13 @@ export class ScheduleComponent implements OnInit {
     
     try {
       const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      
       if (result.statusCode >= 400) {
         throw result;
       }
       event.item.data.Locked = false;
     } catch (error) {
-      
+      console.log(error);
     }
     this.currentDragEvent = null;
     this.isMoveValid = null;
@@ -315,8 +324,7 @@ export class ScheduleComponent implements OnInit {
     this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
       disableClose: true,
       data: new RoomSelectionDialogData(
-        event.item.data.CourseId,
-        event.item.data.CourseEditionId,
+        event.item.data,
         this.getIndexes(event.container.id),
         this.weeks[this.currentTabIndex]
       )
@@ -324,7 +332,7 @@ export class ScheduleComponent implements OnInit {
     const result = await this.currentOpenedDialog.afterClosed().toPromise();
     console.log(result);
     this.currentOpenedDialog = null;
-    if (result == false) {
+    if (result == RoomSelectionDialogResult.FAILED) {
       try {
         const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
         if (result.statusCode >= 400) {
@@ -337,7 +345,7 @@ export class ScheduleComponent implements OnInit {
       this.currentDragEvent = null;
       this.isMoveValid = null;
       return;
-    } 
+    }
     
     //get room and set it
     const room = new Room(1);

@@ -1,8 +1,9 @@
+import { CourseEdition } from "./CourseEdition";
+
 export class RoomSelectionDialogData {
 
     constructor(
-        public CourseId:number,
-        public CourseEditionId:number,
+        public CourseEdition:CourseEdition,
         public SlotIndex:number[],
         public Weeks:number[]
     ) { }

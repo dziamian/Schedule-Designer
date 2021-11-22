@@ -320,7 +320,7 @@ export class ScheduleDesignerApiService {
   public GetBusyPeriods(courseId:number, courseEditionId:number, weeks:number[]):Observable<ScheduleSlot[]> {
     const request = {
       url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetBusyPeriods(Weeks=[${weeks.toString()}])?` +
-      `$apply=groupby((PeriodIndex,Day))`,
+      `$apply=groupby((PeriodIndex,Day))&$orderby=Day asc, PeriodIndex asc`,
       method: 'GET'
     };
 

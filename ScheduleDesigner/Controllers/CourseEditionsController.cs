@@ -21,12 +21,14 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("CourseEditions")]
     public class CourseEditionsController : ODataController
     {
+        private readonly IGroupRepo _groupRepo;
         private readonly ICourseEditionRepo _courseEditionRepo;
         private readonly ISchedulePositionRepo _schedulePositionRepo;
         private readonly ISettingsRepo _settingsRepo;
 
-        public CourseEditionsController(ICourseEditionRepo courseEditionRepo, ISchedulePositionRepo schedulePositionRepo, ISettingsRepo settingsRepo)
+        public CourseEditionsController(IGroupRepo groupRepo, ICourseEditionRepo courseEditionRepo, ISchedulePositionRepo schedulePositionRepo, ISettingsRepo settingsRepo)
         {
+            _groupRepo = groupRepo;
             _courseEditionRepo = courseEditionRepo;
             _schedulePositionRepo = schedulePositionRepo;
             _settingsRepo = settingsRepo;
@@ -106,7 +108,8 @@ namespace ScheduleDesigner.Controllers
                 var _courseEdition = _courseEditionRepo
                     .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
                     .Include(e => e.Coordinators)
-                    .Include(e => e.Groups);
+                    .Include(e => e.Groups)
+                        .ThenInclude(e => e.Group);
 
                 if (!_courseEdition.Any())
                 {
@@ -116,11 +119,46 @@ namespace ScheduleDesigner.Controllers
                 var courseEdition = await _courseEdition.FirstOrDefaultAsync();
 
                 var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
-                var groupsIds = courseEdition.Groups.Select(e => e.GroupId).ToList();
+
+                var groups = courseEdition.Groups.Select(e => e.Group).ToList();
+                var groupsIds = groups.Select(e => e.GroupId).ToList();
+                
+                var startIndex = 0;
+                var endIndex1 = groups.Count;
+                var endIndex2 = endIndex1;
+                while (groups.GetRange(startIndex, endIndex1 - startIndex).Any(e => e.ParentGroupId != null))
+                {
+                    var _parentGroups = _groupRepo
+                        .Get(e => groupsIds.GetRange(startIndex, endIndex1 - startIndex).Contains(e.GroupId))
+                        .Include(e => e.ParentGroup)
+                        .Select(e => e.ParentGroup);
+                    
+                    groups.AddRange(_parentGroups);
+                    groupsIds.AddRange(_parentGroups.Select(e => e.GroupId).ToList());
+
+                    startIndex = endIndex1;
+                    endIndex1 = groups.Count;
+                }
+
+                startIndex = 0;
+                var _childGroups = _groupRepo
+                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex2 - startIndex).Contains((int)e.ParentGroupId));
+                endIndex2 = endIndex1;
+                while (_childGroups.Any())
+                {
+                    groups.AddRange(_childGroups);
+                    groupsIds.AddRange(_childGroups.Select(e => e.GroupId).ToList());
+
+                    startIndex = endIndex2;
+                    endIndex2 = groups.Count;
+
+                    _childGroups = _groupRepo
+                        .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex2 - startIndex).Contains((int)e.ParentGroupId));
+                }
 
                 var _timestamps = _schedulePositionRepo
-                    .Get(e => e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
-                              && e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))
+                    .Get(e => (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
+                              || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e)))
                               && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Coordinators)
@@ -131,7 +169,7 @@ namespace ScheduleDesigner.Controllers
                     .Select(e => e.CourseRoomTimestamp.Timestamp);
 
 
-                return Ok((_timestamps.Any()) ? _timestamps : Enumerable.Empty<Timestamp>().AsQueryable());
+                return Ok(_timestamps.Any() ? _timestamps : Enumerable.Empty<Timestamp>().AsQueryable());
             }
             catch (Exception e)
             {
