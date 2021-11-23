@@ -248,6 +248,14 @@ export class ScheduleComponent implements OnInit {
     ];
   }
 
+  GetMaxElementIndexOnDay(dayIndex:number):number {
+    let dayScheduleLength:number[] = [];
+    for (let i = 0; i < this.settings.periods.length - 1; ++i) {
+      dayScheduleLength.push(this.schedule[dayIndex][i].length);
+    }
+    return Math.max(...dayScheduleLength) - 1;
+  }
+
   OnTabChange(index:number) {
     this.currentTabIndex = index;
     this.tabLoading = true;
@@ -326,11 +334,12 @@ export class ScheduleComponent implements OnInit {
       data: new RoomSelectionDialogData(
         event.item.data,
         this.getIndexes(event.container.id),
-        this.weeks[this.currentTabIndex]
+        this.weeks[this.currentTabIndex],
+        this.scheduleDayLabels,
+        this.scheduleTimeLabels
       )
     });
     const result = await this.currentOpenedDialog.afterClosed().toPromise();
-    console.log(result);
     this.currentOpenedDialog = null;
     if (result == RoomSelectionDialogResult.FAILED) {
       try {
@@ -386,6 +395,10 @@ export class ScheduleComponent implements OnInit {
   OnScheduleSlotEnter(drag:CdkDragEnter<CourseEdition[]>) {
     const indexes = this.getIndexes(drag.container.id);
     this.isMoveValid = this.scheduleSlotsValidity[indexes[0]][indexes[1]];
+  }
+
+  OnMyCoursesEnter(drag:CdkDragEnter<CourseEdition[]>) {
+    this.isMoveValid = null;
   }
 
   async OnStartDragging(event:CdkDragStart<CourseEdition>) {

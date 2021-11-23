@@ -9,6 +9,9 @@ import { RoomSelectionDialogData, RoomSelectionDialogResult } from 'src/app/othe
 })
 export class RoomSelectionComponent implements OnInit {
 
+  readonly FAILED:RoomSelectionDialogResult = RoomSelectionDialogResult.FAILED;
+  readonly ACCEPTED:RoomSelectionDialogResult = RoomSelectionDialogResult.ACCEPTED;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data:RoomSelectionDialogData,
     public dialogRef:MatDialogRef<RoomSelectionComponent>

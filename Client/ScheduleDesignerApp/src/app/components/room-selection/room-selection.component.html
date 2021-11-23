@@ -1,15 +1,33 @@
-<h1 mat-dialog-title>Please choose your room for {{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</h1>
+<h2 mat-dialog-title>
+    <b>Please choose your room for:</b><br>
+    <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>
+    <u>{{data.DayLabels[data.SlotIndex[0]]}}: {{data.TimeLabels[data.SlotIndex[1]]}}</u>
+</h2>
 <div mat-dialog-content>
-    My favorite animal is:
-    <ul>
-        <li>
-        Panda
-        </li>
-        <li>
-        Unicorn
-        </li>
-        <li>
-        Lion
-        </li>
-    </ul>
+    <mat-form-field>
+        <mat-label>Select your room</mat-label>
+        <mat-select required>
+            <mat-option class="option" [value]="1">1.01D</mat-option>
+            <mat-option class="option">1.02D</mat-option>
+            <mat-option class="option">1.03D</mat-option>
+            <mat-option class="option">1.04D</mat-option>
+            <mat-option class="option busy">1.05D</mat-option>
+            <mat-option class="option busy">1.06D</mat-option>
+            <mat-option class="option">1.07D</mat-option>
+            <mat-option class="option">1.08D</mat-option>
+            <mat-option class="option">1.09D</mat-option>
+            <mat-option class="option">1.10D</mat-option>
+            <mat-option class="option">1.11D</mat-option>
+            <mat-option class="option">1.12D</mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="FAILED">Cancel</button>
+    <button 
+    mat-raised-button
+    color="primary"
+    
+    [mat-dialog-close]="FAILED" 
+    cdkFocusInitial>Make a move</button>
+</mat-dialog-actions>

@@ -42,8 +42,12 @@
     margin-top: 0.8vh;
 }
 
-.schedule-course-field + .schedule-course-field {
-    border-top: 1px solid black;
+.schedule-course-field {
+    border-bottom: 1px solid black;
+}
+
+.schedule-course-field:last-child:not(:only-child) {
+    border-bottom: none;
 }
 
 .my-courses-content ::ng-deep .course {
@@ -89,8 +93,9 @@
     min-width: 10.9vw;
 }
 
-.schedule-content table td {
+.schedule-content table td[course="true"] {
     height: 10.2vh;
+    vertical-align: top;
 }
 
 .schedule-content table td[valid="true"] {

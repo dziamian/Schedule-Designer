@@ -22,6 +22,7 @@
                                 id="my-courses"
                                 [cdkDropListData]="myCourses"
                                 [cdkDropListSortingDisabled]="true"
+                                (cdkDropListEntered)="OnMyCoursesEnter($event)"
                                 (cdkDropListDropped)="DropInMyCourses($event)"
                             >
                                 <div *ngFor="let course of myCourses" class="course-field">
@@ -64,8 +65,12 @@
 
                                                 [attr.valid]="scheduleSlotsValidity[dayIndex][timeIndex]"
                                                 [attr.current]="this.currentDragEvent?.source?.dropContainer?.id === dayIndex + ',' + timeIndex"
+                                                [attr.course]="true"
                                             >
-                                                <div *ngFor="let course of schedule[dayIndex][timeIndex]" class="schedule-course-field">
+                                                <div *ngFor="let course of schedule[dayIndex][timeIndex]; let courseIndex = index" 
+                                                    class="schedule-course-field"
+                                                    [style.border-bottom]="courseIndex == GetMaxElementIndexOnDay(dayIndex) ? 'none' : ''"
+                                                >
                                                     <app-course 
                                                         [course]="course"
                                                         [settings]="settings"
@@ -73,6 +78,7 @@
                                                         (start)="OnStartDragging($event)"
                                                         (release)="OnReleaseDragging($event)"
                                                         (ctrlClick)="Reset(dayIndex, timeIndex, $event)" 
+                                                        
                                                         [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"
                                                     ></app-course>
                                                 </div>

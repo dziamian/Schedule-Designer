@@ -1,0 +1,20 @@
+h2[mat-dialog-title] {
+    font-weight: normal;
+    text-align: center;
+}
+
+.option {
+    border-bottom: 1px solid black;
+}
+
+.option.busy {
+    background-color: #FF9090;
+}
+
+.option.busy:hover {
+    background-color: #F28989;
+}
+
+.option:last-child {
+    border-bottom: none;
+}

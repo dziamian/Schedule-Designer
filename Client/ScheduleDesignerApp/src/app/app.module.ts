@@ -10,6 +10,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -53,6 +54,7 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
     MatDialogModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatSelectModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],
