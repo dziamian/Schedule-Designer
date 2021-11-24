@@ -3,31 +3,27 @@
     <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>
     <u>{{data.DayLabels[data.SlotIndex[0]]}}: {{data.TimeLabels[data.SlotIndex[1]]}}</u>
 </h2>
-<div mat-dialog-content>
+<div *ngIf="!loading" mat-dialog-content>
     <mat-form-field>
         <mat-label>Select your room</mat-label>
         <mat-select required>
-            <mat-option class="option" [value]="1">1.01D</mat-option>
-            <mat-option class="option">1.02D</mat-option>
-            <mat-option class="option">1.03D</mat-option>
-            <mat-option class="option">1.04D</mat-option>
-            <mat-option class="option busy">1.05D</mat-option>
-            <mat-option class="option busy">1.06D</mat-option>
-            <mat-option class="option">1.07D</mat-option>
-            <mat-option class="option">1.08D</mat-option>
-            <mat-option class="option">1.09D</mat-option>
-            <mat-option class="option">1.10D</mat-option>
-            <mat-option class="option">1.11D</mat-option>
-            <mat-option class="option">1.12D</mat-option>
+            <mat-optgroup *ngFor="let roomType of mappedCourseRooms | keyvalue" class="option-group"
+                [label]="data.RoomTypes.get(roomType.key)?.Name!">
+                <mat-option *ngFor="let room of roomType.value" class="option" [ngClass]="{'busy': room.IsBusy}"
+                    [value]="room.RoomId">
+                    {{room.Name}}
+                </mat-option>
+            </mat-optgroup>
         </mat-select>
     </mat-form-field>
 </div>
 <mat-dialog-actions align="end">
-    <button mat-button [mat-dialog-close]="FAILED">Cancel</button>
+    <button mat-button [mat-dialog-close]="GET_CANCELED_RESULT">Cancel</button>
     <button 
-    mat-raised-button
-    color="primary"
+        mat-raised-button
+        color="primary"
     
-    [mat-dialog-close]="FAILED" 
-    cdkFocusInitial>Make a move</button>
+        [mat-dialog-close]="GET_FAILED_RESULT" 
+        cdkFocusInitial
+    >Make a move</button>
 </mat-dialog-actions>

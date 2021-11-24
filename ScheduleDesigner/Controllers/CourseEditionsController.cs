@@ -124,36 +124,34 @@ namespace ScheduleDesigner.Controllers
                 var groupsIds = groups.Select(e => e.GroupId).ToList();
                 
                 var startIndex = 0;
-                var endIndex1 = groups.Count;
-                var endIndex2 = endIndex1;
-                while (groups.GetRange(startIndex, endIndex1 - startIndex).Any(e => e.ParentGroupId != null))
+                var endIndex = groups.Count;
+                var oldSize = endIndex;
+                while (groups.GetRange(startIndex, endIndex - startIndex).Any(e => e.ParentGroupId != null))
                 {
                     var _parentGroups = _groupRepo
-                        .Get(e => groupsIds.GetRange(startIndex, endIndex1 - startIndex).Contains(e.GroupId))
+                        .Get(e => groupsIds.GetRange(startIndex, endIndex - startIndex).Contains(e.GroupId) && e.ParentGroup != null)
                         .Include(e => e.ParentGroup)
                         .Select(e => e.ParentGroup);
                     
                     groups.AddRange(_parentGroups);
                     groupsIds.AddRange(_parentGroups.Select(e => e.GroupId).ToList());
 
-                    startIndex = endIndex1;
-                    endIndex1 = groups.Count;
+                    startIndex = endIndex;
+                    endIndex = groups.Count;
                 }
 
-                startIndex = 0;
                 var _childGroups = _groupRepo
-                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex2 - startIndex).Contains((int)e.ParentGroupId));
-                endIndex2 = endIndex1;
+                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(0, oldSize).Contains((int)e.ParentGroupId));
+
                 while (_childGroups.Any())
                 {
-                    groups.AddRange(_childGroups);
                     groupsIds.AddRange(_childGroups.Select(e => e.GroupId).ToList());
 
-                    startIndex = endIndex2;
-                    endIndex2 = groups.Count;
+                    startIndex = endIndex;
+                    endIndex += _childGroups.Count();
 
                     _childGroups = _groupRepo
-                        .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex2 - startIndex).Contains((int)e.ParentGroupId));
+                        .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex - startIndex).Contains((int)e.ParentGroupId));
                 }
 
                 var _timestamps = _schedulePositionRepo

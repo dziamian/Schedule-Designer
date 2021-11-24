@@ -1,4 +1,6 @@
 import { CourseEdition } from "./CourseEdition";
+import { Room } from "./Room";
+import { RoomType } from "./Types";
 
 export class RoomSelectionDialogData {
 
@@ -7,12 +9,22 @@ export class RoomSelectionDialogData {
         public SlotIndex:number[],
         public Weeks:number[],
         public DayLabels:string[],
-        public TimeLabels:string[]
+        public TimeLabels:string[],
+        public RoomTypes:Map<number,RoomType>
     ) { }
 }
 
-export const enum RoomSelectionDialogResult {
+export class RoomSelectionDialogResult {
+    
+    constructor(
+        public Status:RoomSelectionDialogStatus,
+        public Room:Room|null
+    ) {}
+}
+
+export const enum RoomSelectionDialogStatus {
     ACCEPTED,
     SCHEDULED,
-    FAILED
+    FAILED,
+    CANCELED
 }

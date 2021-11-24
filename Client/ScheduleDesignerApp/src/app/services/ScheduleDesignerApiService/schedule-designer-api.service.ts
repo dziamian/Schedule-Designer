@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { Account, Coordinator, Titles } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
-import { CourseType } from 'src/app/others/CourseType';
+import { CourseType, RoomType } from 'src/app/others/Types';
 import { Group } from 'src/app/others/Group';
 import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
@@ -105,6 +105,31 @@ export class ScheduleDesignerApiService {
         
         response.value.forEach((element : any) => {
           map.set(element.CourseTypeId, new CourseType(element.CourseTypeId, element.Name, element.Color));
+        });
+        
+        return map;
+      })
+    );
+  }
+
+  public GetRoomTypes():Observable<Map<number,RoomType>> {
+    const request = {
+      url: this.baseUrl + '/roomTypes',
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        let map = new Map<number,RoomType>();
+        
+        response.value.forEach((element : any) => {
+          map.set(element.RoomTypeId, new RoomType(element.RoomTypeId, element.Name));
         });
         
         return map;
@@ -298,6 +323,68 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => response.value.map((element : any) => element.Name))
     );
+  }
+
+  public GetCourseRooms(courseId:number, roomsTypes:Map<number,RoomType>):Observable<Room[]> {
+    const request = {
+      url: this.baseUrl + `/courseRooms?$expand=Room&$filter=CourseId eq ${courseId}`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => //{
+        //let rooms:Map<number,Room[]> = new Map<number,Room[]>();
+
+        response.value.map((element : any) => {
+          const room = new Room(element.RoomId);
+          room.Name = element.Room.Name;
+          room.RoomType = roomsTypes.get(element.Room.RoomTypeId) ?? new RoomType(0, "");
+          return room;
+          //let currentRooms:Room[]|undefined = rooms.get(room.RoomType.RoomTypeId);
+          //if (currentRooms == undefined) {
+            //rooms.set(room.RoomType.RoomTypeId, new Array<Room>(room));
+          //} else {
+            //currentRooms.push(room);
+            //rooms.set(room.RoomType.RoomTypeId, currentRooms);
+          //}
+        })
+
+        //return rooms;
+      //})
+      )
+    );
+  }
+
+  public GetRoomsAvailability(
+    roomsIds:number[], 
+    periodIndex:number, 
+    day:number, 
+    weeks:number[]):Observable<Room[]> {
+      const request = {
+        url: this.baseUrl + `/schedulePositions/Service.GetRoomsAvailability(RoomsIds=[${roomsIds.toString()}],` +
+        `PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])`,
+        method: 'GET'
+      };
+  
+      return this.http.request(
+        request.method,
+        request.url,
+        {
+          headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+        }
+      ).pipe(
+        map((response : any) => response.value.map((element : any) => {
+          const room = new Room(element.RoomId);
+          room.IsBusy = element.IsBusy;
+          return room;
+        }))
+      );
   }
 
   public GetGroupsFullNames(groupsIds:number[]):Observable<string[]> {

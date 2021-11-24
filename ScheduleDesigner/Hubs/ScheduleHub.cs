@@ -28,14 +28,20 @@ namespace ScheduleDesigner.Hubs
         [Authorize(Policy = "Coordinator")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
+            CourseEditionKey courseEditionKey = null;
+            ConcurrentQueue<object> courseEditionQueue = null;
+            var enqueued = false;
+            
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                var courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
-                var courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
+                courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
+                courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
 
                 courseEditionQueue.Enqueue(new object());
+
+                enqueued = true;
 
                 lock (courseEditionQueue)
                 {
@@ -83,12 +89,19 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject {StatusCode = 200};
                 }
             }
-            catch (DbUpdateConcurrencyException e)
-            {
-                return new MessageObject {StatusCode = 400, Message = e.Message};
-            }
             catch (Exception e)
             {
+                if (!enqueued)
+                {
+                    return new MessageObject {StatusCode = 400, Message = e.Message};
+                }
+                
+                courseEditionQueue.TryDequeue(out _);
+                if (courseEditionQueue.IsEmpty)
+                {
+                    CourseEditionLocks.TryRemove(courseEditionKey, out _);
+                }
+                
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
         }
@@ -96,14 +109,20 @@ namespace ScheduleDesigner.Hubs
         [Authorize(Policy = "Coordinator")]
         public MessageObject UnlockCourseEdition(int courseId, int courseEditionId)
         {
+            CourseEditionKey courseEditionKey = null;
+            ConcurrentQueue<object> courseEditionQueue = null;
+            var enqueued = false;
+            
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                var courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
-                var courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
+                courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
+                courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
 
                 courseEditionQueue.Enqueue(new object());
+
+                enqueued = true;
 
                 lock (courseEditionQueue)
                 {
@@ -164,6 +183,17 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
+                if (!enqueued)
+                {
+                    return new MessageObject { StatusCode = 400, Message = e.Message };
+                }
+
+                courseEditionQueue.TryDequeue(out _);
+                if (courseEditionQueue.IsEmpty)
+                {
+                    CourseEditionLocks.TryRemove(courseEditionKey, out _);
+                }
+
                 return new MessageObject {StatusCode = 400, Message = e.Message};
             }
         }

@@ -3,8 +3,25 @@ h2[mat-dialog-title] {
     text-align: center;
 }
 
+.option-group {
+    background-color: aqua !important;
+}
+
 .option {
     border-bottom: 1px solid black;
+    background-color: #ACFFB1;
+}
+
+.option:hover {
+    background-color: #A3F2A9;
+}
+
+.option.mat-selected {
+    background-color: #97E09D !important;
+}
+
+.option:first-of-type {
+    border-top: 1px solid black;
 }
 
 .option.busy {
@@ -15,6 +32,10 @@ h2[mat-dialog-title] {
     background-color: #F28989;
 }
 
-.option:last-child {
+.option.busy.mat-selected {
+    background-color: #E07F7F !important;
+}
+
+.option-group:last-of-type .option:last-of-type {
     border-bottom: none;
 }

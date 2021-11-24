@@ -1,5 +1,5 @@
 import { Coordinator } from "./Accounts";
-import { CourseType } from "./CourseType";
+import { CourseType } from "./Types";
 import { Group } from "./Group";
 import { Room } from "./Room";
 

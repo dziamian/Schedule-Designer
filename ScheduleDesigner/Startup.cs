@@ -270,11 +270,22 @@ namespace ScheduleDesigner
                 .Function("GetBusyPeriods")
                 .ReturnsCollectionFromEntitySet<Timestamp>("Timestamps")
                 .CollectionParameter<int>("Weeks");
-            
 
             builder.EntityType<SchedulePosition>().Collection
                 .Function("GetScheduleAsCoordinator")
                 .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions")
+                .CollectionParameter<int>("Weeks");
+
+            var getRoomsAvailabilityFunction = builder.EntityType<SchedulePosition>().Collection
+                .Function("GetRoomsAvailability")
+                .ReturnsCollection<RoomAvailability>();
+            getRoomsAvailabilityFunction
+                .CollectionParameter<int>("RoomsIds");
+            getRoomsAvailabilityFunction
+                .Parameter<int>("PeriodIndex");
+            getRoomsAvailabilityFunction
+                .Parameter<int>("Day");
+            getRoomsAvailabilityFunction
                 .CollectionParameter<int>("Weeks");
 
             return builder.GetEdmModel();

@@ -9,4 +9,10 @@ namespace ScheduleDesigner.Dtos
     {
         public string Name { get; set; }
     }
+
+    public class RoomAvailability
+    {
+        public int RoomId { get; set; }
+        public bool IsBusy { get; set; }
+    }
 }

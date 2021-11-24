@@ -6,3 +6,11 @@ export class CourseType {
         public Color:string
     ) {}
 }
+
+export class RoomType {
+
+    constructor(
+        public RoomTypeId:number,
+        public Name:string
+    ) {}
+}

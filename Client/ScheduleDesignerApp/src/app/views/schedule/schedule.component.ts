@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } fro
 import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDropList, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { CourseEdition } from 'src/app/others/CourseEdition';
-import { CourseType } from 'src/app/others/CourseType';
+import { CourseType, RoomType } from 'src/app/others/Types';
 import { Group } from 'src/app/others/Group';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
-import { RoomSelectionDialogData, RoomSelectionDialogResult } from 'src/app/others/RoomSelectionDialog';
+import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
 
 @Component({
   selector: 'app-schedule',
@@ -47,6 +47,7 @@ export class ScheduleComponent implements OnInit {
   scheduleDayLabels:string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
   courseTypes:Map<number, CourseType>;
+  roomTypes:Map<number, RoomType>;
 
   myCourses:CourseEdition[];
   schedule:CourseEdition[][][];
@@ -100,13 +101,16 @@ export class ScheduleComponent implements OnInit {
       this.signalrService.InitConnection(),
       this.scheduleDesignerApiService.GetSettings(),
       this.scheduleDesignerApiService.GetPeriods(),
-      this.scheduleDesignerApiService.GetCourseTypes()
-    ]).subscribe(([,settings,periods,courseTypes]) => {
+      this.scheduleDesignerApiService.GetCourseTypes(),
+      this.scheduleDesignerApiService.GetRoomTypes()
+    ]).subscribe(([,settings,periods,courseTypes,roomTypes]) => {
       this.connectionStatus = true;
       
       this.settings = settings;
       this.settings.periods = periods;
       this.courseTypes = courseTypes;
+      this.roomTypes = roomTypes;
+
       this.setLabels();
       this.setFrequenciesAndWeeks();
       this.initializeValues();
@@ -336,40 +340,35 @@ export class ScheduleComponent implements OnInit {
         this.getIndexes(event.container.id),
         this.weeks[this.currentTabIndex],
         this.scheduleDayLabels,
-        this.scheduleTimeLabels
+        this.scheduleTimeLabels,
+        this.roomTypes
       )
     });
-    const result = await this.currentOpenedDialog.afterClosed().toPromise();
+    const result:RoomSelectionDialogResult = await this.currentOpenedDialog.afterClosed().toPromise();
     this.currentOpenedDialog = null;
-    if (result == RoomSelectionDialogResult.FAILED) {
-      try {
-        const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
-        if (result.statusCode >= 400) {
-          throw result;
-        }
-        event.item.data.Locked = false;
-      } catch (error) {
-  
-      }
-      this.currentDragEvent = null;
-      this.isMoveValid = null;
-      return;
-    }
-    
-    //get room and set it
-    const room = new Room(1);
-    room.Name = "EXAMPLE";
-    event.previousContainer.data[event.previousIndex].Room = room;
-    event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
 
-    //if room has been chosen and accepted by API
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
-    //otherwise if room has been chosen but is busy -> scheduledmove
+    switch (result.Status) {
+      case RoomSelectionDialogStatus.ACCEPTED: {
+        event.previousContainer.data[event.previousIndex].Room = result.Room;
+        event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
+
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      } break;
+      case RoomSelectionDialogStatus.SCHEDULED: {
+
+      } break;
+      case RoomSelectionDialogStatus.CANCELED: {
+
+      } break;
+      case RoomSelectionDialogStatus.FAILED: {
+
+      } break;
+    }
 
     try {
       const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
