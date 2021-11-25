@@ -9,7 +9,7 @@
     )' : course?.Type?.Color"
     
     cdkDrag
-    [cdkDragDisabled]="course?.Locked || CheckIfMatching()"
+    [cdkDragDisabled]="course?.Locked || CheckIfNotMatching()"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"
@@ -19,8 +19,8 @@
     matTooltipShowDelay="300"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>
-    <div *ngIf="CheckIfMatching()" class="pin-field">
-        <img src="/assets/pin.svg" class="pin">
+    <div class="details-field">
+        <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">
     </div>
     <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}, {{course?.Amount}} {{(course!.Amount > 4) ? 'zajęć' : 'zajęcia'}}</i>
     <ng-template #weeksText>

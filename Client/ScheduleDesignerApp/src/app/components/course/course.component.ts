@@ -48,7 +48,7 @@ export class CourseComponent implements OnInit {
     return this.account.UserId == id;
   }
 
-  CheckIfMatching():boolean {
+  CheckIfNotMatching():boolean {
     return this.weeksOnTab?.sort((a,b) => a - b).join(',') !== this.course.Weeks?.sort((a,b) => a - b).join(',');
   }
 
