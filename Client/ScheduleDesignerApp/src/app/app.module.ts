@@ -29,6 +29,7 @@ import { SignalrService } from './services/SignalrService/signalr.service';
 import { StoreModule } from '@ngrx/store';
 import { accountReducer } from './store/account.reducer';
 import { RoomSelectionComponent } from './components/room-selection/room-selection.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,

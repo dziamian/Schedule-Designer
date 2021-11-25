@@ -20,6 +20,8 @@ export class RoomSelectionComponent implements OnInit {
     null
   );
 
+  selectedRoom:Room|null;
+
   courseRooms:Room[];
   mappedCourseRooms:Map<number,Room[]>;
 
@@ -59,6 +61,14 @@ export class RoomSelectionComponent implements OnInit {
           this.loading = false;
         });
       });
+
+    /*setTimeout(() => {
+      this.courseRooms.forEach((room) => {
+        if (room.RoomId == 2) {
+          room.IsBusy = true;
+        }
+      })
+    }, 5000);*/
   }
 
   GET_FAILED_RESULT():RoomSelectionDialogResult {

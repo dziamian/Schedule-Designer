@@ -10,7 +10,9 @@ export class RoomSelectionDialogData {
         public Weeks:number[],
         public DayLabels:string[],
         public TimeLabels:string[],
-        public RoomTypes:Map<number,RoomType>
+        public RoomTypes:Map<number,RoomType>,
+        public IsMoveValid:boolean,
+        public CanBeScheduled:boolean
     ) { }
 }
 

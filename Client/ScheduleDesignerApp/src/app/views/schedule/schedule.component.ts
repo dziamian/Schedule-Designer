@@ -341,7 +341,9 @@ export class ScheduleComponent implements OnInit {
         this.weeks[this.currentTabIndex],
         this.scheduleDayLabels,
         this.scheduleTimeLabels,
-        this.roomTypes
+        this.roomTypes,
+        this.isMoveValid!,
+        event.previousContainer.id !== 'my-courses'
       )
     });
     const result:RoomSelectionDialogResult = await this.currentOpenedDialog.afterClosed().toPromise();
