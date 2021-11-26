@@ -423,4 +423,35 @@ export class ScheduleDesignerApiService {
       ))
     );
   }
+
+  //TESTING
+  public AddSchedulePositions(
+    courseId:number,
+    courseEditionId:number,
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[]
+  ):Observable<any> {
+    const request = {
+      url: this.baseUrl + `/schedulePositions/Service.AddSchedulePositions()`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          'CourseId': courseId,
+          'CourseEditionId': courseEditionId,
+          'RoomId': roomId,
+          'PeriodIndex': periodIndex,
+          'Day': day,
+          'Weeks': weeks
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
 }

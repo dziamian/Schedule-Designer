@@ -288,6 +288,22 @@ namespace ScheduleDesigner
             getRoomsAvailabilityFunction
                 .CollectionParameter<int>("Weeks");
 
+            var addSchedulePositionsAction = builder.EntityType<SchedulePosition>().Collection
+                .Action("AddSchedulePositions");
+
+            addSchedulePositionsAction
+                .Parameter<int>("CourseId");
+            addSchedulePositionsAction
+                .Parameter<int>("CourseEditionId");
+            addSchedulePositionsAction
+                .Parameter<int>("RoomId");
+            addSchedulePositionsAction
+                .Parameter<int>("PeriodIndex");
+            addSchedulePositionsAction
+                .Parameter<int>("Day");
+            addSchedulePositionsAction
+                .CollectionParameter<int>("Weeks");
+
             return builder.GetEdmModel();
         }
     }

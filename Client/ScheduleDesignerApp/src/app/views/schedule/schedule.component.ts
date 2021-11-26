@@ -16,6 +16,7 @@ import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
+import { MessageObject } from 'src/app/others/MessageObject';
 
 @Component({
   selector: 'app-schedule',
@@ -296,7 +297,7 @@ export class ScheduleComponent implements OnInit {
     try {
       const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
       
-      if (result.statusCode >= 400) {
+      if (result.StatusCode >= 400) {
         throw result;
       }
       event.item.data.Locked = false;
@@ -321,7 +322,7 @@ export class ScheduleComponent implements OnInit {
     if (event.previousContainer === event.container) {
       try {
         const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
-        if (result.statusCode >= 400) {
+        if (result.StatusCode >= 400) {
           throw result;
         }
         event.item.data.Locked = false;
@@ -374,7 +375,7 @@ export class ScheduleComponent implements OnInit {
 
     try {
       const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
-      if (result.statusCode >= 400) {
+      if (result.StatusCode >= 400) {
         throw result;
       }
       event.item.data.Locked = false;
@@ -410,7 +411,7 @@ export class ScheduleComponent implements OnInit {
     try {
       if (!this.isReleased) {
         const result = await this.signalrService.LockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
-        if (result.statusCode >= 400) {
+        if (result.StatusCode >= 400) {
           throw result;
         }
         event.source.data.Locked = true;
@@ -483,7 +484,7 @@ export class ScheduleComponent implements OnInit {
     if (this.isReleased) {
       try {
         const result = await this.signalrService.UnlockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
-        if (result.statusCode >= 400) {
+        if (result.StatusCode >= 400) {
           throw result;
         }
         event.source.data.Locked = false;

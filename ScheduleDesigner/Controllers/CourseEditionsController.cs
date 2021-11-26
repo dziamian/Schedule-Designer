@@ -34,6 +34,45 @@ namespace ScheduleDesigner.Controllers
             _settingsRepo = settingsRepo;
         }
 
+        public static List<int> GetNestedGroupsIds(CourseEdition courseEdition, IGroupRepo _groupRepo)
+        {
+            var groups = courseEdition.Groups.Select(e => e.Group).ToList();
+            var groupsIds = groups.Select(e => e.GroupId).ToList();
+
+            var startIndex = 0;
+            var endIndex = groups.Count;
+            var oldSize = endIndex;
+            while (groups.GetRange(startIndex, endIndex - startIndex).Any(e => e.ParentGroupId != null))
+            {
+                var _parentGroups = _groupRepo
+                    .Get(e => groupsIds.GetRange(startIndex, endIndex - startIndex).Contains(e.GroupId) && e.ParentGroup != null)
+                    .Include(e => e.ParentGroup)
+                    .Select(e => e.ParentGroup);
+
+                groups.AddRange(_parentGroups);
+                groupsIds.AddRange(_parentGroups.Select(e => e.GroupId).ToList());
+
+                startIndex = endIndex;
+                endIndex = groups.Count;
+            }
+
+            var _childGroups = _groupRepo
+                .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(0, oldSize).Contains((int)e.ParentGroupId));
+
+            while (_childGroups.Any())
+            {
+                groupsIds.AddRange(_childGroups.Select(e => e.GroupId).ToList());
+
+                startIndex = endIndex;
+                endIndex += _childGroups.Count();
+
+                _childGroups = _groupRepo
+                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex - startIndex).Contains((int)e.ParentGroupId));
+            }
+
+            return groupsIds;
+        }
+
         [HttpPost]
         [ODataRoute("")]
         public async Task<IActionResult> CreateCourseEdition([FromBody] CourseEdition courseEdition)
@@ -97,7 +136,6 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        
         [HttpGet]
         [EnableQuery]
         [ODataRoute("({key1},{key2})/GetBusyPeriods(Weeks={Weeks})")]
@@ -120,39 +158,7 @@ namespace ScheduleDesigner.Controllers
 
                 var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
 
-                var groups = courseEdition.Groups.Select(e => e.Group).ToList();
-                var groupsIds = groups.Select(e => e.GroupId).ToList();
-                
-                var startIndex = 0;
-                var endIndex = groups.Count;
-                var oldSize = endIndex;
-                while (groups.GetRange(startIndex, endIndex - startIndex).Any(e => e.ParentGroupId != null))
-                {
-                    var _parentGroups = _groupRepo
-                        .Get(e => groupsIds.GetRange(startIndex, endIndex - startIndex).Contains(e.GroupId) && e.ParentGroup != null)
-                        .Include(e => e.ParentGroup)
-                        .Select(e => e.ParentGroup);
-                    
-                    groups.AddRange(_parentGroups);
-                    groupsIds.AddRange(_parentGroups.Select(e => e.GroupId).ToList());
-
-                    startIndex = endIndex;
-                    endIndex = groups.Count;
-                }
-
-                var _childGroups = _groupRepo
-                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(0, oldSize).Contains((int)e.ParentGroupId));
-
-                while (_childGroups.Any())
-                {
-                    groupsIds.AddRange(_childGroups.Select(e => e.GroupId).ToList());
-
-                    startIndex = endIndex;
-                    endIndex += _childGroups.Count();
-
-                    _childGroups = _groupRepo
-                        .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex - startIndex).Contains((int)e.ParentGroupId));
-                }
+                var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo);
 
                 var _timestamps = _schedulePositionRepo
                     .Get(e => (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))

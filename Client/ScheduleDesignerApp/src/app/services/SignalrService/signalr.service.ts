@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
+import { MessageObject } from 'src/app/others/MessageObject';
 
 @Injectable({
   providedIn: 'root'
@@ -76,12 +77,25 @@ export class SignalrService implements OnDestroy {
     });
   }
 
-  public LockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
-    return from(this.connection.invoke('LockCourseEdition', courseId, courseEditionId));
+  public LockCourseEdition(courseId:number, courseEditionId:number):Observable<MessageObject> {
+    return from(this.connection.invoke<MessageObject>('LockCourseEdition', courseId, courseEditionId));
   }
 
-  public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable<any> {
-    return from(this.connection.invoke('UnlockCourseEdition', courseId, courseEditionId));
+  public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable<MessageObject> {
+    return from(this.connection.invoke<MessageObject>('UnlockCourseEdition', courseId, courseEditionId));
+  }
+
+  public AddSchedulePositions(
+    courseId:number,
+    courseEditionId:number,
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[]
+  ):Observable<MessageObject> {
+    return from(this.connection.invoke<MessageObject>('AddSchedulePositions', 
+      courseId, courseEditionId, roomId, periodIndex, day, weeks)
+    );
   }
 
   public Disconnect() {

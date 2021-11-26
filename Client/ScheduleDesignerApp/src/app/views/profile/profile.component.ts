@@ -60,6 +60,15 @@ export class ProfileComponent implements OnInit {
         this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
       }
     });
+
+    //TEST
+    forkJoin([
+      this.scheduleDesignerApiService.AddSchedulePositions(1,1,1,1,1,[1,2,3]),
+      this.scheduleDesignerApiService.AddSchedulePositions(1,2,1,1,1,[1,2,3])
+    ]).subscribe(([result1, result2]) => {
+      console.log(result1);
+      console.log(result2);
+    });
   }
 
 }
