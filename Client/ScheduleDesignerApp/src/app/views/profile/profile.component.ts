@@ -63,11 +63,16 @@ export class ProfileComponent implements OnInit {
 
     //TEST
     forkJoin([
-      this.scheduleDesignerApiService.AddSchedulePositions(1,1,1,1,1,[1,2,3]),
-      this.scheduleDesignerApiService.AddSchedulePositions(1,2,1,1,1,[1,2,3])
-    ]).subscribe(([result1, result2]) => {
-      console.log(result1);
-      console.log(result2);
+      this.signalrService.LockCourseEdition(1,1),
+      this.signalrService.LockCourseEdition(3,4)
+    ]).subscribe(() => {
+      forkJoin([
+        this.scheduleDesignerApiService.AddSchedulePositions(1,1,2,2,1,[1,2]),
+        this.scheduleDesignerApiService.AddSchedulePositions(3,4,2,2,1,[1,2])
+      ]).subscribe(([result1,result2]) => {
+        console.log(result1);
+        console.log(result2);
+      });
     });
   }
 

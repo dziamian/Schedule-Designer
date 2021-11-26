@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs.Helpers;
+using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 
 namespace ScheduleDesigner.Controllers
@@ -24,14 +25,25 @@ namespace ScheduleDesigner.Controllers
         private readonly IGroupRepo _groupRepo;
         private readonly ICourseEditionRepo _courseEditionRepo;
         private readonly ISchedulePositionRepo _schedulePositionRepo;
+        private readonly ICourseRoomTimestampRepo _courseRoomTimestampRepo;
+        private readonly ITimestampRepo _timestampRepo;
 
-        public SchedulePositionsController(ISettingsRepo settingsRepo, IRoomRepo roomRepo, IGroupRepo groupRepo, ICourseEditionRepo courseEditionRepo, ISchedulePositionRepo schedulePositionRepo)
+        public SchedulePositionsController(
+            ISettingsRepo settingsRepo, 
+            IRoomRepo roomRepo, 
+            IGroupRepo groupRepo, 
+            ICourseEditionRepo courseEditionRepo, 
+            ISchedulePositionRepo schedulePositionRepo,
+            ICourseRoomTimestampRepo courseRoomTimestampRepo,
+            ITimestampRepo timestampRepo)
         {
             _settingsRepo = settingsRepo;
             _roomRepo = roomRepo;
             _groupRepo = groupRepo;
             _courseEditionRepo = courseEditionRepo;
             _schedulePositionRepo = schedulePositionRepo;
+            _courseRoomTimestampRepo = courseRoomTimestampRepo;
+            _timestampRepo = timestampRepo;
         }
 
         [Authorize(Policy = "Coordinator")]
@@ -115,8 +127,11 @@ namespace ScheduleDesigner.Controllers
             ConcurrentQueue<object> courseEditionQueue, 
             CourseEditionKey courseEditionKey, 
             List<ConcurrentQueue<object>> schedulePositionQueues,
-            List<SchedulePositionKey> schedulePositionKeys
-            )
+            List<SchedulePositionKey> schedulePositionKeys,
+            List<ConcurrentQueue<object>> coordinatorPositionQueues,
+            List<CoordinatorPositionKey> coordinatorPositionKeys,
+            List<ConcurrentQueue<object>> groupPositionQueues,
+            List<GroupPositionKey> groupPositionKeys)
         {
             courseEditionQueue.TryDequeue(out _);
             if (courseEditionQueue.IsEmpty)
@@ -129,6 +144,22 @@ namespace ScheduleDesigner.Controllers
                 if (schedulePositionQueues[i].IsEmpty)
                 {
                     SchedulePositionLocks.TryRemove(schedulePositionKeys[i], out _);
+                }
+            }
+            for (var i = 0; i < coordinatorPositionQueues.Count; ++i)
+            {
+                coordinatorPositionQueues[i].TryDequeue(out _);
+                if (coordinatorPositionQueues[i].IsEmpty)
+                {
+                    CoordinatorPositionLocks.TryRemove(coordinatorPositionKeys[i], out _);
+                }
+            }
+            for (var i = 0; i < groupPositionQueues.Count; ++i)
+            {
+                groupPositionQueues[i].TryDequeue(out _);
+                if (groupPositionQueues[i].IsEmpty)
+                {
+                    GroupPositionLocks.TryRemove(groupPositionKeys[i], out _);
                 }
             }
         }
@@ -151,8 +182,12 @@ namespace ScheduleDesigner.Controllers
 
             CourseEditionKey courseEditionKey = null;
             var schedulePositionKeys = new List<SchedulePositionKey>();
+            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
+            var groupPositionKeys = new List<GroupPositionKey>();
             ConcurrentQueue<object> courseEditionQueue = null;
             var schedulePositionQueues = new List<ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
+            var groupPositionQueues = new List<ConcurrentQueue<object>>();
 
             var courseEnqueued = false;
             Array.Sort(weeks);
@@ -193,7 +228,8 @@ namespace ScheduleDesigner.Controllers
                         .Include(e => e.Groups)
                             .ThenInclude(e => e.Group)
                         .Include(e => e.SchedulePositions)
-                        .Include(e => e.Course);
+                        .Include(e => e.Course)
+                            .ThenInclude(e => e.Rooms);
 
                     if (!_courseEdition.Any())
                     {
@@ -201,7 +237,11 @@ namespace ScheduleDesigner.Controllers
                             courseEditionQueue,
                             courseEditionKey,
                             schedulePositionQueues,
-                            schedulePositionKeys
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
                         );
 
                         return NotFound();
@@ -214,7 +254,11 @@ namespace ScheduleDesigner.Controllers
                             courseEditionQueue,
                             courseEditionKey,
                             schedulePositionQueues,
-                            schedulePositionKeys
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
                         );
 
                         return BadRequest("You didn't lock this course edition.");
@@ -227,10 +271,30 @@ namespace ScheduleDesigner.Controllers
                             courseEditionQueue,
                             courseEditionKey,
                             schedulePositionQueues,
-                            schedulePositionKeys
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
                         );
 
                         return BadRequest("Application settings has not been specified.");
+                    }
+
+                    if (!courseEdition.Course.Rooms.Select(e => e.RoomId).Contains(roomId))
+                    {
+                        RemoveLocks(
+                            courseEditionQueue,
+                            courseEditionKey,
+                            schedulePositionQueues,
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
+                        );
+
+                        return BadRequest("Chosen room does not exist or has not been assigned to this course.");
                     }
 
                     var courseDurationMinutes = _settings.CourseDurationMinutes;
@@ -242,30 +306,139 @@ namespace ScheduleDesigner.Controllers
                             courseEditionQueue,
                             courseEditionKey,
                             schedulePositionQueues,
-                            schedulePositionKeys
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
                         );
 
                         return BadRequest("You cannot add any more course units to schedule.");
                     }
 
-                    //get timestamps
+                    var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
+                    var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                    Array.Sort(coordinatorsIds);
+                    Array.Sort(groupsIds);
 
-                    var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
-                    var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo);
+                    lock (CoordinatorPositionLocks)
+                    lock (GroupPositionLocks)
+                    {
+                        foreach (var week in weeks)
+                        {
+                            foreach (var coordinatorId in coordinatorsIds)
+                            {
+                                var key = new CoordinatorPositionKey
+                                    {CoordinatorId = coordinatorId, PeriodIndex = periodIndex, Day = day, Week = week};
+                                coordinatorPositionKeys.Add(key);
+                                var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                                coordinatorPositionQueues.Add(queue);
+                                queue.Enqueue(new object());
+                            }
 
-                    //lock ids
+                            foreach (var groupId in groupsIds)
+                            {
+                                var key = new GroupPositionKey
+                                    { GroupId = groupId, PeriodIndex = periodIndex, Day = day, Week = week };
+                                groupPositionKeys.Add(key);
+                                var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                                groupPositionQueues.Add(queue);
+                                queue.Enqueue(new object());
+                            }
+                        }
+                    }
 
-                    //look for conflicts and is room available for timestamps
+                    foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                    {
+                        Monitor.Enter(coordinatorPositionQueue);
+                    }
+                    foreach (var groupPositionQueue in groupPositionQueues)
+                    {
+                        Monitor.Enter(groupPositionQueue);
+                    }
 
-                    //if no conflicts then add schedulepositions
+                    try
+                    {
+                        var _timestamps = _timestampRepo
+                            .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
+                            .Select(e => e.TimestampId)
+                            .OrderBy(e => e).ToList();
 
-                    //unlock ids
+                        var _schedulePositions = _schedulePositionRepo
+                            .Get(e => _timestamps.Contains(e.TimestampId)
+                                      && (e.RoomId == roomId || e.CourseEdition.Coordinators
+                                                                 .Select(e => e.CoordinatorId)
+                                                                 .Any(e => coordinatorsIds.Contains(e))
+                                                             || e.CourseEdition.Groups.Select(e => e.GroupId)
+                                                                 .Any(e => groupsIds.Contains(e))))
+                            .Include(e => e.CourseEdition)
+                                .ThenInclude(e => e.Coordinators)
+                            .Include(e => e.CourseEdition)
+                                .ThenInclude(e => e.Groups)
+                            .Select(e => new {e.TimestampId, e.RoomId});
+
+                        if (_schedulePositions.Any())
+                        {
+                            RemoveLocks(
+                                courseEditionQueue,
+                                courseEditionKey,
+                                schedulePositionQueues,
+                                schedulePositionKeys,
+                                coordinatorPositionQueues,
+                                coordinatorPositionKeys,
+                                groupPositionQueues,
+                                groupPositionKeys
+                            );
+
+                            return BadRequest("Some conflicts with other courses occurred.");
+                        }
+
+                        var _courseRoomTimestamps = _courseRoomTimestampRepo
+                            .Get(e => e.RoomId == roomId && _timestamps.Contains(e.TimestampId) &&
+                                      e.CourseId == courseEdition.CourseId)
+                            .Select(e => e.TimestampId)
+                            .OrderBy(e => e);
+
+                        var schedulePositions = _timestamps.Select(timestampId => new SchedulePosition
+                            {
+                                RoomId = roomId,
+                                TimestampId = timestampId,
+                                CourseId = courseEdition.CourseId,
+                                CourseEditionId = courseEdition.CourseEditionId,
+                                CourseRoomTimestamp = !_courseRoomTimestamps.Contains(timestampId) ? new CourseRoomTimestamp
+                                {
+                                    RoomId = roomId, 
+                                    TimestampId = timestampId, 
+                                    CourseId = courseEdition.CourseId
+                                } : null
+                            }).ToList();
+
+                        _schedulePositionRepo.GetAll().AddRange(schedulePositions);
+                        
+                        var result1 = _schedulePositionRepo.SaveChanges().Result;
+                        //var result2 = Clients.All.blabla
+                    }
+                    finally
+                    {
+                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                        {
+                            Monitor.Exit(coordinatorPositionQueue);
+                        }
+                        foreach (var groupPositionQueue in groupPositionQueues)
+                        {
+                            Monitor.Exit(groupPositionQueue);
+                        }
+                    }
 
                     RemoveLocks(
                         courseEditionQueue,
                         courseEditionKey,
                         schedulePositionQueues,
-                        schedulePositionKeys
+                        schedulePositionKeys,
+                        coordinatorPositionQueues,
+                        coordinatorPositionKeys,
+                        groupPositionQueues,
+                        groupPositionKeys
                     );
 
                     return Ok();
@@ -295,10 +468,14 @@ namespace ScheduleDesigner.Controllers
                 try
                 {
                     RemoveLocks(
-                        courseEditionQueue, 
-                        courseEditionKey, 
-                        schedulePositionQueues, 
-                        schedulePositionKeys
+                        courseEditionQueue,
+                        courseEditionKey,
+                        schedulePositionQueues,
+                        schedulePositionKeys,
+                        coordinatorPositionQueues,
+                        coordinatorPositionKeys,
+                        groupPositionQueues,
+                        groupPositionKeys
                     );
                 }
                 finally

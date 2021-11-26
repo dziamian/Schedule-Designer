@@ -8,14 +8,14 @@ namespace ScheduleDesigner.Models
 {
     public class CourseRoomTimestamp
     {
+        public int CourseId { get; set; }
+       
         public int RoomId { get; set; }
 
         public int TimestampId { get; set; }
 
-        public int CourseId { get; set; }
 
-        
-        [ForeignKey("RoomId,CourseId")]
+        [ForeignKey("CourseId,RoomId")]
         public CourseRoom CourseRoom { get; set; }
 
         [ForeignKey("TimestampId")]

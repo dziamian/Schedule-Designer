@@ -161,9 +161,9 @@ namespace ScheduleDesigner.Controllers
                 var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo);
 
                 var _timestamps = _schedulePositionRepo
-                    .Get(e => (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
-                              || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e)))
-                              && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
+                    .Get(e => Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week) 
+                              && (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
+                              || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))))
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Coordinators)
                     .Include(e => e.CourseEdition)
