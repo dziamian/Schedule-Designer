@@ -186,7 +186,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")] //Clients.All.blabla
+        [Authorize(Policy = "Coordinator")]//Clients.All.blabla
         public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -833,7 +833,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Coordinator")]//Clients.All.blabla
         public MessageObject ModifySchedulePositions(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
@@ -965,7 +965,7 @@ namespace ScheduleDesigner.Hubs
                             foreach (var coordinatorId in coordinatorsIds)
                             {
                                 var key = new CoordinatorPositionKey
-                                    { CoordinatorId = coordinatorId, PeriodIndex = periodIndex, Day = day, Week = week };
+                                    { CoordinatorId = coordinatorId, PeriodIndex = destPeriodIndex, Day = destDay, Week = week };
                                 coordinatorPositionKeys.Add(key);
                                 var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
                                 coordinatorPositionQueues.Add(queue);
@@ -975,7 +975,7 @@ namespace ScheduleDesigner.Hubs
                             foreach (var groupId in groupsIds)
                             {
                                 var key = new GroupPositionKey
-                                    { GroupId = groupId, PeriodIndex = periodIndex, Day = day, Week = week };
+                                    { GroupId = groupId, PeriodIndex = destPeriodIndex, Day = destDay, Week = week };
                                 groupPositionKeys.Add(key);
                                 var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
                                 groupPositionQueues.Add(queue);
@@ -996,7 +996,7 @@ namespace ScheduleDesigner.Hubs
                     try
                     {
                         var _destTimestamps = _timestampRepo
-                            .Get(e => e.PeriodIndex == periodIndex && e.Day == day && destWeeks.Contains(e.Week))
+                            .Get(e => e.PeriodIndex == destPeriodIndex && e.Day == destDay && destWeeks.Contains(e.Week))
                             .Select(e => e.TimestampId)
                             .OrderBy(e => e).ToList();
 
@@ -1012,7 +1012,7 @@ namespace ScheduleDesigner.Hubs
 
                         var _destSchedulePositions = _schedulePositionRepo
                             .Get(e => _destTimestamps.Contains(e.TimestampId)
-                                      && (e.RoomId == roomId || e.CourseEdition.Coordinators
+                                      && (e.RoomId == destRoomId || e.CourseEdition.Coordinators
                                                                  .Select(e => e.CoordinatorId)
                                                                  .Any(e => coordinatorsIds.Contains(e))
                                                              || e.CourseEdition.Groups.Select(e => e.GroupId)
@@ -1039,7 +1039,7 @@ namespace ScheduleDesigner.Hubs
                             .Select(e => e.TimestampId)
                             .OrderBy(e => e);
 
-                        var schedulePositions = _destTimestamps.Select(timestampId => new SchedulePosition
+                        var destSchedulePositions = _destTimestamps.Select(timestampId => new SchedulePosition
                         {
                             RoomId = destRoomId,
                             TimestampId = timestampId,
@@ -1054,7 +1054,7 @@ namespace ScheduleDesigner.Hubs
                         }).ToList();
 
                         _schedulePositionRepo.GetAll().RemoveRange(_sourceSchedulePositions);
-                        _schedulePositionRepo.GetAll().AddRange(schedulePositions);
+                        _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
 
                         var result1 = _schedulePositionRepo.SaveChanges().Result;
                         //var result2 = Clients.All.blabla
@@ -1151,16 +1151,23 @@ namespace ScheduleDesigner.Hubs
             var _courseEditions = _courseEditionRepo
                 .Get(e => e.LockUserId == userId && e.LockUserConnectionId == connectionId);
 
-            if (!_courseEditions.Any())
-            {
-                return;
-            }
+            var _schedulePositions = _schedulePositionRepo
+                .Get(e => e.LockUserId == userId && e.LockUserConnectionId == connectionId)
+                .Include(e => e.CourseRoomTimestamp)
+                    .ThenInclude(e => e.Timestamp);
 
-            var courseEditions = _courseEditions.ToList();
+            var courseEditions = _courseEditions.Any() ? _courseEditions.ToList() : new List<CourseEdition>();
+            var schedulePositions = _schedulePositions.Any() ? _schedulePositions.ToList() : new List<SchedulePosition>();
 
             foreach (var courseEdition in courseEditions)
             {
                 UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+            }
+
+            foreach (var schedulePosition in schedulePositions)
+            {
+                var timestamp = schedulePosition.CourseRoomTimestamp.Timestamp;
+                UnlockSchedulePositions(schedulePosition.RoomId, timestamp.PeriodIndex, timestamp.Day, new int[]{timestamp.Week});
             }
         }
 
