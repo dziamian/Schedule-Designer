@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Controllers;
 using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
@@ -18,9 +19,12 @@ namespace ScheduleDesigner.Hubs
     [Authorize]
     public class ScheduleHub : Hub<IScheduleClient>
     {
+        private readonly ISettingsRepo _settingsRepo;
         private readonly ITimestampRepo _timestampRepo;
         private readonly ICourseEditionRepo _courseEditionRepo;
+        private readonly ICourseRoomTimestampRepo _courseRoomTimestampRepo;
         private readonly ISchedulePositionRepo _schedulePositionRepo;
+        private readonly IGroupRepo _groupRepo;
 
         private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>
             CourseEditionLocks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
@@ -28,11 +32,89 @@ namespace ScheduleDesigner.Hubs
         private static readonly ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>
             SchedulePositionLocks = new ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>();
 
-        public ScheduleHub(ITimestampRepo timestampRepo, ICourseEditionRepo courseEditionRepo, ISchedulePositionRepo schedulePositionRepo)
+        private static readonly ConcurrentDictionary<CoordinatorPositionKey, ConcurrentQueue<object>>
+            CoordinatorPositionLocks = new ConcurrentDictionary<CoordinatorPositionKey, ConcurrentQueue<object>>();
+
+        private static readonly ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>
+            GroupPositionLocks = new ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>();
+
+        private void RemoveCourseEditionLock(ConcurrentQueue<object> courseEditionQueue, CourseEditionKey courseEditionKey)
         {
+            courseEditionQueue.TryDequeue(out _);
+            if (courseEditionQueue.IsEmpty)
+            {
+                CourseEditionLocks.TryRemove(courseEditionKey, out _);
+            }
+        }
+
+        private void RemoveSchedulePositionsLocks(List<ConcurrentQueue<object>> schedulePositionQueues, List<SchedulePositionKey> schedulePositionKeys)
+        {
+            for (var i = 0; i < schedulePositionQueues.Count; ++i)
+            {
+                schedulePositionQueues[i].TryDequeue(out _);
+                if (schedulePositionQueues[i].IsEmpty)
+                {
+                    SchedulePositionLocks.TryRemove(schedulePositionKeys[i], out _);
+                }
+            }
+        }
+
+        private void RemoveCoordinatorPositionsLocks(List<ConcurrentQueue<object>> coordinatorPositionQueues, List<CoordinatorPositionKey> coordinatorPositionKeys)
+        {
+            for (var i = 0; i < coordinatorPositionQueues.Count; ++i)
+            {
+                coordinatorPositionQueues[i].TryDequeue(out _);
+                if (coordinatorPositionQueues[i].IsEmpty)
+                {
+                    CoordinatorPositionLocks.TryRemove(coordinatorPositionKeys[i], out _);
+                }
+            }
+        }
+
+        private void RemoveGroupPositionsLocks(List<ConcurrentQueue<object>> groupPositionQueues, List<GroupPositionKey> groupPositionKeys)
+        {
+            for (var i = 0; i < groupPositionQueues.Count; ++i)
+            {
+                groupPositionQueues[i].TryDequeue(out _);
+                if (groupPositionQueues[i].IsEmpty)
+                {
+                    GroupPositionLocks.TryRemove(groupPositionKeys[i], out _);
+                }
+            }
+        }
+
+        private void RemoveLocks(
+            ConcurrentQueue<object> courseEditionQueue,
+            CourseEditionKey courseEditionKey,
+            List<ConcurrentQueue<object>> schedulePositionQueues,
+            List<SchedulePositionKey> schedulePositionKeys,
+            List<ConcurrentQueue<object>> coordinatorPositionQueues,
+            List<CoordinatorPositionKey> coordinatorPositionKeys,
+            List<ConcurrentQueue<object>> groupPositionQueues,
+            List<GroupPositionKey> groupPositionKeys)
+        {
+            RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
+            RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+        }
+
+
+        public ScheduleHub(
+            ISettingsRepo settingsRepo,
+            ITimestampRepo timestampRepo, 
+            ICourseEditionRepo courseEditionRepo, 
+            ICourseRoomTimestampRepo courseRoomTimestampRepo,
+            ISchedulePositionRepo schedulePositionRepo,
+            IGroupRepo groupRepo
+            )
+        {
+            _settingsRepo = settingsRepo;
             _timestampRepo = timestampRepo;
             _courseEditionRepo = courseEditionRepo;
+            _courseRoomTimestampRepo = courseRoomTimestampRepo;
             _schedulePositionRepo = schedulePositionRepo;
+            _groupRepo = groupRepo;
         }
 
         [Authorize(Policy = "Coordinator")]
@@ -63,24 +145,16 @@ namespace ScheduleDesigner.Hubs
 
                     if (!_courseEdition.Any())
                     {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                        }
-
+                        RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
+                        
                         return new MessageObject {StatusCode = 404};
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
                     if (courseEdition.LockUserId != null)
                     {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                        }
-
+                        RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
+                        
                         return new MessageObject {StatusCode = 400, Message = "Course edition is already locked."};
                     }
 
@@ -91,11 +165,7 @@ namespace ScheduleDesigner.Hubs
                     var result1 = _courseEditionRepo.SaveChanges().Result;
                     var result2 = Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
 
-                    courseEditionQueue.TryDequeue(out _);
-                    if (courseEditionQueue.IsEmpty)
-                    {
-                        CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                    }
+                    RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
                     return new MessageObject { StatusCode = 200 };
                 }
@@ -109,10 +179,113 @@ namespace ScheduleDesigner.Hubs
 
                 lock (courseEditionQueue)
                 {
-                    courseEditionQueue.TryDequeue(out _);
-                    if (courseEditionQueue.IsEmpty)
+                    RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
+                }
+
+                return new MessageObject { StatusCode = 400, Message = e.Message };
+            }
+        }
+
+        [Authorize(Policy = "Coordinator")] //Client.All.blabla
+        public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
+        {
+            var schedulePositionKeys = new List<SchedulePositionKey>();
+            var schedulePositionQueues = new List<ConcurrentQueue<object>>();
+
+            try
+            {
+                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+
+                lock (SchedulePositionLocks)
+                {
+                    foreach (var week in weeks)
                     {
-                        CourseEditionLocks.TryRemove(courseEditionKey, out _);
+                        var key = new SchedulePositionKey { RoomId = roomId, PeriodIndex = periodIndex, Day = day, Week = week };
+                        schedulePositionKeys.Add(key);
+                        var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                        schedulePositionQueues.Add(queue);
+                        queue.Enqueue(new object());
+                    }
+                }
+
+                foreach (var schedulePositionQueue in schedulePositionQueues)
+                {
+                    Monitor.Enter(schedulePositionQueue);
+                }
+
+                try
+                {
+                    var _timestamps = _timestampRepo
+                        .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
+                        .Select(e => e.TimestampId)
+                        .OrderBy(e => e).ToList();
+
+                    if (!_timestamps.Any())
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                        return new MessageObject {StatusCode = 404, Message = "Could not find requested time periods."};
+                    }
+
+                    var _schedulePositions = _schedulePositionRepo
+                        .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId &&
+                                  e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        .Include(e => e.CourseEdition)
+                        .ThenInclude(e => e.Coordinators);
+
+                    if (_schedulePositions.Count() != weeks.Length)
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                        return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule."};
+                    }
+
+                    if (Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != null))
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                        return new MessageObject { StatusCode = 400, Message = "Some positions in schedule are already locked." };
+                    }
+
+                    foreach (var schedulePosition in _schedulePositions)
+                    {
+                        schedulePosition.LockUserId = userId;
+                        schedulePosition.LockUserConnectionId = Context.ConnectionId;
+                    }
+
+                    _schedulePositionRepo.GetAll().UpdateRange(_schedulePositions);
+
+                    var result1 = _schedulePositionRepo.SaveChanges().Result;
+                    //var result2 = Clients.All.blabla
+
+                    RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                    return new MessageObject { StatusCode = 200 };
+                }
+                finally
+                {
+                    foreach (var schedulePositionQueue in schedulePositionQueues)
+                    {
+                        Monitor.Exit(schedulePositionQueue);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                foreach (var schedulePositionQueue in schedulePositionQueues)
+                {
+                    Monitor.Enter(schedulePositionQueue);
+                }
+
+                try
+                {
+                    RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+                }
+                finally
+                {
+                    foreach (var schedulePositionQueue in schedulePositionQueues)
+                    {
+                        Monitor.Exit(schedulePositionQueue);
                     }
                 }
 
@@ -148,11 +321,7 @@ namespace ScheduleDesigner.Hubs
 
                     if (!_courseEdition.Any())
                     {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                        }
+                        RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
                         return new MessageObject { StatusCode = 404 };
                     }
@@ -160,22 +329,14 @@ namespace ScheduleDesigner.Hubs
                     var courseEdition = _courseEdition.FirstOrDefault();
                     if (courseEdition.LockUserId == null)
                     {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                        }
+                        RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
                         return new MessageObject { StatusCode = 400, Message = "This course edition is already unlocked." };
                     }
 
                     if (courseEdition.LockUserId != userId || courseEdition.LockUserConnectionId != Context.ConnectionId)
                     {
-                        courseEditionQueue.TryDequeue(out _);
-                        if (courseEditionQueue.IsEmpty)
-                        {
-                            CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                        }
+                        RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
                         return new MessageObject { StatusCode = 400, Message = "You cannot unlock this course edition." };
                     }
@@ -187,11 +348,7 @@ namespace ScheduleDesigner.Hubs
                     var result1 = _courseEditionRepo.SaveChanges().Result;
                     var result2 = Clients.All.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
 
-                    courseEditionQueue.TryDequeue(out _);
-                    if (courseEditionQueue.IsEmpty)
-                    {
-                        CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                    }
+                    RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
                     return new MessageObject { StatusCode = 200 };
                 }
@@ -203,26 +360,146 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject { StatusCode = 400, Message = e.Message };
                 }
 
-                courseEditionQueue.TryDequeue(out _);
-                if (courseEditionQueue.IsEmpty)
+                lock (courseEditionQueue)
                 {
-                    CourseEditionLocks.TryRemove(courseEditionKey, out _);
+                    RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                 }
 
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Coordinator")]//Client.All.blabla
+        public MessageObject UnlockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
+        {
+            var schedulePositionKeys = new List<SchedulePositionKey>();
+            var schedulePositionQueues = new List<ConcurrentQueue<object>>();
+
+            try
+            {
+                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+
+                lock (SchedulePositionLocks)
+                {
+                    foreach (var week in weeks)
+                    {
+                        var key = new SchedulePositionKey { RoomId = roomId, PeriodIndex = periodIndex, Day = day, Week = week };
+                        schedulePositionKeys.Add(key);
+                        var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                        schedulePositionQueues.Add(queue);
+                        queue.Enqueue(new object());
+                    }
+                }
+
+                foreach (var schedulePositionQueue in schedulePositionQueues)
+                {
+                    Monitor.Enter(schedulePositionQueue);
+                }
+
+                try
+                {
+                    var _timestamps = _timestampRepo
+                        .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
+                        .Select(e => e.TimestampId)
+                        .OrderBy(e => e).ToList();
+
+                    if (!_timestamps.Any())
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                        return new MessageObject { StatusCode = 404, Message = "Could not find requested time periods." };
+                    }
+
+                    var _schedulePositions = _schedulePositionRepo
+                        .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId &&
+                                  e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        .Include(e => e.CourseEdition)
+                        .ThenInclude(e => e.Coordinators);
+
+                    if (_schedulePositions.Count() != weeks.Length)
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                        return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." };
+                    }
+
+                    foreach (var schedulePosition in _schedulePositions)
+                    {
+                        if (schedulePosition.LockUserId == null)
+                        {
+                            RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                            return new MessageObject { StatusCode = 400, Message = "Some positions in schedule are already unlocked." };
+                        }
+
+                        if (schedulePosition.LockUserId != userId || schedulePosition.LockUserConnectionId != Context.ConnectionId)
+                        {
+                            RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                            return new MessageObject { StatusCode = 400, Message = "You cannot unlock some of positions in the schedule." };
+                        }
+                    }
+
+                    foreach (var schedulePosition in _schedulePositions)
+                    {
+                        schedulePosition.LockUserId = null;
+                        schedulePosition.LockUserConnectionId = null;
+                    }
+
+                    _schedulePositionRepo.GetAll().UpdateRange(_schedulePositions);
+
+                    var result1 = _schedulePositionRepo.SaveChanges().Result;
+                    //var result2 = Clients.All.blabla
+
+                    RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+
+                    return new MessageObject { StatusCode = 200 };
+                }
+                finally
+                {
+                    foreach (var schedulePositionQueue in schedulePositionQueues)
+                    {
+                        Monitor.Exit(schedulePositionQueue);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                foreach (var schedulePositionQueue in schedulePositionQueues)
+                {
+                    Monitor.Enter(schedulePositionQueue);
+                }
+
+                try
+                {
+                    RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
+                }
+                finally
+                {
+                    foreach (var schedulePositionQueue in schedulePositionQueues)
+                    {
+                        Monitor.Exit(schedulePositionQueue);
+                    }
+                }
+
+                return new MessageObject { StatusCode = 400, Message = e.Message };
+            }
+        }
+
+        
+        [Authorize(Policy = "Coordinator")]//Client.All.blabla
         public MessageObject AddSchedulePositions(int courseId, int courseEditionId, int roomId, int periodIndex, int day, int[] weeks)
         {
             CourseEditionKey courseEditionKey = null;
             var schedulePositionKeys = new List<SchedulePositionKey>();
+            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
+            var groupPositionKeys = new List<GroupPositionKey>();
             ConcurrentQueue<object> courseEditionQueue = null;
             var schedulePositionQueues = new List<ConcurrentQueue<object>>();
-            
-            var courseEnqueued = false;
+            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
+            var groupPositionQueues = new List<ConcurrentQueue<object>>();
 
+            var courseEnqueued = false;
             Array.Sort(weeks);
 
             try
@@ -255,23 +532,242 @@ namespace ScheduleDesigner.Hubs
 
                 try
                 {
-                    //do some stuff
+                    var _courseEdition = _courseEditionRepo
+                        .Get(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId)
+                        .Include(e => e.Coordinators)
+                        .Include(e => e.Groups)
+                        .ThenInclude(e => e.Group)
+                        .Include(e => e.SchedulePositions)
+                        .Include(e => e.Course)
+                        .ThenInclude(e => e.Rooms);
 
-                    courseEditionQueue.TryDequeue(out _);
-                    if (courseEditionQueue.IsEmpty)
+                    if (!_courseEdition.Any())
                     {
-                        CourseEditionLocks.TryRemove(courseEditionKey, out _);
+                        RemoveLocks(
+                            courseEditionQueue,
+                            courseEditionKey,
+                            schedulePositionQueues,
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
+                        );
+
+                        return new MessageObject {StatusCode = 404};
                     }
-                    for (var i = 0; i < schedulePositionQueues.Count; ++i)
+
+                    var courseEdition = _courseEdition.FirstOrDefault();
+                    if (courseEdition.LockUserId != userId || courseEdition.LockUserConnectionId != Context.ConnectionId)
                     {
-                        schedulePositionQueues[i].TryDequeue(out _);
-                        if (schedulePositionQueues[i].IsEmpty)
+                        RemoveLocks(
+                            courseEditionQueue,
+                            courseEditionKey,
+                            schedulePositionQueues,
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
+                        );
+
+                        return new MessageObject{StatusCode = 400, Message = "You didn't lock this course edition."};
+                    }
+
+                    var _settings = _settingsRepo.GetSettings().Result;
+                    if (_settings == null)
+                    {
+                        RemoveLocks(
+                            courseEditionQueue,
+                            courseEditionKey,
+                            schedulePositionQueues,
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
+                        );
+
+                        return new MessageObject {StatusCode = 400, Message = "Application settings has not been specified."};
+                    }
+
+                    if (!courseEdition.Course.Rooms.Select(e => e.RoomId).Contains(roomId))
+                    {
+                        RemoveLocks(
+                            courseEditionQueue,
+                            courseEditionKey,
+                            schedulePositionQueues,
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
+                        );
+
+                        return new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to this course."};
+                    }
+
+                    var courseDurationMinutes = _settings.CourseDurationMinutes;
+                    var totalMinutes = weeks.Length * courseDurationMinutes;
+                    if (courseEdition.Course.UnitsMinutes -
+                        courseEdition.SchedulePositions.Count * courseDurationMinutes < totalMinutes)
+                    {
+                        RemoveLocks(
+                            courseEditionQueue,
+                            courseEditionKey,
+                            schedulePositionQueues,
+                            schedulePositionKeys,
+                            coordinatorPositionQueues,
+                            coordinatorPositionKeys,
+                            groupPositionQueues,
+                            groupPositionKeys
+                        );
+
+                        return new MessageObject { StatusCode = 400, Message = "You cannot add any more units of this course to the schedule."};
+                    }
+
+                    var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
+                    var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                    Array.Sort(coordinatorsIds);
+                    Array.Sort(groupsIds);
+
+                    lock (CoordinatorPositionLocks)
+                    lock (GroupPositionLocks)
+                    {
+                        foreach (var week in weeks)
                         {
-                            SchedulePositionLocks.TryRemove(schedulePositionKeys[i], out _);
+                            foreach (var coordinatorId in coordinatorsIds)
+                            {
+                                var key = new CoordinatorPositionKey
+                                    { CoordinatorId = coordinatorId, PeriodIndex = periodIndex, Day = day, Week = week };
+                                coordinatorPositionKeys.Add(key);
+                                var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                                coordinatorPositionQueues.Add(queue);
+                                queue.Enqueue(new object());
+                            }
+
+                            foreach (var groupId in groupsIds)
+                            {
+                                var key = new GroupPositionKey
+                                    { GroupId = groupId, PeriodIndex = periodIndex, Day = day, Week = week };
+                                groupPositionKeys.Add(key);
+                                var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                                groupPositionQueues.Add(queue);
+                                queue.Enqueue(new object());
+                            }
+                        }
+                    }
+                    
+                    foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                    {
+                        Monitor.Enter(coordinatorPositionQueue);
+                    }
+                    foreach (var groupPositionQueue in groupPositionQueues)
+                    {
+                        Monitor.Enter(groupPositionQueue);
+                    }
+
+                    try
+                    {
+                        var _timestamps = _timestampRepo
+                            .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
+                            .Select(e => e.TimestampId)
+                            .OrderBy(e => e).ToList();
+
+                        if (!_timestamps.Any())
+                        {
+                            RemoveLocks(
+                                courseEditionQueue,
+                                courseEditionKey,
+                                schedulePositionQueues,
+                                schedulePositionKeys,
+                                coordinatorPositionQueues,
+                                coordinatorPositionKeys,
+                                groupPositionQueues,
+                                groupPositionKeys
+                            );
+
+                            return new MessageObject { StatusCode = 404, Message = "Could not find requested time periods." };
+                        }
+
+                        var _schedulePositions = _schedulePositionRepo
+                            .Get(e => _timestamps.Contains(e.TimestampId)
+                                      && (e.RoomId == roomId || e.CourseEdition.Coordinators
+                                                                 .Select(e => e.CoordinatorId)
+                                                                 .Any(e => coordinatorsIds.Contains(e))
+                                                             || e.CourseEdition.Groups.Select(e => e.GroupId)
+                                                                 .Any(e => groupsIds.Contains(e))))
+                            .Include(e => e.CourseEdition)
+                            .ThenInclude(e => e.Coordinators)
+                            .Include(e => e.CourseEdition)
+                            .ThenInclude(e => e.Groups)
+                            .Select(e => new { e.TimestampId, e.RoomId });
+
+                        if (_schedulePositions.Any())
+                        {
+                            RemoveLocks(
+                                courseEditionQueue,
+                                courseEditionKey,
+                                schedulePositionQueues,
+                                schedulePositionKeys,
+                                coordinatorPositionQueues,
+                                coordinatorPositionKeys,
+                                groupPositionQueues,
+                                groupPositionKeys
+                            );
+
+                            return new MessageObject {StatusCode = 400, Message = "Some conflicts with other courses occurred."};
+                        }
+
+                        var _courseRoomTimestamps = _courseRoomTimestampRepo
+                            .Get(e => e.RoomId == roomId && _timestamps.Contains(e.TimestampId) &&
+                                      e.CourseId == courseEdition.CourseId)
+                            .Select(e => e.TimestampId)
+                            .OrderBy(e => e);
+
+                        var schedulePositions = _timestamps.Select(timestampId => new SchedulePosition
+                        {
+                            RoomId = roomId,
+                            TimestampId = timestampId,
+                            CourseId = courseEdition.CourseId,
+                            CourseEditionId = courseEdition.CourseEditionId,
+                            CourseRoomTimestamp = !_courseRoomTimestamps.Contains(timestampId) ? new CourseRoomTimestamp
+                            {
+                                RoomId = roomId,
+                                TimestampId = timestampId,
+                                CourseId = courseEdition.CourseId
+                            } : null
+                        }).ToList();
+
+                        _schedulePositionRepo.GetAll().AddRange(schedulePositions);
+
+                        var result1 = _schedulePositionRepo.SaveChanges().Result;
+                        //var result2 = Clients.All.blabla
+                    }
+                    finally
+                    {
+                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                        {
+                            Monitor.Exit(coordinatorPositionQueue);
+                        }
+                        foreach (var groupPositionQueue in groupPositionQueues)
+                        {
+                            Monitor.Exit(groupPositionQueue);
                         }
                     }
 
-                    return new MessageObject { StatusCode = 200 };
+                    RemoveLocks(
+                        courseEditionQueue,
+                        courseEditionKey,
+                        schedulePositionQueues,
+                        schedulePositionKeys,
+                        coordinatorPositionQueues,
+                        coordinatorPositionKeys,
+                        groupPositionQueues,
+                        groupPositionKeys
+                    );
+
+                    return new MessageObject {StatusCode = 200};
                 }
                 finally
                 {
@@ -284,9 +780,9 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                if (!courseEnqueued) 
+                if (!courseEnqueued)
                 {
-                    return new MessageObject { StatusCode = 400, Message = e.Message };
+                    return new MessageObject {StatusCode = 400, Message = e.Message};
                 }
 
                 Monitor.Enter(courseEditionQueue);
@@ -294,23 +790,27 @@ namespace ScheduleDesigner.Hubs
                 {
                     Monitor.Enter(schedulePositionQueue);
                 }
+                foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                {
+                    Monitor.Enter(coordinatorPositionQueue);
+                }
+                foreach (var groupPositionQueue in groupPositionQueues)
+                {
+                    Monitor.Enter(groupPositionQueue);
+                }
 
                 try
                 {
-                    courseEditionQueue.TryDequeue(out _);
-                    if (courseEditionQueue.IsEmpty)
-                    {
-                        CourseEditionLocks.TryRemove(courseEditionKey, out _);
-                    }
-
-                    for (var i = 0; i < schedulePositionQueues.Count; ++i)
-                    {
-                        schedulePositionQueues[i].TryDequeue(out _);
-                        if (schedulePositionQueues[i].IsEmpty)
-                        {
-                            SchedulePositionLocks.TryRemove(schedulePositionKeys[i], out _);
-                        }
-                    }
+                    RemoveLocks(
+                        courseEditionQueue,
+                        courseEditionKey,
+                        schedulePositionQueues,
+                        schedulePositionKeys,
+                        coordinatorPositionQueues,
+                        coordinatorPositionKeys,
+                        groupPositionQueues,
+                        groupPositionKeys
+                    );
                 }
                 finally
                 {
@@ -319,30 +819,34 @@ namespace ScheduleDesigner.Hubs
                     {
                         Monitor.Exit(schedulePositionQueue);
                     }
+                    foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                    {
+                        Monitor.Exit(coordinatorPositionQueue);
+                    }
+                    foreach (var groupPositionQueue in groupPositionQueues)
+                    {
+                        Monitor.Exit(groupPositionQueue);
+                    }
                 }
 
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject {StatusCode = 400, Message = e.Message};
             }
         }
 
         [Authorize(Policy = "Coordinator")]
         public MessageObject ModifySchedulePositions()
         {
-            return new MessageObject { StatusCode = 400 };
+            return new MessageObject { StatusCode = 404 };
         }
 
         [Authorize(Policy = "Coordinator")]
         public MessageObject RemoveSchedulePositions()
         {
-            return new MessageObject { StatusCode = 400 };
+            return new MessageObject { StatusCode = 404 };
         }
 
         private void RemoveAllClientLocks(int userId, string connectionId)
         {
-            /*var _user = _userRepo
-                .Get(e => e.UserId == userId && e.LockedCourseEditions.Any(e => e.LockUserConnectionId == connectionId))
-                .Include(e => e.LockedCourseEditions)
-                .Select(e => e.LockedCourseEditions);*/
             var _courseEditions = _courseEditionRepo
                 .Get(e => e.LockUserId == userId && e.LockUserConnectionId == connectionId);
 

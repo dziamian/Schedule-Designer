@@ -425,7 +425,7 @@ export class ScheduleDesignerApiService {
   }
 
   //TESTING
-  public AddSchedulePositions(
+  /*public AddSchedulePositions(
     courseId:number,
     courseEditionId:number,
     roomId:number,
@@ -453,5 +453,5 @@ export class ScheduleDesignerApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     );
-  }
+  }*/
 }

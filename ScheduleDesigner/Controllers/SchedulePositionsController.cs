@@ -20,30 +20,13 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("SchedulePositions")]
     public class SchedulePositionsController : ODataController
     {
-        private readonly ISettingsRepo _settingsRepo;
         private readonly IRoomRepo _roomRepo;
-        private readonly IGroupRepo _groupRepo;
-        private readonly ICourseEditionRepo _courseEditionRepo;
         private readonly ISchedulePositionRepo _schedulePositionRepo;
-        private readonly ICourseRoomTimestampRepo _courseRoomTimestampRepo;
-        private readonly ITimestampRepo _timestampRepo;
 
-        public SchedulePositionsController(
-            ISettingsRepo settingsRepo, 
-            IRoomRepo roomRepo, 
-            IGroupRepo groupRepo, 
-            ICourseEditionRepo courseEditionRepo, 
-            ISchedulePositionRepo schedulePositionRepo,
-            ICourseRoomTimestampRepo courseRoomTimestampRepo,
-            ITimestampRepo timestampRepo)
+        public SchedulePositionsController(IRoomRepo roomRepo, ISchedulePositionRepo schedulePositionRepo)
         {
-            _settingsRepo = settingsRepo;
             _roomRepo = roomRepo;
-            _groupRepo = groupRepo;
-            _courseEditionRepo = courseEditionRepo;
             _schedulePositionRepo = schedulePositionRepo;
-            _courseRoomTimestampRepo = courseRoomTimestampRepo;
-            _timestampRepo = timestampRepo;
         }
 
         [Authorize(Policy = "Coordinator")]
@@ -111,7 +94,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>
+        /*private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>
             CourseEditionLocks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
 
         private static readonly ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>
@@ -121,9 +104,9 @@ namespace ScheduleDesigner.Controllers
             CoordinatorPositionLocks = new ConcurrentDictionary<CoordinatorPositionKey, ConcurrentQueue<object>>();
 
         private static readonly ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>
-            GroupPositionLocks = new ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>();
+            GroupPositionLocks = new ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>();*/
 
-        private void RemoveLocks(
+        /*private void RemoveLocks(
             ConcurrentQueue<object> courseEditionQueue, 
             CourseEditionKey courseEditionKey, 
             List<ConcurrentQueue<object>> schedulePositionQueues,
@@ -162,9 +145,9 @@ namespace ScheduleDesigner.Controllers
                     GroupPositionLocks.TryRemove(groupPositionKeys[i], out _);
                 }
             }
-        }
+        }*/
 
-        [Authorize(Policy = "Coordinator")]
+        /*[Authorize(Policy = "Coordinator")]
         [HttpPost]
         public IActionResult AddSchedulePositions(ODataActionParameters parameters)
         {
@@ -313,7 +296,7 @@ namespace ScheduleDesigner.Controllers
                             groupPositionKeys
                         );
 
-                        return BadRequest("You cannot add any more course units to schedule.");
+                        return BadRequest("You cannot add any more units of this course to the schedule.");
                     }
 
                     var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
@@ -489,6 +472,6 @@ namespace ScheduleDesigner.Controllers
 
                 return BadRequest(e.Message);
             }
-        }
+        }*/
     }
 }

@@ -288,7 +288,7 @@ namespace ScheduleDesigner
             getRoomsAvailabilityFunction
                 .CollectionParameter<int>("Weeks");
 
-            var addSchedulePositionsAction = builder.EntityType<SchedulePosition>().Collection
+            /*var addSchedulePositionsAction = builder.EntityType<SchedulePosition>().Collection
                 .Action("AddSchedulePositions");
 
             addSchedulePositionsAction
@@ -302,7 +302,7 @@ namespace ScheduleDesigner
             addSchedulePositionsAction
                 .Parameter<int>("Day");
             addSchedulePositionsAction
-                .CollectionParameter<int>("Weeks");
+                .CollectionParameter<int>("Weeks");*/
 
             return builder.GetEdmModel();
         }
