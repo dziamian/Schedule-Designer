@@ -16,7 +16,7 @@ import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
-import { MessageObject } from 'src/app/others/MessageObject';
+import { MessageObject } from 'src/app/others/CommunicationObjects';
 
 @Component({
   selector: 'app-schedule',
@@ -66,14 +66,7 @@ export class ScheduleComponent implements OnInit {
   ) 
   { }
 
-  ngOnInit(): void {
-    let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
-      this.connectionStatus = status;
-      if (!status && !this.signalrService.connectionIntentionallyStopped) {
-        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
-      }
-    });
-
+  private setSignalrSubscriptions():void {
     this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
       if (!this.myCourses) {
         return;
@@ -84,6 +77,10 @@ export class ScheduleComponent implements OnInit {
           value.Locked = true;
         }
       });
+    });
+
+    this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
+      console.log(lockedSchedulePositions);
     });
 
     this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
@@ -97,6 +94,31 @@ export class ScheduleComponent implements OnInit {
         }
       });
     });
+
+    this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
+      console.log(unlockedSchedulePositions);
+    });
+
+    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
+      console.log(addedSchedulePositions);
+    });
+    this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
+      console.log(modifiedSchedulePositions);
+    });
+    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+      console.log(removedSchedulePositions);
+    });
+  }
+
+  ngOnInit(): void {
+    let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      this.connectionStatus = status;
+      if (!status && !this.signalrService.connectionIntentionallyStopped) {
+        this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
+      }
+    });
+
+    this.setSignalrSubscriptions();
 
     forkJoin([
       this.signalrService.InitConnection(),
@@ -283,15 +305,33 @@ export class ScheduleComponent implements OnInit {
         event.currentIndex
       );
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      event.container.data[event.currentIndex].Room = null;
-      event.container.data[event.currentIndex].Amount = event.container.data[event.currentIndex].Weeks?.length ?? 0;
-      event.container.data[event.currentIndex].Weeks = null;
+      const courseEdition = event.item.data;
+      const previousSlot = this.getIndexes(event.previousContainer.id);
+
+      try {
+        const result = await this.signalrService.RemoveSchedulePositions(
+          courseEdition.Room!.RoomId, previousSlot[1] + 1,
+          previousSlot[0] + 1, this.weeks[this.currentTabIndex]
+        ).toPromise();
+        if (result.StatusCode >= 400) {
+          throw result;
+        }
+
+        console.log(result);
+
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+        event.container.data[event.currentIndex].Room = null;
+        event.container.data[event.currentIndex].Amount = event.container.data[event.currentIndex].Weeks?.length ?? 0;
+        event.container.data[event.currentIndex].Weeks = null;
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
     
     try {
@@ -310,8 +350,6 @@ export class ScheduleComponent implements OnInit {
 
   async DropInSchedule(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>, dayIndex:number, slotIndex:number) {
     this.isReleased = true;
-
-    const index = dayIndex * this.scheduleTimeLabels.length + slotIndex;
 
     if (this.isCanceled) {
       this.currentDragEvent = null;
@@ -334,7 +372,62 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
+    const courseEdition = event.item.data;
+    const slot = this.getIndexes(event.container.id);
+
+    if (event.previousContainer.id === 'my-courses') {
+      try {
+        const result:MessageObject = await this.signalrService.AddSchedulePositions(
+          courseEdition.CourseId, courseEdition.CourseEditionId,
+          2, slot[1] + 1, 
+          slot[0] + 1, this.weeks[this.currentTabIndex]
+        ).toPromise();
+        console.log(result.StatusCode);
+        if (result.StatusCode >= 400) {
+          console.log(result);
+          throw result;
+        }
+
+        console.log(result);
+
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
+      catch (error) {
+        console.log(error);
+      }
+    } else {
+      const previousSlot = this.getIndexes(event.previousContainer.id);
+      try {
+        const result = await this.signalrService.ModifySchedulePositions(
+          courseEdition.Room!.RoomId, previousSlot[1] + 1,
+          previousSlot[0] + 1, this.weeks[this.currentTabIndex],
+          2, slot[1] + 1,
+          slot[0] + 1, this.weeks[this.currentTabIndex]
+        ).toPromise();
+        if (result.StatusCode >= 400) {
+          throw result;
+        }
+
+        console.log(result);
+
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
+
+    /*this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
       disableClose: true,
       data: new RoomSelectionDialogData(
         event.item.data,
@@ -352,8 +445,8 @@ export class ScheduleComponent implements OnInit {
 
     switch (result.Status) {
       case RoomSelectionDialogStatus.ACCEPTED: {
-        event.previousContainer.data[event.previousIndex].Room = result.Room;
-        event.previousContainer.data[event.previousIndex].Weeks = this.weeks[this.currentTabIndex];
+        event.item.data.Room = result.Room;
+        event.item.data.Weeks = this.weeks[this.currentTabIndex];
 
         transferArrayItem(
           event.previousContainer.data,
@@ -371,10 +464,12 @@ export class ScheduleComponent implements OnInit {
       case RoomSelectionDialogStatus.FAILED: {
 
       } break;
-    }
+    }*/
 
     try {
-      const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+      const result = await this.signalrService.UnlockCourseEdition(
+        event.item.data.CourseId, event.item.data.CourseEditionId
+      ).toPromise();
       if (result.StatusCode >= 400) {
         throw result;
       }
@@ -407,6 +502,8 @@ export class ScheduleComponent implements OnInit {
     this.isReleased = false;
     this.isCanceled = false;
     this.currentDragEvent = event;
+
+    console.log(event);
     
     try {
       if (!this.isReleased) {
@@ -501,6 +598,8 @@ export class ScheduleComponent implements OnInit {
   async OnReleaseDragging(event:CdkDragRelease<CourseEdition>) {
     this.isReleased = true;
     
+    console.log(event);
+
     event.source.dropContainer.connectedTo = [];
 
     const numberOfSlots = this.settings.periods.length - 1;

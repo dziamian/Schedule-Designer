@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
-import { MessageObject } from 'src/app/others/MessageObject';
+import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, RemovedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
 
 @Injectable({
   providedIn: 'root'
@@ -15,24 +15,45 @@ export class SignalrService implements OnDestroy {
   
   isConnected:BehaviorSubject<boolean>
   lastLockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number}>
+  lastLockedSchedulePositions:BehaviorSubject<SchedulePosition>
   lastUnlockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number}>
+  lastUnlockedSchedulePositions:BehaviorSubject<SchedulePosition>
+  lastAddedSchedulePositions:BehaviorSubject<AddedSchedulePositions>
+  lastModifiedSchedulePositions:BehaviorSubject<ModifiedSchedulePositions>
+  lastRemovedSchedulePositions:BehaviorSubject<RemovedSchedulePositions>
 
   constructor() {
     this.isConnected = new BehaviorSubject<boolean>(false);
-    this.lastLockedCourseEdition = new BehaviorSubject<{
-      courseId:number, 
-      courseEditionId:number
-    }>({
-      courseId: -1,
-      courseEditionId: -1
-    });
-    this.lastUnlockedCourseEdition = new BehaviorSubject<{
-      courseId:number, 
-      courseEditionId:number
-    }>({
-      courseId: -1,
-      courseEditionId: -1
-    });
+    
+    this.lastLockedCourseEdition = new BehaviorSubject<{courseId:number, courseEditionId:number}>(
+      {courseId: -1,courseEditionId: -1}
+    );
+    
+    this.lastLockedSchedulePositions = new BehaviorSubject<SchedulePosition>(
+      new SchedulePosition(-1,-1,-1,-1,-1,[])
+    );
+    
+    this.lastUnlockedCourseEdition = new BehaviorSubject<{courseId:number, courseEditionId:number}>(
+      {courseId: -1,courseEditionId: -1}
+    );
+
+    this.lastUnlockedSchedulePositions = new BehaviorSubject<SchedulePosition>(
+      new SchedulePosition(-1,-1,-1,-1,-1,[])
+    );
+    
+    this.lastAddedSchedulePositions = new BehaviorSubject<AddedSchedulePositions>(
+      new AddedSchedulePositions([],[], new SchedulePosition(-1,-1,-1,-1,-1,[]))
+    );
+    
+    this.lastModifiedSchedulePositions = new BehaviorSubject<ModifiedSchedulePositions>(
+      new ModifiedSchedulePositions([],[],
+      new SchedulePosition(-1,-1,-1,-1,-1,[]),
+      new SchedulePosition(-1,-1,-1,-1,-1,[]))
+    );
+    
+    this.lastRemovedSchedulePositions = new BehaviorSubject<RemovedSchedulePositions>(
+      new RemovedSchedulePositions([],[],new SchedulePosition(-1,-1,-1,-1,-1,[]))
+    );
   }
 
   private GetAuthorizationHeader(token:any) {
@@ -121,6 +142,17 @@ export class SignalrService implements OnDestroy {
     );
   }
 
+  public RemoveSchedulePositions(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[]
+  ):Observable<MessageObject> {
+    return from(this.connection.invoke<MessageObject>('RemoveSchedulePositions',
+      roomId, periodIndex, day, weeks)
+    );
+  }
+
   public Disconnect() {
     if (this.connection?.state == "Connected") {
       this.connectionIntentionallyStopped = true;
@@ -141,11 +173,96 @@ export class SignalrService implements OnDestroy {
       });
     });
 
+    this.connection.on('LockSchedulePositions', (
+      courseId, courseEditionId,
+      roomId, periodIndex, 
+      day, weeks
+    ) => {
+      this.lastLockedSchedulePositions.next(new SchedulePosition(
+        courseId, courseEditionId,
+        roomId, periodIndex, 
+        day, weeks
+      ));
+    });
+
     this.connection.on('UnlockCourseEdition', (courseId, courseEditionId) => {
       this.lastUnlockedCourseEdition.next({
         courseId: courseId,
         courseEditionId: courseEditionId
       });
+    });
+
+    this.connection.on('UnlockSchedulePositions', (
+      courseId, courseEditionId,
+      roomId, periodIndex, 
+      day, weeks
+    ) => {
+      this.lastUnlockedSchedulePositions.next(new SchedulePosition(
+        courseId, courseEditionId,
+        roomId, periodIndex, 
+        day, weeks
+      ));
+    });
+
+    this.connection.on('AddedSchedulePositions', (
+      courseId, courseEditionId,
+      groupsIds, coordinatorsIds,
+      roomId, periodIndex,
+      day, weeks
+    ) => {
+      this.lastAddedSchedulePositions.next(
+        new AddedSchedulePositions(
+          groupsIds, coordinatorsIds, 
+          new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        )
+      );
+    });
+
+    this.connection.on('ModifiedSchedulePositions', (
+      courseId, courseEditionId,
+      groupsIds, coordinatorsIds,
+      previousRoomId, newRoomId,
+      previousPeriodIndex, newPeriodIndex,
+      previousDay, newDay,
+      previousWeeks, newWeeks
+    ) => {
+      this.lastModifiedSchedulePositions.next(
+        new ModifiedSchedulePositions(
+          groupsIds, coordinatorsIds,
+          new SchedulePosition(
+            courseId, courseEditionId,
+            previousRoomId, previousPeriodIndex,
+            previousDay, previousWeeks
+          ),
+          new SchedulePosition(
+            courseId, courseEditionId,
+            newRoomId, newPeriodIndex,
+            newDay, newWeeks
+          )
+        )
+      );
+    });
+
+    this.connection.on('RemovedSchedulePositions', (
+      courseId, courseEditionId,
+      groupsIds, coordinatorsIds,
+      roomId, periodIndex,
+      day, weeks
+    ) => {
+      this.lastRemovedSchedulePositions.next(
+        new RemovedSchedulePositions(
+          groupsIds, coordinatorsIds, 
+          new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        )
+      );
     });
   }
 
