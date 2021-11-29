@@ -16,7 +16,7 @@ import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
-import { MessageObject } from 'src/app/others/CommunicationObjects';
+import { SchedulePosition } from 'src/app/others/CommunicationObjects';
 
 @Component({
   selector: 'app-schedule',
@@ -66,37 +66,55 @@ export class ScheduleComponent implements OnInit {
   ) 
   { }
 
+  private UpdateLockInMyCourses(courseId:number, courseEditionId:number, value:boolean) {
+    if (!this.myCourses) {
+      return;
+    }
+
+    this.myCourses.forEach((myCourse) => {
+      if (myCourse.CourseId == courseId && myCourse.CourseEditionId == courseEditionId) {
+        myCourse.Locked = value;
+      }
+    });
+  }
+
+  private UpdateLockInSchedule(position:SchedulePosition, value:boolean) {
+    if (!this.schedule) {
+      return;
+    }
+
+    if (!this.weeks[this.currentTabIndex].some(r => position.Weeks.includes(r))) {
+      return;
+    }
+
+    const courseId = position.CourseId;
+    const courseEditionId = position.CourseEditionId;
+    const day = position.Day - 1;
+    const periodIndex = position.PeriodIndex - 1;
+
+    let courseEditions = this.schedule[day][periodIndex];
+    courseEditions.forEach((courseEdition) => {
+      if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId) {
+        courseEdition.Locked = value;
+      }
+    });
+  }
+
   private setSignalrSubscriptions():void {
     this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
-      if (!this.myCourses) {
-        return;
-      }
-
-      this.myCourses.forEach((value) => {
-        if (value.CourseId == courseId && value.CourseEditionId == courseEditionId) {
-          value.Locked = true;
-        }
-      });
+      this.UpdateLockInMyCourses(courseId, courseEditionId, true);
     });
 
     this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
-      console.log(lockedSchedulePositions);
+      this.UpdateLockInSchedule(lockedSchedulePositions, true);
     });
 
     this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
-      if (!this.myCourses) {
-        return;
-      }
-
-      this.myCourses.forEach((value) => {
-        if (value.CourseId == courseId && value.CourseEditionId == courseEditionId) {
-          value.Locked = false;
-        }
-      });
+      this.UpdateLockInMyCourses(courseId, courseEditionId, false);
     });
 
     this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
-      console.log(unlockedSchedulePositions);
+      this.UpdateLockInSchedule(unlockedSchedulePositions, false);
     });
 
     this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
@@ -105,7 +123,7 @@ export class ScheduleComponent implements OnInit {
     this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       console.log(modifiedSchedulePositions);
     });
-    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       console.log(removedSchedulePositions);
     });
   }
@@ -298,14 +316,16 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    if (event.previousContainer === event.container) {
+    const courseEdition = event.item.data;
+    const isScheduleSource = event.previousContainer.id !== 'my-courses';
+
+    if (!isScheduleSource) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
     } else {
-      const courseEdition = event.item.data;
       const previousSlot = this.getIndexes(event.previousContainer.id);
 
       try {
@@ -316,8 +336,6 @@ export class ScheduleComponent implements OnInit {
         if (result.StatusCode >= 400) {
           throw result;
         }
-
-        console.log(result);
 
         transferArrayItem(
           event.previousContainer.data,
@@ -330,25 +348,41 @@ export class ScheduleComponent implements OnInit {
         event.container.data[event.currentIndex].Weeks = null;
       }
       catch (error) {
-        console.log(error);
+        
       }
     }
     
-    try {
-      const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
-      
-      if (result.StatusCode >= 400) {
-        throw result;
+    if (!isScheduleSource) {
+      try {
+        const result = await this.signalrService.UnlockCourseEdition(
+          courseEdition.CourseId, courseEdition.CourseEditionId
+        ).toPromise();
+        
+        if (result.StatusCode >= 400) {
+          throw result;
+        }
+        
+        courseEdition.Locked = false;
+      } catch (error) {
+        
       }
-      event.item.data.Locked = false;
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+        const result = await this.scheduleDesignerApiService.IsCourseEditionLocked(
+          courseEdition.CourseId, courseEdition.CourseEditionId
+        ).toPromise();
+
+        courseEdition.Locked = result;
+      }
+      catch (error) {
+
+      }
     }
     this.currentDragEvent = null;
     this.isMoveValid = null;
   }
 
-  async DropInSchedule(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>, dayIndex:number, slotIndex:number) {
+  async DropInSchedule(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>) {
     this.isReleased = true;
 
     if (this.isCanceled) {
@@ -357,13 +391,25 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    if (event.previousContainer === event.container) {
+    const courseEdition = event.item.data;
+    const previousContainer = event.previousContainer;
+    const currentContainer = event.container;
+    const isScheduleSource = previousContainer.id !== 'my-courses';
+    const previousIndexes = (isScheduleSource) ? this.getIndexes(previousContainer.id) : [-1,-1];
+    const currentIndexes = this.getIndexes(currentContainer.id);
+    const weeks = this.weeks[this.currentTabIndex];
+
+    if (previousContainer === currentContainer) {
       try {
-        const result = await this.signalrService.UnlockCourseEdition(event.item.data.CourseId, event.item.data.CourseEditionId).toPromise();
+        const result = await this.signalrService.UnlockSchedulePositions(
+          courseEdition.Room!.RoomId, previousIndexes[1] + 1,
+          previousIndexes[0] + 1, weeks
+        ).toPromise();
+        
         if (result.StatusCode >= 400) {
           throw result;
         }
-        event.item.data.Locked = false;
+        courseEdition.Locked = false;
       } catch (error) {
 
       }
@@ -372,81 +418,28 @@ export class ScheduleComponent implements OnInit {
       return;
     }
 
-    const courseEdition = event.item.data;
-    const slot = this.getIndexes(event.container.id);
-
-    if (event.previousContainer.id === 'my-courses') {
-      try {
-        const result:MessageObject = await this.signalrService.AddSchedulePositions(
-          courseEdition.CourseId, courseEdition.CourseEditionId,
-          2, slot[1] + 1, 
-          slot[0] + 1, this.weeks[this.currentTabIndex]
-        ).toPromise();
-        console.log(result.StatusCode);
-        if (result.StatusCode >= 400) {
-          console.log(result);
-          throw result;
-        }
-
-        console.log(result);
-
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-      }
-      catch (error) {
-        console.log(error);
-      }
-    } else {
-      const previousSlot = this.getIndexes(event.previousContainer.id);
-      try {
-        const result = await this.signalrService.ModifySchedulePositions(
-          courseEdition.Room!.RoomId, previousSlot[1] + 1,
-          previousSlot[0] + 1, this.weeks[this.currentTabIndex],
-          2, slot[1] + 1,
-          slot[0] + 1, this.weeks[this.currentTabIndex]
-        ).toPromise();
-        if (result.StatusCode >= 400) {
-          throw result;
-        }
-
-        console.log(result);
-
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-      }
-      catch (error) {
-        console.log(error);
-      }
-    }
-
-    /*this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
+    const dialogData = new RoomSelectionDialogData(
+      courseEdition,
+      previousIndexes,
+      currentIndexes,
+      weeks,
+      this.scheduleDayLabels,
+      this.scheduleTimeLabels,
+      this.roomTypes,
+      this.isMoveValid!,
+      isScheduleSource
+    );
+    this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
       disableClose: true,
-      data: new RoomSelectionDialogData(
-        event.item.data,
-        this.getIndexes(event.container.id),
-        this.weeks[this.currentTabIndex],
-        this.scheduleDayLabels,
-        this.scheduleTimeLabels,
-        this.roomTypes,
-        this.isMoveValid!,
-        event.previousContainer.id !== 'my-courses'
-      )
+      data: dialogData
     });
-    const result:RoomSelectionDialogResult = await this.currentOpenedDialog.afterClosed().toPromise();
+    const dialogResult:RoomSelectionDialogResult = await this.currentOpenedDialog.afterClosed().toPromise();
     this.currentOpenedDialog = null;
 
-    switch (result.Status) {
+    switch (dialogResult.Status) {
       case RoomSelectionDialogStatus.ACCEPTED: {
-        event.item.data.Room = result.Room;
-        event.item.data.Weeks = this.weeks[this.currentTabIndex];
+        courseEdition.Room = dialogResult.Room;
+        courseEdition.Weeks = dialogResult.Weeks;
 
         transferArrayItem(
           event.previousContainer.data,
@@ -462,20 +455,41 @@ export class ScheduleComponent implements OnInit {
 
       } break;
       case RoomSelectionDialogStatus.FAILED: {
-
+        this.snackBar.open(dialogResult?.Message, "OK");
       } break;
-    }*/
+    }
 
-    try {
-      const result = await this.signalrService.UnlockCourseEdition(
-        event.item.data.CourseId, event.item.data.CourseEditionId
-      ).toPromise();
-      if (result.StatusCode >= 400) {
-        throw result;
+    if (!isScheduleSource) {
+      try {
+        const result = await this.signalrService.UnlockCourseEdition(
+          courseEdition.CourseId, courseEdition.CourseEditionId
+        ).toPromise();
+        
+        if (result.StatusCode >= 400) {
+          throw result;
+        }
+        
+        courseEdition.Locked = false;
+      } catch (error) {
+  
       }
-      event.item.data.Locked = false;
-    } catch (error) {
-
+    } else if (dialogResult.Status == RoomSelectionDialogStatus.ACCEPTED){
+      courseEdition.Locked = false;
+    } else {
+      try {
+        const result = await this.signalrService.UnlockSchedulePositions(
+          courseEdition.Room!.RoomId, previousIndexes[1] + 1,
+          previousIndexes[0] + 1, weeks
+        ).toPromise();
+        
+        if (result.StatusCode >= 400) {
+          throw result;
+        }
+        
+        courseEdition.Locked = false;
+      } catch (error) {
+  
+      }
     }
     this.currentDragEvent = null;
     this.isMoveValid = null;
@@ -489,53 +503,64 @@ export class ScheduleComponent implements OnInit {
     return drop.data.length < 1;
   }
 
+  OnMyCoursesEnter(drag:CdkDragEnter<CourseEdition[]>) {
+    this.isMoveValid = null;
+  }
+
   OnScheduleSlotEnter(drag:CdkDragEnter<CourseEdition[]>) {
     const indexes = this.getIndexes(drag.container.id);
     this.isMoveValid = this.scheduleSlotsValidity[indexes[0]][indexes[1]];
-  }
-
-  OnMyCoursesEnter(drag:CdkDragEnter<CourseEdition[]>) {
-    this.isMoveValid = null;
   }
 
   async OnStartDragging(event:CdkDragStart<CourseEdition>) {
     this.isReleased = false;
     this.isCanceled = false;
     this.currentDragEvent = event;
-
-    console.log(event);
     
+    const courseEdition = event.source.data;
+    const dropContainer = event.source.dropContainer;
+    const isScheduleSource = dropContainer.id !== 'my-courses';
+    const indexes = (isScheduleSource) ? this.getIndexes(dropContainer.id) : [-1,-1];
+
     try {
       if (!this.isReleased) {
-        const result = await this.signalrService.LockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        const result = (!isScheduleSource) 
+        ? await this.signalrService.LockCourseEdition(
+          courseEdition.CourseId, courseEdition.CourseEditionId
+        ).toPromise() 
+        : await this.signalrService.LockSchedulePositions(
+          courseEdition.Room!.RoomId, indexes[1] + 1,
+          indexes[0] + 1, this.weeks[this.currentTabIndex]
+        ).toPromise();
+        
         if (result.StatusCode >= 400) {
           throw result;
         }
-        event.source.data.Locked = true;
+        courseEdition.Locked = true;
       } else {
         return;
       }
-    } catch (error) {
+    } catch (error:any) {
       this.isCanceled = true;
       if (!this.isReleased) {
-        event.source.dropContainer._dropListRef.enter(
+        dropContainer._dropListRef.enter(
           event.source._dragRef,
           0,0
         );
         document.dispatchEvent(new Event('mouseup'));
       } else {
         if (this.currentOpenedDialog != null) {
-          this.currentOpenedDialog.close(false);
+          this.currentOpenedDialog.close(RoomSelectionDialogResult.CANCELED);
         }
       }
-      event.source.data.Locked = true;
-      this.snackBar.open("Someone has locked this course before you.", "OK");
+      courseEdition.Locked = true;
+      this.snackBar.open(error.Message, "OK");
       return;
     }
 
     let busySlots = await this.scheduleDesignerApiService.GetBusyPeriods(
-      event.source.data.CourseId, 
-      event.source.data.CourseEditionId,
+      courseEdition.CourseId, 
+      courseEdition.CourseEditionId,
       this.weeks[this.currentTabIndex]
     ).toPromise();
     let connectedTo = ['my-courses'];
@@ -544,7 +569,7 @@ export class ScheduleComponent implements OnInit {
     let busySlotIndex = 0;
     let scheduleSlots = this.scheduleSlots.toArray();
     
-    if (event.source.dropContainer.id != 'my-courses') {
+    if (isScheduleSource) {
       for (let i = 0; i < this.scheduleSlots.length; ++i) {
         let element = scheduleSlots[i].element as ElementRef<HTMLElement>;
         connectedTo.push(element.nativeElement.id);
@@ -555,7 +580,6 @@ export class ScheduleComponent implements OnInit {
           ++busySlotIndex;
         }
       }
-      const indexes = this.getIndexes(event.source.dropContainer.id);
       this.scheduleSlotsValidity[indexes[0]][indexes[1]] = true;
     } else {
       for (let i = 0; i < this.scheduleSlots.length; ++i) {
@@ -570,23 +594,31 @@ export class ScheduleComponent implements OnInit {
       }
     }
 
-    event.source.dropContainer.connectedTo = connectedTo;
+    dropContainer.connectedTo = connectedTo;
     
     if (!this.isReleased) {
-      event.source.dropContainer._dropListRef.enter(
+      dropContainer._dropListRef.enter(
         event.source._dragRef, 0, 0
       );
     }
     
     if (this.isReleased) {
       try {
-        const result = await this.signalrService.UnlockCourseEdition(event.source.data.CourseId, event.source.data.CourseEditionId).toPromise();
+        const result = (!isScheduleSource) 
+        ? await this.signalrService.UnlockCourseEdition(
+          courseEdition.CourseId, courseEdition.CourseEditionId
+        ).toPromise()
+        : await this.signalrService.UnlockSchedulePositions(
+          courseEdition.Room!.RoomId, indexes[1] + 1,
+          indexes[0] + 1, this.weeks[this.currentTabIndex]
+        ).toPromise();
+        
         if (result.StatusCode >= 400) {
           throw result;
         }
-        event.source.data.Locked = false;
+        courseEdition.Locked = false;
       } catch (error) {
-
+        
       }
       this.currentDragEvent = null;
       for (let i = 0; i < this.scheduleSlots.length; ++i) {
@@ -597,8 +629,6 @@ export class ScheduleComponent implements OnInit {
 
   async OnReleaseDragging(event:CdkDragRelease<CourseEdition>) {
     this.isReleased = true;
-    
-    console.log(event);
 
     event.source.dropContainer.connectedTo = [];
 

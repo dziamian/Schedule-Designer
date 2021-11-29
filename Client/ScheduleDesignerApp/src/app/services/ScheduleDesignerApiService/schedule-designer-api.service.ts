@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as OAuth from 'oauth-1.0a';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, min } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { Account, Coordinator, Titles } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
@@ -154,6 +154,23 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public IsCourseEditionLocked(courseId:number, courseEditionId:number):Observable<boolean> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?$select=LockUserId`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.LockUserId != null)
+    );
+  }
+
   public GetMyCourseEditions(
     frequency:number, 
     courseTypes:Map<number,CourseType>, 
@@ -220,6 +237,27 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public IsSchedulePositionLocked(
+    roomId:number, periodIndex:number,
+    day:number, week:number
+  ):Observable<boolean> {
+    const request = {
+      url: this.baseUrl + `/schedulePositions/Service.GetSchedulePosition(`
+      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Week=${week})?$select=LockUserId`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.LockUserId != null)
+    );
+  }
+
   public GetScheduleAsCoordinator(
     weeks:number[], 
     courseTypes:Map<number,CourseType>,
@@ -275,6 +313,7 @@ export class ScheduleDesignerApiService {
           const dayIndex = value.CourseRoomTimestamp.Timestamp.Day - 1;
           const periodIndex = value.CourseRoomTimestamp.Timestamp.PeriodIndex - 1;
           const week = value.CourseRoomTimestamp.Timestamp.Week;
+          const locked = value.LockUserId != null;
           let scheduleSlot = schedule[dayIndex][periodIndex];
           let found = false;
           for (let i = 0; i < scheduleSlot.length; ++i) {
@@ -282,6 +321,9 @@ export class ScheduleDesignerApiService {
             if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
               && courseEdition.Room!.RoomId == roomId) {
               courseEdition.Weeks?.push(week);
+              if (locked) {
+                courseEdition.Locked = true;
+              }
               found = true;
             }
           }
@@ -297,7 +339,7 @@ export class ScheduleDesignerApiService {
               coordinators
             );
             courseEdition.Room = new Room(roomId);
-            courseEdition.Locked = value.LockUserId;
+            courseEdition.Locked = locked;
             courseEdition.Weeks = [week];
             scheduleSlot.push(courseEdition);
           }
@@ -338,25 +380,13 @@ export class ScheduleDesignerApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
-      map((response : any) => //{
-        //let rooms:Map<number,Room[]> = new Map<number,Room[]>();
-
+      map((response : any) =>
         response.value.map((element : any) => {
           const room = new Room(element.RoomId);
           room.Name = element.Room.Name;
           room.RoomType = roomsTypes.get(element.Room.RoomTypeId) ?? new RoomType(0, "");
           return room;
-          //let currentRooms:Room[]|undefined = rooms.get(room.RoomType.RoomTypeId);
-          //if (currentRooms == undefined) {
-            //rooms.set(room.RoomType.RoomTypeId, new Array<Room>(room));
-          //} else {
-            //currentRooms.push(room);
-            //rooms.set(room.RoomType.RoomTypeId, currentRooms);
-          //}
         })
-
-        //return rooms;
-      //})
       )
     );
   }

@@ -271,6 +271,18 @@ namespace ScheduleDesigner
                 .ReturnsCollectionFromEntitySet<Timestamp>("Timestamps")
                 .CollectionParameter<int>("Weeks");
 
+            var getSchedulePositionFunction = builder.EntityType<SchedulePosition>().Collection
+                .Function("GetSchedulePosition")
+                .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions");
+            getSchedulePositionFunction
+                .Parameter<int>("RoomId");
+            getSchedulePositionFunction
+                .Parameter<int>("PeriodIndex");
+            getSchedulePositionFunction
+                .Parameter<int>("Day");
+            getSchedulePositionFunction
+                .Parameter<int>("Week");
+
             builder.EntityType<SchedulePosition>().Collection
                 .Function("GetScheduleAsCoordinator")
                 .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions")

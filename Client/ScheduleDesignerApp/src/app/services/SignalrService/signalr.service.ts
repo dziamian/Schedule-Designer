@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import * as signalr from '@microsoft/signalr';
 import { BehaviorSubject, from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, RemovedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
 
@@ -99,19 +100,39 @@ export class SignalrService implements OnDestroy {
   }
 
   public LockCourseEdition(courseId:number, courseEditionId:number):Observable<MessageObject> {
-    return from(this.connection.invoke<MessageObject>('LockCourseEdition', courseId, courseEditionId));
+    return from(this.connection.invoke<MessageObject>('LockCourseEdition', courseId, courseEditionId))
+    .pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public LockSchedulePositions(roomId:number, periodIndex:number, day:number, weeks:number[]) {
-    return from(this.connection.invoke<MessageObject>('LockSchedulePositions', roomId, periodIndex, day, weeks));
+    return from(this.connection.invoke<MessageObject>('LockSchedulePositions', roomId, periodIndex, day, weeks))
+    .pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable<MessageObject> {
-    return from(this.connection.invoke<MessageObject>('UnlockCourseEdition', courseId, courseEditionId));
+    return from(this.connection.invoke<MessageObject>('UnlockCourseEdition', courseId, courseEditionId))
+    .pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public UnlockSchedulePositions(roomId:number, periodIndex:number, day:number, weeks:number[]) {
-    return from(this.connection.invoke<MessageObject>('UnlockSchedulePositions', roomId, periodIndex, day, weeks));
+    return from(this.connection.invoke<MessageObject>('UnlockSchedulePositions', roomId, periodIndex, day, weeks))
+    .pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public AddSchedulePositions(
@@ -124,7 +145,11 @@ export class SignalrService implements OnDestroy {
   ):Observable<MessageObject> {
     return from(this.connection.invoke<MessageObject>('AddSchedulePositions', 
       courseId, courseEditionId, roomId, periodIndex, day, weeks)
-    );
+    ).pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public ModifySchedulePositions(
@@ -139,7 +164,11 @@ export class SignalrService implements OnDestroy {
   ):Observable<MessageObject> {
     return from(this.connection.invoke<MessageObject>('ModifySchedulePositions',
       roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks) 
-    );
+    ).pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public RemoveSchedulePositions(
@@ -150,7 +179,11 @@ export class SignalrService implements OnDestroy {
   ):Observable<MessageObject> {
     return from(this.connection.invoke<MessageObject>('RemoveSchedulePositions',
       roomId, periodIndex, day, weeks)
-    );
+    ).pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
   }
 
   public Disconnect() {

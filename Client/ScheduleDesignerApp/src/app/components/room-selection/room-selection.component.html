@@ -3,7 +3,7 @@
     <b *ngIf="selectedRoom?.IsBusy || !data.IsMoveValid" style="color: #FF4800">You are scheduling a move:</b>
     <br>
     <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>
-    <u>{{data.DayLabels[data.SlotIndex[0]]}}: {{data.TimeLabels[data.SlotIndex[1]]}}</u>
+    <u>{{data.DayLabels[data.DestIndexes[0]]}}: {{data.TimeLabels[data.DestIndexes[1]]}}</u>
 </h2>
 <div *ngIf="!loading" mat-dialog-content>
     <form>
@@ -26,8 +26,8 @@
     <button 
         mat-raised-button
         color="primary"
+        [disabled]="selectedRoom == null"
     
-        [mat-dialog-close]="GET_FAILED_RESULT" 
-        cdkFocusInitial
+        (click)="Action()"
     >{{(data.IsMoveValid) ? ((!selectedRoom?.IsBusy) ? 'Make' : 'Schedule') : 'Schedule'}} a move</button>
 </mat-dialog-actions>

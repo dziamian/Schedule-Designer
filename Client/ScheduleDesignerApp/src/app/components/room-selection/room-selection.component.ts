@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MessageObject } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
+import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
 @Component({
   selector: 'app-room-selection',
@@ -11,14 +13,7 @@ import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApi
 })
 export class RoomSelectionComponent implements OnInit {
 
-  static readonly FAILED:RoomSelectionDialogResult = new RoomSelectionDialogResult(
-    RoomSelectionDialogStatus.FAILED,
-    null
-  );
-  static readonly CANCELED:RoomSelectionDialogResult = new RoomSelectionDialogResult(
-    RoomSelectionDialogStatus.CANCELED,
-    null
-  );
+  static readonly CANCELED:RoomSelectionDialogResult = RoomSelectionDialogResult.CANCELED;
 
   selectedRoom:Room|null;
 
@@ -30,7 +25,8 @@ export class RoomSelectionComponent implements OnInit {
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
     @Inject(MAT_DIALOG_DATA) public data:RoomSelectionDialogData,
-    public dialogRef:MatDialogRef<RoomSelectionComponent>
+    public dialogRef:MatDialogRef<RoomSelectionComponent>,
+    private signalrService:SignalrService,
   ) { }
 
   ngOnInit(): void {
@@ -44,8 +40,8 @@ export class RoomSelectionComponent implements OnInit {
 
         this.scheduleDesignerApiService.GetRoomsAvailability(
           this.courseRooms.map((room) => room.RoomId),
-          this.data.SlotIndex[1] + 1,
-          this.data.SlotIndex[0] + 1,
+          this.data.DestIndexes[1] + 1,
+          this.data.DestIndexes[0] + 1,
           this.data.Weeks
         ).subscribe((rooms) => {
           for (let i = 0; i < rooms.length; ++i) {
@@ -71,10 +67,6 @@ export class RoomSelectionComponent implements OnInit {
     }, 5000);*/
   }
 
-  GET_FAILED_RESULT():RoomSelectionDialogResult {
-    return RoomSelectionComponent.FAILED;
-  }
-
   GET_CANCELED_RESULT():RoomSelectionDialogResult {
     return RoomSelectionComponent.CANCELED;
   }
@@ -93,5 +85,59 @@ export class RoomSelectionComponent implements OnInit {
     });
 
     return rooms;
+  }
+
+  async Action() {
+    const selectedRoom = this.selectedRoom;
+
+    if (selectedRoom == null) {
+      return;
+    }
+
+    const areModified = this.data.SrcIndexes[0] != -1;
+    const isMoveValid = this.data.IsMoveValid;
+    const courseEdition = this.data.CourseEdition;
+    const srcIndexes = this.data.SrcIndexes;
+    const destIndexes = this.data.DestIndexes;
+    const weeks = this.data.Weeks;
+
+    let message:string = '';
+    let status:RoomSelectionDialogStatus;
+    try {
+      const notImplemented:MessageObject = new MessageObject(404);
+      notImplemented.Message = "Not implemented yet.";
+      const result = (!areModified) 
+      ? await this.signalrService.AddSchedulePositions(
+        courseEdition.CourseId, courseEdition.CourseEditionId,
+        selectedRoom!.RoomId, destIndexes[1] + 1, 
+        destIndexes[0] + 1, weeks
+      ).toPromise()
+      : ((isMoveValid && !selectedRoom.IsBusy) 
+      ? await this.signalrService.ModifySchedulePositions(
+        courseEdition.Room!.RoomId, srcIndexes[1] + 1,
+        srcIndexes[0] + 1, weeks,
+        selectedRoom!.RoomId, destIndexes[1] + 1,
+        destIndexes[0] + 1, weeks
+      ).toPromise() 
+      : notImplemented);
+      
+      if (result.StatusCode >= 400) {
+        throw result;
+      }
+
+      status = (isMoveValid) ? RoomSelectionDialogStatus.ACCEPTED : RoomSelectionDialogStatus.SCHEDULED;
+    }
+    catch (error:any) {
+      status = RoomSelectionDialogStatus.FAILED;
+      message = error.Message;
+    }
+    
+    const dialogResult = new RoomSelectionDialogResult(
+      status,
+      selectedRoom,
+      weeks
+    );
+    dialogResult.Message = message;
+    this.dialogRef.close(dialogResult);
   }
 }

@@ -61,7 +61,7 @@
                                                 [cdkDropListEnterPredicate]="ScheduleSlotEnterPredicate"
                                                 [cdkDropListDisabled]="IsScheduleSlotDisabled(dayIndex,timeIndex)"
                                                 (cdkDropListEntered)="OnScheduleSlotEnter($event)"
-                                                (cdkDropListDropped)="DropInSchedule($event, dayIndex, timeIndex)"
+                                                (cdkDropListDropped)="DropInSchedule($event)"
 
                                                 [attr.valid]="scheduleSlotsValidity[dayIndex][timeIndex]"
                                                 [attr.current]="this.currentDragEvent?.source?.dropContainer?.id === dayIndex + ',' + timeIndex"

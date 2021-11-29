@@ -29,6 +29,32 @@ namespace ScheduleDesigner.Controllers
             _schedulePositionRepo = schedulePositionRepo;
         }
 
+        [HttpGet]
+        [EnableQuery]
+        [ODataRoute("Service.GetSchedulePosition(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Week={Week})")]
+        public IActionResult GetSchedulePosition([FromODataUri] int RoomId, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] int Week)
+        {
+            try
+            {
+                var _schedulePosition = _schedulePositionRepo
+                    .Get(e => e.RoomId == RoomId && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex 
+                        && e.CourseRoomTimestamp.Timestamp.Day == Day && e.CourseRoomTimestamp.Timestamp.Week == Week)
+                    .Include(e => e.CourseRoomTimestamp)
+                        .ThenInclude(e => e.Timestamp);
+
+                if (!_schedulePosition.Any())
+                {
+                    return NotFound();
+                }
+
+                return Ok(SingleResult.Create(_schedulePosition));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [Authorize(Policy = "Coordinator")]
         [HttpGet]
         [EnableQuery(MaxExpansionDepth = 4)]

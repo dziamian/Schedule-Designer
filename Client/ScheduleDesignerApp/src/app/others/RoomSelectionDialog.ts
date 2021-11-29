@@ -6,7 +6,8 @@ export class RoomSelectionDialogData {
 
     constructor(
         public CourseEdition:CourseEdition,
-        public SlotIndex:number[],
+        public SrcIndexes:number[],
+        public DestIndexes:number[],
         public Weeks:number[],
         public DayLabels:string[],
         public TimeLabels:string[],
@@ -16,17 +17,25 @@ export class RoomSelectionDialogData {
     ) { }
 }
 
-export class RoomSelectionDialogResult {
-    
-    constructor(
-        public Status:RoomSelectionDialogStatus,
-        public Room:Room|null
-    ) {}
-}
-
 export const enum RoomSelectionDialogStatus {
     ACCEPTED,
     SCHEDULED,
     FAILED,
     CANCELED
+}
+
+export class RoomSelectionDialogResult {
+    static readonly CANCELED:RoomSelectionDialogResult = new RoomSelectionDialogResult(
+        RoomSelectionDialogStatus.CANCELED,
+        null,
+        []
+    );
+
+    Message:string;
+
+    constructor(
+        public Status:RoomSelectionDialogStatus,
+        public Room:Room|null,
+        public Weeks:number[]
+    ) {}
 }

@@ -151,11 +151,11 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
-                    if (courseEdition.LockUserId != null)
+                    if (!(courseEdition is {LockUserId: null}))
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                         
-                        return new MessageObject {StatusCode = 400, Message = "Course edition is already locked."};
+                        return new MessageObject {StatusCode = 400, Message = "Someone has locked this course before you." };
                     }
 
                     courseEdition.LockUserId = userId;

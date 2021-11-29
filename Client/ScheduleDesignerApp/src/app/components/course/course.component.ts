@@ -49,7 +49,8 @@ export class CourseComponent implements OnInit {
   }
 
   CheckIfNotMatching():boolean {
-    return this.weeksOnTab?.sort((a,b) => a - b).join(',') !== this.course.Weeks?.sort((a,b) => a - b).join(',');
+    return this.weeksOnTab?.sort((a,b) => a - b).join(',') 
+      !== this.course.Weeks?.sort((a,b) => a - b).join(',');
   }
 
   OnStarted(event:CdkDragStart) {
