@@ -68,9 +68,9 @@ namespace ScheduleDesigner.Controllers
                     .Get(e => e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId)
                               && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
                     .Include(e => e.CourseEdition)
-                    .ThenInclude(e => e.Coordinators)
+                        .ThenInclude(e => e.Coordinators)
                     .Include(e => e.CourseRoomTimestamp)
-                    .ThenInclude(e => e.Timestamp);
+                        .ThenInclude(e => e.Timestamp);
 
                 return Ok(_schedulePositions);
             }

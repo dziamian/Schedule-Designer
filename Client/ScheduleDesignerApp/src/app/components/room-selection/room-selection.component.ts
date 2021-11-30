@@ -16,6 +16,7 @@ export class RoomSelectionComponent implements OnInit {
   static readonly CANCELED:RoomSelectionDialogResult = RoomSelectionDialogResult.CANCELED;
 
   selectedRoom:Room|null;
+  actionActivated:boolean = false;
 
   courseRooms:Room[];
   mappedCourseRooms:Map<number,Room[]>;
@@ -88,6 +89,7 @@ export class RoomSelectionComponent implements OnInit {
   }
 
   async Action() {
+    this.actionActivated = true;
     const selectedRoom = this.selectedRoom;
 
     if (selectedRoom == null) {

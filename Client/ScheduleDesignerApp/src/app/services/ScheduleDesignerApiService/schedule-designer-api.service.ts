@@ -11,6 +11,7 @@ import { Group } from 'src/app/others/Group';
 import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
+import { CourseEditionInfo } from 'src/app/others/CourseEditionInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -171,6 +172,64 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetCoordinators(usersIds:number[]):Observable<Coordinator[]> {
+    const request = {
+      url: this.baseUrl + `/users?$expand=Coordinator&$filter=UserId in [${usersIds.toString()}]`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((value : any) => 
+        new Coordinator(
+          value.UserId,
+          value.FirstName,
+          value.LastName,
+          new Titles(
+            value.Coordinator.TitleBefore,
+            value.Coordinator.TitleAfter
+          )
+        ))
+      )
+    );
+  }
+
+  public GetCourseEditionInfo(
+    courseId:number, 
+    courseEdition:number, 
+    settings:Settings
+  ):Observable<CourseEditionInfo> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEdition})?`
+      + `$expand=Course,SchedulePositions($count=true;$top=0)`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        const courseEditionInfo = new CourseEditionInfo(
+          courseId, response.Course.CourseTypeId, response.Course.Name
+        );
+        courseEditionInfo.UnitsMinutes = response.Course.UnitsMinutes;
+        courseEditionInfo.ScheduleAmount = response['SchedulePositions@odata.count'];
+        courseEditionInfo.FullAmount = courseEditionInfo.UnitsMinutes / settings.CourseDurationMinutes;
+        courseEditionInfo.Locked = response.LockUserId != null;
+        return courseEditionInfo;
+      })
+    );
+  }
+
   public GetMyCourseEditions(
     frequency:number, 
     courseTypes:Map<number,CourseType>, 
@@ -213,8 +272,9 @@ export class ScheduleDesignerApiService {
               )
             ));
           });
-
-          let coursesAmount = value.Course.UnitsMinutes - value['SchedulePositions@odata.count'] * settings.CourseDurationMinutes
+          const scheduleAmount = value['SchedulePositions@odata.count'];
+          const fullAmount = value.Course.UnitsMinutes / settings.CourseDurationMinutes;
+          let coursesAmount = value.Course.UnitsMinutes - scheduleAmount * settings.CourseDurationMinutes
           coursesAmount /= frequency * settings.CourseDurationMinutes;
           coursesAmount = Math.floor(coursesAmount);
           for (let i = 0; i < coursesAmount; ++i) {
@@ -228,6 +288,8 @@ export class ScheduleDesignerApiService {
               coordinators
             );
             courseEdition.Locked = value.LockUserId;
+            courseEdition.ScheduleAmount = scheduleAmount;
+            courseEdition.FullAmount = fullAmount;
             myCourseEditions.push(courseEdition);
           }
         });
@@ -265,7 +327,7 @@ export class ScheduleDesignerApiService {
   ):Observable<CourseEdition[][][]> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetScheduleAsCoordinator(Weeks=[${weeks.toString()}])?` +
-        '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups),' +
+        '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups,SchedulePositions($count=true;$top=0)),' +
         'CourseRoomTimestamp($expand=Timestamp)',
       method: 'GET'
     };
@@ -314,6 +376,8 @@ export class ScheduleDesignerApiService {
           const periodIndex = value.CourseRoomTimestamp.Timestamp.PeriodIndex - 1;
           const week = value.CourseRoomTimestamp.Timestamp.Week;
           const locked = value.LockUserId != null;
+          const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
+          const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
           let scheduleSlot = schedule[dayIndex][periodIndex];
           let found = false;
           for (let i = 0; i < scheduleSlot.length; ++i) {
@@ -341,6 +405,8 @@ export class ScheduleDesignerApiService {
             courseEdition.Room = new Room(roomId);
             courseEdition.Locked = locked;
             courseEdition.Weeks = [week];
+            courseEdition.ScheduleAmount = scheduleAmount;
+            courseEdition.FullAmount = fullAmount;
             scheduleSlot.push(courseEdition);
           }
         });

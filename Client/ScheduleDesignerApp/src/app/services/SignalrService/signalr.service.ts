@@ -43,17 +43,17 @@ export class SignalrService implements OnDestroy {
     );
     
     this.lastAddedSchedulePositions = new BehaviorSubject<AddedSchedulePositions>(
-      new AddedSchedulePositions([],[], new SchedulePosition(-1,-1,-1,-1,-1,[]))
+      new AddedSchedulePositions([],-1,[], new SchedulePosition(-1,-1,-1,-1,-1,[]))
     );
     
     this.lastModifiedSchedulePositions = new BehaviorSubject<ModifiedSchedulePositions>(
-      new ModifiedSchedulePositions([],[],
+      new ModifiedSchedulePositions([],-1,[],
       new SchedulePosition(-1,-1,-1,-1,-1,[]),
       new SchedulePosition(-1,-1,-1,-1,-1,[]))
     );
     
     this.lastRemovedSchedulePositions = new BehaviorSubject<RemovedSchedulePositions>(
-      new RemovedSchedulePositions([],[],new SchedulePosition(-1,-1,-1,-1,-1,[]))
+      new RemovedSchedulePositions([],-1,[],new SchedulePosition(-1,-1,-1,-1,-1,[]))
     );
   }
 
@@ -239,13 +239,13 @@ export class SignalrService implements OnDestroy {
 
     this.connection.on('AddedSchedulePositions', (
       courseId, courseEditionId,
-      groupsIds, coordinatorsIds,
+      groupsIds, mainGroupsAmount, coordinatorsIds,
       roomId, periodIndex,
       day, weeks
     ) => {
       this.lastAddedSchedulePositions.next(
         new AddedSchedulePositions(
-          groupsIds, coordinatorsIds, 
+          groupsIds, mainGroupsAmount, coordinatorsIds, 
           new SchedulePosition(
             courseId, courseEditionId,
             roomId, periodIndex,
@@ -257,7 +257,7 @@ export class SignalrService implements OnDestroy {
 
     this.connection.on('ModifiedSchedulePositions', (
       courseId, courseEditionId,
-      groupsIds, coordinatorsIds,
+      groupsIds, mainGroupsAmount, coordinatorsIds,
       previousRoomId, newRoomId,
       previousPeriodIndex, newPeriodIndex,
       previousDay, newDay,
@@ -265,7 +265,7 @@ export class SignalrService implements OnDestroy {
     ) => {
       this.lastModifiedSchedulePositions.next(
         new ModifiedSchedulePositions(
-          groupsIds, coordinatorsIds,
+          groupsIds, mainGroupsAmount, coordinatorsIds,
           new SchedulePosition(
             courseId, courseEditionId,
             previousRoomId, previousPeriodIndex,
@@ -282,13 +282,13 @@ export class SignalrService implements OnDestroy {
 
     this.connection.on('RemovedSchedulePositions', (
       courseId, courseEditionId,
-      groupsIds, coordinatorsIds,
+      groupsIds, mainGroupsAmount, coordinatorsIds,
       roomId, periodIndex,
       day, weeks
     ) => {
       this.lastRemovedSchedulePositions.next(
         new RemovedSchedulePositions(
-          groupsIds, coordinatorsIds, 
+          groupsIds, mainGroupsAmount, coordinatorsIds, 
           new SchedulePosition(
             courseId, courseEditionId,
             roomId, periodIndex,

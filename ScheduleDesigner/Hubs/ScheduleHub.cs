@@ -651,7 +651,10 @@ namespace ScheduleDesigner.Hubs
 
                     var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
                     var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                    var returnableGroupsIds = new int[groupsIds.Length];
+
                     Array.Sort(coordinatorsIds);
+                    Array.Copy(groupsIds, returnableGroupsIds, groupsIds.Length);
                     Array.Sort(groupsIds);
 
                     lock (CoordinatorPositionLocks)
@@ -765,9 +768,9 @@ namespace ScheduleDesigner.Hubs
                         _schedulePositionRepo.GetAll().AddRange(schedulePositions);
 
                         var result1 = _schedulePositionRepo.SaveChanges().Result;
-                        var result2 = Clients.All.AddedSchedulePositions(
+                        var result2 = Clients.Others.AddedSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
-                            groupsIds, coordinatorsIds,
+                            returnableGroupsIds, courseEdition.Groups.Count, coordinatorsIds,
                             roomId, periodIndex,
                             day, weeks
                         );
@@ -982,7 +985,10 @@ namespace ScheduleDesigner.Hubs
 
                     var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
                     var groupsIds = CourseEditionsController.GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                    var returnableGroupsIds = new int[groupsIds.Length];
+
                     Array.Sort(coordinatorsIds);
+                    Array.Copy(groupsIds, returnableGroupsIds, groupsIds.Length);
                     Array.Sort(groupsIds);
 
                     lock (CoordinatorPositionLocks)
@@ -1095,9 +1101,9 @@ namespace ScheduleDesigner.Hubs
                         _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
 
                         var result1 = _schedulePositionRepo.SaveChanges().Result;
-                        var result2 = Clients.All.ModifiedSchedulePositions(
+                        var result2 = Clients.Others.ModifiedSchedulePositions(
                             includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
-                            groupsIds, coordinatorsIds,
+                            returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
                             roomId, destRoomId,
                             periodIndex, destPeriodIndex,
                             day, destDay,
@@ -1232,7 +1238,9 @@ namespace ScheduleDesigner.Hubs
                         .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId &&
                                   e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
                         .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Coordinators);
+                            .ThenInclude(e => e.Coordinators)
+                        .Include(e => e.CourseEdition)
+                            .ThenInclude(e => e.Groups);
 
                     if (_schedulePositions.Count() != _timestamps.Count)
                     {
@@ -1272,14 +1280,17 @@ namespace ScheduleDesigner.Hubs
 
                     var coordinatorsIds = firstCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
                     var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                    var returnableGroupsIds = new int[groupsIds.Length];
+
                     Array.Sort(coordinatorsIds);
+                    Array.Copy(groupsIds, returnableGroupsIds, groupsIds.Length);
                     Array.Sort(groupsIds);
 
                     _schedulePositionRepo.GetAll().RemoveRange(_schedulePositions);
                     var result1 = _schedulePositionRepo.SaveChanges().Result;
-                    var result2 = Clients.All.RemovedSchedulePositions(
+                    var result2 = Clients.Others.RemovedSchedulePositions(
                         courseEdition.CourseId, courseEdition.CourseEditionId,
-                        groupsIds, coordinatorsIds,
+                        returnableGroupsIds, courseEdition.Groups.Count, coordinatorsIds,
                         roomId, periodIndex,
                         day, weeks
                     );

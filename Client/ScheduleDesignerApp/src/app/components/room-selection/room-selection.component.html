@@ -26,7 +26,7 @@
     <button 
         mat-raised-button
         color="primary"
-        [disabled]="selectedRoom == null"
+        [disabled]="selectedRoom == null || actionActivated"
     
         (click)="Action()"
     >{{(data.IsMoveValid) ? ((!selectedRoom?.IsBusy) ? 'Make' : 'Schedule') : 'Schedule'}} a move</button>

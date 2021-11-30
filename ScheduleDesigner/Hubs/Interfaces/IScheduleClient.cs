@@ -23,13 +23,13 @@ namespace ScheduleDesigner.Hubs.Interfaces
         
         Task AddedSchedulePositions(
             int courseId, int courseEditionId,
-            int[] groupsIds, int[] coordinatorsIds,
+            int[] groupsIds, int mainGroupsAmount, int[] coordinatorsIds,
             int roomId, int periodIndex, 
             int day, int[] weeks);
         
         Task ModifiedSchedulePositions(
             int courseId, int courseEditionId,
-            int[] groupsIds, int[] coordinatorsIds,
+            int[] groupsIds, int mainGroupsAmount, int[] coordinatorsIds,
             int previousRoomId, int newRoomId,
             int previousPeriodIndex, int newPeriodIndex,
             int previousDay, int newDay,
@@ -37,7 +37,7 @@ namespace ScheduleDesigner.Hubs.Interfaces
 
         Task RemovedSchedulePositions(
             int courseId, int courseEditionId,
-            int[] groupsIds, int[] coordinatorsIds,
+            int[] groupsIds, int mainGroupsAmount, int[] coordinatorsIds,
             int roomId, int periodIndex,
             int day, int[] weeks);
     }

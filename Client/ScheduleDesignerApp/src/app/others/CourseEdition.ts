@@ -4,6 +4,8 @@ import { Group } from "./Group";
 import { Room } from "./Room";
 
 export class CourseEdition {
+    FullAmount:number = 0;
+    ScheduleAmount:number = 0;
     Weeks:number[]|null = null;
     Room:Room|null = null;
     Optional:boolean = false;
@@ -14,7 +16,7 @@ export class CourseEdition {
         public CourseEditionId:number,
         public Name:string,
         public Type:CourseType,
-        public Amount:number,
+        public CurrentAmount:number,
         public Groups:Group[],
         public Coordinators:Coordinator[]
     ) {}

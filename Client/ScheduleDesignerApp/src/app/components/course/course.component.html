@@ -22,7 +22,7 @@
     <div class="details-field">
         <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">
     </div>
-    <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}, {{course?.Amount}} {{(course!.Amount > 4) ? 'zajęć' : 'zajęcia'}}</i>
+    <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}, {{course?.CurrentAmount}} {{(course!.CurrentAmount > 4) ? 'zajęć' : 'zajęcia'}}</i>
     <ng-template #weeksText>
         <i>{{course?.Type?.Name}}</i>
     </ng-template>

@@ -17,6 +17,8 @@ import { RoomSelectionComponent } from 'src/app/components/room-selection/room-s
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
 import { SchedulePosition } from 'src/app/others/CommunicationObjects';
+import { Store } from '@ngrx/store';
+import { Account } from 'src/app/others/Accounts';
 
 @Component({
   selector: 'app-schedule',
@@ -32,6 +34,8 @@ export class ScheduleComponent implements OnInit {
   currentOpenedDialog : MatDialogRef<RoomSelectionComponent, any> | null;
   isReleased:boolean = false;
   isCanceled:boolean = false;
+  
+  account:Account;
 
   loading:boolean = true;
   tabLoading:boolean = true;
@@ -57,14 +61,21 @@ export class ScheduleComponent implements OnInit {
   isMoveValid:boolean|null = null;
 
   constructor(
+    private store:Store<{account: Account}>,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
     private usosApiService:UsosApiService,
     private signalrService:SignalrService,
     private router:Router,
     private snackBar:MatSnackBar,
     private dialog:MatDialog
-  ) 
-  { }
+  ) { 
+    this.store.select('account').subscribe((account) => {
+      if (account.UserId == 0) {
+        return;
+      }
+      this.account = account;
+    });
+  }
 
   private UpdateLockInMyCourses(courseId:number, courseEditionId:number, value:boolean) {
     if (!this.myCourses) {
@@ -119,6 +130,74 @@ export class ScheduleComponent implements OnInit {
 
     this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       console.log(addedSchedulePositions);
+
+      if (!addedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
+        return;
+      }
+      
+      const schedulePosition = addedSchedulePositions.SchedulePosition;
+      const addedAmount = schedulePosition.Weeks.length;
+
+      const courses = this.myCourses.filter((course) => 
+        course.CourseId == schedulePosition.CourseId 
+        && course.CourseEditionId == schedulePosition.CourseEditionId 
+      );
+
+      if (courses.length == 0) {
+        return;
+      }
+      const firstCourse = courses[0];
+      let currentScheduleAmount = firstCourse.ScheduleAmount + addedAmount;
+
+      this.myCourses = this.myCourses.filter((course) => {
+        if (course.CourseId != schedulePosition.CourseId 
+          || course.CourseEditionId != schedulePosition.CourseEditionId) {
+          return true;
+        }
+        
+        if (currentScheduleAmount + course.CurrentAmount <= course.FullAmount) {
+          course.ScheduleAmount += addedAmount;
+          currentScheduleAmount += course.CurrentAmount;
+          return true;
+        }
+
+        return false;
+      });
+
+      const mainGroupsIds = addedSchedulePositions.GroupsIds.slice(
+        0, addedSchedulePositions.MainGroupsAmount
+      );
+
+      forkJoin([
+        this.scheduleDesignerApiService.GetCourseEditionInfo(
+          schedulePosition.CourseId, schedulePosition.CourseEditionId, this.settings),
+        this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
+        this.scheduleDesignerApiService.GetCoordinators(addedSchedulePositions.CoordinatorsIds),
+        this.scheduleDesignerApiService.GetRoomsNames([schedulePosition.RoomId])
+      ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) => {
+        let groups:Group[] = [];
+        for (let i = 0; i < mainGroupsIds.length; ++i) {
+          const group = new Group(mainGroupsIds[i]);
+          group.FullName = groupsNames[i];
+          groups.push(group);
+        }
+        const room = new Room(schedulePosition.RoomId);
+        room.Name = roomNames[0];
+        
+        const addedCourseEdition = new CourseEdition(
+          schedulePosition.CourseId, schedulePosition.CourseEditionId,
+          courseEditionInfo.Name, this.courseTypes.get(courseEditionInfo.CourseTypeId)!,
+          0, groups, coordinators
+        );
+        addedCourseEdition.Room = room;
+        addedCourseEdition.Weeks = schedulePosition.Weeks;
+        addedCourseEdition.ScheduleAmount = courseEditionInfo.ScheduleAmount;
+        addedCourseEdition.FullAmount = courseEditionInfo.FullAmount;
+        addedCourseEdition.Locked = courseEditionInfo.Locked;
+
+        this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].push(addedCourseEdition);
+      });
+
     });
     this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       console.log(modifiedSchedulePositions);
@@ -317,38 +396,41 @@ export class ScheduleComponent implements OnInit {
     }
 
     const courseEdition = event.item.data;
+    const previousContainer = event.previousContainer;
+    const currentContainer = event.container;
+    const weeks = this.weeks[this.currentTabIndex];
     const isScheduleSource = event.previousContainer.id !== 'my-courses';
 
     if (!isScheduleSource) {
       moveItemInArray(
-        event.container.data,
+        currentContainer.data,
         event.previousIndex,
         event.currentIndex
       );
     } else {
-      const previousSlot = this.getIndexes(event.previousContainer.id);
+      const previousIndexes = this.getIndexes(previousContainer.id);
 
       try {
         const result = await this.signalrService.RemoveSchedulePositions(
-          courseEdition.Room!.RoomId, previousSlot[1] + 1,
-          previousSlot[0] + 1, this.weeks[this.currentTabIndex]
+          courseEdition.Room!.RoomId, previousIndexes[1] + 1,
+          previousIndexes[0] + 1, weeks
         ).toPromise();
         if (result.StatusCode >= 400) {
           throw result;
         }
 
         transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
+          previousContainer.data,
+          currentContainer.data,
           event.previousIndex,
           event.currentIndex
         );
-        event.container.data[event.currentIndex].Room = null;
-        event.container.data[event.currentIndex].Amount = event.container.data[event.currentIndex].Weeks?.length ?? 0;
-        event.container.data[event.currentIndex].Weeks = null;
+        courseEdition.Room = null;
+        courseEdition.CurrentAmount = courseEdition.Weeks?.length ?? 0;
+        courseEdition.Weeks = null;
       }
-      catch (error) {
-        
+      catch (error:any) {
+        this.snackBar.open(error.Message, "OK");
       }
     }
     
@@ -398,7 +480,7 @@ export class ScheduleComponent implements OnInit {
     const previousIndexes = (isScheduleSource) ? this.getIndexes(previousContainer.id) : [-1,-1];
     const currentIndexes = this.getIndexes(currentContainer.id);
     const weeks = this.weeks[this.currentTabIndex];
-
+    
     if (previousContainer === currentContainer) {
       try {
         const result = await this.signalrService.UnlockSchedulePositions(
