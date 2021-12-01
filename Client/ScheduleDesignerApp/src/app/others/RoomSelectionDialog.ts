@@ -13,7 +13,8 @@ export class RoomSelectionDialogData {
         public TimeLabels:string[],
         public RoomTypes:Map<number,RoomType>,
         public IsMoveValid:boolean,
-        public CanBeScheduled:boolean
+        public CanBeScheduled:boolean,
+        public FilterCoordinatorId:number
     ) { }
 }
 

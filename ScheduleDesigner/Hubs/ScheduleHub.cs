@@ -244,7 +244,7 @@ namespace ScheduleDesigner.Hubs
                     {
                         RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
 
-                        return new MessageObject { StatusCode = 400, Message = "Some positions in schedule are already locked." };
+                        return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };
                     }
 
                     var courseEdition = _schedulePositions.FirstOrDefault()?.CourseEdition;
@@ -441,7 +441,7 @@ namespace ScheduleDesigner.Hubs
                         {
                             RemoveSchedulePositionsLocks(schedulePositionQueues, schedulePositionKeys);
 
-                            return new MessageObject { StatusCode = 400, Message = "Some positions in schedule are already unlocked." };
+                            return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };
                         }
 
                         if (schedulePosition.LockUserId != userId || schedulePosition.LockUserConnectionId != Context.ConnectionId)

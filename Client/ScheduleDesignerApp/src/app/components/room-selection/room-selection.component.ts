@@ -18,7 +18,7 @@ export class RoomSelectionComponent implements OnInit {
   selectedRoom:Room|null;
   actionActivated:boolean = false;
 
-  courseRooms:Room[];
+  courseRooms:Room[] = [];
   mappedCourseRooms:Map<number,Room[]>;
 
   loading:boolean = true;
@@ -32,7 +32,77 @@ export class RoomSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
-      this.dialogRef.close(RoomSelectionComponent.CANCELED);
+      this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+    });
+
+    this.signalrService.lastAddedSchedulePositions.subscribe((addedSchedulePositions) => {
+      const coordinatorsIds = addedSchedulePositions.CoordinatorsIds;
+      const groupsIds = addedSchedulePositions.GroupsIds;
+      const periodIndex = addedSchedulePositions.SchedulePosition.PeriodIndex;
+      const day = addedSchedulePositions.SchedulePosition.Day;
+      const weeks = addedSchedulePositions.SchedulePosition.Weeks;
+      const roomId = addedSchedulePositions.SchedulePosition.RoomId;
+
+      if (this.data.DestIndexes[1] + 1 != periodIndex
+        || this.data.DestIndexes[0] + 1 != day || this.data.Weeks.filter((week) => weeks.includes(week)).length == 0) {
+        return;
+      }
+
+      const item = this.data.CourseEdition;
+      if (item != undefined 
+        && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
+        || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
+          setTimeout(() => {
+            this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+          });
+          return;
+      }
+
+      const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == roomId);
+      if (busyRoom != undefined) {
+        busyRoom.IsBusy = true;
+      }
+    });
+
+    this.signalrService.lastModifiedSchedulePositions.subscribe((modifiedSchedulePositions) => {
+      const coordinatorsIds = modifiedSchedulePositions.CoordinatorsIds;
+      const groupsIds = modifiedSchedulePositions.GroupsIds;
+      const dstPeriodIndex = modifiedSchedulePositions.DestinationSchedulePosition.PeriodIndex;
+      const srcPeriodIndex = modifiedSchedulePositions.SourceSchedulePosition.PeriodIndex;
+      const dstDay = modifiedSchedulePositions.DestinationSchedulePosition.Day;
+      const srcDay = modifiedSchedulePositions.SourceSchedulePosition.Day;
+      const dstWeeks = modifiedSchedulePositions.DestinationSchedulePosition.Weeks;
+      const srcWeeks = modifiedSchedulePositions.SourceSchedulePosition.Weeks;
+      const dstRoomId = modifiedSchedulePositions.DestinationSchedulePosition.RoomId;
+      const srcRoomId = modifiedSchedulePositions.SourceSchedulePosition.RoomId;
+
+      if (this.data.DestIndexes[1] + 1 == dstPeriodIndex
+        && this.data.DestIndexes[0] + 1 == dstDay 
+        && this.data.Weeks.filter((week) => dstWeeks.includes(week)).length != 0) {
+          const item = this.data.CourseEdition;
+          if (item != undefined 
+            && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
+            || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
+              setTimeout(() => {
+                this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+              });
+              return;
+          }
+
+          const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == dstRoomId);
+          if (busyRoom != undefined) {
+            busyRoom.IsBusy = true;
+          }
+      }
+
+      if (this.data.DestIndexes[1] + 1 == srcPeriodIndex
+        && this.data.DestIndexes[0] + 1 == srcDay 
+        && this.data.Weeks.filter((week) => srcWeeks.includes(week)).length != 0) {
+          const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == srcRoomId);
+          if (busyRoom != undefined) {
+            busyRoom.IsBusy = true;
+          }
+      }
     });
 
     this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes)
@@ -58,14 +128,6 @@ export class RoomSelectionComponent implements OnInit {
           this.loading = false;
         });
       });
-
-    /*setTimeout(() => {
-      this.courseRooms.forEach((room) => {
-        if (room.RoomId == 2) {
-          room.IsBusy = true;
-        }
-      })
-    }, 5000);*/
   }
 
   GET_CANCELED_RESULT():RoomSelectionDialogResult {

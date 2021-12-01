@@ -100,12 +100,14 @@ export class ScheduleComponent implements OnInit {
 
     const courseId = position.CourseId;
     const courseEditionId = position.CourseEditionId;
+    const roomId = position.RoomId;
     const day = position.Day - 1;
     const periodIndex = position.PeriodIndex - 1;
 
     let courseEditions = this.schedule[day][periodIndex];
     courseEditions.forEach((courseEdition) => {
-      if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId) {
+      if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId 
+        && courseEdition.Room?.RoomId == roomId) {
         courseEdition.Locked = value;
       }
     });
@@ -129,79 +131,202 @@ export class ScheduleComponent implements OnInit {
     });
 
     this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
-      console.log(addedSchedulePositions);
-
-      if (!addedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
-        return;
-      }
-      
       const schedulePosition = addedSchedulePositions.SchedulePosition;
       const addedAmount = schedulePosition.Weeks.length;
 
-      const courses = this.myCourses.filter((course) => 
-        course.CourseId == schedulePosition.CourseId 
-        && course.CourseEditionId == schedulePosition.CourseEditionId 
-      );
-
-      if (courses.length == 0) {
-        return;
-      }
-      const firstCourse = courses[0];
-      let currentScheduleAmount = firstCourse.ScheduleAmount + addedAmount;
-
-      this.myCourses = this.myCourses.filter((course) => {
-        if (course.CourseId != schedulePosition.CourseId 
-          || course.CourseEditionId != schedulePosition.CourseEditionId) {
-          return true;
-        }
-        
-        if (currentScheduleAmount + course.CurrentAmount <= course.FullAmount) {
-          course.ScheduleAmount += addedAmount;
-          currentScheduleAmount += course.CurrentAmount;
-          return true;
-        }
-
-        return false;
-      });
-
-      const mainGroupsIds = addedSchedulePositions.GroupsIds.slice(
-        0, addedSchedulePositions.MainGroupsAmount
-      );
-
-      forkJoin([
-        this.scheduleDesignerApiService.GetCourseEditionInfo(
-          schedulePosition.CourseId, schedulePosition.CourseEditionId, this.settings),
-        this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
-        this.scheduleDesignerApiService.GetCoordinators(addedSchedulePositions.CoordinatorsIds),
-        this.scheduleDesignerApiService.GetRoomsNames([schedulePosition.RoomId])
-      ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) => {
-        let groups:Group[] = [];
-        for (let i = 0; i < mainGroupsIds.length; ++i) {
-          const group = new Group(mainGroupsIds[i]);
-          group.FullName = groupsNames[i];
-          groups.push(group);
-        }
-        const room = new Room(schedulePosition.RoomId);
-        room.Name = roomNames[0];
-        
-        const addedCourseEdition = new CourseEdition(
-          schedulePosition.CourseId, schedulePosition.CourseEditionId,
-          courseEditionInfo.Name, this.courseTypes.get(courseEditionInfo.CourseTypeId)!,
-          0, groups, coordinators
+      //filter for updating board
+      if (addedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
+        //remove from my courses
+        const courses = this.myCourses.filter((course) => 
+          course.CourseId == schedulePosition.CourseId 
+          && course.CourseEditionId == schedulePosition.CourseEditionId 
         );
-        addedCourseEdition.Room = room;
-        addedCourseEdition.Weeks = schedulePosition.Weeks;
-        addedCourseEdition.ScheduleAmount = courseEditionInfo.ScheduleAmount;
-        addedCourseEdition.FullAmount = courseEditionInfo.FullAmount;
-        addedCourseEdition.Locked = courseEditionInfo.Locked;
 
-        this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].push(addedCourseEdition);
-      });
+        if (courses.length != 0) {
+          const firstCourse = courses[0];
+          let currentScheduleAmount = firstCourse.ScheduleAmount + addedAmount;
 
+          this.myCourses = this.myCourses.filter((course) => {
+            if (course.CourseId != schedulePosition.CourseId 
+              || course.CourseEditionId != schedulePosition.CourseEditionId) {
+              return true;
+            }
+            
+            if (currentScheduleAmount + course.CurrentAmount <= course.FullAmount) {
+              course.ScheduleAmount += addedAmount;
+              currentScheduleAmount += course.CurrentAmount;
+              return true;
+            }
+
+            return false;
+          });
+        }
+        
+        //add new
+        const existingCourseEditions = this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].filter((courseEdition) => 
+          courseEdition.CourseId == schedulePosition.CourseId 
+            && courseEdition.CourseEditionId == schedulePosition.CourseEditionId
+            && courseEdition.Room!.RoomId == schedulePosition.RoomId
+        );
+
+        if (existingCourseEditions.length > 0) {
+          existingCourseEditions[0].Weeks?.push(
+            ...schedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
+          );
+        } else {
+          const mainGroupsIds = addedSchedulePositions.GroupsIds.slice(
+            0, addedSchedulePositions.MainGroupsAmount
+          );
+  
+          forkJoin([
+            this.scheduleDesignerApiService.GetCourseEditionInfo(
+              schedulePosition.CourseId, schedulePosition.CourseEditionId, this.settings),
+            this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
+            this.scheduleDesignerApiService.GetCoordinators(addedSchedulePositions.CoordinatorsIds),
+            this.scheduleDesignerApiService.GetRoomsNames([schedulePosition.RoomId])
+          ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) => {
+            let groups:Group[] = [];
+            for (let i = 0; i < mainGroupsIds.length; ++i) {
+              const group = new Group(mainGroupsIds[i]);
+              group.FullName = groupsNames[i];
+              groups.push(group);
+            }
+            const room = new Room(schedulePosition.RoomId);
+            room.Name = roomNames[0];
+            
+            const addedCourseEdition = new CourseEdition(
+              schedulePosition.CourseId, schedulePosition.CourseEditionId,
+              courseEditionInfo.Name, this.courseTypes.get(courseEditionInfo.CourseTypeId)!,
+              0, groups, coordinators
+            );
+            const tabWeeks = this.weeks[this.currentTabIndex];
+  
+            addedCourseEdition.Room = room;
+            addedCourseEdition.Weeks = schedulePosition.Weeks.filter(week => tabWeeks.includes(week));
+            addedCourseEdition.ScheduleAmount = courseEditionInfo.ScheduleAmount;
+            addedCourseEdition.FullAmount = courseEditionInfo.FullAmount;
+  
+            this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].push(addedCourseEdition);
+          });
+        }
+      }
+      
+      //active drag fields update
+      const item = this.currentDragEvent?.source.data;
+      if (item != undefined 
+        && (item.Coordinators.map(c => c.UserId).some(c => addedSchedulePositions.CoordinatorsIds.includes(c))
+        || item.Groups.map(g => g.GroupId).some(g => addedSchedulePositions.GroupsIds.includes(g)))) {
+        this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = false;
+      }
     });
+    
     this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       console.log(modifiedSchedulePositions);
+
+      const srcSchedulePosition = modifiedSchedulePositions.SourceSchedulePosition;
+      const dstSchedulePosition = modifiedSchedulePositions.DestinationSchedulePosition;
+
+      //filter for updating board
+      if (modifiedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
+        //remove or update old
+        let srcScheduleSlot = this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1];
+        const existingSrcCourseEditions = this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1].filter((courseEdition) => 
+          courseEdition.CourseId == srcSchedulePosition.CourseId 
+            && courseEdition.CourseEditionId == srcSchedulePosition.CourseEditionId
+            && courseEdition.Room!.RoomId == srcSchedulePosition.RoomId
+        );
+        
+        if (existingSrcCourseEditions.length > 0) {
+          existingSrcCourseEditions[0].Weeks = existingSrcCourseEditions[0].Weeks
+            ?.filter(week => !srcSchedulePosition.Weeks.includes(week)) ?? [];
+          
+          if (existingSrcCourseEditions[0].Weeks.length == 0) {
+            this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] 
+              = srcScheduleSlot.filter(courseEdition => courseEdition.Weeks != null 
+                && courseEdition.Weeks.length > 0);
+          } else {
+            this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+              srcSchedulePosition.RoomId, srcSchedulePosition.PeriodIndex,
+              srcSchedulePosition.Day, existingSrcCourseEditions[0].Weeks
+            ).subscribe((areLocked) => {
+              existingSrcCourseEditions[0].Locked = areLocked;
+            });
+          }
+        }
+
+        //add new
+        let dstScheduleSlot = this.schedule[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1];
+        const existingDstCourseEditions = dstScheduleSlot.filter((courseEdition) => 
+          courseEdition.CourseId == dstSchedulePosition.CourseId 
+            && courseEdition.CourseEditionId == dstSchedulePosition.CourseEditionId
+            && courseEdition.Room!.RoomId == dstSchedulePosition.RoomId
+        );
+
+        if (existingDstCourseEditions.length > 0) {
+          existingDstCourseEditions[0].Weeks?.push(
+            ...dstSchedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
+          );
+        } else {
+          const mainGroupsIds = modifiedSchedulePositions.GroupsIds.slice(
+            0, modifiedSchedulePositions.MainGroupsAmount
+          );
+
+          forkJoin([
+            this.scheduleDesignerApiService.GetCourseEditionInfo(
+              dstSchedulePosition.CourseId, dstSchedulePosition.CourseEditionId, this.settings),
+            this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
+            this.scheduleDesignerApiService.GetCoordinators(modifiedSchedulePositions.CoordinatorsIds),
+            this.scheduleDesignerApiService.GetRoomsNames([dstSchedulePosition.RoomId])
+          ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) => {
+            let groups:Group[] = [];
+            for (let i = 0; i < mainGroupsIds.length; ++i) {
+              const group = new Group(mainGroupsIds[i]);
+              group.FullName = groupsNames[i];
+              groups.push(group);
+            }
+            const room = new Room(dstSchedulePosition.RoomId);
+            room.Name = roomNames[0];
+            
+            const addedCourseEdition = new CourseEdition(
+              dstSchedulePosition.CourseId, dstSchedulePosition.CourseEditionId,
+              courseEditionInfo.Name, this.courseTypes.get(courseEditionInfo.CourseTypeId)!,
+              0, groups, coordinators
+            );
+            const tabWeeks = this.weeks[this.currentTabIndex];
+  
+            addedCourseEdition.Room = room;
+            addedCourseEdition.Weeks = dstSchedulePosition.Weeks.filter(week => tabWeeks.includes(week));
+            addedCourseEdition.ScheduleAmount = courseEditionInfo.ScheduleAmount;
+            addedCourseEdition.FullAmount = courseEditionInfo.FullAmount;
+  
+            dstScheduleSlot.push(addedCourseEdition);
+          });
+        }
+      }
+
+      //active drag fields update
+      const item = this.currentDragEvent?.source.data;
+      if (item == undefined) {
+        return;
+      }
+
+      if (item.Coordinators.map(c => c.UserId).some(c => modifiedSchedulePositions.CoordinatorsIds.includes(c))
+        || item.Groups.map(g => g.GroupId).some(g => modifiedSchedulePositions.GroupsIds.includes(g))) {
+        this.scheduleSlotsValidity[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1] = false;
+
+        this.scheduleDesignerApiService.IsPeriodBusy(
+          srcSchedulePosition.CourseId, srcSchedulePosition.CourseEditionId,
+          srcSchedulePosition.PeriodIndex + 1, srcSchedulePosition.Day + 1,
+          srcSchedulePosition.Weeks
+        ).subscribe((isBusy) => {
+          if (this.currentDragEvent != null) {
+            this.scheduleSlotsValidity[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] = !isBusy;
+          }
+        });
+      }
+
     });
+    
     this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       console.log(removedSchedulePositions);
     });
@@ -509,7 +634,8 @@ export class ScheduleComponent implements OnInit {
       this.scheduleTimeLabels,
       this.roomTypes,
       this.isMoveValid!,
-      isScheduleSource
+      isScheduleSource,
+      this.account.UserId
     );
     this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
       disableClose: true,
@@ -555,7 +681,7 @@ export class ScheduleComponent implements OnInit {
       } catch (error) {
   
       }
-    } else if (dialogResult.Status == RoomSelectionDialogStatus.ACCEPTED){
+    } else if (dialogResult.Status == RoomSelectionDialogStatus.ACCEPTED) {
       courseEdition.Locked = false;
     } else {
       try {
@@ -714,6 +840,7 @@ export class ScheduleComponent implements OnInit {
 
     event.source.dropContainer.connectedTo = [];
 
+    this.currentDragEvent = null;
     const numberOfSlots = this.settings.periods.length - 1;
     for (let i = 0; i < this.scheduleSlots.length; ++i) {
       this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;

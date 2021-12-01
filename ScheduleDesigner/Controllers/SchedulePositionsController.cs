@@ -31,23 +31,19 @@ namespace ScheduleDesigner.Controllers
 
         [HttpGet]
         [EnableQuery]
-        [ODataRoute("Service.GetSchedulePosition(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Week={Week})")]
-        public IActionResult GetSchedulePosition([FromODataUri] int RoomId, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] int Week)
+        [ODataRoute("Service.GetSchedulePositions(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
+        public IActionResult GetSchedulePositions([FromODataUri] int RoomId, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
         {
             try
             {
-                var _schedulePosition = _schedulePositionRepo
-                    .Get(e => e.RoomId == RoomId && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex 
-                        && e.CourseRoomTimestamp.Timestamp.Day == Day && e.CourseRoomTimestamp.Timestamp.Week == Week)
+                var _schedulePositions = _schedulePositionRepo
+                    .Get(e => e.RoomId == RoomId && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex
+                                                 && e.CourseRoomTimestamp.Timestamp.Day == Day &&
+                                                 Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
                     .Include(e => e.CourseRoomTimestamp)
                         .ThenInclude(e => e.Timestamp);
 
-                if (!_schedulePosition.Any())
-                {
-                    return NotFound();
-                }
-
-                return Ok(SingleResult.Create(_schedulePosition));
+                return Ok(_schedulePositions);
             }
             catch (Exception e)
             {

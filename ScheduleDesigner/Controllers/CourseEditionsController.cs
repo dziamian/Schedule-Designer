@@ -183,6 +183,54 @@ namespace ScheduleDesigner.Controllers
 
         [HttpGet]
         [EnableQuery]
+        [ODataRoute("({key1},{key2})/IsPeriodBusy(PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
+        public async Task<IActionResult> IsPeriodBusy([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
+        {
+            try
+            {
+                var _courseEdition = _courseEditionRepo
+                    .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
+                    .Include(e => e.Coordinators)
+                    .Include(e => e.Groups)
+                    .ThenInclude(e => e.Group);
+
+                if (!_courseEdition.Any())
+                {
+                    return NotFound();
+                }
+
+                var courseEdition = await _courseEdition.FirstOrDefaultAsync();
+
+                var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
+
+                var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo);
+
+                var _timestamps = _schedulePositionRepo
+                    .Get(e => e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex
+                              && e.CourseRoomTimestamp.Timestamp.Day == Day
+                              && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week)
+                              && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex &&
+                              e.CourseRoomTimestamp.Timestamp.Day == Day
+                              && (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId)
+                                      .Any(e => coordinatorsIds.Contains(e))
+                                  || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))))
+                    .Include(e => e.CourseEdition)
+                    .ThenInclude(e => e.Coordinators)
+                    .Include(e => e.CourseEdition)
+                    .ThenInclude(e => e.Groups)
+                    .Include(e => e.CourseRoomTimestamp)
+                    .ThenInclude(e => e.Timestamp);
+
+                return Ok(_timestamps.Any());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [EnableQuery]
         [ODataRoute("")]
         public IActionResult GetCourseEditions()
         {

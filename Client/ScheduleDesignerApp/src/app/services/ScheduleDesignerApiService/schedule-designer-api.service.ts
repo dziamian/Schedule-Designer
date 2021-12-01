@@ -299,13 +299,13 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public IsSchedulePositionLocked(
+  public AreSchedulePositionsLocked(
     roomId:number, periodIndex:number,
-    day:number, week:number
+    day:number, weeks:number[]
   ):Observable<boolean> {
     const request = {
-      url: this.baseUrl + `/schedulePositions/Service.GetSchedulePosition(`
-      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Week=${week})?$select=LockUserId`,
+      url: this.baseUrl + `/schedulePositions/Service.GetSchedulePositions(`
+      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])?$select=LockUserId`,
       method: 'GET'
     };
 
@@ -316,7 +316,7 @@ export class ScheduleDesignerApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
-      map((response : any) => response.LockUserId != null)
+      map((response : any) => response.value.find((x:any) => x.LockUserId != null) != undefined)
     );
   }
 
@@ -517,6 +517,28 @@ export class ScheduleDesignerApiService {
       map((response : any) => response.map(
         (element : any) => new ScheduleSlot(element.PeriodIndex, element.Day)
       ))
+    );
+  }
+
+  public IsPeriodBusy(
+    courseId:number, courseEditionId:number,
+    periodIndex:number, day:number,
+    weeks:number[]
+  ):Observable<boolean> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.IsPeriodBusy(`
+      + `PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value)
     );
   }
 
