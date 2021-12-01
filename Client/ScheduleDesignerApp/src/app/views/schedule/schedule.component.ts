@@ -131,6 +131,10 @@ export class ScheduleComponent implements OnInit {
     });
 
     this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
+      if (this.tabLoading) {
+        return;
+      }
+
       const schedulePosition = addedSchedulePositions.SchedulePosition;
       const addedAmount = schedulePosition.Weeks.length;
 
@@ -144,6 +148,8 @@ export class ScheduleComponent implements OnInit {
 
         if (courses.length != 0) {
           const firstCourse = courses[0];
+          
+          const frequency = this.frequencies[this.currentTabIndex];
           let currentScheduleAmount = firstCourse.ScheduleAmount + addedAmount;
 
           this.myCourses = this.myCourses.filter((course) => {
@@ -152,7 +158,7 @@ export class ScheduleComponent implements OnInit {
               return true;
             }
             
-            if (currentScheduleAmount + course.CurrentAmount <= course.FullAmount) {
+            if (currentScheduleAmount + frequency <= course.FullAmount) {
               course.ScheduleAmount += addedAmount;
               currentScheduleAmount += course.CurrentAmount;
               return true;
@@ -221,8 +227,10 @@ export class ScheduleComponent implements OnInit {
     });
     
     this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
-      console.log(modifiedSchedulePositions);
-
+      if (this.tabLoading) {
+        return;
+      }
+      
       const srcSchedulePosition = modifiedSchedulePositions.SourceSchedulePosition;
       const dstSchedulePosition = modifiedSchedulePositions.DestinationSchedulePosition;
 
@@ -317,7 +325,7 @@ export class ScheduleComponent implements OnInit {
         this.scheduleDesignerApiService.IsPeriodBusy(
           srcSchedulePosition.CourseId, srcSchedulePosition.CourseEditionId,
           srcSchedulePosition.PeriodIndex + 1, srcSchedulePosition.Day + 1,
-          srcSchedulePosition.Weeks
+          srcSchedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
         ).subscribe((isBusy) => {
           if (this.currentDragEvent != null) {
             this.scheduleSlotsValidity[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] = !isBusy;
@@ -328,7 +336,113 @@ export class ScheduleComponent implements OnInit {
     });
     
     this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
-      console.log(removedSchedulePositions);
+      if (this.tabLoading) {
+        return;
+      }
+      
+      const schedulePosition = removedSchedulePositions.SchedulePosition;
+      const removedAmount = schedulePosition.Weeks.length;
+
+      //filter for updating board
+      if (removedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
+        //add to my courses
+        const courses = this.myCourses.filter((course) => {
+          if (course.CourseId == schedulePosition.CourseId 
+            && course.CourseEditionId == schedulePosition.CourseEditionId) {
+              course.ScheduleAmount -= removedAmount;
+          }
+        });
+
+        if (courses.length != 0) {
+          const firstCourse = courses[0];
+          
+          const frequency = this.frequencies[this.currentTabIndex];
+          const currentScheduleAmount = firstCourse.ScheduleAmount + frequency * courses.length;
+          const fullAmount = firstCourse.FullAmount;
+
+          const coursesAmountAdded = Math.floor((fullAmount - currentScheduleAmount) / frequency);
+          let newCourses:CourseEdition[] = []; 
+          for (let i = 0; i < coursesAmountAdded; ++i) {
+            const courseEdition = new CourseEdition(
+              firstCourse.CourseId, firstCourse.CourseEditionId,
+              firstCourse.Name, firstCourse.Type,
+              firstCourse.CurrentAmount, firstCourse.Groups,
+              firstCourse.Coordinators
+            );
+            courseEdition.Locked = firstCourse.Locked;
+            courseEdition.ScheduleAmount = firstCourse.ScheduleAmount;
+            courseEdition.FullAmount = firstCourse.FullAmount;
+            newCourses.push(courseEdition);
+          }
+          this.myCourses.splice(0,0,...newCourses);
+        } else {
+          const mainGroupsIds = removedSchedulePositions.GroupsIds.slice(
+            0, removedSchedulePositions.MainGroupsAmount
+          );
+
+          forkJoin([
+            this.scheduleDesignerApiService.GetMyCourseEdition(
+              schedulePosition.CourseId, schedulePosition.CourseEditionId,
+              this.frequencies[this.currentTabIndex], this.courseTypes,
+              this.settings, this.currentTabIndex != 1
+            ),
+            this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds)
+          ]).subscribe(([myNewCourses, groupFullNames]) => {
+            myNewCourses.forEach((myNewCourse) => {
+              for (let i = 0; i < groupFullNames.length; ++i) {
+                myNewCourse.Groups[i].FullName = groupFullNames[i];
+              }
+            });
+            this.myCourses.splice(0,0,...myNewCourses);
+          });
+        }
+
+        //remove old
+        let scheduleSlot = this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1];
+        const existingCourseEditions = this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].filter((courseEdition) => 
+          courseEdition.CourseId == schedulePosition.CourseId 
+            && courseEdition.CourseEditionId == schedulePosition.CourseEditionId
+            && courseEdition.Room!.RoomId == schedulePosition.RoomId
+        );
+        
+        if (existingCourseEditions.length > 0) {
+          existingCourseEditions[0].Weeks = existingCourseEditions[0].Weeks
+            ?.filter(week => !schedulePosition.Weeks.includes(week)) ?? [];
+          
+          if (existingCourseEditions[0].Weeks.length == 0) {
+            this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] 
+              = scheduleSlot.filter(courseEdition => courseEdition.Weeks != null 
+                && courseEdition.Weeks.length > 0);
+          } else {
+            this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+              schedulePosition.RoomId, schedulePosition.PeriodIndex,
+              schedulePosition.Day, existingCourseEditions[0].Weeks
+            ).subscribe((areLocked) => {
+              existingCourseEditions[0].Locked = areLocked;
+            });
+          }
+        }
+      }
+
+      //active drag fields update
+      const item = this.currentDragEvent?.source.data;
+      if (item == undefined) {
+        return;
+      }
+
+      if (item.Coordinators.map(c => c.UserId).some(c => removedSchedulePositions.CoordinatorsIds.includes(c))
+        || item.Groups.map(g => g.GroupId).some(g => removedSchedulePositions.GroupsIds.includes(g))) {
+
+        this.scheduleDesignerApiService.IsPeriodBusy(
+          schedulePosition.CourseId, schedulePosition.CourseEditionId,
+          schedulePosition.PeriodIndex + 1, schedulePosition.Day + 1,
+          schedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
+        ).subscribe((isBusy) => {
+          if (this.currentDragEvent != null) {
+            this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = !isBusy;
+          }
+        });
+      }
     });
   }
 

@@ -263,6 +263,11 @@ namespace ScheduleDesigner
 
             builder.EntityType<CourseEdition>().Collection
                 .Function("GetMyCourseEditions")
+                .ReturnsCollectionFromEntitySet<CourseEdition>("CourseEditions")
+                .Parameter<double>("Frequency");
+
+            builder.EntityType<CourseEdition>()
+                .Function("GetMyCourseEdition")
                 .ReturnsFromEntitySet<CourseEdition>("CourseEditions")
                 .Parameter<double>("Frequency");
 

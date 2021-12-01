@@ -99,7 +99,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "Coordinator")]
         [EnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
         public async Task<IActionResult> GetMyCourseEditions([FromODataUri] double Frequency)
@@ -129,6 +129,46 @@ namespace ScheduleDesigner.Controllers
                     .Include(e => e.Coordinators);
 
                 return Ok(_courseEditions);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "Coordinator")]
+        [EnableQuery(MaxExpansionDepth = 3)]
+        [HttpGet]
+        [ODataRoute("({key1},{key2})/GetMyCourseEdition(Frequency={Frequency})")]
+        public async Task<IActionResult> GetMyCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] double Frequency)
+        {
+            var _settings = await _settingsRepo.GetSettings();
+            if (_settings == null)
+            {
+                return BadRequest("Application settings has not been specified.");
+            }
+
+            if (Frequency > _settings.TermDurationWeeks || Frequency <= 0)
+            {
+                return BadRequest("Frequency is invalid");
+            }
+
+            try
+            {
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+
+                var courseDurationMinutes = _settings.CourseDurationMinutes;
+                var totalMinutes = Frequency * courseDurationMinutes;
+
+                var _courseEditions = _courseEditionRepo
+                    .Get(e => e.CourseId == key1 && e.CourseEditionId == key2 
+                        && e.Coordinators.Any(e => e.CoordinatorId == userId) 
+                        && e.Course.UnitsMinutes - e.SchedulePositions.Count * courseDurationMinutes >= totalMinutes)
+                    .Include(e => e.SchedulePositions)
+                    .Include(e => e.Course)
+                    .Include(e => e.Coordinators);
+
+                return Ok(SingleResult.Create(_courseEditions));
             }
             catch (Exception e)
             {

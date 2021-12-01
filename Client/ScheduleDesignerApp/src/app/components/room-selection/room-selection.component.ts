@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MessageObject } from 'src/app/others/CommunicationObjects';
+import { MessageObject, RemovedSchedulePositions } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
@@ -100,7 +100,23 @@ export class RoomSelectionComponent implements OnInit {
         && this.data.Weeks.filter((week) => srcWeeks.includes(week)).length != 0) {
           const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == srcRoomId);
           if (busyRoom != undefined) {
-            busyRoom.IsBusy = true;
+            busyRoom.IsBusy = false;
+          }
+      }
+    });
+
+    this.signalrService.lastRemovedSchedulePositions.subscribe((removedSchedulePositions) => {
+      const periodIndex = removedSchedulePositions.SchedulePosition.PeriodIndex;
+      const day = removedSchedulePositions.SchedulePosition.Day;
+      const weeks = removedSchedulePositions.SchedulePosition.Weeks;
+      const roomId = removedSchedulePositions.SchedulePosition.RoomId;
+
+      if (this.data.DestIndexes[1] + 1 == periodIndex
+        && this.data.DestIndexes[0] + 1 == day 
+        && this.data.Weeks.filter((week) => weeks.includes(week)).length != 0) {
+          const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == roomId);
+          if (busyRoom != undefined) {
+            busyRoom.IsBusy = false;
           }
       }
     });

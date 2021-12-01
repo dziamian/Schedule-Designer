@@ -230,6 +230,72 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetMyCourseEdition(
+    courseId:number,
+    courseEditionId:number,
+    frequency:number, 
+    courseTypes:Map<number,CourseType>, 
+    settings:Settings, 
+    roundUp:boolean = true
+  ):Observable<CourseEdition[]> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(Frequency=${frequency})?` +
+        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
+        'SchedulePositions($count=true;$top=0)',
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        let myCourseEditions = new Array<CourseEdition>();
+        
+        let groups = new Array<Group>();
+        response.Groups.forEach((element : any) => {
+          groups.push(new Group(
+            element.GroupId
+          ));
+        });
+        let coordinators = new Array<Coordinator>();
+        response.Coordinators.forEach((element : any) => {
+          coordinators.push(new Coordinator(
+            element.Coordinator.UserId,
+            element.Coordinator.User.FirstName,
+            element.Coordinator.User.LastName,
+            new Titles(
+              element.Coordinator.TitleBefore,
+              element.Coordinator.TitleAfter
+            )
+          ));
+        });
+        const scheduleAmount = response['SchedulePositions@odata.count'];
+        const fullAmount = response.Course.UnitsMinutes / settings.CourseDurationMinutes;
+        let coursesAmount = response.Course.UnitsMinutes - scheduleAmount * settings.CourseDurationMinutes
+        coursesAmount /= frequency * settings.CourseDurationMinutes;
+        coursesAmount = Math.floor(coursesAmount);
+        for (let i = 0; i < coursesAmount; ++i) {
+          let courseEdition = new CourseEdition(
+            response.CourseId, response.CourseEditionId,
+            response.Course.Name, courseTypes.get(response.Course.CourseTypeId) ?? new CourseType(0, "", ""),
+            (roundUp) ? Math.ceil(frequency) : Math.floor(frequency),
+            groups, coordinators
+          );
+          courseEdition.Locked = response.LockUserId;
+          courseEdition.ScheduleAmount = scheduleAmount;
+          courseEdition.FullAmount = fullAmount;
+          myCourseEditions.push(courseEdition);
+        }
+
+        return myCourseEditions;
+      })
+    );
+  }
+
   public GetMyCourseEditions(
     frequency:number, 
     courseTypes:Map<number,CourseType>, 
@@ -279,13 +345,10 @@ export class ScheduleDesignerApiService {
           coursesAmount = Math.floor(coursesAmount);
           for (let i = 0; i < coursesAmount; ++i) {
             let courseEdition = new CourseEdition(
-              value.CourseId, 
-              value.CourseEditionId,
-              value.Course.Name,
-              courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
+              value.CourseId, value.CourseEditionId,
+              value.Course.Name, courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
               (roundUp) ? Math.ceil(frequency) : Math.floor(frequency),
-              groups,
-              coordinators
+              groups, coordinators
             );
             courseEdition.Locked = value.LockUserId;
             courseEdition.ScheduleAmount = scheduleAmount;
