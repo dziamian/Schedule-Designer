@@ -15,7 +15,7 @@
                     </span>
                     <div class="board">
                         <div class="my-courses">
-                            <div class="my-courses-header">Your courses</div>
+                            <div class="my-courses-header">Your unplanned courses</div>
                             <div class="my-courses-content"
                                 cdkDropList
                                 #myCoursesSlot="cdkDropList"
@@ -25,7 +25,9 @@
                                 (cdkDropListEntered)="OnMyCoursesEnter($event)"
                                 (cdkDropListDropped)="DropInMyCourses($event)"
                             >
-                                <div *ngFor="let course of myCourses" class="course-field">
+                                <div *ngFor="let course of myCourses" 
+                                    class="course-field"
+                                >
                                     <app-course 
                                         [course]="course"
                                         [settings]="settings"

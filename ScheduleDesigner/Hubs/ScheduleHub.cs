@@ -631,9 +631,8 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     var courseDurationMinutes = _settings.CourseDurationMinutes;
-                    var totalMinutes = weeks.Length * courseDurationMinutes;
-                    if (courseEdition.Course.UnitsMinutes -
-                        courseEdition.SchedulePositions.Count * courseDurationMinutes < totalMinutes)
+                    if (Math.Ceiling(courseEdition.Course.UnitsMinutes / (courseDurationMinutes * 1.0)) -
+                        courseEdition.SchedulePositions.Count < weeks.Length)
                     {
                         RemoveLocks(
                             courseEditionQueue,
@@ -646,7 +645,7 @@ namespace ScheduleDesigner.Hubs
                             groupPositionKeys
                         );
 
-                        return new MessageObject { StatusCode = 400, Message = "You cannot add any more units of this course to the schedule."};
+                        return new MessageObject { StatusCode = 400, Message = "You cannot add this amount of units to the schedule."};
                     }
 
                     var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();

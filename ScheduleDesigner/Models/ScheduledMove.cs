@@ -23,7 +23,7 @@ namespace ScheduleDesigner.Models
 
         public int UserId { get; set; }
 
-        public bool RequireConfirmation { get; set; }
+        public bool IsConfirmed { get; set; }
 
         public DateTime ScheduledDate { get; set; }
 

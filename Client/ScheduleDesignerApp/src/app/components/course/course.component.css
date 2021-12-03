@@ -36,3 +36,17 @@
     padding-top: 2px;
     padding-left: 2px;
 }
+
+.course .mat-badge-medium.mat-badge-above.mat-badge-before .mat-badge-content {
+    top: -3px;
+    left: -2px;
+}
+
+.course .mat-badge-medium.mat-badge-above.mat-badge-before[valid="true"] .mat-badge-content {
+    background: green;
+}
+
+.course.mat-badge-medium.mat-badge-above.mat-badge-after .mat-badge-content {
+    top: -3px;
+    right: 0px;
+}

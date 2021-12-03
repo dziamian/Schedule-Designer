@@ -17,26 +17,32 @@
     
     [matTooltip]="ShowFrequency()"
     matTooltipShowDelay="300"
+
+    [matBadge]="course?.CurrentAmount" matBadgePosition="after" matBadgeColor="primary" [matBadgeHidden]="course?.Weeks != null"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>
-    <div class="details-field">
-        <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">
-    </div>
-    <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}, {{course?.CurrentAmount}} {{(course!.CurrentAmount > 4) ? 'zajęć' : 'zajęcia'}}</i>
-    <ng-template #weeksText>
-        <i>{{course?.Type?.Name}}</i>
-    </ng-template>
-    <br/>
-    <b>{{course?.Name}}</b>
-    <br/>
-    <div *ngFor="let coordinator of course?.Coordinators">
-        <span [style.text-decoration]="CheckIfItsMe(coordinator.UserId) ? 'underline' : 'none'">{{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleBefore}} {{coordinator.Titles.TitleAfter}}</span>
+    <div [matBadge]="course?.ScheduleAmount" matBadgePosition="before" matBadgeColor="warn" [matBadgeHidden]="course?.Weeks != null"
+        [attr.valid]="course?.ScheduleAmount == Floor(course!.FullAmount)"
+    >
+        <div class="details-field">
+            <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">
+        </div>
+        <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}<br>
+            {{(course!.FullAmount % 1 == 0) ? course?.FullAmount : Floor(course!.FullAmount)+'/'+Ceil(course!.FullAmount)}} {{(course!.FullAmount > 4) ? 'zajęć' : 'zajęcia'}}
+        </i>
+        <ng-template #weeksText>
+            <i>{{course?.Type?.Name}}, {{course?.Room?.Name}}</i>
+        </ng-template>
         <br/>
-    </div>
-    <div *ngFor="let group of course?.Groups">
-        {{group?.FullName}}
+        <b>{{course?.Name}}</b>
         <br/>
+        <div *ngFor="let coordinator of course?.Coordinators">
+            <span [style.text-decoration]="CheckIfItsMe(coordinator.UserId) ? 'underline' : 'none'">{{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleBefore}} {{coordinator.Titles.TitleAfter}}</span>
+            <br/>
+        </div>
+        <div *ngFor="let group of course?.Groups">
+            {{group?.FullName}}
+            <br/>
+        </div>
     </div>
-    {{course?.Room?.Name}}
-    <!--{{(course?.Room != undefined) ? (", " + course?.Room?.Name) : ""}}-->
 </div>

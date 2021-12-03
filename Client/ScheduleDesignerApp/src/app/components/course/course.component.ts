@@ -49,6 +49,7 @@ export class CourseComponent implements OnInit {
   }
 
   CheckIfNotMatching():boolean {
+    if (this.course.Weeks == null) return false;
     return this.weeksOnTab?.sort((a,b) => a - b).join(',') 
       !== this.course.Weeks?.sort((a,b) => a - b).join(',');
   }
@@ -119,5 +120,13 @@ export class CourseComponent implements OnInit {
     }
 
     return this.frequencyToString(this.course.Weeks);
+  }
+
+  Floor(number:number):number {
+    return Math.floor(number);
+  }
+
+  Ceil(number:number):number {
+    return Math.ceil(number);
   }
 }

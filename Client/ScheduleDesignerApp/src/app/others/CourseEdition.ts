@@ -8,7 +8,6 @@ export class CourseEdition {
     ScheduleAmount:number = 0;
     Weeks:number[]|null = null;
     Room:Room|null = null;
-    Optional:boolean = false;
     Locked:boolean = false;
 
     constructor(

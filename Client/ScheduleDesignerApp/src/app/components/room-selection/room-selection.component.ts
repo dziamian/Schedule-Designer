@@ -32,6 +32,7 @@ export class RoomSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
+      console.log(event);
       this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
     });
 
