@@ -523,7 +523,7 @@ namespace ScheduleDesigner.Hubs
             var groupPositionQueues = new List<ConcurrentQueue<object>>();
 
             var courseEnqueued = false;
-            Array.Sort(weeks);
+            Array.Sort(weeks.Distinct().ToArray());
 
             try
             {
@@ -875,8 +875,8 @@ namespace ScheduleDesigner.Hubs
             var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
             var groupPositionQueues = new List<ConcurrentQueue<object>>();
 
-            Array.Sort(weeks);
-            Array.Sort(destWeeks);
+            Array.Sort(weeks.Distinct().ToArray());
+            Array.Sort(destWeeks.Distinct().ToArray());
 
             if (weeks.Length != destWeeks.Length)
             {
@@ -898,9 +898,9 @@ namespace ScheduleDesigner.Hubs
                         queue.Enqueue(new object());
                     }
 
-                    foreach (var week in destWeeks)
+                    foreach (var destWeek in destWeeks)
                     {
-                        var key = new SchedulePositionKey { RoomId = roomId, PeriodIndex = periodIndex, Day = day, Week = week };
+                        var key = new SchedulePositionKey { RoomId = destRoomId, PeriodIndex = destPeriodIndex, Day = destDay, Week = destWeek };
                         schedulePositionKeys2.Add(key);
                         var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
                         schedulePositionQueues2.Add(queue);
@@ -1196,7 +1196,7 @@ namespace ScheduleDesigner.Hubs
             var schedulePositionKeys = new List<SchedulePositionKey>();
             var schedulePositionQueues = new List<ConcurrentQueue<object>>();
 
-            Array.Sort(weeks);
+            Array.Sort(weeks.Distinct().ToArray());
 
             try
             {
