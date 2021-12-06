@@ -79,7 +79,6 @@
                                                         [weeksOnTab]="weeks[currentTabIndex]"
                                                         (start)="OnStartDragging($event)"
                                                         (release)="OnReleaseDragging($event)"
-                                                        (ctrlClick)="Reset(dayIndex, timeIndex, $event)" 
                                                         
                                                         [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"
                                                     ></app-course>

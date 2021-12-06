@@ -26,6 +26,7 @@
     >
         <div class="details-field">
             <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">
+            <img *ngIf="CheckIfMatching()" src="/assets/pin2.svg" class="pin">
         </div>
         <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}<br>
             {{(course!.FullAmount % 1 == 0) ? course?.FullAmount : Floor(course!.FullAmount)+'/'+Ceil(course!.FullAmount)}} {{(course!.FullAmount > 4) ? 'zajęć' : 'zajęcia'}}

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MessageObject, RemovedSchedulePositions } from 'src/app/others/CommunicationObjects';
+import { skip } from 'rxjs/operators';
+import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
@@ -32,10 +33,8 @@ export class RoomSelectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
-      console.log(event);
       this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
     });
-
     this.signalrService.lastAddedSchedulePositions.subscribe((addedSchedulePositions) => {
       const coordinatorsIds = addedSchedulePositions.CoordinatorsIds;
       const groupsIds = addedSchedulePositions.GroupsIds;
@@ -53,10 +52,19 @@ export class RoomSelectionComponent implements OnInit {
       if (item != undefined 
         && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
         || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
-          setTimeout(() => {
-            this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
-          });
-          return;
+          
+          if (coordinatorsIds.includes(this.data.FilterCoordinatorId) || !this.data.CanBeScheduled) {
+            setTimeout(() => {
+              this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+              this.signalrService.lastAddedSchedulePositions.next(
+                new AddedSchedulePositions([],-1,[], new SchedulePosition(-1,-1,-1,-1,-1,[]))
+              );
+            });
+            return;
+          }
+
+          this.data.IsMoveValid = false;
+          
       }
 
       const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == roomId);
@@ -80,14 +88,24 @@ export class RoomSelectionComponent implements OnInit {
       if (this.data.DestIndexes[1] + 1 == dstPeriodIndex
         && this.data.DestIndexes[0] + 1 == dstDay 
         && this.data.Weeks.filter((week) => dstWeeks.includes(week)).length != 0) {
+          
           const item = this.data.CourseEdition;
           if (item != undefined 
             && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
             || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
-              setTimeout(() => {
-                this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
-              });
-              return;
+              if (coordinatorsIds.includes(this.data.FilterCoordinatorId) || !this.data.CanBeScheduled) {
+                setTimeout(() => {
+                  this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+                  this.signalrService.lastModifiedSchedulePositions.next(
+                    new ModifiedSchedulePositions([],-1,[],
+                    new SchedulePosition(-1,-1,-1,-1,-1,[]),
+                    new SchedulePosition(-1,-1,-1,-1,-1,[]))
+                  );
+                });
+                return;
+              }
+    
+              this.data.IsMoveValid = false;
           }
 
           const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == dstRoomId);
@@ -101,7 +119,13 @@ export class RoomSelectionComponent implements OnInit {
         && this.data.Weeks.filter((week) => srcWeeks.includes(week)).length != 0) {
           const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == srcRoomId);
           if (busyRoom != undefined) {
-            busyRoom.IsBusy = false;
+            this.scheduleDesignerApiService.GetRoomsAvailability(
+              [busyRoom.RoomId], this.data.DestIndexes[1] + 1,
+              this.data.DestIndexes[0] + 1, this.data.Weeks
+            ).subscribe((rooms) => {
+              const room = rooms[0];
+              busyRoom.IsBusy = room.IsBusy;
+            });
           }
       }
     });
@@ -117,7 +141,13 @@ export class RoomSelectionComponent implements OnInit {
         && this.data.Weeks.filter((week) => weeks.includes(week)).length != 0) {
           const busyRoom = this.courseRooms.find(courseRoom => courseRoom.RoomId == roomId);
           if (busyRoom != undefined) {
-            busyRoom.IsBusy = false;
+            this.scheduleDesignerApiService.GetRoomsAvailability(
+              [busyRoom.RoomId], this.data.DestIndexes[1] + 1,
+              this.data.DestIndexes[0] + 1, this.data.Weeks
+            ).subscribe((rooms) => {
+              const room = rooms[0];
+              busyRoom.IsBusy = room.IsBusy;
+            });
           }
       }
     });
