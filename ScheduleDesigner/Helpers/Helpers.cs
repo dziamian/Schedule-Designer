@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,12 +18,26 @@ namespace ScheduleDesigner.Helpers
         public string Secret { get; set; }
     }
 
-    public class CourseEditionKey
+    public class CourseEditionKey : IComparable<CourseEditionKey>
     {
         public int CourseId { get; set; }
 
         public int CourseEditionId { get; set; }
 
+        public int CompareTo(CourseEditionKey other)
+        {
+            int result = this.CourseId.CompareTo(other.CourseId);
+            if (result != 0)
+            {
+                return result;
+            }
+            result = this.CourseEditionId.CompareTo(other.CourseEditionId);
+            if (result != 0)
+            {
+                return result;
+            }
+            return 0;
+        }
 
         public bool Equals(CourseEditionKey key)
         {
@@ -40,7 +55,7 @@ namespace ScheduleDesigner.Helpers
         }
     }
 
-    public class SchedulePositionKey
+    public class SchedulePositionKey : IComparable<SchedulePositionKey>
     {
         public int RoomId { get; set; }
 
@@ -50,6 +65,30 @@ namespace ScheduleDesigner.Helpers
 
         public int Week { get; set; }
 
+        public int CompareTo(SchedulePositionKey other)
+        {
+            int result = this.RoomId.CompareTo(other.RoomId);
+            if (result != 0)
+            {
+                return result;
+            }
+            result = this.PeriodIndex.CompareTo(other.PeriodIndex);
+            if (result != 0)
+            {
+                return result;
+            }
+            result = this.Day.CompareTo(other.Day);
+            if (result != 0)
+            {
+                return result;
+            }
+            result = this.Week.CompareTo(other.Week);
+            if (result != 0)
+            {
+                return result;
+            }
+            return 0;
+        }
 
         public bool Equals(SchedulePositionKey key)
         {

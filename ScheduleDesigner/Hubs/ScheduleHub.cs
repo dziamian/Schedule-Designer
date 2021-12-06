@@ -523,7 +523,8 @@ namespace ScheduleDesigner.Hubs
             var groupPositionQueues = new List<ConcurrentQueue<object>>();
 
             var courseEnqueued = false;
-            Array.Sort(weeks.Distinct().ToArray());
+            weeks = weeks.Distinct().ToArray();
+            Array.Sort(weeks);
 
             try
             {
@@ -872,11 +873,14 @@ namespace ScheduleDesigner.Hubs
             var groupPositionKeys = new List<GroupPositionKey>();
             var schedulePositionQueues1 = new List<ConcurrentQueue<object>>();
             var schedulePositionQueues2 = new List<ConcurrentQueue<object>>();
+            var schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
             var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
             var groupPositionQueues = new List<ConcurrentQueue<object>>();
 
-            Array.Sort(weeks.Distinct().ToArray());
-            Array.Sort(destWeeks.Distinct().ToArray());
+            weeks = weeks.Distinct().ToArray();
+            Array.Sort(weeks);
+            destWeeks = destWeeks.Distinct().ToArray();
+            Array.Sort(destWeeks);
 
             if (weeks.Length != destWeeks.Length)
             {
@@ -896,6 +900,8 @@ namespace ScheduleDesigner.Hubs
                         var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
                         schedulePositionQueues1.Add(queue);
                         queue.Enqueue(new object());
+                        
+                        schedulePositionAllQueues.Add(key, queue);
                     }
 
                     foreach (var destWeek in destWeeks)
@@ -905,16 +911,14 @@ namespace ScheduleDesigner.Hubs
                         var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
                         schedulePositionQueues2.Add(queue);
                         queue.Enqueue(new object());
+
+                        schedulePositionAllQueues.Add(key, queue);
                     }
                 }
 
-                foreach (var schedulePositionQueue1 in schedulePositionQueues1)
+                foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
                 {
-                    Monitor.Enter(schedulePositionQueue1);
-                }
-                foreach (var schedulePositionQueue2 in schedulePositionQueues2)
-                {
-                    Monitor.Enter(schedulePositionQueue2);
+                    Monitor.Enter(schedulePositionQueue);
                 }
 
                 try
@@ -1130,25 +1134,17 @@ namespace ScheduleDesigner.Hubs
                 }
                 finally
                 {
-                    foreach (var schedulePositionQueue1 in schedulePositionQueues1)
+                    foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
                     {
-                        Monitor.Exit(schedulePositionQueue1);
-                    }
-                    foreach (var schedulePositionQueue2 in schedulePositionQueues2)
-                    {
-                        Monitor.Exit(schedulePositionQueue2);
+                        Monitor.Exit(schedulePositionQueue);
                     }
                 }
             }
             catch (Exception e)
             {
-                foreach (var schedulePositionQueue1 in schedulePositionQueues1)
+                foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
                 {
-                    Monitor.Enter(schedulePositionQueue1);
-                }
-                foreach (var schedulePositionQueue2 in schedulePositionQueues2)
-                {
-                    Monitor.Enter(schedulePositionQueue2);
+                    Monitor.Enter(schedulePositionQueue);
                 }
                 foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
                 {
@@ -1168,13 +1164,9 @@ namespace ScheduleDesigner.Hubs
                 }
                 finally
                 {
-                    foreach (var schedulePositionQueue1 in schedulePositionQueues1)
+                    foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
                     {
-                        Monitor.Exit(schedulePositionQueue1);
-                    }
-                    foreach (var schedulePositionQueue2 in schedulePositionQueues2)
-                    {
-                        Monitor.Exit(schedulePositionQueue2);
+                        Monitor.Exit(schedulePositionQueue);
                     }
                     foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
                     {
@@ -1195,8 +1187,9 @@ namespace ScheduleDesigner.Hubs
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
             var schedulePositionQueues = new List<ConcurrentQueue<object>>();
-
-            Array.Sort(weeks.Distinct().ToArray());
+            
+            weeks = weeks.Distinct().ToArray();
+            Array.Sort(weeks);
 
             try
             {
@@ -1327,6 +1320,21 @@ namespace ScheduleDesigner.Hubs
 
                 return new MessageObject {StatusCode = 400, Message = e.Message};
             }
+        }
+
+        
+        [Authorize(Policy = "Coordinator")]
+        public MessageObject AddScheduledMove(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
+        {
+            //require locks on SchedulePositions
+            return new MessageObject { StatusCode = 404 };
+        }
+
+        [Authorize(Policy = "Coordinator")]
+        public MessageObject RemoveScheduledMove(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
+        {
+            //require locks on SchedulePositions
+            return new MessageObject { StatusCode = 404 };
         }
 
         private void RemoveAllClientLocks(int userId, string connectionId)
