@@ -867,7 +867,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Coordinator")] //make scheduled moves
         public MessageObject ModifySchedulePositions(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
@@ -1185,7 +1185,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Coordinator")] //make scheduled moves
         public MessageObject RemoveSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -1326,7 +1326,7 @@ namespace ScheduleDesigner.Hubs
         }
 
         
-        [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Coordinator")] //Clients.All.blabla
         public MessageObject AddScheduledMove(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
@@ -1517,7 +1517,6 @@ namespace ScheduleDesigner.Hubs
                                     .ThenInclude(e => e.Coordinators)
                                     .Include(e => e.CourseEdition)
                                     .ThenInclude(e => e.Groups)
-                                    .Select(e => new { e.TimestampId, e.RoomId })
                             :
                             _schedulePositionRepo
                             .Get(e => _destTimestamps.Contains(e.TimestampId)
@@ -1529,8 +1528,7 @@ namespace ScheduleDesigner.Hubs
                             .Include(e => e.CourseEdition)
                             .ThenInclude(e => e.Coordinators)
                             .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Groups)
-                            .Select(e => new { e.TimestampId, e.RoomId });
+                            .ThenInclude(e => e.Groups);
 
                         if (!_destSchedulePositions.Any())
                         {
@@ -1542,7 +1540,47 @@ namespace ScheduleDesigner.Hubs
                             return new MessageObject { StatusCode = 400, Message = "This move is possible, so you should not try to schedule it." };
                         }
 
-                        //-------> check if move is not scheduled <-------\\
+                        if (_destSchedulePositions.Any(e => e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Contains(userId)))
+                        {
+                            RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                            RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+
+                            return new MessageObject { StatusCode = 400, Message = "Scheduled move cannot collide with your own courses." };
+                        }
+
+                        var _scheduledMovesCountsCondition = _scheduledMoveRepo
+                            .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
+                                && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
+                                && e.CourseId == courseEdition.CourseId)
+                            .GroupBy(e => e.MoveId)
+                            .Select(e => new { MoveId = e.Key, Count = e.Count() })
+                            .OrderBy(e => e.MoveId).ToList();
+
+                        var _sourceTimestampsCount = _sourceTimestamps.Count();
+                        _scheduledMovesCountsCondition = _scheduledMovesCountsCondition
+                            .Where(e => e.Count == _sourceTimestampsCount).ToList();
+                        
+                        var _scheduledMovesCounts = _scheduledMoveRepo
+                            .Get(e => _scheduledMovesCountsCondition.Select(e => e.MoveId).Contains(e.MoveId))
+                            .GroupBy(e => e.MoveId)
+                            .Select(e => new { MoveId = e.Key, Count = e.Count() })
+                            .OrderBy(e => e.MoveId).ToList();
+
+                        var _scheduledMovesCount = _scheduledMovesCountsCondition.Count();
+                        for (var i = 0; i < _scheduledMovesCount; ++i)
+                        {
+                            if (_scheduledMovesCountsCondition[i].Count == _scheduledMovesCounts[i].Count)
+                            {
+                                RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                                RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+                                RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+                                RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+
+                                return new MessageObject { StatusCode = 400, Message = "This move is already scheduled." };
+                            }
+                        }
 
                         var _courseRoomTimestamps = _courseRoomTimestampRepo
                             .Get(e => e.RoomId == destRoomId && _destTimestamps.Contains(e.TimestampId) &&
@@ -1659,7 +1697,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Coordinator")] //Clients.All.blabla
         public MessageObject RemoveScheduledMove(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
@@ -1684,13 +1722,282 @@ namespace ScheduleDesigner.Hubs
 
             try
             {
-                return new MessageObject { StatusCode = 404 };
+                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+
+                lock (SchedulePositionLocks)
+                {
+                    foreach (var week in weeks)
+                    {
+                        var key = new SchedulePositionKey { RoomId = roomId, PeriodIndex = periodIndex, Day = day, Week = week };
+                        schedulePositionKeys1.Add(key);
+                        var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                        schedulePositionQueues1.Add(queue);
+                        queue.Enqueue(new object());
+
+                        schedulePositionAllQueues.Add(key, queue);
+                    }
+
+                    foreach (var destWeek in destWeeks)
+                    {
+                        var key = new SchedulePositionKey { RoomId = destRoomId, PeriodIndex = destPeriodIndex, Day = destDay, Week = destWeek };
+                        schedulePositionKeys2.Add(key);
+                        var queue = SchedulePositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                        schedulePositionQueues2.Add(queue);
+                        queue.Enqueue(new object());
+
+                        schedulePositionAllQueues.Add(key, queue);
+                    }
+                }
+
+                foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
+                {
+                    Monitor.Enter(schedulePositionQueue);
+                }
+
+                try
+                {
+                    var _sourceTimestamps = _timestampRepo
+                        .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
+                        .Select(e => e.TimestampId)
+                        .OrderBy(e => e).ToList();
+
+                    if (_sourceTimestamps.Count != weeks.Length)
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                        RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+
+                        return new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." };
+                    }
+
+                    var _sourceSchedulePositions = _schedulePositionRepo
+                        .Get(e => _sourceTimestamps.Contains(e.TimestampId) && e.RoomId == roomId &&
+                                  e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        .Include(e => e.CourseEdition)
+                            .ThenInclude(e => e.Coordinators);
+
+                    if (_sourceSchedulePositions.Count() != _sourceTimestamps.Count)
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                        RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+
+                        return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." };
+                    }
+
+                    if (Enumerable.Any(_sourceSchedulePositions, schedulePosition => schedulePosition.LockUserId != userId || schedulePosition.LockUserConnectionId != Context.ConnectionId))
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                        RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+
+                        return new MessageObject { StatusCode = 400, Message = "You didn't lock some positions in schedule." };
+                    }
+
+                    var courseEdition = _sourceSchedulePositions.FirstOrDefault()?.CourseEdition;
+
+                    if (courseEdition == null)
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                        RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+
+                        return new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." };
+                    }
+
+                    var _courseEdition = _courseEditionRepo
+                        .Get(e => e.CourseId == courseEdition.CourseId &&
+                                  e.CourseEditionId == courseEdition.CourseEditionId)
+                        .Include(e => e.Course)
+                            .ThenInclude(e => e.Rooms)
+                        .Include(e => e.Coordinators)
+                        .Include(e => e.Groups)
+                            .ThenInclude(e => e.Group);
+
+                    var includableCourseEdition = _courseEdition.FirstOrDefault();
+                    if (includableCourseEdition == null || !includableCourseEdition.Course.Rooms.Select(e => e.RoomId).Contains(destRoomId))
+                    {
+                        RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                        RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+
+                        return new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to chosen course." };
+                    }
+
+                    var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
+                    var groupsIds = CourseEditionsController.GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                    var returnableGroupsIds = new int[groupsIds.Length];
+
+                    Array.Sort(coordinatorsIds);
+                    Array.Copy(groupsIds, returnableGroupsIds, groupsIds.Length);
+                    Array.Sort(groupsIds);
+
+                    lock (CoordinatorPositionLocks)
+                        lock (GroupPositionLocks)
+                        {
+                            foreach (var week in destWeeks)
+                            {
+                                foreach (var coordinatorId in coordinatorsIds)
+                                {
+                                    var key = new CoordinatorPositionKey
+                                    { CoordinatorId = coordinatorId, PeriodIndex = destPeriodIndex, Day = destDay, Week = week };
+                                    coordinatorPositionKeys.Add(key);
+                                    var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                                    coordinatorPositionQueues.Add(queue);
+                                    queue.Enqueue(new object());
+                                }
+
+                                foreach (var groupId in groupsIds)
+                                {
+                                    var key = new GroupPositionKey
+                                    { GroupId = groupId, PeriodIndex = destPeriodIndex, Day = destDay, Week = week };
+                                    groupPositionKeys.Add(key);
+                                    var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                                    groupPositionQueues.Add(queue);
+                                    queue.Enqueue(new object());
+                                }
+                            }
+                        }
+
+                    foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                    {
+                        Monitor.Enter(coordinatorPositionQueue);
+                    }
+                    foreach (var groupPositionQueue in groupPositionQueues)
+                    {
+                        Monitor.Enter(groupPositionQueue);
+                    }
+
+                    try
+                    {
+                        var _destTimestamps = _timestampRepo
+                            .Get(e => e.PeriodIndex == destPeriodIndex && e.Day == destDay && destWeeks.Contains(e.Week))
+                            .Select(e => e.TimestampId)
+                            .OrderBy(e => e).ToList();
+
+                        if (_destTimestamps.Count != destWeeks.Length)
+                        {
+                            RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                            RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+
+                            return new MessageObject { StatusCode = 404, Message = "Could not find requested destination time periods." };
+                        }
+
+                        var _scheduledMovesCountsCondition = _scheduledMoveRepo
+                            .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
+                                && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
+                                && e.CourseId == courseEdition.CourseId)
+                            .GroupBy(e => e.MoveId)
+                            .Select(e => new { MoveId = e.Key, Count = e.Count() })
+                            .OrderBy(e => e.MoveId).ToList();
+
+                        var _sourceTimestampsCount = _sourceTimestamps.Count();
+                        _scheduledMovesCountsCondition = _scheduledMovesCountsCondition
+                            .Where(e => e.Count == _sourceTimestampsCount).ToList();
+
+                        var _scheduledMovesCounts = _scheduledMoveRepo
+                            .Get(e => _scheduledMovesCountsCondition.Select(e => e.MoveId).Contains(e.MoveId))
+                            .GroupBy(e => e.MoveId)
+                            .Select(e => new { MoveId = e.Key, Count = e.Count() })
+                            .OrderBy(e => e.MoveId).ToList();
+
+                        var _scheduledMovesCount = _scheduledMovesCountsCondition.Count();
+                        var isFound = false;
+                        for (var i = 0; i < _scheduledMovesCount; ++i)
+                        {
+                            if (_scheduledMovesCountsCondition[i].Count == _scheduledMovesCounts[i].Count)
+                            {
+                                _scheduledMoveRepo
+                                    .Delete(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
+                                isFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!isFound)
+                        {
+                            RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                            RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+
+                            return new MessageObject { StatusCode = 400, Message = "Could not find scheduled move." };
+                        }
+                        
+                        var result1 = _scheduledMoveRepo.SaveChanges().Result;
+                        /*var result2 = Clients.Others.ModifiedSchedulePositions(
+                            includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
+                            returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
+                            roomId, destRoomId,
+                            periodIndex, destPeriodIndex,
+                            day, destDay,
+                            weeks, destWeeks
+                        );*/
+
+                        RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                        RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+                        RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+                        RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+
+                        return new MessageObject { StatusCode = 200 };
+                    }
+                    finally
+                    {
+                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                        {
+                            Monitor.Exit(coordinatorPositionQueue);
+                        }
+                        foreach (var groupPositionQueue in groupPositionQueues)
+                        {
+                            Monitor.Exit(groupPositionQueue);
+                        }
+                    }
+                }
+                finally
+                {
+                    foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
+                    {
+                        Monitor.Exit(schedulePositionQueue);
+                    }
+                }
             }
             catch (Exception e)
             {
+                foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
+                {
+                    Monitor.Enter(schedulePositionQueue);
+                }
+                foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                {
+                    Monitor.Enter(coordinatorPositionQueue);
+                }
+                foreach (var groupPositionQueue in groupPositionQueues)
+                {
+                    Monitor.Enter(groupPositionQueue);
+                }
+
+                try
+                {
+                    RemoveSchedulePositionsLocks(schedulePositionQueues1, schedulePositionKeys1);
+                    RemoveSchedulePositionsLocks(schedulePositionQueues2, schedulePositionKeys2);
+                    RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
+                    RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
+                }
+                finally
+                {
+                    foreach (var schedulePositionQueue in schedulePositionAllQueues.Values)
+                    {
+                        Monitor.Exit(schedulePositionQueue);
+                    }
+                    foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
+                    {
+                        Monitor.Exit(coordinatorPositionQueue);
+                    }
+                    foreach (var groupPositionQueue in groupPositionQueues)
+                    {
+                        Monitor.Exit(groupPositionQueue);
+                    }
+                }
+
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
-            //require locks on SchedulePositions
         }
 
         private void RemoveAllClientLocks(int userId, string connectionId)
