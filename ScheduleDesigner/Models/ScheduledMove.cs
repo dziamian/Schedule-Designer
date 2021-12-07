@@ -25,7 +25,7 @@ namespace ScheduleDesigner.Models
 
         public bool IsConfirmed { get; set; }
 
-        public DateTime ScheduledDate { get; set; }
+        public DateTime ScheduleOrder { get; set; }
 
         
         [ForeignKey("UserId")]

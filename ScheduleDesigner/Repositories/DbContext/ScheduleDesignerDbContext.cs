@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ScheduleDesigner.Authentication;
+using System.Data.SqlClient;
 
 namespace ScheduleDesigner.Repositories
 {
@@ -33,8 +34,20 @@ namespace ScheduleDesigner.Repositories
 
         public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
 
+        public int GetNextScheduledMoveId()
+        {
+            var result = new SqlParameter("@result", System.Data.SqlDbType.Int);
+            Database.ExecuteSqlRaw("SELECT @result = (NEXT VALUE FOR dbo.ScheduledMovesIds)", result);
+            return (int)result.Value;
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //SEQUENCES
+            modelBuilder.HasSequence<int>("ScheduledMovesIds")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
             //Authorization
             modelBuilder.Entity<Authorization>()
                 .HasKey(e => e.UserId);

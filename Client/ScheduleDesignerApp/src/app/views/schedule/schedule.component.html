@@ -9,8 +9,8 @@
                 <div *ngIf="!tabLoading && connectionStatus; else spinner" class="tabContent">
                     <span class="move-description"
                         [style.color]="isMoveValid ? 'green' : '#FF4800'">
-                        <b>{{(isMoveValid) ? 'This is valid move!' : 
-                            ((isMoveValid != null) ? 'This move will be scheduled!' : '')}}</b>
+                        <b>{{(isMoveValid) ? 'This move is possible!' : 
+                            ((isMoveValid != null) ? 'This move is not possible, will be scheduled!' : '')}}</b>
                         <br>
                     </span>
                     <div class="board">

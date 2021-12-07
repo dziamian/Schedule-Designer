@@ -9,5 +9,6 @@ namespace ScheduleDesigner.Repositories.Interfaces
 {
     public interface IScheduledMoveRepo : IRepoBase<ScheduledMove>
     {
+        int GetNextId();
     }
 }

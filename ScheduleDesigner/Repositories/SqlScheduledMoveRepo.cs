@@ -13,5 +13,10 @@ namespace ScheduleDesigner.Repositories
         public SqlScheduledMoveRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
+
+        public int GetNextId()
+        {
+            return _context.GetNextScheduledMoveId();
+        }
     }
 }
