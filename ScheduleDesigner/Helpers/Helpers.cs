@@ -59,11 +59,7 @@ namespace ScheduleDesigner.Helpers
     {
         public int RoomId { get; set; }
 
-        public int PeriodIndex { get; set; }
-
-        public int Day { get; set; }
-
-        public int Week { get; set; }
+        public int TimestampId { get; set; }
 
         public int CompareTo(SchedulePositionKey other)
         {
@@ -72,17 +68,7 @@ namespace ScheduleDesigner.Helpers
             {
                 return result;
             }
-            result = this.PeriodIndex.CompareTo(other.PeriodIndex);
-            if (result != 0)
-            {
-                return result;
-            }
-            result = this.Day.CompareTo(other.Day);
-            if (result != 0)
-            {
-                return result;
-            }
-            result = this.Week.CompareTo(other.Week);
+            result = this.TimestampId.CompareTo(other.TimestampId);
             if (result != 0)
             {
                 return result;
@@ -92,8 +78,8 @@ namespace ScheduleDesigner.Helpers
 
         public bool Equals(SchedulePositionKey key)
         {
-            return key.RoomId.Equals(RoomId) && key.PeriodIndex.Equals(PeriodIndex)
-                && key.Day.Equals(Day) && key.Week.Equals(Week);
+            return key.RoomId.Equals(RoomId)
+                && key.TimestampId.Equals(TimestampId);
         }
 
         public override bool Equals(object obj)
@@ -103,7 +89,7 @@ namespace ScheduleDesigner.Helpers
 
         public override int GetHashCode()
         {
-            return RoomId.GetHashCode() ^ PeriodIndex.GetHashCode() ^ Day.GetHashCode() ^ Week.GetHashCode();
+            return RoomId.GetHashCode() ^ TimestampId.GetHashCode();
         }
     }
 
@@ -111,17 +97,13 @@ namespace ScheduleDesigner.Helpers
     {
         public int CoordinatorId { get; set; }
 
-        public int PeriodIndex { get; set; }
-
-        public int Day { get; set; }
-
-        public int Week { get; set; }
+        public int TimestampId { get; set; }
 
 
         public bool Equals(CoordinatorPositionKey key)
         {
-            return key.CoordinatorId.Equals(CoordinatorId) && key.PeriodIndex.Equals(PeriodIndex)
-                                                           && key.Day.Equals(Day) && key.Week.Equals(Week);
+            return key.CoordinatorId.Equals(CoordinatorId)
+                && key.TimestampId.Equals(TimestampId);
         }
 
         public override bool Equals(object obj)
@@ -131,7 +113,7 @@ namespace ScheduleDesigner.Helpers
 
         public override int GetHashCode()
         {
-            return CoordinatorId.GetHashCode() ^ PeriodIndex.GetHashCode() ^ Day.GetHashCode() ^ Week.GetHashCode();
+            return CoordinatorId.GetHashCode() ^ TimestampId.GetHashCode();
         }
     }
 
@@ -139,17 +121,13 @@ namespace ScheduleDesigner.Helpers
     {
         public int GroupId { get; set; }
 
-        public int PeriodIndex { get; set; }
-
-        public int Day { get; set; }
-
-        public int Week { get; set; }
+        public int TimestampId { get; set; }
 
 
         public bool Equals(GroupPositionKey key)
         {
-            return key.GroupId.Equals(GroupId) && key.PeriodIndex.Equals(PeriodIndex)
-                                               && key.Day.Equals(Day) && key.Week.Equals(Week);
+            return key.GroupId.Equals(GroupId) 
+                && key.TimestampId.Equals(TimestampId);
         }
 
         public override bool Equals(object obj)
@@ -159,7 +137,7 @@ namespace ScheduleDesigner.Helpers
 
         public override int GetHashCode()
         {
-            return GroupId.GetHashCode() ^ PeriodIndex.GetHashCode() ^ Day.GetHashCode() ^ Week.GetHashCode();
+            return GroupId.GetHashCode() ^ TimestampId.GetHashCode();
         }
     }
 }
