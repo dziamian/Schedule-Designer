@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScheduleDesigner.Hubs.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,5 +41,7 @@ namespace ScheduleDesigner.Hubs.Interfaces
             int[] groupsIds, int mainGroupsAmount, int[] coordinatorsIds,
             int roomId, int periodIndex,
             int day, int[] weeks);
+
+        Task SendResponse(MessageObject response);
     }
 }

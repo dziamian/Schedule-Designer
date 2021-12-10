@@ -972,7 +972,7 @@ namespace ScheduleDesigner.Hubs
         }
         
         [Authorize(Policy = "Coordinator")]
-        public MessageObject AddSchedulePositions(int courseId, int courseEditionId, int roomId, int periodIndex, int day, int[] weeks)
+        public void AddSchedulePositions(int courseId, int courseEditionId, int roomId, int periodIndex, int day, int[] weeks)
         {
             CourseEditionKey courseEditionKey = null;
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -998,7 +998,8 @@ namespace ScheduleDesigner.Hubs
 
                 if (_timestamps.Count != weeks.Length)
                 {
-                    return new MessageObject { StatusCode = 404, Message = "Could not find requested time periods." };
+                    Clients.Caller.SendResponse(new MessageObject { StatusCode = 404, Message = "Could not find requested time periods." });
+                    return;
                 }
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
@@ -1035,31 +1036,36 @@ namespace ScheduleDesigner.Hubs
 
                     if (!_courseEdition.Any())
                     {
-                        return new MessageObject { StatusCode = 404 };
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 404 });
+                        return;
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
                     if (courseEdition.LockUserId != userId || courseEdition.LockUserConnectionId != Context.ConnectionId)
                     {
-                        return new MessageObject { StatusCode = 400, Message = "You didn't lock this course edition." };
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You didn't lock this course edition." });
+                        return;
                     }
 
                     var _settings = _settingsRepo.GetSettings().Result;
                     if (_settings == null)
                     {
-                        return new MessageObject { StatusCode = 400, Message = "Application settings has not been specified." };
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Application settings has not been specified." });
+                        return;
                     }
 
                     if (!courseEdition.Course.Rooms.Select(e => e.RoomId).Contains(roomId))
                     {
-                        return new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to this course."};
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to this course." });
+                        return;
                     }
 
                     var courseDurationMinutes = _settings.CourseDurationMinutes;
                     if (Math.Ceiling(courseEdition.Course.UnitsMinutes / (courseDurationMinutes * 1.0)) -
                         courseEdition.SchedulePositions.Count < weeks.Length)
                     {
-                        return new MessageObject { StatusCode = 400, Message = "You cannot add this amount of units to the schedule."};
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You cannot add this amount of units to the schedule." });
+                        return;
                     }
 
                     var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
@@ -1134,7 +1140,8 @@ namespace ScheduleDesigner.Hubs
 
                         if (_schedulePositions.Any())
                         {
-                            return new MessageObject { StatusCode = 400, Message = "Some conflicts with other courses occurred." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Some conflicts with other courses occurred." });
+                            return;
                         }
 
                         var _courseRoomTimestamps = _courseRoomTimestampRepo
@@ -1167,7 +1174,8 @@ namespace ScheduleDesigner.Hubs
                             day, weeks
                         );
 
-                        return new MessageObject { StatusCode = 200 };
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 200 });
+                        return;
                     }
                     finally
                     {
@@ -1201,12 +1209,13 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject {StatusCode = 400, Message = e.Message};
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = e.Message });
+                return;
             }
         }
 
         [Authorize(Policy = "Coordinator")] //Clients.Others.blabla //make scheduled moves
-        public MessageObject ModifySchedulePositions(
+        public void ModifySchedulePositions(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks
         )
@@ -1231,7 +1240,8 @@ namespace ScheduleDesigner.Hubs
 
             if (weeks.Length != destWeeks.Length)
             {
-                return new MessageObject {StatusCode = 400, Message = "Amount of weeks must be equal."};
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Amount of weeks must be equal." });
+                return;
             }
 
             try
@@ -1245,7 +1255,8 @@ namespace ScheduleDesigner.Hubs
 
                 if (_sourceTimestamps.Count != weeks.Length)
                 {
-                    return new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." };
+                    Clients.Caller.SendResponse(new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." });
+                    return;
                 }
 
                 var _destTimestamps = _timestampRepo
@@ -1255,7 +1266,8 @@ namespace ScheduleDesigner.Hubs
 
                 if (_destTimestamps.Count != destWeeks.Length)
                 {
-                    return new MessageObject { StatusCode = 404, Message = "Could not find requested destination time periods." };
+                    Clients.Caller.SendResponse(new MessageObject { StatusCode = 404, Message = "Could not find requested destination time periods." });
+                    return;
                 }
 
                 lock (SchedulePositionLocksL1)
@@ -1325,12 +1337,14 @@ namespace ScheduleDesigner.Hubs
 
                         if (_sourceSchedulePositions.Count() != _sourceTimestamps.Count)
                         {
-                            return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." });
+                            return;
                         }
 
                         if (Enumerable.Any(_sourceSchedulePositions, schedulePosition => schedulePosition.LockUserId != userId || schedulePosition.LockUserConnectionId != Context.ConnectionId))
                         {
-                            return new MessageObject { StatusCode = 400, Message = "You didn't lock some positions in schedule." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You didn't lock some positions in schedule." });
+                            return;
                         }
                         
                         var schedulePosition = _sourceSchedulePositions.FirstOrDefault();
@@ -1347,12 +1361,14 @@ namespace ScheduleDesigner.Hubs
                         var includableCourseEdition = _courseEdition.FirstOrDefault();
                         if (includableCourseEdition == null)
                         {
-                            return new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." });
+                            return;
                         }
 
                         if (!includableCourseEdition.Course.Rooms.Select(e => e.RoomId).Contains(destRoomId))
                         {
-                            return new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to chosen course." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to chosen course." });
+                            return;
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
@@ -1425,7 +1441,8 @@ namespace ScheduleDesigner.Hubs
 
                             if (_destSchedulePositions.Any())
                             {
-                                return new MessageObject { StatusCode = 400, Message = "Some conflicts with other courses occurred." };
+                                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Some conflicts with other courses occurred." });
+                                return;
                             }
 
                             var _courseRoomTimestamps = _courseRoomTimestampRepo
@@ -1472,6 +1489,8 @@ namespace ScheduleDesigner.Hubs
                                 day, destDay,
                                 weeks, destWeeks
                             );
+
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 200 });
                         }
                         finally
                         {
@@ -1507,8 +1526,7 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     MakeScheduledMoves(schedulePositionKeys1, ref L1schedulePositionAllQueues, ref L1KeysToRemove);
-
-                    return new MessageObject { StatusCode = 200 };
+                    return;
                 }
                 finally
                 {
@@ -1526,12 +1544,13 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = e.Message });
+                return;
             }
         }
 
         [Authorize(Policy = "Coordinator")] //make scheduled moves
-        public MessageObject RemoveSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
+        public void RemoveSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
             var L1schedulePositionQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
@@ -1551,7 +1570,8 @@ namespace ScheduleDesigner.Hubs
 
                 if (_timestamps.Count != weeks.Length)
                 {
-                    return new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." };
+                    Clients.Caller.SendResponse(new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." });
+                    return;
                 }
 
                 lock (SchedulePositionLocksL1)
@@ -1600,12 +1620,14 @@ namespace ScheduleDesigner.Hubs
 
                         if (_schedulePositions.Count() != _timestamps.Count)
                         {
-                            return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." });
+                            return;
                         }
 
                         if (Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != userId || schedulePosition.LockUserConnectionId != Context.ConnectionId))
                         {
-                            return new MessageObject { StatusCode = 400, Message = "You didn't lock some positions in schedule." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You didn't lock some positions in schedule." });
+                            return;
                         }
 
                         var schedulePosition = _schedulePositions.FirstOrDefault();
@@ -1619,7 +1641,8 @@ namespace ScheduleDesigner.Hubs
                         var courseEdition = _courseEdition.FirstOrDefault();
                         if (courseEdition == null)
                         {
-                            return new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." };
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." });
+                            return;
                         }
 
                         var coordinatorsIds = schedulePosition.CourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
@@ -1651,6 +1674,8 @@ namespace ScheduleDesigner.Hubs
                             roomId, periodIndex,
                             day, weeks
                         );
+
+                        Clients.Caller.SendResponse(new MessageObject { StatusCode = 204 });
                     }
                     finally
                     {
@@ -1662,8 +1687,7 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     MakeScheduledMoves(schedulePositionKeys, ref L1schedulePositionQueues, ref L1KeysToRemove);
-
-                    return new MessageObject { StatusCode = 204 };
+                    return;
                 }
                 finally
                 {
@@ -1681,7 +1705,8 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject {StatusCode = 400, Message = e.Message};
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = e.Message });
+                return;
             }
         }
 
