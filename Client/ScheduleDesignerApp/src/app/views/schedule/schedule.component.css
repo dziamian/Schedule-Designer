@@ -88,9 +88,13 @@
     border: 1px solid #000000;
 }
 
+.schedule-content table td.day-column, .schedule-content table th.day-column {
+    min-width: 5vw;
+}
+
 .schedule-content table td, .schedule-content table th {
     border: 1px solid #000000;
-    min-width: 10.9vw;
+    min-width: 11.6vw;
 }
 
 .schedule-content table td[course="true"] {

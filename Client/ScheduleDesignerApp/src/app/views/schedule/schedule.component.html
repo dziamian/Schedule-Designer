@@ -43,7 +43,7 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th></th>
+                                            <th class="day-column"></th>
                                             <th *ngFor="let timeLabel of scheduleTimeLabels">
                                                 {{timeLabel}}
                                             </th>
@@ -51,7 +51,7 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let dayLabel of scheduleDayLabels; let dayIndex = index">
-                                            <td>
+                                            <td class="day-column">
                                                 <b>{{dayLabel}}</b>
                                             </td>
                                             <td *ngFor="let timeLabel of scheduleTimeLabels; let timeIndex = index"

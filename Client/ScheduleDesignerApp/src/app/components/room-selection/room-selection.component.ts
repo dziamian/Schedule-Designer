@@ -246,6 +246,7 @@ export class RoomSelectionComponent implements OnInit {
           selectedRoom!.RoomId, destIndexes[1] + 1,
           destIndexes[0] + 1, weeks
         );
+        setTimeout(() => this.signalrService.Disconnect(), 1);
         setTimeout(() => responseSubscription.unsubscribe(), 15000);
       })
       : await this.signalrService.AddScheduledMove(
