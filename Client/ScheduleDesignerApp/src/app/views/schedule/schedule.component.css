@@ -85,7 +85,7 @@
 }
 
 .schedule-content table {
-    border-collapse: collapse;
+    border: 1px solid #000000;
 }
 
 .schedule-content table td, .schedule-content table th {
