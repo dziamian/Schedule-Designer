@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ScheduleDesigner.Authentication;
-using System.Data.SqlClient;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace ScheduleDesigner.Repositories
 {
@@ -36,8 +37,12 @@ namespace ScheduleDesigner.Repositories
 
         public int GetNextScheduledMoveId()
         {
-            var result = new SqlParameter("@result", System.Data.SqlDbType.Int);
-            Database.ExecuteSqlRaw("SELECT @result = (NEXT VALUE FOR dbo.ScheduledMovesIds)", result);
+            var result = new SqlParameter("@result", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Output
+            };
+            Database.ExecuteSqlRaw("SET @result = (NEXT VALUE FOR dbo.ScheduledMovesIds);", result);
+            Console.WriteLine(result);
             return (int)result.Value;
         }
 

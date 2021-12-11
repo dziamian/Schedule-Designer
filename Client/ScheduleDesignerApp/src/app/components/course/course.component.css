@@ -20,7 +20,7 @@
 }
 
 .course-placeholder {
-    border: 3px dotted rgb(102, 102, 102);
+    border: 3px dashed rgb(102, 102, 102);
     height: 10.2vh;
     box-sizing: border-box;
 }

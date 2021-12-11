@@ -215,22 +215,45 @@ export class RoomSelectionComponent implements OnInit {
     let message:string = '';
     let status:RoomSelectionDialogStatus;
     try {
-      const notImplemented:MessageObject = new MessageObject(404);
-      notImplemented.Message = "Not implemented yet.";
       const result = (!areModified) 
-      ? await this.signalrService.AddSchedulePositions(
-        courseEdition.CourseId, courseEdition.CourseEditionId,
-        selectedRoom!.RoomId, destIndexes[1] + 1, 
-        destIndexes[0] + 1, weeks
-      ).toPromise()
+      ? await new Promise<MessageObject>((resolve, reject) => {
+        const responseSubscription = this.signalrService.lastResponse.pipe(skip(1))
+        .subscribe((messageObject) => {
+          responseSubscription.unsubscribe();
+          resolve(messageObject);
+        },() => {
+          reject();
+        });
+        this.signalrService.AddSchedulePositions(
+          courseEdition.CourseId, courseEdition.CourseEditionId,
+          selectedRoom!.RoomId, destIndexes[1] + 1, 
+          destIndexes[0] + 1, weeks
+        );
+        setTimeout(() => responseSubscription.unsubscribe(), 15000);
+      })
       : ((isMoveValid && !selectedRoom.IsBusy) 
-      ? await this.signalrService.ModifySchedulePositions(
+      ? await new Promise<MessageObject>((resolve, reject) => {
+        const responseSubscription = this.signalrService.lastResponse.pipe(skip(1))
+        .subscribe((messageObject) => {
+          responseSubscription.unsubscribe();
+          resolve(messageObject);
+        },() => {
+          reject();
+        });
+        this.signalrService.ModifySchedulePositions(
+          courseEdition.Room!.RoomId, srcIndexes[1] + 1,
+          srcIndexes[0] + 1, weeks,
+          selectedRoom!.RoomId, destIndexes[1] + 1,
+          destIndexes[0] + 1, weeks
+        );
+        setTimeout(() => responseSubscription.unsubscribe(), 15000);
+      })
+      : await this.signalrService.AddScheduledMove(
         courseEdition.Room!.RoomId, srcIndexes[1] + 1,
         srcIndexes[0] + 1, weeks,
         selectedRoom!.RoomId, destIndexes[1] + 1,
         destIndexes[0] + 1, weeks
-      ).toPromise() 
-      : notImplemented);
+      ).toPromise());
       
       if (result.StatusCode >= 400) {
         throw result;

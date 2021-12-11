@@ -16,7 +16,7 @@ import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
-import { SchedulePosition } from 'src/app/others/CommunicationObjects';
+import { MessageObject, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { Store } from '@ngrx/store';
 import { Account } from 'src/app/others/Accounts';
 
@@ -743,10 +743,24 @@ export class ScheduleComponent implements OnInit {
       const previousIndexes = this.getIndexes(previousContainer.id);
 
       try {
-        const result = await this.signalrService.RemoveSchedulePositions(
+        const result = await new Promise<MessageObject>((resolve, reject) => {
+          const responseSubscription = this.signalrService.lastResponse.pipe(skip(1))
+          .subscribe((messageObject) => {
+            responseSubscription.unsubscribe();
+            resolve(messageObject);
+          },() => {
+            reject();
+          });
+          this.signalrService.RemoveSchedulePositions(
+            courseEdition.Room!.RoomId, previousIndexes[1] + 1,
+            previousIndexes[0] + 1, weeks
+          );
+          setTimeout(() => responseSubscription.unsubscribe(), 15000);
+        });
+        /*const result = await this.signalrService.RemoveSchedulePositions(
           courseEdition.Room!.RoomId, previousIndexes[1] + 1,
           previousIndexes[0] + 1, weeks
-        ).toPromise();
+        ).toPromise();*/
         if (result.StatusCode >= 400) {
           throw result;
         }

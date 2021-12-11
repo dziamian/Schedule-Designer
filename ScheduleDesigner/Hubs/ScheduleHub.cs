@@ -153,45 +153,61 @@ namespace ScheduleDesigner.Hubs
             out Tuple<SchedulePositionKey[], SchedulePositionKey[]> possibleMove)
         {
             possibleMove = null;
-            
-            if (!source.Any())
+            try
             {
+                if (!source.Any())
+                {
+                    return null;
+                }
+
+                var timestampsIds = source.Select(e => e.TimestampId).ToList();
+
+                var movesIds = _scheduledMoveRepo
+                    .Get(e => e.IsConfirmed && timestampsIds.Contains(e.TimestampId_2)
+                        && !skippedMovesIds.Contains(e.MoveId))
+                    .OrderBy(e => e.ScheduleOrder)
+                    .GroupBy(e => e.MoveId)
+                    .Select(e => e.Key).ToList();
+
+                if (!movesIds.Any())
+                {
+                    return null;
+                }
+
+                var moveId = movesIds.First();
+
+                var _scheduledMove = _scheduledMoveRepo
+                    .Get(e => e.MoveId == moveId);
+
+                var length = _scheduledMove.Count();
+                var possibleMoveSource = new SchedulePositionKey[length];
+                var possibleMoveDestination = new SchedulePositionKey[length];
+
+                var index = 0;
+                _scheduledMove.ToList().ForEach((move) =>
+                {
+                    possibleMoveSource[index] = new SchedulePositionKey
+                    {
+                        RoomId = move.RoomId_1,
+                        TimestampId = move.TimestampId_1
+                    };
+                    possibleMoveDestination[index] = new SchedulePositionKey
+                    {
+                        RoomId = move.RoomId_2,
+                        TimestampId = move.TimestampId_2
+                    };
+                    ++index;
+                });
+
+                possibleMove = new Tuple<SchedulePositionKey[], SchedulePositionKey[]>(possibleMoveSource, possibleMoveDestination);
+
+                return moveId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 return null;
             }
-
-            var moveId = _scheduledMoveRepo
-                .Get(e => e.IsConfirmed && source.Any(s => s.RoomId == e.RoomId_2 && s.TimestampId == e.TimestampId_2)
-                    && !skippedMovesIds.Contains(e.MoveId))
-                .OrderByDescending(e => e.ScheduleOrder)
-                .GroupBy(e => e.MoveId)
-                .Select(e => e.Key).FirstOrDefault();
-
-            var _scheduledMove = _scheduledMoveRepo
-                .Get(e => e.MoveId == moveId);
-
-            var length = _scheduledMove.Count();
-            var possibleMoveSource = new SchedulePositionKey[length];
-            var possibleMoveDestination = new SchedulePositionKey[length];
-
-            var index = 0;
-            _scheduledMove.ToList().ForEach((move) =>
-            {
-                possibleMoveSource[index] = new SchedulePositionKey
-                {
-                    RoomId = move.RoomId_1,
-                    TimestampId = move.TimestampId_1
-                };
-                possibleMoveDestination[index] = new SchedulePositionKey
-                {
-                    RoomId = move.RoomId_2,
-                    TimestampId = move.TimestampId_2
-                };
-                ++index;
-            });
-
-            possibleMove = new Tuple<SchedulePositionKey[], SchedulePositionKey[]>(possibleMoveSource, possibleMoveDestination);
-            
-            return moveId;
         }
 
         private void MakeScheduledMoves(List<SchedulePositionKey> sourceSchedulePositionKeys, 
@@ -447,7 +463,7 @@ namespace ScheduleDesigner.Hubs
                                         && e.CourseId == includableCourseEdition.CourseId)
                                     .GroupBy(e => e.MoveId)
                                     .Select(e => e.Key)
-                                    .OrderBy(e => e);
+                                    .OrderBy(e => e).ToList();
 
                                 var srcPeriodIndex = _srcTimestamps.FirstOrDefault().PeriodIndex;
                                 var srcDay = _srcTimestamps.FirstOrDefault().Day;
@@ -457,7 +473,7 @@ namespace ScheduleDesigner.Hubs
                                 var destDay = _destTimestamps.FirstOrDefault().Day;
                                 var destWeeks = _destTimestamps.Select(e => e.Week).OrderBy(e => e).ToArray();
 
-                                _scheduledMoveRepo.Delete(e => movesIds.Contains(e.MoveId));
+                                _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
                                 _schedulePositionRepo.GetAll().RemoveRange(_sourceSchedulePositions);
                                 _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
 
@@ -1470,9 +1486,9 @@ namespace ScheduleDesigner.Hubs
                                     && e.CourseId == includableCourseEdition.CourseId)
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => e.Key)
-                                .OrderBy(e => e);
+                                .OrderBy(e => e).ToList();
 
-                            _scheduledMoveRepo.Delete(e => movesIds.Contains(e.MoveId));
+                            _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
                             _schedulePositionRepo.GetAll().RemoveRange(_sourceSchedulePositions);
                             _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
 
@@ -1480,7 +1496,6 @@ namespace ScheduleDesigner.Hubs
                             var result1b = _schedulePositionRepo.SaveChanges().Result;
                             
                             //var result2a = Clients.Others.blabla;
-                            //var response = Clients.Client.blabla; instead of return
                             var result2b = Clients.Others.ModifiedSchedulePositions(
                                 includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
                                 returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
@@ -1658,9 +1673,9 @@ namespace ScheduleDesigner.Hubs
                                     && e.CourseId == schedulePosition.CourseId)
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => e.Key)
-                                .OrderBy(e => e);
+                                .OrderBy(e => e).ToList();
 
-                        _scheduledMoveRepo.Delete(e => movesIds.Contains(e.MoveId));
+                        _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
                         _schedulePositionRepo.GetAll().RemoveRange(_schedulePositions);
                         
                         var result1a = _schedulePositionRepo.SaveChanges().Result;
@@ -2249,7 +2264,7 @@ namespace ScheduleDesigner.Hubs
                                 if (_scheduledMovesCountsCondition[i].Count == _scheduledMovesCounts[i].Count)
                                 {
                                     _scheduledMoveRepo
-                                        .Delete(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
+                                        .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
                                     isFound = true;
                                     break;
                                 }

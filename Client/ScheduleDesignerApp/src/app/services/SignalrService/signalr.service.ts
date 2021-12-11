@@ -23,6 +23,8 @@ export class SignalrService implements OnDestroy {
   lastModifiedSchedulePositions:BehaviorSubject<ModifiedSchedulePositions>
   lastRemovedSchedulePositions:BehaviorSubject<RemovedSchedulePositions>
 
+  lastResponse:BehaviorSubject<MessageObject>
+
   constructor() {
     this.isConnected = new BehaviorSubject<boolean>(false);
     
@@ -54,6 +56,10 @@ export class SignalrService implements OnDestroy {
     
     this.lastRemovedSchedulePositions = new BehaviorSubject<RemovedSchedulePositions>(
       new RemovedSchedulePositions([],-1,[],new SchedulePosition(-1,-1,-1,-1,-1,[]))
+    );
+
+    this.lastResponse = new BehaviorSubject<MessageObject>(
+      new MessageObject(-1)
     );
   }
 
@@ -142,14 +148,9 @@ export class SignalrService implements OnDestroy {
     periodIndex:number,
     day:number,
     weeks:number[]
-  ):Observable<MessageObject> {
-    return from(this.connection.invoke<MessageObject>('AddSchedulePositions', 
-      courseId, courseEditionId, roomId, periodIndex, day, weeks)
-    ).pipe(map((result : any) => {
-      const message = new MessageObject(result.statusCode);
-      message.Message = result.message;
-      return message;
-    }));
+  ):void {
+    this.connection.invoke<MessageObject>('AddSchedulePositions', 
+      courseId, courseEditionId, roomId, periodIndex, day, weeks);
   }
 
   public ModifySchedulePositions(
@@ -161,14 +162,9 @@ export class SignalrService implements OnDestroy {
     destPeriodIndex:number,
     destDay:number,
     destWeeks:number[]
-  ):Observable<MessageObject> {
-    return from(this.connection.invoke<MessageObject>('ModifySchedulePositions',
-      roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks) 
-    ).pipe(map((result : any) => {
-      const message = new MessageObject(result.statusCode);
-      message.Message = result.message;
-      return message;
-    }));
+  ):void {
+    this.connection.invoke<MessageObject>('ModifySchedulePositions',
+      roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks);
   }
 
   public RemoveSchedulePositions(
@@ -176,14 +172,47 @@ export class SignalrService implements OnDestroy {
     periodIndex:number,
     day:number,
     weeks:number[]
+  ):void {
+    this.connection.invoke<MessageObject>('RemoveSchedulePositions',
+      roomId, periodIndex, day, weeks);
+  }
+
+  public AddScheduledMove(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[]
   ):Observable<MessageObject> {
-    return from(this.connection.invoke<MessageObject>('RemoveSchedulePositions',
-      roomId, periodIndex, day, weeks)
-    ).pipe(map((result : any) => {
-      const message = new MessageObject(result.statusCode);
-      message.Message = result.message;
-      return message;
-    }));
+    return from(this.connection.invoke<MessageObject>('AddScheduledMove', 
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public RemoveScheduledMove(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[]
+  ):Observable<MessageObject> {
+    return from(this.connection.invoke<MessageObject>('RemoveScheduledMove', 
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
   }
 
   public Disconnect() {
@@ -296,6 +325,12 @@ export class SignalrService implements OnDestroy {
           )
         )
       );
+    });
+
+    this.connection.on('SendResponse', (messageObject) => {
+      const message = new MessageObject(messageObject.StatusCode);
+      message.Message = messageObject.Message;
+      this.lastResponse.next(message);
     });
   }
 
