@@ -10,3 +10,11 @@ body {
     font-family: "Rubik";
     height: 100%;
 }
+
+.mat-raised-button {
+    font-weight: bold !important;
+}
+
+.mat-button-disabled {
+    background-color: #CCCCCC !important;
+}

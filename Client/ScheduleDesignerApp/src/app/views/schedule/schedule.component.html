@@ -7,12 +7,6 @@
         <mat-tab *ngFor="let label of tabLabels; let tabIndex = index" label="{{label}}">
             <ng-template matTabContent>
                 <div *ngIf="!tabLoading && connectionStatus; else spinner" class="tabContent">
-                    <span class="move-description"
-                        [style.color]="isMoveValid ? 'green' : '#FF4800'">
-                        <b>{{(isMoveValid) ? 'This move is possible!' : 
-                            ((isMoveValid != null) ? 'This move is not possible, will be scheduled!' : '')}}</b>
-                        <br>
-                    </span>
                     <div class="board">
                         <div class="my-courses">
                             <div class="my-courses-header">Your unplanned courses</div>
@@ -36,6 +30,35 @@
                                     ></app-course>
                                 </div>
                             </div>
+                        </div>
+                        <div class="schedule-menu">
+                            <button mat-raised-button color="accent" disabled>
+                                Change Room
+                            </button>
+                            <button mat-raised-button color="accent" disabled>
+                                Add Room
+                            </button>
+                            <button mat-raised-button color="accent" disabled>
+                                Show Scheduled Changes
+                            </button>
+                            <button mat-raised-button color="accent" disabled>
+                                Make Move
+                            </button>
+                            <button mat-raised-button color="accent" disabled>
+                                X
+                            </button>
+                        </div>
+                        <div class="slot-selected" [style.background]="currentSelectedCourseEdition?.CourseEdition?.Type?.Color">
+                            <span *ngIf="currentSelectedCourseEdition != null">
+                                {{currentSelectedCourseEdition.CourseEdition.Name}} - {{currentSelectedCourseEdition.CourseEdition.Type.Name}},<br> 
+                                {{scheduleDayLabels[currentSelectedCourseEdition.Day]}}: {{scheduleTimeLabels[currentSelectedCourseEdition.PeriodIndex]}},<br> 
+                                <span *ngIf="currentSelectedCourseEdition.CourseEdition.Weeks != null">
+                                    {{currentSelectedCourseEdition.CourseEdition.ShowFrequency(settings)}}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="slot-status" [style.background]="isMoveValid ? '#6ef84c' : ((isMoveValid != null) ? '#f86e4c' : 'none')">
+                            {{isMoveValid ? 'Correct movement' : ((isMoveValid != null) ? 'Only scheduling' : '')}}
                         </div>
                         <div class="schedule">
                             <div class="schedule-header">Schedule</div>

@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDropList, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
-import { CourseEdition } from 'src/app/others/CourseEdition';
+import { CourseEdition, SelectedCourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType, RoomType } from 'src/app/others/Types';
 import { Group } from 'src/app/others/Group';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
@@ -31,6 +31,8 @@ export class ScheduleComponent implements OnInit {
   @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef<CourseEdition>>;
   @ViewChildren(CourseComponent) courses : QueryList<CourseComponent>;
   currentDragEvent : CdkDragStart<CourseEdition> | null;
+  currentSelectedCourseEdition : SelectedCourseEdition | null;
+  currentDragContainerId:string;
   currentOpenedDialog : MatDialogRef<RoomSelectionComponent, any> | null;
   isReleased:boolean = false;
   isCanceled:boolean = false;
@@ -60,8 +62,7 @@ export class ScheduleComponent implements OnInit {
   
   scheduleSlotsValidity:boolean[][];
   areSlotsValiditySet:boolean = false;
-  
-  currentDragContainerId:string;
+
   isMoveValid:boolean|null = null;
 
   constructor(
@@ -264,6 +265,36 @@ export class ScheduleComponent implements OnInit {
       const dstSchedulePosition = modifiedSchedulePositions.DestinationSchedulePosition;
       const commonWeeks = dstSchedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week));
 
+      const currentDrag = this.currentDragEvent?.source;
+      if (currentDrag != null) {
+        const currentIndexes = (currentDrag.dropContainer.id !== 'my-courses') ? this.getIndexes(currentDrag.dropContainer.id) : [-1,-1];
+        if (currentDrag.data.CourseId == srcSchedulePosition.CourseId 
+          && currentDrag.data.CourseEditionId == srcSchedulePosition.CourseEditionId && currentDrag.data.Room?.RoomId == srcSchedulePosition.RoomId
+          && currentIndexes[1] == srcSchedulePosition.PeriodIndex - 1 && currentIndexes[0] == srcSchedulePosition.Day - 1
+          && currentDrag.data.Weeks?.some(c => srcSchedulePosition.Weeks.includes(c))) {
+            if (this.currentDragEvent != null) {
+              this.currentDragEvent.source.dropContainer._dropListRef.enter(
+                this.currentDragEvent.source._dragRef,
+                0,0
+              );
+              document.dispatchEvent(new Event('mouseup'));
+            }
+        }
+      }
+
+      const currentDialogData = this.currentOpenedDialog?.componentInstance.data;
+      if (currentDialogData != null) {
+        const currentIndexes = currentDialogData.SrcIndexes;
+        if (currentDialogData.CourseEdition.CourseId == srcSchedulePosition.CourseId
+          && currentDialogData.CourseEdition.CourseEditionId == srcSchedulePosition.CourseEditionId && currentDialogData.CourseEdition.Room?.RoomId == srcSchedulePosition.RoomId
+          && currentIndexes[1] == srcSchedulePosition.PeriodIndex - 1 && currentIndexes[0] == srcSchedulePosition.Day - 1
+          && currentDialogData.CourseEdition.Weeks?.some(c => srcSchedulePosition.Weeks.includes(c))) {
+            if (this.currentOpenedDialog != null) {
+              this.currentOpenedDialog.close(RoomSelectionComponent.CANCELED);
+            }
+        }
+      }
+
       //filter for updating board
       if (modifiedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
         //remove or update old
@@ -292,7 +323,7 @@ export class ScheduleComponent implements OnInit {
           }
         }
 
-        //add new
+        //add or update new
         if (commonWeeks.length > 0) {
           let dstScheduleSlot = this.schedule[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1];
           const existingDstCourseEditions = dstScheduleSlot.filter((courseEdition) => 
@@ -302,9 +333,23 @@ export class ScheduleComponent implements OnInit {
           );
 
           if (existingDstCourseEditions.length > 0) {
-            existingDstCourseEditions[0].Weeks?.push(
-              ...commonWeeks
-            );
+            if (existingDstCourseEditions[0].Weeks?.some(week => commonWeeks.includes(week))) {
+              const addedCourseEdition = new CourseEdition(
+                existingDstCourseEditions[0].CourseId, existingDstCourseEditions[0].CourseEditionId,
+                existingDstCourseEditions[0].Name, existingDstCourseEditions[0].Type,
+                0, existingDstCourseEditions[0].Groups, existingDstCourseEditions[0].Coordinators
+              );
+              addedCourseEdition.Room = existingDstCourseEditions[0].Room;
+              addedCourseEdition.Weeks = commonWeeks;
+              addedCourseEdition.ScheduleAmount = existingDstCourseEditions[0].ScheduleAmount;
+              addedCourseEdition.FullAmount = existingDstCourseEditions[0].FullAmount;
+
+              this.schedule[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1].push(addedCourseEdition);
+            } else {
+              existingDstCourseEditions[0].Weeks?.push(
+                ...commonWeeks
+              );
+            }
           } else {
             const mainGroupsIds = modifiedSchedulePositions.GroupsIds.slice(
               0, modifiedSchedulePositions.MainGroupsAmount
@@ -722,6 +767,7 @@ export class ScheduleComponent implements OnInit {
   async DropInMyCourses(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>) {
     if (this.isCanceled) {
       this.currentDragEvent = null;
+      this.currentSelectedCourseEdition = null;
       this.isMoveValid = null;
       event.item.data.IsCurrentlyActive = false;
       return;
@@ -757,10 +803,7 @@ export class ScheduleComponent implements OnInit {
           );
           setTimeout(() => responseSubscription.unsubscribe(), 15000);
         });
-        /*const result = await this.signalrService.RemoveSchedulePositions(
-          courseEdition.Room!.RoomId, previousIndexes[1] + 1,
-          previousIndexes[0] + 1, weeks
-        ).toPromise();*/
+        
         if (result.StatusCode >= 400) {
           throw result;
         }
@@ -826,6 +869,7 @@ export class ScheduleComponent implements OnInit {
       }
     }
     this.currentDragEvent = null;
+    this.currentSelectedCourseEdition = null;
     this.isMoveValid = null;
     event.item.data.IsCurrentlyActive = false;
   }
@@ -835,6 +879,7 @@ export class ScheduleComponent implements OnInit {
 
     if (this.isCanceled) {
       this.currentDragEvent = null;
+      this.currentSelectedCourseEdition = null;
       this.isMoveValid = null;
       event.item.data.IsCurrentlyActive = false;
       return;
@@ -863,6 +908,7 @@ export class ScheduleComponent implements OnInit {
 
       }
       this.currentDragEvent = null;
+      this.currentSelectedCourseEdition = null;
       this.isMoveValid = null;
       event.item.data.IsCurrentlyActive = false;
       return;
@@ -929,10 +975,14 @@ export class ScheduleComponent implements OnInit {
 
       } break;
       case RoomSelectionDialogStatus.CANCELED: {
-
+        if (dialogResult.Message != "") {
+          this.snackBar.open(dialogResult.Message, "OK");
+        }
       } break;
       case RoomSelectionDialogStatus.FAILED: {
-        this.snackBar.open(dialogResult?.Message, "OK");
+        if (dialogResult.Message != "") {
+          this.snackBar.open(dialogResult.Message, "OK");
+        }
       } break;
     }
 
@@ -969,6 +1019,7 @@ export class ScheduleComponent implements OnInit {
       }
     }
     this.currentDragEvent = null;
+    this.currentSelectedCourseEdition = null;
     event.item.data.IsCurrentlyActive = false;
   }
 
@@ -977,7 +1028,8 @@ export class ScheduleComponent implements OnInit {
   }
 
   ScheduleSlotEnterPredicate(drag:CdkDrag<CourseEdition>, drop:CdkDropList<CourseEdition[]>) {
-    return drop.data.length < 1;
+    //return drop.data.length < 1;
+    return true;
   }
 
   OnMyCoursesEnter(drag:CdkDragEnter<CourseEdition[]>) {
@@ -1002,6 +1054,8 @@ export class ScheduleComponent implements OnInit {
     const dropContainer = event.source.dropContainer;
     const isScheduleSource = dropContainer.id !== 'my-courses';
     const indexes = (isScheduleSource) ? this.getIndexes(dropContainer.id) : [-1,-1];
+
+    this.currentSelectedCourseEdition = new SelectedCourseEdition(courseEdition, indexes[1], indexes[0]);
 
     try {
       if (!this.isReleased) {
@@ -1102,6 +1156,7 @@ export class ScheduleComponent implements OnInit {
         
       }
       this.currentDragEvent = null;
+      this.currentSelectedCourseEdition = null;
       for (let i = 0; i < this.scheduleSlots.length; ++i) {
         this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
       }
@@ -1114,6 +1169,7 @@ export class ScheduleComponent implements OnInit {
     event.source.dropContainer.connectedTo = [];
 
     this.currentDragEvent = null;
+    this.currentSelectedCourseEdition = null;
     const numberOfSlots = this.settings.periods.length - 1;
     for (let i = 0; i < this.scheduleSlots.length; ++i) {
       this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;

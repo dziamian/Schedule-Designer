@@ -222,14 +222,18 @@ export class RoomSelectionComponent implements OnInit {
           responseSubscription.unsubscribe();
           resolve(messageObject);
         },() => {
-          reject();
+          reject({Message: "Connection error."});
         });
         this.signalrService.AddSchedulePositions(
           courseEdition.CourseId, courseEdition.CourseEditionId,
           selectedRoom!.RoomId, destIndexes[1] + 1, 
           destIndexes[0] + 1, weeks
         );
-        setTimeout(() => responseSubscription.unsubscribe(), 15000);
+        
+        setTimeout(() => {
+          responseSubscription.unsubscribe(); 
+          reject({Message: "Connection error."});
+        }, 15000);
       })
       : ((isMoveValid && !selectedRoom.IsBusy) 
       ? await new Promise<MessageObject>((resolve, reject) => {
@@ -238,7 +242,7 @@ export class RoomSelectionComponent implements OnInit {
           responseSubscription.unsubscribe();
           resolve(messageObject);
         },() => {
-          reject();
+          reject({Message: "Connection error."});
         });
         this.signalrService.ModifySchedulePositions(
           courseEdition.Room!.RoomId, srcIndexes[1] + 1,
@@ -246,8 +250,11 @@ export class RoomSelectionComponent implements OnInit {
           selectedRoom!.RoomId, destIndexes[1] + 1,
           destIndexes[0] + 1, weeks
         );
-        setTimeout(() => this.signalrService.Disconnect(), 1);
-        setTimeout(() => responseSubscription.unsubscribe(), 15000);
+        
+        setTimeout(() => {
+          responseSubscription.unsubscribe(); 
+          reject({Message: "Connection error."});
+        }, 15000);
       })
       : await this.signalrService.AddScheduledMove(
         courseEdition.Room!.RoomId, srcIndexes[1] + 1,

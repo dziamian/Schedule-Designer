@@ -15,7 +15,7 @@
     (cdkDragReleased)="OnReleased($event)"
     (click)="CtrlClick($event)"
     
-    [matTooltip]="ShowFrequency()"
+    [matTooltip]="course.ShowFrequency(settings)"
     matTooltipShowDelay="300"
 
     [matBadge]="course?.CurrentAmount" matBadgePosition="after" matBadgeColor="primary" [matBadgeHidden]="course?.Weeks != null"
@@ -29,7 +29,7 @@
             <img *ngIf="CheckIfMatching()" src="/assets/pin2.svg" class="pin">
         </div>
         <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}<br>
-            {{(course!.FullAmount % 1 == 0) ? course?.FullAmount : Floor(course!.FullAmount)+'/'+Ceil(course!.FullAmount)}} {{(course!.FullAmount > 4) ? 'zajęć' : 'zajęcia'}}
+            {{(course!.FullAmount % 1 == 0) ? course?.FullAmount : Floor(course!.FullAmount)+'/'+Ceil(course!.FullAmount)}} {{(course!.FullAmount > 1) ? 'classes' : 'class'}}
         </i>
         <ng-template #weeksText>
             <i>{{course?.Type?.Name}}, {{course?.Room?.Name}}</i>

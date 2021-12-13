@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as OAuth from 'oauth-1.0a';
 import { Observable } from 'rxjs';
 import { map, min } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';

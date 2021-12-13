@@ -42,7 +42,6 @@ namespace ScheduleDesigner.Repositories
                 Direction = ParameterDirection.Output
             };
             Database.ExecuteSqlRaw("SET @result = (NEXT VALUE FOR dbo.ScheduledMovesIds);", result);
-            Console.WriteLine(result);
             return (int)result.Value;
         }
 

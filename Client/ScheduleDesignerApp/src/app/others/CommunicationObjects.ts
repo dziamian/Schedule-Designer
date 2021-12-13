@@ -1,5 +1,5 @@
 export class MessageObject {
-    Message:string
+    Message:string = "";
 
     constructor(
         public StatusCode:number

@@ -203,9 +203,8 @@ namespace ScheduleDesigner.Hubs
 
                 return moveId;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e.Message);
                 return null;
             }
         }
@@ -480,7 +479,6 @@ namespace ScheduleDesigner.Hubs
                                 var result1a = _scheduledMoveRepo.SaveChanges().Result;
                                 var result1b = _schedulePositionRepo.SaveChanges().Result;
                                 
-                                //var result2a = Clients.Others.blabla;
                                 var result2b = Clients.All.ModifiedSchedulePositions(
                                     includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
                                     returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
@@ -1230,7 +1228,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")] //Clients.Others.blabla //make scheduled moves
+        [Authorize(Policy = "Coordinator")]
         public void ModifySchedulePositions(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks
@@ -1495,7 +1493,6 @@ namespace ScheduleDesigner.Hubs
                             var result1a = _scheduledMoveRepo.SaveChanges().Result;
                             var result1b = _schedulePositionRepo.SaveChanges().Result;
                             
-                            //var result2a = Clients.Others.blabla;
                             var result2b = Clients.Others.ModifiedSchedulePositions(
                                 includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
                                 returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
@@ -1505,7 +1502,7 @@ namespace ScheduleDesigner.Hubs
                                 weeks, destWeeks
                             );
 
-                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 200 });
+                            var result2a = Clients.Caller.SendResponse(new MessageObject { StatusCode = 200 });
                         }
                         finally
                         {
@@ -1564,7 +1561,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")] //make scheduled moves
+        [Authorize(Policy = "Coordinator")]
         public void RemoveSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -1681,8 +1678,6 @@ namespace ScheduleDesigner.Hubs
                         var result1a = _schedulePositionRepo.SaveChanges().Result;
                         var resull1b = _scheduledMoveRepo.SaveChanges().Result;
 
-                        //var result2a = blabla
-                        //var response = Clients.Client.blabla; instead of return
                         var result2b = Clients.Others.RemovedSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             returnableGroupsIds, courseEdition.Groups.Count, coordinatorsIds,
@@ -1726,7 +1721,7 @@ namespace ScheduleDesigner.Hubs
         }
 
         
-        [Authorize(Policy = "Coordinator")] //Clients.All.blabla
+        [Authorize(Policy = "Coordinator")]
         public MessageObject AddScheduledMove(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
@@ -1937,10 +1932,10 @@ namespace ScheduleDesigner.Hubs
                                 return new MessageObject { StatusCode = 400, Message = "This move is possible, so you should not try to schedule it." };
                             }
 
-                            if (_destSchedulePositions.Any(e => e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Contains(userId)))
+                            /*if (_destSchedulePositions.Any(e => e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Contains(userId)))
                             {
                                 return new MessageObject { StatusCode = 400, Message = "Scheduled move cannot collide with your own courses." };
-                            }
+                            }*/
 
                             var _scheduledMovesCountsCondition = _scheduledMoveRepo
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
@@ -2006,14 +2001,6 @@ namespace ScheduleDesigner.Hubs
                             _scheduledMoveRepo.GetAll().AddRange(scheduledMove);
 
                             var result1 = _scheduledMoveRepo.SaveChanges().Result;
-                            /*var result2 = Clients.Others.ModifiedSchedulePositions(
-                                includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
-                                returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
-                                roomId, destRoomId,
-                                periodIndex, destPeriodIndex,
-                                day, destDay,
-                                weeks, destWeeks
-                            );*/
 
                             return new MessageObject { StatusCode = 200 };
                         }
@@ -2055,7 +2042,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")] //Clients.All.blabla
+        [Authorize(Policy = "Coordinator")]
         public MessageObject RemoveScheduledMove(int roomId, int periodIndex, int day, int[] weeks, int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();

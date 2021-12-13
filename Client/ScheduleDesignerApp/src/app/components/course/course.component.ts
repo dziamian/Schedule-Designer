@@ -68,66 +68,6 @@ export class CourseComponent implements OnInit {
     this.release.emit(event);
   }
 
-  private checkFrequency(weeks:number[],termDurationWeeks:number,even:boolean):boolean {
-    const length = weeks.length;
-    const halfTermDurationWeeks = termDurationWeeks / 2;
-    const requiredLength = (even) ? Math.floor(halfTermDurationWeeks) : Math.ceil(halfTermDurationWeeks);
-
-    if (length != requiredLength) {
-      return false;
-    }
-
-    for (let i = 0; i < length; ++i) {
-      if (even && weeks[i] % 2 != 0) {
-        return false;
-      }
-      if (!even && weeks[i] % 2 == 0) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private frequencyToString(weeks:number[]|null):string {
-    if (weeks == null) {
-      return '';
-    }
-    let result = (weeks.length > 1) ? 'Tygodnie ' : 'Tydzień ';  
-    weeks.sort((a, b) => a - b).forEach((week) => {
-      result += week + ', ';
-    });
-    result = result.substring(0, result.length - 2);
-    return result;
-  }
-
-  ShowFrequency():string {
-    if (this.course.Weeks == null) {
-      return '';
-    }
-
-    const courseWeeksLength = this.course.Weeks.length;
-    if (courseWeeksLength == 0) {
-      return '';
-    }
-
-    const termDurationWeeks = this.settings.TermDurationWeeks;
-
-    if (courseWeeksLength == termDurationWeeks) {
-      return 'Tygodniowo';
-    }
-
-    if (this.checkFrequency(this.course.Weeks, termDurationWeeks, true)) {
-      return 'Tygodnie parzyste';
-    }
-
-    if (this.checkFrequency(this.course.Weeks, termDurationWeeks, false)) {
-      return 'Tygodnie nieparzyste';
-    }
-
-    return this.frequencyToString(this.course.Weeks);
-  }
-
   Floor(number:number):number {
     return Math.floor(number);
   }
