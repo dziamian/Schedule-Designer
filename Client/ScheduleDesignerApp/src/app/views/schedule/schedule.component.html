@@ -95,6 +95,8 @@
                                                 <div *ngFor="let course of schedule[dayIndex][timeIndex]; let courseIndex = index" 
                                                     class="schedule-course-field"
                                                     [style.border-bottom]="courseIndex == GetMaxElementIndexOnDay(dayIndex) ? 'none' : ''"
+                                                    
+                                                    [attr.selected]="course.IsCurrentlyActive && currentDragEvent == null"
                                                 >
                                                     <app-course 
                                                         [course]="course"

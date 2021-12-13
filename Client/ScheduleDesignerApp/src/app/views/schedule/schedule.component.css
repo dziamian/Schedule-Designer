@@ -43,6 +43,10 @@
     border-bottom: 1px solid black;
 }
 
+.schedule-course-field[selected="true"] {
+    border: 2px dashed rgb(0, 161, 94) !important;
+}
+
 .schedule-course-field:last-child:not(:only-child) {
     border-bottom: none;
 }
