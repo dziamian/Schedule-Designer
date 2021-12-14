@@ -752,7 +752,7 @@ namespace ScheduleDesigner.Hubs
                         _schedulePositionRepo.GetAll().UpdateRange(_schedulePositions);
 
                         var result1 = _schedulePositionRepo.SaveChanges().Result;
-                        var result2 = Clients.All.LockSchedulePositions(
+                        var result2 = Clients.Others.LockSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             roomId, periodIndex,
                             day, weeks

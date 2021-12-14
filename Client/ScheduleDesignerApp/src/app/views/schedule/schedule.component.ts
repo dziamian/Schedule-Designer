@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDropList, DropListRef, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
-import { CourseEdition, SelectedCourseEdition } from 'src/app/others/CourseEdition';
+import { CourseEdition } from 'src/app/others/CourseEdition';
+import { SelectedCourseEdition } from 'src/app/others/SelectedCourseEdition';
 import { CourseType, RoomType } from 'src/app/others/Types';
 import { Group } from 'src/app/others/Group';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
@@ -31,9 +32,12 @@ export class ScheduleComponent implements OnInit {
   @ViewChildren('scheduleSlots') scheduleSlots : QueryList<DropListRef<CourseEdition>>;
   @ViewChildren(CourseComponent) courses : QueryList<CourseComponent>;
   currentDragEvent : CdkDragStart<CourseEdition> | null;
+  currentDropContainerId:string;
   currentSelectedCourseEdition : SelectedCourseEdition | null;
-  currentDragContainerId:string;
-  currentOpenedDialog : MatDialogRef<RoomSelectionComponent, any> | null;
+  currentSelectedDropContainerId:string;
+  //currentAddRoomSelectionDialog
+  //currentScheduledChangesDialog
+  currentRoomSelectionDialog : MatDialogRef<RoomSelectionComponent, any> | null;
   isReleased:boolean = false;
   isCanceled:boolean = false;
   
@@ -114,6 +118,12 @@ export class ScheduleComponent implements OnInit {
       if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId 
         && courseEdition.Room?.RoomId == roomId) {
         courseEdition.Locked = value;
+        
+        if (value && this.currentSelectedCourseEdition?.CourseEdition == courseEdition) {
+          //TODO: this.currentSelectedCourseEdition.IsMoving = false;
+          this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+          this.currentSelectedCourseEdition = null;
+        }
       }
     });
   }
@@ -223,6 +233,7 @@ export class ScheduleComponent implements OnInit {
         }
       }
       
+      //TODO: active selected course edition //do not check common weeks
       //active drag fields update
       const event = this.currentDragEvent?.source;
       const item = this.currentDragEvent?.source.data;
@@ -246,8 +257,8 @@ export class ScheduleComponent implements OnInit {
             );
           }
         }
-        else if (this.currentDragContainerId !== 'my-courses') {
-          const currentDragIndexes = this.getIndexes(this.currentDragContainerId);
+        else if (this.currentDropContainerId !== 'my-courses') {
+          const currentDragIndexes = this.getIndexes(this.currentDropContainerId);
           if (currentDragIndexes[0] == schedulePosition.Day - 1 
             && currentDragIndexes[1] == schedulePosition.PeriodIndex - 1) {
               this.isMoveValid = false;
@@ -282,18 +293,22 @@ export class ScheduleComponent implements OnInit {
         }
       }
 
-      const currentDialogData = this.currentOpenedDialog?.componentInstance.data;
+      //TODO: currentSelectedCourseEdition check if not changed position (scheduled move)
+      //TODO: currentScheduledChangesDialog check if not changed position (scheduled move)
+
+      const currentDialogData = this.currentRoomSelectionDialog?.componentInstance.data;
       if (currentDialogData != null) {
         const currentIndexes = currentDialogData.SrcIndexes;
         if (currentDialogData.CourseEdition.CourseId == srcSchedulePosition.CourseId
           && currentDialogData.CourseEdition.CourseEditionId == srcSchedulePosition.CourseEditionId && currentDialogData.CourseEdition.Room?.RoomId == srcSchedulePosition.RoomId
           && currentIndexes[1] == srcSchedulePosition.PeriodIndex - 1 && currentIndexes[0] == srcSchedulePosition.Day - 1
           && currentDialogData.CourseEdition.Weeks?.some(c => srcSchedulePosition.Weeks.includes(c))) {
-            if (this.currentOpenedDialog != null) {
-              this.currentOpenedDialog.close(RoomSelectionComponent.CANCELED);
+            if (this.currentRoomSelectionDialog != null) {
+              this.currentRoomSelectionDialog.close(RoomSelectionComponent.CANCELED);
             }
         }
       }
+
 
       //filter for updating board
       if (modifiedSchedulePositions.CoordinatorsIds.includes(this.account.UserId)) {
@@ -388,6 +403,7 @@ export class ScheduleComponent implements OnInit {
         }
       }
 
+      //TODO: active selected course edition //do not check common weeks
       //active drag fields update
       const item = this.currentDragEvent?.source.data;
       const event = this.currentDragEvent?.source;
@@ -410,8 +426,8 @@ export class ScheduleComponent implements OnInit {
             );
           }
         }
-        else if (this.currentDragContainerId !== 'my-courses') {
-          const currentDragIndexes = this.getIndexes(this.currentDragContainerId);
+        else if (this.currentDropContainerId !== 'my-courses') {
+          const currentDragIndexes = this.getIndexes(this.currentDropContainerId);
           if (currentDragIndexes[0] == dstSchedulePosition.Day - 1 
             && currentDragIndexes[1] == dstSchedulePosition.PeriodIndex - 1) {
               this.isMoveValid = false;
@@ -441,8 +457,8 @@ export class ScheduleComponent implements OnInit {
                   0,0
                 );
               }
-            } else if (this.currentDragContainerId !== 'my-courses') {
-              const currentDragIndexes = this.getIndexes(this.currentDragContainerId);
+            } else if (this.currentDropContainerId !== 'my-courses') {
+              const currentDragIndexes = this.getIndexes(this.currentDropContainerId);
               if (currentDragIndexes[0] == srcSchedulePosition.Day - 1 
                 && currentDragIndexes[1] == srcSchedulePosition.PeriodIndex - 1) {
                   this.isMoveValid = true;
@@ -551,6 +567,7 @@ export class ScheduleComponent implements OnInit {
         }
       }
 
+      //TODO: active selected course edition //do not check common weeks
       //active drag fields update
       const item = this.currentDragEvent?.source.data;
       const event = this.currentDragEvent?.source;
@@ -584,8 +601,8 @@ export class ScheduleComponent implements OnInit {
                   0,0
                 );
               }
-            } else if (this.currentDragContainerId !== 'my-courses') {
-              const currentDragIndexes = this.getIndexes(this.currentDragContainerId);
+            } else if (this.currentDropContainerId !== 'my-courses') {
+              const currentDragIndexes = this.getIndexes(this.currentDropContainerId);
               if (currentDragIndexes[0] == schedulePosition.Day - 1 
                 && currentDragIndexes[1] == schedulePosition.PeriodIndex - 1) {
                   this.isMoveValid = true;
@@ -647,6 +664,20 @@ export class ScheduleComponent implements OnInit {
     ]).subscribe(([myCourses, mySchedule]) => {
       this.myCourses = myCourses;
       this.schedule = mySchedule;
+
+      //look for selected course
+      if (this.currentSelectedCourseEdition != null 
+        && this.weeks[index].sort((a,b) => a - b).join(',') === this.currentSelectedCourseEdition.CourseEdition.Weeks?.sort((a,b) => a - b).join(',')) {
+          this.schedule[this.currentSelectedCourseEdition.Day][this.currentSelectedCourseEdition.PeriodIndex]
+            .forEach((courseEdition) => {
+              if (this.currentSelectedCourseEdition?.CourseEdition.CourseId == courseEdition.CourseId
+                && this.currentSelectedCourseEdition?.CourseEdition.CourseEditionId == courseEdition.CourseEditionId
+                && this.currentSelectedCourseEdition?.CourseEdition.Room?.RoomId == courseEdition.Room?.RoomId) {
+                  this.currentSelectedCourseEdition.CourseEdition = courseEdition;
+                  this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = true;
+                }
+          });
+      }
 
       let allGroups = new Array<Group>();
       let allRooms = new Array<Room>();
@@ -767,6 +798,9 @@ export class ScheduleComponent implements OnInit {
   async DropInMyCourses(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>) {
     if (this.isCanceled) {
       this.currentDragEvent = null;
+      if (this.currentSelectedCourseEdition != null) {
+        this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+      }
       this.currentSelectedCourseEdition = null;
       this.isMoveValid = null;
       event.item.data.IsCurrentlyActive = false;
@@ -838,10 +872,17 @@ export class ScheduleComponent implements OnInit {
         }
       }
       catch (error:any) {
-        this.snackBar.open(error.Message, "OK");
+        if (error.Message != undefined) {
+          this.snackBar.open(error.Message, "OK");
+        }
       }
     }
     
+    if (this.currentSelectedCourseEdition != null) {
+      this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+    }
+    this.currentSelectedCourseEdition = null;
+
     if (!isScheduleSource) {
       try {
         const result = await this.signalrService.UnlockCourseEdition(
@@ -869,7 +910,6 @@ export class ScheduleComponent implements OnInit {
       }
     }
     this.currentDragEvent = null;
-    this.currentSelectedCourseEdition = null;
     this.isMoveValid = null;
     event.item.data.IsCurrentlyActive = false;
   }
@@ -879,6 +919,9 @@ export class ScheduleComponent implements OnInit {
 
     if (this.isCanceled) {
       this.currentDragEvent = null;
+      if (this.currentSelectedCourseEdition != null) {
+        this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+      }
       this.currentSelectedCourseEdition = null;
       this.isMoveValid = null;
       event.item.data.IsCurrentlyActive = false;
@@ -908,6 +951,9 @@ export class ScheduleComponent implements OnInit {
 
       }
       this.currentDragEvent = null;
+      if (this.currentSelectedCourseEdition != null) {
+        this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+      }
       this.currentSelectedCourseEdition = null;
       this.isMoveValid = null;
       event.item.data.IsCurrentlyActive = false;
@@ -924,16 +970,21 @@ export class ScheduleComponent implements OnInit {
       this.roomTypes,
       this.isMoveValid!,
       isScheduleSource,
+      true,
       this.account.UserId
     );
 
-    this.currentOpenedDialog = this.dialog.open(RoomSelectionComponent, {
+    this.currentRoomSelectionDialog = this.dialog.open(RoomSelectionComponent, {
       disableClose: true,
       data: dialogData
     });
+    const dialogResult:RoomSelectionDialogResult = await this.currentRoomSelectionDialog.afterClosed().toPromise();
+    this.currentRoomSelectionDialog = null;
     this.isMoveValid = null;
-    const dialogResult:RoomSelectionDialogResult = await this.currentOpenedDialog.afterClosed().toPromise();
-    this.currentOpenedDialog = null;
+    if (this.currentSelectedCourseEdition != null) {
+      this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+    }
+    this.currentSelectedCourseEdition = null;
 
     switch (dialogResult.Status) {
       case RoomSelectionDialogStatus.ACCEPTED: {
@@ -975,12 +1026,13 @@ export class ScheduleComponent implements OnInit {
 
       } break;
       case RoomSelectionDialogStatus.CANCELED: {
-        if (dialogResult.Message != "") {
+        if (dialogResult.Message != undefined) {
+          console.log(dialogResult);
           this.snackBar.open(dialogResult.Message, "OK");
         }
       } break;
       case RoomSelectionDialogStatus.FAILED: {
-        if (dialogResult.Message != "") {
+        if (dialogResult.Message != undefined) {
           this.snackBar.open(dialogResult.Message, "OK");
         }
       } break;
@@ -1018,9 +1070,6 @@ export class ScheduleComponent implements OnInit {
   
       }
     }
-    this.currentDragEvent = null;
-    this.currentSelectedCourseEdition = null;
-    event.item.data.IsCurrentlyActive = false;
   }
 
   IsScheduleSlotDisabled(dayIndex:number, slotIndex:number) {
@@ -1034,13 +1083,13 @@ export class ScheduleComponent implements OnInit {
 
   OnMyCoursesEnter(drag:CdkDragEnter<CourseEdition[]>) {
     this.isMoveValid = null;
-    this.currentDragContainerId = drag.container.id;
+    this.currentDropContainerId = drag.container.id;
   }
 
   OnScheduleSlotEnter(drag:CdkDragEnter<CourseEdition[]>) {
     const indexes = this.getIndexes(drag.container.id);
     this.isMoveValid = this.scheduleSlotsValidity[indexes[0]][indexes[1]];
-    this.currentDragContainerId = drag.container.id;
+    this.currentDropContainerId = drag.container.id;
   }
 
   async OnStartDragging(event:CdkDragStart<CourseEdition>) {
@@ -1055,6 +1104,9 @@ export class ScheduleComponent implements OnInit {
     const isScheduleSource = dropContainer.id !== 'my-courses';
     const indexes = (isScheduleSource) ? this.getIndexes(dropContainer.id) : [-1,-1];
 
+    if (this.currentSelectedCourseEdition != null) {
+      this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+    }
     this.currentSelectedCourseEdition = new SelectedCourseEdition(courseEdition, indexes[1], indexes[0]);
 
     try {
@@ -1084,12 +1136,14 @@ export class ScheduleComponent implements OnInit {
         );
         document.dispatchEvent(new Event('mouseup'));
       } else {
-        if (this.currentOpenedDialog != null) {
-          this.currentOpenedDialog.close(RoomSelectionDialogResult.CANCELED);
+        if (this.currentRoomSelectionDialog != null) {
+          this.currentRoomSelectionDialog.close(RoomSelectionDialogResult.CANCELED);
         }
       }
       courseEdition.Locked = true;
-      this.snackBar.open(error.Message, "OK");
+      if (error.Message != undefined) {
+        this.snackBar.open(error.Message, "OK");
+      }
       return;
     }
 
@@ -1156,6 +1210,9 @@ export class ScheduleComponent implements OnInit {
         
       }
       this.currentDragEvent = null;
+      if (this.currentSelectedCourseEdition != null) {
+        this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+      }
       this.currentSelectedCourseEdition = null;
       for (let i = 0; i < this.scheduleSlots.length; ++i) {
         this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
@@ -1169,19 +1226,64 @@ export class ScheduleComponent implements OnInit {
     event.source.dropContainer.connectedTo = [];
 
     this.currentDragEvent = null;
-    this.currentSelectedCourseEdition = null;
     const numberOfSlots = this.settings.periods.length - 1;
     for (let i = 0; i < this.scheduleSlots.length; ++i) {
       this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
     }
   }
 
-  /*Reset(dayIndex:number, slotIndex:number, event:CourseEdition) {
-    transferArrayItem<CourseEdition>(
-      this.schedule[dayIndex][slotIndex],
-      this.myCourses,
-      0,
-      this.myCourses.length
-    );
-  }*/
+
+  Select(courseEdition:CourseEdition, day:number, periodIndex:number) {
+    if (this.currentSelectedCourseEdition != null) {
+      if (this.currentSelectedCourseEdition.IsMoving) {
+        return;
+      }
+      this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+      if (courseEdition == this.currentSelectedCourseEdition.CourseEdition) {
+        this.currentSelectedCourseEdition = null;
+        return;
+      }
+    }
+    this.currentSelectedCourseEdition = new SelectedCourseEdition(courseEdition, periodIndex, day);
+    courseEdition.IsCurrentlyActive = true;
+  }
+
+  AddRoom() {
+
+  }
+
+  ChangeRoom() {
+
+  }
+
+  ShowScheduledChanges() {
+
+  }
+
+  Move() {
+    if (this.currentSelectedCourseEdition == null) {
+      return;
+    }
+
+    if (this.currentSelectedCourseEdition.IsMoving) {
+      //unlock
+      this.currentSelectedCourseEdition.IsMoving = false;
+      return;
+    }
+
+    //lock
+    //...
+    this.currentSelectedCourseEdition.IsMoving = true;
+  }
+
+  CancelSelection() {
+    if (this.currentSelectedCourseEdition != null) {
+      this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
+    }
+    this.currentSelectedCourseEdition = null;
+  }
+
+  OnMouseEnter(day:number, periodIndex:number) {
+    
+  }
 }

@@ -4,7 +4,8 @@
         ([selectedIndex])="currentTabIndex"
         (selectedIndexChange)="OnTabChange($event)"
     >
-        <mat-tab *ngFor="let label of tabLabels; let tabIndex = index" label="{{label}}">
+        <mat-tab *ngFor="let label of tabLabels; let tabIndex = index" label="{{label}}" 
+            [disabled]="currentSelectedCourseEdition?.IsMoving && currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != weeks[tabIndex].length">
             <ng-template matTabContent>
                 <div *ngIf="!tabLoading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
@@ -32,20 +33,24 @@
                             </div>
                         </div>
                         <div class="schedule-menu">
-                            <button mat-raised-button color="accent" disabled>
-                                Change Room
-                            </button>
-                            <button mat-raised-button color="accent" disabled>
-                                Add Room
-                            </button>
-                            <button mat-raised-button color="accent" disabled>
+                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog?.componentInstance?.data?.IsDragSource || currentSelectedCourseEdition?.IsMoving || !currentSelectedCourseEdition?.CanAddRoom"
+                                (click)="AddRoom()"
+                                >Add Room</button>
+                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog?.componentInstance?.data?.IsDragSource || currentSelectedCourseEdition?.IsMoving || !currentSelectedCourseEdition?.CanChangeRoom"
+                                (click)="ChangeRoom()"
+                                >Change Room</button>
+                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog?.componentInstance?.data?.IsDragSource || currentSelectedCourseEdition?.IsMoving || !currentSelectedCourseEdition?.CanShowScheduledChanges"
+                                (click)="ShowScheduledChanges()"
+                                ><mat-icon>schedule</mat-icon>
                                 Show Scheduled Changes
                             </button>
-                            <button mat-raised-button color="accent" disabled>
-                                Make Move
-                            </button>
-                            <button mat-raised-button color="accent" disabled>
-                                X
+                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog?.componentInstance?.data?.IsDragSource || currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != weeks[tabIndex].length || !currentSelectedCourseEdition?.CanMakeMove"
+                                (click)="Move()"
+                                >{{currentSelectedCourseEdition?.IsMoving ? 'Cancel' : 'Make'}} Move</button>
+                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog?.componentInstance?.data?.IsDragSource || currentSelectedCourseEdition?.IsMoving || !currentSelectedCourseEdition?.CanCancel"
+                                (click)="CancelSelection()"
+                                ><mat-icon>cancel</mat-icon>
+                                Cancel Selection
                             </button>
                         </div>
                         <div class="slot-selected" [style.background]="currentSelectedCourseEdition?.CourseEdition?.Type?.Color">
@@ -88,9 +93,12 @@
                                                 (cdkDropListEntered)="OnScheduleSlotEnter($event)"
                                                 (cdkDropListDropped)="DropInSchedule($event)"
 
+                                                (mouseenter)="OnMouseEnter(dayIndex,timeIndex)"
+
                                                 [attr.valid]="scheduleSlotsValidity[dayIndex][timeIndex]"
                                                 [attr.current]="this.currentDragEvent?.source?.dropContainer?.id === dayIndex + ',' + timeIndex"
                                                 [attr.course]="true"
+                                                [attr.pointer]="currentSelectedCourseEdition?.IsMoving"
                                             >
                                                 <div *ngFor="let course of schedule[dayIndex][timeIndex]; let courseIndex = index" 
                                                     class="schedule-course-field"
@@ -104,6 +112,7 @@
                                                         [weeksOnTab]="weeks[currentTabIndex]"
                                                         (start)="OnStartDragging($event)"
                                                         (release)="OnReleaseDragging($event)"
+                                                        (select)="Select($event,dayIndex,timeIndex)"
                                                         
                                                         [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"
                                                     ></app-course>

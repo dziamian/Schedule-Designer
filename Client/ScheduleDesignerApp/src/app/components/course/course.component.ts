@@ -18,7 +18,7 @@ export class CourseComponent implements OnInit {
   @Input() settings:Settings;
   @Input() weeksOnTab:number[];
   
-  @Output() ctrlClick:EventEmitter<CourseEdition> = new EventEmitter<CourseEdition>();
+  @Output() select:EventEmitter<CourseEdition> = new EventEmitter<CourseEdition>();
   @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() release:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 
@@ -38,10 +38,10 @@ export class CourseComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  CtrlClick(event:MouseEvent) {
-    /*if (!this.cdkCourse.disabled && event.ctrlKey) {
-      this.ctrlClick.emit(this.course);
-    }*/
+  Click(event:MouseEvent) {
+    if (!this.cdkCourse.disabled) {
+      this.select.emit(this.course);
+    }
   }
 
   CheckIfItsMe(id:number):boolean {

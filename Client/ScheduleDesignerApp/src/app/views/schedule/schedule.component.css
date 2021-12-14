@@ -44,7 +44,7 @@
 }
 
 .schedule-course-field[selected="true"] {
-    border: 2px dashed rgb(0, 161, 94) !important;
+    border: 2px dashed #0043be !important;
 }
 
 .schedule-course-field:last-child:not(:only-child) {
@@ -157,9 +157,13 @@
     background-color: rgb(180, 180, 180);
 }
 
+.schedule-content table td[pointer="true"]:hover{ 
+    cursor: pointer;
+}
+
 .schedule-content table td[current="true"] {
     background-color: rgb(255, 255, 255);
-    animation: currentDrop 1.25s infinite;
+    animation: currentDrop 1.75s infinite;
 }
 
 @keyframes currentDrop {

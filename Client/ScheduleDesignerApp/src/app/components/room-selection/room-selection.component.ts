@@ -35,7 +35,7 @@ export class RoomSelectionComponent implements OnInit {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
     });
-    this.signalrService.lastAddedSchedulePositions.subscribe((addedSchedulePositions) => {
+    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       const coordinatorsIds = addedSchedulePositions.CoordinatorsIds;
       const groupsIds = addedSchedulePositions.GroupsIds;
       const periodIndex = addedSchedulePositions.SchedulePosition.PeriodIndex;
@@ -56,9 +56,6 @@ export class RoomSelectionComponent implements OnInit {
           if (coordinatorsIds.includes(this.data.FilterCoordinatorId) || !this.data.CanBeScheduled) {
             setTimeout(() => {
               this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
-              this.signalrService.lastAddedSchedulePositions.next(
-                new AddedSchedulePositions([],-1,[], new SchedulePosition(-1,-1,-1,-1,-1,[]))
-              );
             });
             return;
           }
@@ -73,7 +70,7 @@ export class RoomSelectionComponent implements OnInit {
       }
     });
 
-    this.signalrService.lastModifiedSchedulePositions.subscribe((modifiedSchedulePositions) => {
+    this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       const coordinatorsIds = modifiedSchedulePositions.CoordinatorsIds;
       const groupsIds = modifiedSchedulePositions.GroupsIds;
       const dstPeriodIndex = modifiedSchedulePositions.DestinationSchedulePosition.PeriodIndex;
@@ -96,11 +93,6 @@ export class RoomSelectionComponent implements OnInit {
               if (coordinatorsIds.includes(this.data.FilterCoordinatorId) || !this.data.CanBeScheduled) {
                 setTimeout(() => {
                   this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
-                  this.signalrService.lastModifiedSchedulePositions.next(
-                    new ModifiedSchedulePositions([],-1,[],
-                    new SchedulePosition(-1,-1,-1,-1,-1,[]),
-                    new SchedulePosition(-1,-1,-1,-1,-1,[]))
-                  );
                 });
                 return;
               }
@@ -130,7 +122,7 @@ export class RoomSelectionComponent implements OnInit {
       }
     });
 
-    this.signalrService.lastRemovedSchedulePositions.subscribe((removedSchedulePositions) => {
+    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       const periodIndex = removedSchedulePositions.SchedulePosition.PeriodIndex;
       const day = removedSchedulePositions.SchedulePosition.Day;
       const weeks = removedSchedulePositions.SchedulePosition.Weeks;

@@ -82,12 +82,3 @@ export class CourseEdition {
         return this.frequencyToString(this.Weeks);
     }
 }
-
-export class SelectedCourseEdition {
-    
-    constructor(
-        public CourseEdition:CourseEdition,
-        public PeriodIndex:number,
-        public Day:number
-    ) {}
-}
