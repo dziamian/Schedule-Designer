@@ -55,13 +55,15 @@
                             </button>
                         </div>
                         <div class="slot-selected" [style.background]="currentSelectedCourseEdition?.CourseEdition?.Type?.Color">
-                            <span *ngIf="currentSelectedCourseEdition != null">
-                                {{currentSelectedCourseEdition.CourseEdition.Name}} - {{currentSelectedCourseEdition.CourseEdition.Type.Name}},<br> 
-                                {{scheduleDayLabels[currentSelectedCourseEdition.Day]}}: {{scheduleTimeLabels[currentSelectedCourseEdition.PeriodIndex]}},<br> 
-                                <span *ngIf="currentSelectedCourseEdition.CourseEdition.Weeks != null">
+                            <ng-container *ngIf="currentSelectedCourseEdition != null">
+                                {{currentSelectedCourseEdition.CourseEdition.Name}} - {{currentSelectedCourseEdition.CourseEdition.Type.Name}}<br>
+                                <ng-container *ngIf="currentSelectedCourseEdition.PeriodIndex > -1 && currentSelectedCourseEdition.Day > -1">
+                                    {{scheduleDayLabels[currentSelectedCourseEdition.Day]}}: {{scheduleTimeLabels[currentSelectedCourseEdition.PeriodIndex]}}<br>
+                                </ng-container>
+                                <ng-container *ngIf="currentSelectedCourseEdition.CourseEdition.Weeks != null">
                                     {{currentSelectedCourseEdition.CourseEdition.ShowFrequency(settings)}}
-                                </span>
-                            </span>
+                                </ng-container>
+                            </ng-container>
                         </div>
                         <div class="slot-status" [style.background]="isMoveValid ? '#6ef84c' : ((isMoveValid != null) ? '#f86e4c' : 'none')">
                             {{isMoveValid ? 'Correct movement' : ((isMoveValid != null) ? 'Only scheduling' : '')}}

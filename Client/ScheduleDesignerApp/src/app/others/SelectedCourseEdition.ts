@@ -10,7 +10,7 @@ export class SelectedCourseEdition {
 
     constructor(
         public CourseEdition:CourseEdition,
-        public PeriodIndex:number,
-        public Day:number
+        public PeriodIndex:number = -1,
+        public Day:number = -1
     ) {}
 }
