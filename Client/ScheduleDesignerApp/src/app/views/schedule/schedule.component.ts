@@ -48,7 +48,7 @@ export class ScheduleComponent implements OnInit {
   connectionStatus:boolean = false;
   
   settings:Settings;
-  //frequencies:number[];
+  frequencies:number[];
   weeks:number[][];
   
   currentTabIndex:number = 0;
