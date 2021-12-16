@@ -5,7 +5,7 @@
         (selectedIndexChange)="OnTabChange($event)"
     >
         <mat-tab *ngFor="let label of tabLabels; let tabIndex = index" label="{{label}}" 
-            [disabled]="currentSelectedCourseEdition?.IsMoving && currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != weeks[tabIndex].length">
+            [disabled]="currentSelectedCourseEdition != null && currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != weeks[tabIndex].length">
             <ng-template matTabContent>
                 <div *ngIf="!tabLoading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
@@ -45,7 +45,7 @@
                                 ><mat-icon>schedule</mat-icon>
                                 Show Scheduled Changes
                             </button>
-                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog != null || currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != weeks[tabIndex].length || !currentSelectedCourseEdition?.CanMakeMove"
+                            <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog != null || !currentSelectedCourseEdition?.CanMakeMove"
                                 (click)="Move()"
                                 >{{currentSelectedCourseEdition?.IsMoving ? 'Cancel' : 'Make'}} Move</button>
                             <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog != null || currentSelectedCourseEdition?.IsMoving || !currentSelectedCourseEdition?.CanCancel"
