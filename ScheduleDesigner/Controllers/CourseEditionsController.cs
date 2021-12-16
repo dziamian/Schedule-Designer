@@ -102,15 +102,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "Coordinator")]
         [EnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
-        public async Task<IActionResult> GetMyCourseEditions([FromODataUri] double Frequency)
-        {
-            return await GetMyCourseEditions(Frequency, true);
-        }
-
-        [Authorize(Policy = "Coordinator")]
-        [EnableQuery(MaxExpansionDepth = 3)]
-        [HttpGet]
-        public async Task<IActionResult> GetMyCourseEditions([FromODataUri] double Frequency, [FromODataUri] bool RoundUp)
+        public async Task<IActionResult> GetMyCourseEditions([FromODataUri] int Frequency)
         {
             var _settings = await _settingsRepo.GetSettings();
             if (_settings == null)
@@ -132,10 +124,7 @@ namespace ScheduleDesigner.Controllers
                 
                 var _courseEditions = _courseEditionRepo
                     .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) 
-                        && ((RoundUp 
-                            && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency) 
-                        || (!RoundUp 
-                            && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Math.Floor(Frequency))))
+                        && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency) 
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
                     .Include(e => e.Coordinators);
@@ -151,8 +140,8 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "Coordinator")]
         [EnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
-        [ODataRoute("({key1},{key2})/GetMyCourseEdition(Frequency={Frequency},RoundUp={RoundUp})")]
-        public async Task<IActionResult> GetMyCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] double Frequency, [FromODataUri] bool RoundUp)
+        [ODataRoute("({key1},{key2})/GetMyCourseEdition(Frequency={Frequency})")]
+        public async Task<IActionResult> GetMyCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] double Frequency)
         {
             var _settings = await _settingsRepo.GetSettings();
             if (_settings == null)
@@ -175,10 +164,7 @@ namespace ScheduleDesigner.Controllers
                 var _courseEditions = _courseEditionRepo
                     .Get(e => e.CourseId == key1 && e.CourseEditionId == key2
                         && e.Coordinators.Any(e => e.CoordinatorId == userId)
-                        && ((RoundUp
-                            && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency)
-                        || (!RoundUp
-                            && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Math.Floor(Frequency))))
+                        && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency)
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
                     .Include(e => e.Coordinators);

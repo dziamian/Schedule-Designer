@@ -263,19 +263,13 @@ namespace ScheduleDesigner
 
             var getMyCourseEditionsFunction = builder.EntityType<CourseEdition>().Collection
                 .Function("GetMyCourseEditions")
-                .ReturnsCollectionFromEntitySet<CourseEdition>("CourseEditions");
-            getMyCourseEditionsFunction
+                .ReturnsCollectionFromEntitySet<CourseEdition>("CourseEditions")
                 .Parameter<double>("Frequency");
-            getMyCourseEditionsFunction
-                .Parameter<bool>("RoundUp").Optional().HasDefaultValue("true");
 
             var getMyCourseEditionFunction = builder.EntityType<CourseEdition>()
                 .Function("GetMyCourseEdition")
-                .ReturnsFromEntitySet<CourseEdition>("CourseEditions");
-            getMyCourseEditionFunction
-                .Parameter<double>("Frequency");
-            getMyCourseEditionFunction
-                .Parameter<bool>("RoundUp");
+                .ReturnsFromEntitySet<CourseEdition>("CourseEditions")
+                .Parameter<int>("Frequency");
 
             builder.EntityType<CourseEdition>()
                 .Function("GetBusyPeriods")

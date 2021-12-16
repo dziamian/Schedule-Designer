@@ -234,11 +234,11 @@ export class ScheduleDesignerApiService {
     courseEditionId:number,
     frequency:number, 
     courseTypes:Map<number,CourseType>, 
-    settings:Settings, 
-    roundUp:boolean = true
+    settings:Settings
   ):Observable<CourseEdition[]> {
+    const FREQUENCY = Math.floor(frequency);
     const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(Frequency=${frequency},RoundUp=${roundUp})?` +
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(Frequency=${FREQUENCY})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
@@ -275,13 +275,12 @@ export class ScheduleDesignerApiService {
         const scheduleAmount = response['SchedulePositions@odata.count'];
         const fullAmount = response.Course.UnitsMinutes / settings.CourseDurationMinutes;
         const fullAmountInteger = Math.ceil(fullAmount);
-        const frequencyInteger = (roundUp) ? Math.ceil(frequency) : Math.floor(frequency);
-        const coursesAmount = Math.floor((fullAmountInteger - scheduleAmount) / frequencyInteger);
+        const coursesAmount = Math.floor((fullAmountInteger - scheduleAmount) / FREQUENCY);
         for (let i = 0; i < coursesAmount; ++i) {
           let courseEdition = new CourseEdition(
             response.CourseId, response.CourseEditionId,
             response.Course.Name, courseTypes.get(response.Course.CourseTypeId) ?? new CourseType(0, "", ""),
-            (roundUp) ? Math.ceil(frequency) : Math.floor(frequency),
+            FREQUENCY,
             groups, coordinators
           );
           courseEdition.Locked = response.LockUserId;
@@ -298,11 +297,11 @@ export class ScheduleDesignerApiService {
   public GetMyCourseEditions(
     frequency:number, 
     courseTypes:Map<number,CourseType>, 
-    settings:Settings, 
-    roundUp:boolean = true
+    settings:Settings
   ):Observable<CourseEdition[]> {
+    const FREQUENCY = Math.floor(frequency);
     const request = {
-      url: this.baseUrl + `/courseEditions/Service.GetMyCourseEditions(Frequency=${frequency},RoundUp=${roundUp})?` +
+      url: this.baseUrl + `/courseEditions/Service.GetMyCourseEditions(Frequency=${FREQUENCY})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
@@ -340,13 +339,12 @@ export class ScheduleDesignerApiService {
           const scheduleAmount = value['SchedulePositions@odata.count'];
           const fullAmount = value.Course.UnitsMinutes / settings.CourseDurationMinutes;
           const fullAmountInteger = Math.ceil(fullAmount);
-          const frequencyInteger = (roundUp) ? Math.ceil(frequency) : Math.floor(frequency);
-          const coursesAmount = Math.floor((fullAmountInteger - scheduleAmount) / frequencyInteger);
+          const coursesAmount = Math.floor((fullAmountInteger - scheduleAmount) / FREQUENCY);
           for (let i = 0; i < coursesAmount; ++i) {
             let courseEdition = new CourseEdition(
               value.CourseId, value.CourseEditionId,
               value.Course.Name, courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
-              (roundUp) ? Math.ceil(frequency) : Math.floor(frequency),
+              FREQUENCY,
               groups, coordinators
             );
             courseEdition.Locked = value.LockUserId;

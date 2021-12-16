@@ -48,7 +48,6 @@ export class ScheduleComponent implements OnInit {
   connectionStatus:boolean = false;
   
   settings:Settings;
-  frequencies:number[];
   weeks:number[][];
   
   currentTabIndex:number = 0;
@@ -550,8 +549,8 @@ export class ScheduleComponent implements OnInit {
           forkJoin([
             this.scheduleDesignerApiService.GetMyCourseEdition(
               schedulePosition.CourseId, schedulePosition.CourseEditionId,
-              this.frequencies[this.currentTabIndex], this.courseTypes,
-              this.settings, this.currentTabIndex != 1
+              this.weeks[this.currentTabIndex].length, this.courseTypes,
+              this.settings
             ),
             this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds)
           ]).subscribe(([myNewCourses, groupFullNames]) => {
@@ -683,10 +682,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   private getMyCourseEditionsAndScheduleAsCoordinator(index:number) {
-    let roundUp = (index != 1);
 
     this.currentLoadingSubscription = forkJoin([
-      this.scheduleDesignerApiService.GetMyCourseEditions(this.frequencies[index], this.courseTypes, this.settings, roundUp),
+      this.scheduleDesignerApiService.GetMyCourseEditions(this.weeks[this.currentTabIndex].length, this.courseTypes, this.settings),
       this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.weeks[index], this.courseTypes, this.settings)
     ]).subscribe(([myCourses, mySchedule]) => {
       this.myCourses = myCourses;
@@ -750,13 +748,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   private setFrequenciesAndWeeks() {
-    //this.frequencies = [this.settings.TermDurationWeeks, this.settings.TermDurationWeeks / 2, this.settings.TermDurationWeeks / 2];
-    //TEST
-    this.frequencies = [this.settings.TermDurationWeeks, 7, this.settings.TermDurationWeeks / 2];
     this.weeks = [[],[],[]];
 
     for (let i:number = 0; i < this.settings.TermDurationWeeks; ++i) {
-      this.frequencies.push(1);
       const weekNumber = i + 1;
       this.weeks[0].push(weekNumber);
       this.weeks.push([weekNumber]);
@@ -766,8 +760,6 @@ export class ScheduleComponent implements OnInit {
         this.weeks[2].push(weekNumber);
       }
     }
-    //TEST
-    this.weeks[1] = [1,2,3,4,5,6,7];
   }
 
   private initializeValues() {
