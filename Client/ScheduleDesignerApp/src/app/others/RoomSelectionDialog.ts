@@ -14,7 +14,6 @@ export class RoomSelectionDialogData {
         public RoomTypes:Map<number,RoomType>,
         public IsMoveValid:boolean,
         public CanBeScheduled:boolean,
-        public IsDragSource:boolean,
         public FilterCoordinatorId:number
     ) { }
 }

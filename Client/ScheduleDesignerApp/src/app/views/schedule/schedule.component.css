@@ -39,10 +39,6 @@
     margin-top: 0.8vh;
 }
 
-.schedule-course-field {
-    border-bottom: 1px solid black;
-}
-
 .schedule-course-field[selected="true"] ::ng-deep .course {
     border: 2px dashed #0043be !important;
 }
