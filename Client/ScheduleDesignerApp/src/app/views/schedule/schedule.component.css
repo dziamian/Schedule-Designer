@@ -43,7 +43,7 @@
     border-bottom: 1px solid black;
 }
 
-.schedule-course-field[selected="true"] {
+.schedule-course-field[selected="true"] ::ng-deep .course {
     border: 2px dashed #0043be !important;
 }
 
@@ -157,8 +157,10 @@
     background-color: rgb(180, 180, 180);
 }
 
-.schedule-content table td[pointer="true"]:hover{ 
+.schedule-content table td[pointer="true"]:empty:hover{ 
     cursor: pointer;
+    border: 3px dashed rgb(102, 102, 102);
+    box-sizing: border-box;
 }
 
 .schedule-content table td[current="true"] {

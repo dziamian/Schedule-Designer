@@ -9,7 +9,7 @@
     )' : course?.Type?.Color"
     
     cdkDrag
-    [cdkDragDisabled]="course?.Locked || CheckIfNotMatching()"
+    [cdkDragDisabled]="course?.Locked || CheckIfNotMatching() || isSelectedMoving"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"
@@ -18,7 +18,7 @@
     [matTooltip]="course.ShowFrequency(settings)"
     matTooltipShowDelay="300"
 
-    [matBadge]="course?.CurrentAmount" matBadgePosition="after" matBadgeColor="primary" [matBadgeHidden]="course?.Weeks != null"
+    [matBadge]="(course?.Weeks == null) ? course?.CurrentAmount : course?.ScheduledChanges" matBadgePosition="after" [matBadgeColor]="(course?.Weeks == null) ? 'primary' : 'accent'" [matBadgeHidden]="course?.Weeks != null && course?.ScheduledChanges == 0"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>
     <div [matBadge]="course?.ScheduleAmount" matBadgePosition="before" matBadgeColor="warn" [matBadgeHidden]="course?.Weeks != null"

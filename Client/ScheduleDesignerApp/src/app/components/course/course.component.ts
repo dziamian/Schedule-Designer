@@ -17,6 +17,7 @@ export class CourseComponent implements OnInit {
   @Input() course:CourseEdition;
   @Input() settings:Settings;
   @Input() weeksOnTab:number[];
+  @Input() isSelectedMoving:boolean|undefined;
   
   @Output() select:EventEmitter<CourseEdition> = new EventEmitter<CourseEdition>();
   @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();

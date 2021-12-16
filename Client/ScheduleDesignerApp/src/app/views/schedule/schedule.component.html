@@ -26,6 +26,7 @@
                                     <app-course 
                                         [course]="course"
                                         [settings]="settings"
+                                        [isSelectedMoving]="currentSelectedCourseEdition?.IsMoving"
                                         (start)="OnStartDragging($event)"
                                         (release)="OnReleaseDragging($event)"
                                     ></app-course>
@@ -94,6 +95,7 @@
                                                 (cdkDropListDropped)="DropInSchedule($event)"
 
                                                 (mouseenter)="OnMouseEnter(dayIndex,timeIndex)"
+                                                (mouseleave)="OnMouseLeave()"
 
                                                 [attr.valid]="scheduleSlotsValidity[dayIndex][timeIndex]"
                                                 [attr.current]="this.currentDragEvent?.source?.dropContainer?.id === dayIndex + ',' + timeIndex"
@@ -110,6 +112,7 @@
                                                         [course]="course"
                                                         [settings]="settings"
                                                         [weeksOnTab]="weeks[currentTabIndex]"
+                                                        [isSelectedMoving]="currentSelectedCourseEdition?.IsMoving"
                                                         (start)="OnStartDragging($event)"
                                                         (release)="OnReleaseDragging($event)"
                                                         (select)="Select($event,dayIndex,timeIndex)"

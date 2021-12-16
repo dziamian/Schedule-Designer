@@ -253,7 +253,6 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => {
         let myCourseEditions = new Array<CourseEdition>();
-        console.log(response);
         
         let groups = new Array<Group>();
         response.Groups.forEach((element : any) => {
