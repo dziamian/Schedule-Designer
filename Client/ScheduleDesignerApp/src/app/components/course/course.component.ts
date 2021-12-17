@@ -19,7 +19,7 @@ export class CourseComponent implements OnInit {
   @Input() weeksOnTab:number[];
   @Input() isSelectedMoving:boolean|undefined;
   
-  @Output() select:EventEmitter<CourseEdition> = new EventEmitter<CourseEdition>();
+  @Output() select:EventEmitter<{courseEdition:CourseEdition,isDisabled:boolean}> = new EventEmitter<{courseEdition:CourseEdition,isDisabled:boolean}>();
   @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() release:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 
@@ -40,9 +40,7 @@ export class CourseComponent implements OnInit {
   }
 
   Click(event:MouseEvent) {
-    if (!this.cdkCourse.disabled) {
-      this.select.emit(this.course);
-    }
+    this.select.emit({courseEdition: this.course, isDisabled: this.cdkCourse.disabled});
   }
 
   CheckIfItsMe(id:number):boolean {
@@ -59,6 +57,10 @@ export class CourseComponent implements OnInit {
     if (this.course.Weeks == null) return false;
     return this.weeksOnTab?.sort((a,b) => a - b).join(',') 
       === this.course.Weeks?.sort((a,b) => a - b).join(',');
+  }
+
+  CheckIfAnyProposition():boolean {
+    return this.course.ScheduledMoves.some((scheduledMove) => !scheduledMove.IsConfirmed);
   }
 
   OnStarted(event:CdkDragStart) {

@@ -3,13 +3,13 @@ import { CourseType } from "./Types";
 import { Group } from "./Group";
 import { Room } from "./Room";
 import { Settings } from "./Settings";
+import { ScheduledMove } from "./ScheduledMove";
 
 export class CourseEdition {
     IsCurrentlyActive:boolean = false;
     FullAmount:number = 0;
     ScheduleAmount:number = 0;
-    ScheduledChanges:number = 1;
-    IsProposition:boolean = false;
+    ScheduledMoves:ScheduledMove[] = [];
     Weeks:number[]|null = null;
     Room:Room|null = null;
     Locked:boolean = false;

@@ -43,7 +43,7 @@
                             <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog != null || currentSelectedCourseEdition?.IsMoving || !currentSelectedCourseEdition?.CanShowScheduledChanges"
                                 (click)="ShowScheduledChanges()"
                                 ><mat-icon>schedule</mat-icon>
-                                Show Scheduled Changes
+                                Manage Scheduled Changes
                             </button>
                             <button mat-raised-button color="accent" [disabled]="currentDragEvent != null || currentRoomSelectionDialog != null || !currentSelectedCourseEdition?.CanMakeMove"
                                 (click)="Move()"

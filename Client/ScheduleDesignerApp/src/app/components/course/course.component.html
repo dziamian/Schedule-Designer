@@ -18,7 +18,12 @@
     [matTooltip]="course.ShowFrequency(settings)"
     matTooltipShowDelay="300"
 
-    [matBadge]="(course?.Weeks == null) ? course?.CurrentAmount : course?.ScheduledChanges" matBadgePosition="after" [matBadgeColor]="(course?.Weeks == null) ? 'primary' : 'accent'" [matBadgeHidden]="course?.Weeks != null && course?.ScheduledChanges == 0"
+    [matBadge]="(course?.Weeks == null) ? course?.CurrentAmount : course?.ScheduledMoves?.length" 
+    matBadgePosition="after" 
+    [matBadgeColor]="(course?.Weeks == null) ? 'primary' : 'accent'" 
+    [matBadgeHidden]="course?.Weeks != null && course?.ScheduledMoves?.length == 0"
+
+    [attr.proposition]="CheckIfAnyProposition()"
 >
     <div class="course-placeholder" *cdkDragPlaceholder></div>
     <div [matBadge]="course?.ScheduleAmount" matBadgePosition="before" matBadgeColor="warn" [matBadgeHidden]="course?.Weeks != null"

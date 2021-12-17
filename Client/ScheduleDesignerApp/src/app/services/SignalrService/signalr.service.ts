@@ -4,6 +4,7 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, RemovedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
+import { ScheduledMove } from 'src/app/others/ScheduledMove';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,9 @@ export class SignalrService implements OnDestroy {
   lastAddedSchedulePositions:BehaviorSubject<AddedSchedulePositions>
   lastModifiedSchedulePositions:BehaviorSubject<ModifiedSchedulePositions>
   lastRemovedSchedulePositions:BehaviorSubject<RemovedSchedulePositions>
+
+  lastAddedScheduledMove:BehaviorSubject<{scheduledMove:ScheduledMove, sourceSchedulePosition:SchedulePosition}>
+  lastRemovedScheduledMove:BehaviorSubject<{moveId:number, sourceSchedulePosition:SchedulePosition}>
 
   lastResponse:BehaviorSubject<MessageObject>
 
@@ -51,11 +55,23 @@ export class SignalrService implements OnDestroy {
     this.lastModifiedSchedulePositions = new BehaviorSubject<ModifiedSchedulePositions>(
       new ModifiedSchedulePositions([],-1,[],
       new SchedulePosition(-1,-1,-1,-1,-1,[]),
-      new SchedulePosition(-1,-1,-1,-1,-1,[]))
+      new SchedulePosition(-1,-1,-1,-1,-1,[]),
+      [])
     );
     
     this.lastRemovedSchedulePositions = new BehaviorSubject<RemovedSchedulePositions>(
-      new RemovedSchedulePositions([],-1,[],new SchedulePosition(-1,-1,-1,-1,-1,[]))
+      new RemovedSchedulePositions(
+        [],-1,[],
+        new SchedulePosition(-1,-1,-1,-1,-1,[]),
+        [])
+    );
+
+    this.lastAddedScheduledMove = new BehaviorSubject<{scheduledMove:ScheduledMove, sourceSchedulePosition:SchedulePosition}>(
+      {scheduledMove: new ScheduledMove(-1,true),sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
+    );
+
+    this.lastRemovedScheduledMove = new BehaviorSubject<{moveId:number, sourceSchedulePosition:SchedulePosition}>(
+      {moveId: -1,sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
     );
 
     this.lastResponse = new BehaviorSubject<MessageObject>(
@@ -290,7 +306,8 @@ export class SignalrService implements OnDestroy {
       previousRoomId, newRoomId,
       previousPeriodIndex, newPeriodIndex,
       previousDay, newDay,
-      previousWeeks, newWeeks
+      previousWeeks, newWeeks,
+      movesIds
     ) => {
       this.lastModifiedSchedulePositions.next(
         new ModifiedSchedulePositions(
@@ -304,7 +321,8 @@ export class SignalrService implements OnDestroy {
             courseId, courseEditionId,
             newRoomId, newPeriodIndex,
             newDay, newWeeks
-          )
+          ),
+          movesIds
         )
       );
     });
@@ -313,7 +331,8 @@ export class SignalrService implements OnDestroy {
       courseId, courseEditionId,
       groupsIds, mainGroupsAmount, coordinatorsIds,
       roomId, periodIndex,
-      day, weeks
+      day, weeks,
+      movesIds
     ) => {
       this.lastRemovedSchedulePositions.next(
         new RemovedSchedulePositions(
@@ -322,8 +341,47 @@ export class SignalrService implements OnDestroy {
             courseId, courseEditionId,
             roomId, periodIndex,
             day, weeks
-          )
+          ),
+          movesIds
         )
+      );
+    });
+
+    this.connection.on('AddedScheduledMove', (
+      moveId, isConfirmed,
+      courseId, courseEditionId,
+      roomId, periodIndex,
+      day, weeks
+    ) => {
+      this.lastAddedScheduledMove.next(
+        {
+          scheduledMove: new ScheduledMove(
+            moveId, isConfirmed
+          ),
+          sourceSchedulePosition: new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        }
+      );
+    });
+
+    this.connection.on('RemovedScheduledMove', (
+      moveId,
+      courseId, courseEditionId,
+      roomId, periodIndex,
+      day, weeks
+    ) => {
+      this.lastRemovedScheduledMove.next(
+        {
+          moveId: moveId,
+          sourceSchedulePosition: new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        }
       );
     });
 

@@ -485,7 +485,8 @@ namespace ScheduleDesigner.Hubs
                                     candidateSourceRoomId, candidateDestRoomId,
                                     srcPeriodIndex, destPeriodIndex,
                                     srcDay, destDay,
-                                    srcWeeks, destWeeks
+                                    srcWeeks, destWeeks,
+                                    movesIds.ToArray()
                                 );
 
                                 _skippedMovesIds.Add((int)currentMoveId);
@@ -1499,7 +1500,8 @@ namespace ScheduleDesigner.Hubs
                                 roomId, destRoomId,
                                 periodIndex, destPeriodIndex,
                                 day, destDay,
-                                weeks, destWeeks
+                                weeks, destWeeks,
+                                movesIds.ToArray()
                             );
 
                             var result2a = Clients.Caller.SendResponse(new MessageObject { StatusCode = 200 });
@@ -1682,7 +1684,8 @@ namespace ScheduleDesigner.Hubs
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             returnableGroupsIds, courseEdition.Groups.Count, coordinatorsIds,
                             roomId, periodIndex,
-                            day, weeks
+                            day, weeks,
+                            movesIds.ToArray()
                         );
 
                         Clients.Caller.SendResponse(new MessageObject { StatusCode = 204 });
@@ -2001,6 +2004,12 @@ namespace ScheduleDesigner.Hubs
                             _scheduledMoveRepo.GetAll().AddRange(scheduledMove);
 
                             var result1 = _scheduledMoveRepo.SaveChanges().Result;
+                            var result2 = Clients.All.AddedScheduledMove(
+                                scheduledMoveId, true,
+                                courseEdition.CourseId, courseEdition.CourseEditionId,
+                                roomId, periodIndex,
+                                day, weeks
+                            );
 
                             return new MessageObject { StatusCode = 200 };
                         }
@@ -2245,6 +2254,7 @@ namespace ScheduleDesigner.Hubs
                                 .OrderBy(e => e.MoveId).ToList();
 
                             var _scheduledMovesCount = _scheduledMovesCountsCondition.Count();
+                            int moveId = 0;
                             var isFound = false;
                             for (var i = 0; i < _scheduledMovesCount; ++i)
                             {
@@ -2252,6 +2262,8 @@ namespace ScheduleDesigner.Hubs
                                 {
                                     _scheduledMoveRepo
                                         .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
+
+                                    moveId = _scheduledMovesCountsCondition[i].MoveId;
                                     isFound = true;
                                     break;
                                 }
@@ -2263,14 +2275,12 @@ namespace ScheduleDesigner.Hubs
                             }
 
                             var result1 = _scheduledMoveRepo.SaveChanges().Result;
-                            /*var result2 = Clients.Others.ModifiedSchedulePositions(
-                                includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
-                                returnableGroupsIds, includableCourseEdition.Groups.Count, coordinatorsIds,
-                                roomId, destRoomId,
-                                periodIndex, destPeriodIndex,
-                                day, destDay,
-                                weeks, destWeeks
-                            );*/
+                            var result2 = Clients.All.RemovedScheduledMove(
+                                moveId,
+                                courseEdition.CourseId, courseEdition.CourseEditionId,
+                                roomId, periodIndex,
+                                day, weeks
+                            );
 
                             return new MessageObject { StatusCode = 200 };
                         }

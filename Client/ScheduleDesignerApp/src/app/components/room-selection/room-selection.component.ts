@@ -19,6 +19,7 @@ export class RoomSelectionComponent implements OnInit {
 
   selectedRoom:Room|null;
   actionActivated:boolean = false;
+  isRoomOnlyChanging:boolean;
 
   courseRooms:Room[] = [];
   mappedCourseRooms:Map<number,Room[]>;
@@ -30,7 +31,11 @@ export class RoomSelectionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data:RoomSelectionDialogData,
     public dialogRef:MatDialogRef<RoomSelectionComponent>,
     private signalrService:SignalrService,
-  ) { }
+  ) { 
+    this.isRoomOnlyChanging = data.SrcIndexes[0] == data.DestIndexes[0] 
+      && data.SrcIndexes[1] == data.DestIndexes[1] 
+      && data.CourseEdition.Weeks?.sort((a,b) => a - b).join(',') === data.Weeks.sort((a,b) => a - b).join(',');
+  }
 
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {

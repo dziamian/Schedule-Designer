@@ -34,11 +34,25 @@ namespace ScheduleDesigner.Hubs.Interfaces
             int previousRoomId, int newRoomId,
             int previousPeriodIndex, int newPeriodIndex,
             int previousDay, int newDay,
-            int[] previousWeeks, int[] newWeeks);
+            int[] previousWeeks, int[] newWeeks,
+            int[] movesIds);
 
         Task RemovedSchedulePositions(
             int courseId, int courseEditionId,
             int[] groupsIds, int mainGroupsAmount, int[] coordinatorsIds,
+            int roomId, int periodIndex,
+            int day, int[] weeks,
+            int[] movesIds);
+
+        Task AddedScheduledMove(
+            int moveId, bool isConfirmed,
+            int courseId, int courseEditionId,
+            int roomId, int periodIndex,
+            int day, int[] weeks);
+
+        Task RemovedScheduledMove(
+            int moveId,
+            int courseId, int courseEditionId,
             int roomId, int periodIndex,
             int day, int[] weeks);
 

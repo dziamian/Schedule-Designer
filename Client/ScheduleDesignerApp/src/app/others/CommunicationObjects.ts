@@ -35,7 +35,8 @@ export class ModifiedSchedulePositions {
         public MainGroupsAmount:number,
         public CoordinatorsIds:number[],
         public SourceSchedulePosition:SchedulePosition,
-        public DestinationSchedulePosition:SchedulePosition
+        public DestinationSchedulePosition:SchedulePosition,
+        public MovesIds:number[]
     ) {}
 }
 
@@ -45,6 +46,7 @@ export class RemovedSchedulePositions {
         public GroupsIds:number[],
         public MainGroupsAmount:number,
         public CoordinatorsIds:number[],
-        public SchedulePosition:SchedulePosition
+        public SchedulePosition:SchedulePosition,
+        public MovesIds:number[]
     ) {}
 }

@@ -12,11 +12,11 @@
 }
 
 :host.not-grabbing .course {
-    cursor: default;
+    cursor: pointer;
 }
 
 .course.cdk-drag-disabled {
-    cursor: default;
+    cursor: pointer;
 }
 
 .course-placeholder {
@@ -49,4 +49,21 @@
 .course.mat-badge-medium.mat-badge-above.mat-badge-after .mat-badge-content {
     top: -3px;
     right: 0px;
+}
+
+.course.mat-badge-medium.mat-badge-above.mat-badge-after.mat-badge-accent[proposition="true"] .mat-badge-content {
+    background-color: #FFD740;
+    animation: propositionNotification 1.4s infinite;
+}
+
+@keyframes propositionNotification {
+    0% {
+        background-color: #FFD740;
+    }
+    50% {
+        background-color: #b99614;
+    }
+    100% {
+        background-color: #FFD740;
+    }
 }

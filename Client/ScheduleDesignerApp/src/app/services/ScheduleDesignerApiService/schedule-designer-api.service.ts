@@ -11,6 +11,7 @@ import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
 import { CourseEditionInfo } from 'src/app/others/CourseEditionInfo';
+import { ScheduledMove } from 'src/app/others/ScheduledMove';
 
 @Injectable({
   providedIn: 'root'
@@ -388,7 +389,7 @@ export class ScheduleDesignerApiService {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetScheduleAsCoordinator(Weeks=[${weeks.toString()}])?` +
         '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups,SchedulePositions($count=true;$top=0)),' +
-        'CourseRoomTimestamp($expand=Timestamp)',
+        'CourseRoomTimestamp($expand=Timestamp),ScheduledMoves($select=MoveId,IsConfirmed)',
       method: 'GET'
     };
 
@@ -438,17 +439,23 @@ export class ScheduleDesignerApiService {
           const locked = value.LockUserId != null;
           const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
           const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
+          const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.IsConfirmed));
           let scheduleSlot = schedule[dayIndex][periodIndex];
           let found = false;
           for (let i = 0; i < scheduleSlot.length; ++i) {
             let courseEdition = scheduleSlot[i];
             if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
               && courseEdition.Room!.RoomId == roomId) {
-              courseEdition.Weeks?.push(week);
-              if (locked) {
-                courseEdition.Locked = true;
-              }
-              found = true;
+                courseEdition.Weeks?.push(week);
+                if (locked) {
+                  courseEdition.Locked = true;
+                }
+                
+                const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);
+                const notAddedScheduledMoves = scheduledMoves.filter((scheduledMove : ScheduledMove) => !currentMovesIds.includes(scheduledMove.MoveId));
+                courseEdition.ScheduledMoves.push(...notAddedScheduledMoves);
+                
+                found = true;
             }
           }
 
@@ -467,6 +474,8 @@ export class ScheduleDesignerApiService {
             courseEdition.Weeks = [week];
             courseEdition.ScheduleAmount = scheduleAmount;
             courseEdition.FullAmount = fullAmount;
+            courseEdition.ScheduledMoves.push(...scheduledMoves);
+            
             scheduleSlot.push(courseEdition);
           }
         });

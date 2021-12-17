@@ -13,7 +13,7 @@
                 <mat-optgroup *ngFor="let roomType of mappedCourseRooms | keyvalue" class="option-group"
                     [label]="data.RoomTypes.get(roomType.key)?.Name!">
                     <mat-option *ngFor="let room of roomType.value" class="option" [ngClass]="{'busy': room.IsBusy}"
-                        [value]="room" [disabled]="(!data.CanBeScheduled && room.IsBusy) || room.RoomId == data.CourseEdition.Room?.RoomId">
+                        [value]="room" [disabled]="(!data.CanBeScheduled && room.IsBusy) || (isRoomOnlyChanging && room.RoomId == data.CourseEdition.Room?.RoomId)">
                         {{room.Name}}
                     </mat-option>
                 </mat-optgroup>
