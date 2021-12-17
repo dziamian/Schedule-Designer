@@ -20,6 +20,8 @@ import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialog
 import { MessageObject, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { Store } from '@ngrx/store';
 import { Account } from 'src/app/others/Accounts';
+import { AddRoomSelectionComponent } from 'src/app/components/add-room-selection/add-room-selection.component';
+import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/AddRoomSelectionDialog';
 
 @Component({
   selector: 'app-schedule',
@@ -35,7 +37,7 @@ export class ScheduleComponent implements OnInit {
   currentDropContainerId:string;
   currentSelectedCourseEdition : SelectedCourseEdition | null;
   currentSelectedDropContainerId:string;
-  //currentAddRoomSelectionDialog
+  currentAddRoomSelectionDialog : MatDialogRef<AddRoomSelectionComponent, any> | null;
   //currentScheduledChangesDialog
   currentRoomSelectionDialog : MatDialogRef<RoomSelectionComponent, any> | null;
   isReleased:boolean = false;
@@ -736,8 +738,11 @@ export class ScheduleComponent implements OnInit {
                 && this.currentSelectedCourseEdition?.CourseEdition.Room?.RoomId == courseEdition.Room?.RoomId) {
                   this.currentSelectedCourseEdition.CourseEdition = courseEdition;
                   this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = true;
+                  this.currentSelectedCourseEdition.CanChangeRoom = true;
               }
           });
+        } else {
+          this.currentSelectedCourseEdition.CanChangeRoom = false;
         }
       }
 
@@ -1307,8 +1312,28 @@ export class ScheduleComponent implements OnInit {
     courseEdition.IsCurrentlyActive = true;
   }
 
-  AddRoom() {
+  async AddRoom() {
+    if (this.currentSelectedCourseEdition == null) {
+      return;
+    }
+    const selectedCourseEdition = this.currentSelectedCourseEdition;
 
+    const dialogData = new AddRoomSelectionDialogData(
+      selectedCourseEdition.CourseEdition,
+      this.roomTypes,
+      this.account.UserId
+    );
+
+    this.currentAddRoomSelectionDialog = this.dialog.open(AddRoomSelectionComponent, {
+      disableClose: true,
+      data: dialogData
+    });
+    const dialogResult:AddRoomSelectionDialogResult = await this.currentAddRoomSelectionDialog.afterClosed().toPromise();
+    this.currentAddRoomSelectionDialog = null;
+
+    if (dialogResult.Message != undefined) {
+      this.snackBar.open(dialogResult.Message, "OK");
+    }
   }
 
   async ChangeRoom() {

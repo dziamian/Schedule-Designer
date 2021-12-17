@@ -30,6 +30,8 @@ import { SignalrService } from './services/SignalrService/signalr.service';
 import { StoreModule } from '@ngrx/store';
 import { accountReducer } from './store/account.reducer';
 import { RoomSelectionComponent } from './components/room-selection/room-selection.component';
+import { AddRoomSelectionComponent } from './components/add-room-selection/add-room-selection.component';
+import { ScheduledChangesViewComponent } from './components/scheduled-changes-view/scheduled-changes-view.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -41,7 +43,9 @@ import { FormsModule } from '@angular/forms';
     ProfileComponent,
     CourseComponent,
     RoomSelectionComponent,
-    RoomSelectionComponent
+    RoomSelectionComponent,
+    AddRoomSelectionComponent,
+    ScheduledChangesViewComponent
   ],
   imports: [
     BrowserModule,

@@ -8,7 +8,7 @@ export class CourseEdition {
     IsCurrentlyActive:boolean = false;
     FullAmount:number = 0;
     ScheduleAmount:number = 0;
-    ScheduledChanges:number = 0;
+    ScheduledChanges:number = 1;
     IsProposition:boolean = false;
     Weeks:number[]|null = null;
     Room:Room|null = null;

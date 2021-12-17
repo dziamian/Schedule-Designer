@@ -26,11 +26,12 @@ export const enum RoomSelectionDialogStatus {
 }
 
 export class RoomSelectionDialogResult {
-    static readonly CANCELED:RoomSelectionDialogResult = new RoomSelectionDialogResult(
-        RoomSelectionDialogStatus.CANCELED,
-        null,
-        []
-    );
+    static readonly CANCELED:RoomSelectionDialogResult 
+        = new RoomSelectionDialogResult(
+            RoomSelectionDialogStatus.CANCELED,
+            null,
+            []
+        );
 
     Message:string;
 

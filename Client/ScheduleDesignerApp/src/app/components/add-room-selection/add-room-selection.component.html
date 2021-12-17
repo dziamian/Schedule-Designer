@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>
+    <b style="color: green">Select the room you want <br> to be available for:</b> 
+    <br>
+    <u><i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i></u>
+</h2>
+<div *ngIf="!loading" mat-dialog-content>
+    <form>
+        <mat-form-field>
+            <mat-label>Select your room</mat-label>
+            <mat-select [(ngModel)]="selectedRoom" name="room" required>
+                <mat-optgroup *ngFor="let roomType of mappedAllRooms | keyvalue" class="option-group"
+                    [label]="data.RoomTypes.get(roomType.key)?.Name!">
+                    <mat-option *ngFor="let roomSelect of roomType.value" class="option" [ngClass]="{'busy': roomSelect.IsDisabled}"
+                        [value]="roomSelect.Room" [disabled]="roomSelect.IsDisabled">
+                        {{roomSelect.Room.Name}}
+                    </mat-option>
+                </mat-optgroup>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="GET_EMPTY_RESULT">Close</button>
+    <button 
+        mat-raised-button
+        color="primary"
+        [disabled]="selectedRoom == null || actionActivated"
+
+        (click)="Action()"
+    >Add room</button>
+</mat-dialog-actions>

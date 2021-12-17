@@ -179,12 +179,6 @@ export class RoomSelectionComponent implements OnInit {
 
     this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes)
       .subscribe((courseRooms) => {
-
-        if (this.data.SrcIndexes[0] == this.data.DestIndexes[0] && this.data.SrcIndexes[1] == this.data.DestIndexes[1] 
-          && this.data.CourseEdition.Weeks?.sort((a,b) => a - b).join(',') === this.data.Weeks.sort((a,b) => a - b).join(',')) {
-            courseRooms = courseRooms.filter((room) => room.RoomId != this.data.CourseEdition.Room?.RoomId);
-        }
-
         this.courseRooms = courseRooms;
 
         this.scheduleDesignerApiService.GetRoomsAvailability(
@@ -201,7 +195,7 @@ export class RoomSelectionComponent implements OnInit {
             }
           }
 
-          this.mappedCourseRooms = this.GetMappedCourseRooms();
+          this.mappedCourseRooms = this.getMappedCourseRooms();
 
           this.loading = false;
         });
@@ -212,8 +206,8 @@ export class RoomSelectionComponent implements OnInit {
     return RoomSelectionComponent.CANCELED;
   }
 
-  GetMappedCourseRooms():Map<number,Room[]> {
-    let rooms:Map<number,Room[]> = new Map<number,Room[]>();
+  private getMappedCourseRooms():Map<number,Room[]> {
+    const rooms:Map<number,Room[]> = new Map<number,Room[]>();
     
     this.courseRooms.forEach((room) => {
       let currentRooms:Room[]|undefined = rooms.get(room.RoomType.RoomTypeId);

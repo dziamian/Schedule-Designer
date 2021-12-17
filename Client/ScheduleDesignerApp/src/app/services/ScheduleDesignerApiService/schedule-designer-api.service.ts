@@ -476,6 +476,30 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetRooms(roomsTypes:Map<number,RoomType>):Observable<Room[]> {
+    const request = {
+      url: this.baseUrl + `/rooms`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) =>
+        response.value.map((element : any) => {
+          const room = new Room(element.RoomId);
+          room.Name = element.Name;
+          room.RoomType = roomsTypes.get(element.RoomTypeId) ?? new RoomType(0, "");
+          return room;
+        })
+      )
+    );
+  }
+
   public GetRoomsNames(roomsIds:number[]):Observable<string[]> {
     const request = {
       url: this.baseUrl + `/rooms/Service.GetRoomsNames(RoomsIds=[${roomsIds.toString()}])`,
@@ -541,6 +565,26 @@ export class ScheduleDesignerApiService {
           return room;
         }))
       );
+  }
+
+  public AddCourseRoom(courseId:number, roomId:number, userId:number):Observable<any> {
+    const request = {
+      url: this.baseUrl + `/courseRooms`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          'CourseId': courseId,
+          'RoomId': roomId,
+          'UserId': userId
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
   }
 
   public GetGroupsFullNames(groupsIds:number[]):Observable<string[]> {
