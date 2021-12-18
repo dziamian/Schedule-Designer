@@ -24,7 +24,7 @@ export class CourseEdition {
         public Coordinators:Coordinator[]
     ) {}
 
-    private checkFrequency(weeks:number[],termDurationWeeks:number,even:boolean):boolean {
+    private static checkFrequency(weeks:number[],termDurationWeeks:number,even:boolean):boolean {
         const length = weeks.length;
         const halfTermDurationWeeks = termDurationWeeks / 2;
         const requiredLength = (even) ? Math.floor(halfTermDurationWeeks) : Math.ceil(halfTermDurationWeeks);
@@ -45,7 +45,7 @@ export class CourseEdition {
         return true;
     }
 
-    private frequencyToString(weeks:number[]|null):string {
+    private static frequencyToString(weeks:number[]|null):string {
         if (weeks == null) {
             return '';
         }
@@ -73,14 +73,41 @@ export class CourseEdition {
             return 'Weekly';
         }
     
-        if (this.checkFrequency(this.Weeks, termDurationWeeks, true)) {
+        if (CourseEdition.checkFrequency(this.Weeks, termDurationWeeks, true)) {
             return 'Even weeks';
         }
     
-        if (this.checkFrequency(this.Weeks, termDurationWeeks, false)) {
+        if (CourseEdition.checkFrequency(this.Weeks, termDurationWeeks, false)) {
             return 'Odd weeks';
         }
     
-        return this.frequencyToString(this.Weeks);
+        return CourseEdition.frequencyToString(this.Weeks);
+    }
+
+    static ShowFrequency(settings:Settings, weeks:number[]):string {
+        if (weeks == null) {
+            return '';
+        }
+    
+        const weeksLength = weeks.length;
+        if (weeksLength == 0) {
+            return '';
+        }
+    
+        const termDurationWeeks = settings.TermDurationWeeks;
+    
+        if (weeksLength == termDurationWeeks) {
+            return 'Weekly';
+        }
+    
+        if (CourseEdition.checkFrequency(weeks, termDurationWeeks, true)) {
+            return 'Even weeks';
+        }
+    
+        if (CourseEdition.checkFrequency(weeks, termDurationWeeks, false)) {
+            return 'Odd weeks';
+        }
+    
+        return CourseEdition.frequencyToString(weeks);
     }
 }

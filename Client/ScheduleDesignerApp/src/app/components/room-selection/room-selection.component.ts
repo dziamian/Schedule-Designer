@@ -41,6 +41,7 @@ export class RoomSelectionComponent implements OnInit {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
     });
+    
     this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       const coordinatorsIds = addedSchedulePositions.CoordinatorsIds;
       const groupsIds = addedSchedulePositions.GroupsIds;

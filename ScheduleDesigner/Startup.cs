@@ -315,6 +315,11 @@ namespace ScheduleDesigner
             getRoomsAvailabilityFunction
                 .CollectionParameter<int>("Weeks");
 
+            builder.EntityType<ScheduledMove>().Collection
+                .Function("GetConcreteScheduledMoves")
+                .ReturnsCollection<ScheduledMoveRead>()
+                .CollectionParameter<int>("MovesIds");
+
             /*var addSchedulePositionsAction = builder.EntityType<SchedulePosition>().Collection
                 .Action("AddSchedulePositions");
 

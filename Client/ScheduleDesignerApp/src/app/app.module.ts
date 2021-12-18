@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatListModule } from '@angular/material/list';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -63,6 +64,7 @@ import { FormsModule } from '@angular/forms';
     MatTooltipModule,
     MatSelectModule,
     MatBadgeModule,
+    MatListModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],

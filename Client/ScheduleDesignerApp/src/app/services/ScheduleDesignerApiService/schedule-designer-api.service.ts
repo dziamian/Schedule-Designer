@@ -11,7 +11,7 @@ import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
 import { CourseEditionInfo } from 'src/app/others/CourseEditionInfo';
-import { ScheduledMove } from 'src/app/others/ScheduledMove';
+import { ScheduledMove, ScheduledMoveDetails } from 'src/app/others/ScheduledMove';
 
 @Injectable({
   providedIn: 'root'
@@ -652,6 +652,35 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => response.value)
+    );
+  }
+
+  public GetConcreteScheduledMoves(movesIds:number[], roomsTypes:Map<number,RoomType>):Observable<ScheduledMoveDetails[]> {
+    const request = {
+      url: this.baseUrl + `/scheduledMoves/Service.GetConcreteScheduledMoves(MovesIds=[${movesIds.toString()}])`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((move : any) => {
+        const room = new Room(move.DestRoomId);
+        room.Name = move.DestRoomName;
+        room.RoomType = roomsTypes.get(move.DestRoomTypeId) ?? new RoomType(0, "");
+        return new ScheduledMoveDetails(
+          move.MoveId,
+          move.IsConfirmed,
+          move.SourceWeeks,
+          room,
+          move.DestPeriodIndex,
+          move.DestDay,
+          move.DestWeeks);
+      }))
     );
   }
 

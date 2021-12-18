@@ -58,7 +58,10 @@
                             <ng-container *ngIf="currentSelectedCourseEdition != null">
                                 {{currentSelectedCourseEdition.CourseEdition.Name}} - {{currentSelectedCourseEdition.CourseEdition.Type.Name}}<br>
                                 <ng-container *ngIf="currentSelectedCourseEdition.PeriodIndex > -1 && currentSelectedCourseEdition.Day > -1">
-                                    {{scheduleDayLabels[currentSelectedCourseEdition.Day]}}: {{scheduleTimeLabels[currentSelectedCourseEdition.PeriodIndex]}}<br>
+                                    {{scheduleDayLabels[currentSelectedCourseEdition.Day]}}: {{scheduleTimeLabels[currentSelectedCourseEdition.PeriodIndex]}}
+                                    <ng-container *ngIf="currentSelectedCourseEdition.CourseEdition.Room != null">
+                                        ({{currentSelectedCourseEdition.CourseEdition.Room.Name}})
+                                    </ng-container><br>
                                 </ng-container>
                                 <ng-container *ngIf="currentSelectedCourseEdition.CourseEdition.Weeks != null">
                                     {{currentSelectedCourseEdition.CourseEdition.ShowFrequency(settings)}}

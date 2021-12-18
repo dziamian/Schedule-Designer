@@ -1,0 +1,15 @@
+h2[mat-dialog-title] {
+    font-weight: normal;
+    text-align: center;
+}
+
+div[mat-dialog-content] {
+    min-width: 50vw;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.confirm {
+    background-color:green; 
+    color: white;
+}

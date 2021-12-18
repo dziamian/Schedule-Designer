@@ -1,1 +1,30 @@
-<p>scheduled-changes-view works!</p>
+<h2 mat-dialog-title>
+    <b>Managing scheduled moves for:</b>
+    <br>
+    <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>
+    <u>{{data.DayLabels[data.SrcIndexes[0]]}}: {{data.TimeLabels[data.SrcIndexes[1]]}}</u>, <i>{{data.CourseEdition.Room?.Name}}</i>
+    <br>
+    {{(data.CourseEdition.Weeks != null) ? ShowFrequency(data.CourseEdition.Weeks) : ''}}
+</h2>
+<div *ngIf="!loading" mat-dialog-content>
+    <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let scheduledMove of scheduledMoves">
+            <div class="item-text" matLine>
+                <b>From:</b> {{ShowFrequency(scheduledMove.SourceWeeks)}}
+            </div>
+            <div class="item-text" matLine>
+                <b>To:</b> {{ShowFrequency(scheduledMove.DestWeeks)}}, <u>{{data.DayLabels[scheduledMove.DestDay - 1]}}: 
+                {{data.TimeLabels[scheduledMove.DestPeriodIndex - 1]}}</u>, <i>{{scheduledMove.DestRoom.Name}}</i>
+            </div>
+            <div class="item-buttons">
+                <button *ngIf="!scheduledMove.IsConfirmed" mat-raised-button class="confirm" style="margin-right: 1vw;">Confirm</button>
+                <button mat-raised-button color="warn" 
+                [disabled]="scheduledMove.Locked || scheduledMove.IsRemoving" 
+                (click)="Remove(scheduledMove)">Remove</button>
+            </div>
+        </mat-list-item>
+    </mat-list>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</mat-dialog-actions>

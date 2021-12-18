@@ -22,6 +22,8 @@ import { Store } from '@ngrx/store';
 import { Account } from 'src/app/others/Accounts';
 import { AddRoomSelectionComponent } from 'src/app/components/add-room-selection/add-room-selection.component';
 import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/AddRoomSelectionDialog';
+import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/ScheduledChangesDialog';
+import { ScheduledChangesViewComponent } from 'src/app/components/scheduled-changes-view/scheduled-changes-view.component';
 
 @Component({
   selector: 'app-schedule',
@@ -38,7 +40,7 @@ export class ScheduleComponent implements OnInit {
   currentSelectedCourseEdition : SelectedCourseEdition | null;
   currentSelectedDropContainerId:string;
   currentAddRoomSelectionDialog : MatDialogRef<AddRoomSelectionComponent, any> | null;
-  //currentScheduledChangesDialog
+  currentScheduledChangesDialog : MatDialogRef<ScheduledChangesViewComponent, any> | null;
   currentRoomSelectionDialog : MatDialogRef<RoomSelectionComponent, any> | null;
   isReleased:boolean = false;
   isCanceled:boolean = false;
@@ -111,7 +113,7 @@ export class ScheduleComponent implements OnInit {
     const periodIndex = position.PeriodIndex - 1;
     const weeks = position.Weeks;
 
-    if (this.currentSelectedCourseEdition != null && value 
+    if (this.currentSelectedCourseEdition != null 
       && this.currentSelectedCourseEdition.CourseEdition.CourseId == courseId
       && this.currentSelectedCourseEdition.CourseEdition.CourseEditionId == courseEditionId
       && this.currentSelectedCourseEdition.CourseEdition.Room?.RoomId == roomId
@@ -122,7 +124,7 @@ export class ScheduleComponent implements OnInit {
         this.currentSelectedCourseEdition = null;
     }
 
-    //TODO: admin took control: currentDrag, all currentDialogs except addRoom
+    //TODO: admin took control: currentDrag, all currentDialogs except addRoom,scheduledChanges
 
     if (!this.weeks[this.currentTabIndex].some(r => weeks.includes(r))) {
       return;
@@ -265,7 +267,7 @@ export class ScheduleComponent implements OnInit {
               );
             }
           }
-          else if (this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
+          else if (event != undefined && this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
             if (this.currentDropContainerIndexes[0] == schedulePosition.Day - 1 
               && this.currentDropContainerIndexes[1] == schedulePosition.PeriodIndex - 1) {
                 this.isMoveValid = false;
@@ -284,6 +286,7 @@ export class ScheduleComponent implements OnInit {
       const commonWeeks = dstSchedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week));
       const movesIds = modifiedSchedulePositions.MovesIds;
 
+      //scheduled change occurred
       const currentDrag = this.currentDragEvent?.source;
       if (currentDrag != null) {
         const currentIndexes = (currentDrag.dropContainer.id !== 'my-courses') ? this.getIndexes(currentDrag.dropContainer.id) : [-1,-1];
@@ -301,6 +304,7 @@ export class ScheduleComponent implements OnInit {
         }
       }
 
+      //scheduled change occurred
       const selectedCourseEdition = this.currentSelectedCourseEdition;
       if (selectedCourseEdition != null) {
         if (selectedCourseEdition.CourseEdition.CourseId == srcSchedulePosition.CourseId
@@ -314,9 +318,8 @@ export class ScheduleComponent implements OnInit {
             this.currentSelectedCourseEdition = null;
           }
       }
-      
-      //TODO: currentScheduledChangesDialog check if not changed position (scheduled move)
 
+      //scheduled change occurred
       const currentDialogData = this.currentRoomSelectionDialog?.componentInstance.data;
       if (currentDialogData != null) {
         const currentIndexes = currentDialogData.SrcIndexes;
@@ -468,7 +471,7 @@ export class ScheduleComponent implements OnInit {
       //active dragged and selected fields update
       const event = this.currentDragEvent?.source;
       const item = (event != undefined) ? this.currentDragEvent?.source.data : this.currentSelectedCourseEdition?.CourseEdition;
-
+      
       if (item == undefined || commonWeeks.length == 0) {
         return;
       }
@@ -489,7 +492,7 @@ export class ScheduleComponent implements OnInit {
             );
           }
         }
-        else if (this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
+        else if (event != undefined && this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
           if (this.currentDropContainerIndexes[0] == dstSchedulePosition.Day - 1 
             && this.currentDropContainerIndexes[1] == dstSchedulePosition.PeriodIndex - 1) {
               this.isMoveValid = false;
@@ -501,31 +504,31 @@ export class ScheduleComponent implements OnInit {
           srcSchedulePosition.PeriodIndex, srcSchedulePosition.Day,
           srcSchedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
         ).subscribe((isBusy) => {
-          if (this.currentDragEvent != null) {
-            this.scheduleSlotsValidity[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] = !isBusy;
+          
+          this.scheduleSlotsValidity[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] = !isBusy;
 
-            if (isBusy) {
-              return;
+          if (isBusy) {
+            return;
+          }
+
+          if (event?.dropContainer.id === 'my-courses') {
+            const connectedTo = event.dropContainer.connectedTo as string[];
+            const id = `${srcSchedulePosition.Day - 1},${srcSchedulePosition.PeriodIndex - 1}`;
+            if (this.currentDragEvent != null) {
+              connectedTo.push(id);
+              this.currentDragEvent.source.dropContainer.connectedTo = connectedTo;
+              event.dropContainer._dropListRef.enter(
+                event._dragRef,
+                0,0
+              );
             }
-
-            if (event?.dropContainer.id === 'my-courses') {
-              const connectedTo = event.dropContainer.connectedTo as string[];
-              const id = `${srcSchedulePosition.Day - 1},${srcSchedulePosition.PeriodIndex - 1}`;
-              if (this.currentDragEvent != null) {
-                connectedTo.push(id);
-                this.currentDragEvent.source.dropContainer.connectedTo = connectedTo;
-                event.dropContainer._dropListRef.enter(
-                  event._dragRef,
-                  0,0
-                );
-              }
-            } else if (this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
-              if (this.currentDropContainerIndexes[0] == srcSchedulePosition.Day - 1 
-                && this.currentDropContainerIndexes[1] == srcSchedulePosition.PeriodIndex - 1) {
-                  this.isMoveValid = true;
-              }
+          } else if (event != undefined && this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
+            if (this.currentDropContainerIndexes[0] == srcSchedulePosition.Day - 1 
+              && this.currentDropContainerIndexes[1] == srcSchedulePosition.PeriodIndex - 1) {
+                this.isMoveValid = true;
             }
           }
+          
         });
       }
 
@@ -644,31 +647,31 @@ export class ScheduleComponent implements OnInit {
           schedulePosition.PeriodIndex, schedulePosition.Day,
           schedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
         ).subscribe((isBusy) => {
-          if (this.currentDragEvent != null) {
-            this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = !isBusy;
+          
+          this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = !isBusy;
 
-            if (isBusy) {
-              return;
+          if (isBusy) {
+            return;
+          }
+
+          if (event?.dropContainer.id === 'my-courses') {
+            const connectedTo = event.dropContainer.connectedTo as string[];
+            const id = `${schedulePosition.Day - 1},${schedulePosition.PeriodIndex - 1}`;
+            if (this.currentDragEvent != null) {
+              connectedTo.push(id);
+              this.currentDragEvent.source.dropContainer.connectedTo = connectedTo;
+              event.dropContainer._dropListRef.enter(
+                event._dragRef,
+                0,0
+              );
             }
-
-            if (event?.dropContainer.id === 'my-courses') {
-              const connectedTo = event.dropContainer.connectedTo as string[];
-              const id = `${schedulePosition.Day - 1},${schedulePosition.PeriodIndex - 1}`;
-              if (this.currentDragEvent != null) {
-                connectedTo.push(id);
-                this.currentDragEvent.source.dropContainer.connectedTo = connectedTo;
-                event.dropContainer._dropListRef.enter(
-                  event._dragRef,
-                  0,0
-                );
-              }
-            } else if (this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
-              if (this.currentDropContainerIndexes[0] == schedulePosition.Day - 1 
-                && this.currentDropContainerIndexes[1] == schedulePosition.PeriodIndex - 1) {
-                  this.isMoveValid = true;
-              }
+          } else if (event != undefined && this.currentDropContainerIndexes[0] !== -1 && this.currentDropContainerIndexes[1] !== -1) {
+            if (this.currentDropContainerIndexes[0] == schedulePosition.Day - 1 
+              && this.currentDropContainerIndexes[1] == schedulePosition.PeriodIndex - 1) {
+                this.isMoveValid = true;
             }
           }
+          
         });
       }
     });
@@ -808,10 +811,14 @@ export class ScheduleComponent implements OnInit {
                   this.currentSelectedCourseEdition.CourseEdition = courseEdition;
                   this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = true;
                   this.currentSelectedCourseEdition.CanChangeRoom = true;
+                  this.currentSelectedCourseEdition.CanMakeMove = true;
               }
           });
         } else {
           this.currentSelectedCourseEdition.CanChangeRoom = false;
+          if (this.weeks[this.currentTabIndex].length == this.currentSelectedCourseEdition.CourseEdition.Weeks?.length) {
+            this.currentSelectedCourseEdition.CanMakeMove = true;
+          }
         }
       }
 
@@ -1493,8 +1500,32 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
-  ShowScheduledChanges() {
+  async ShowScheduledChanges() {
+    if (this.currentSelectedCourseEdition == null) {
+      return;
+    }
+    const selectedCourseEdition = this.currentSelectedCourseEdition;
 
+    const dialogData = new ScheduledChangesDialogData(
+      selectedCourseEdition.CourseEdition,
+      [selectedCourseEdition.Day,selectedCourseEdition.PeriodIndex],
+      this.scheduleDayLabels,
+      this.scheduleTimeLabels,
+      this.roomTypes,
+      this.settings
+    );
+
+    this.currentScheduledChangesDialog = this.dialog.open(ScheduledChangesViewComponent, {
+      disableClose: true,
+      data: dialogData
+    });
+    const dialogResult:ScheduledChangesDialogResult = await this.currentScheduledChangesDialog.afterClosed().toPromise();
+    this.currentScheduledChangesDialog = null;
+    this.currentSelectedCourseEdition.CanShowScheduledChanges = this.currentSelectedCourseEdition.CourseEdition.ScheduledMoves.length > 0;
+
+    if (dialogResult.Message != undefined) {
+      this.snackBar.open(dialogResult.Message, "OK");
+    }
   }
 
   async Move() {
@@ -1580,6 +1611,7 @@ export class ScheduleComponent implements OnInit {
 
   OnMouseEnter(day:number, periodIndex:number) {
     if (this.currentSelectedCourseEdition?.IsMoving) {
+      this.currentDropContainerIndexes = [day,periodIndex];
       if (this.schedule[day][periodIndex].length > 0) {
         this.isMoveValid = null;
       } else {
@@ -1596,6 +1628,8 @@ export class ScheduleComponent implements OnInit {
     if (this.schedule[day][periodIndex].length > 0) {
       return;
     }
+
+    this.isMoveValid = this.scheduleSlotsValidity[day][periodIndex];
     
     const selectedCourseEdition = this.currentSelectedCourseEdition;
     const dialogData = new RoomSelectionDialogData(
@@ -1648,6 +1682,7 @@ export class ScheduleComponent implements OnInit {
         
         this.currentSelectedCourseEdition.CourseEdition.Room = dialogResult.Room;
         this.currentSelectedCourseEdition.CourseEdition.Weeks = dialogResult.Weeks;
+        this.currentSelectedCourseEdition.CourseEdition.ScheduledMoves = [];
 
         //add new
         this.schedule[day][periodIndex].push(this.currentSelectedCourseEdition.CourseEdition);
@@ -1686,8 +1721,7 @@ export class ScheduleComponent implements OnInit {
     }
     
     this.isMoveValid = null;
-    this.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
-    this.currentSelectedCourseEdition = null;
+    this.currentSelectedCourseEdition.IsMoving = false;
     const numberOfSlots = this.settings.periods.length - 1;
     for (let i = 0; i < this.scheduleSlots.length; ++i) {
       this.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
@@ -1698,6 +1732,7 @@ export class ScheduleComponent implements OnInit {
   OnMouseLeave() {
     if (this.currentSelectedCourseEdition?.IsMoving) {
       this.isMoveValid = null;
+      this.currentDropContainerIndexes = [-1,-1];
     }
   }
 }
