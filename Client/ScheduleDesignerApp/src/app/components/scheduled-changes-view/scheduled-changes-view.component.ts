@@ -16,7 +16,7 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class ScheduledChangesViewComponent implements OnInit {
 
-  scheduledMoves:ScheduledMoveDetails[]
+  scheduledMoves:ScheduledMoveDetails[] = [];
 
   loading:boolean = true;
 
@@ -187,6 +187,10 @@ export class ScheduledChangesViewComponent implements OnInit {
 
             this.loading = false;
           });
+        }, () => {
+          const dialogResult = new ScheduledChangesDialogResult();
+          dialogResult.Message = "Could not find scheduled changes for this course.";
+          this.dialogRef.close(dialogResult);
         });
   }
 

@@ -1521,7 +1521,10 @@ export class ScheduleComponent implements OnInit {
     });
     const dialogResult:ScheduledChangesDialogResult = await this.currentScheduledChangesDialog.afterClosed().toPromise();
     this.currentScheduledChangesDialog = null;
-    this.currentSelectedCourseEdition.CanShowScheduledChanges = this.currentSelectedCourseEdition.CourseEdition.ScheduledMoves.length > 0;
+    if (this.currentSelectedCourseEdition != null) {
+      this.currentSelectedCourseEdition.CanShowScheduledChanges 
+        = this.currentSelectedCourseEdition.CourseEdition.ScheduledMoves.length > 0;
+    }
 
     if (dialogResult.Message != undefined) {
       this.snackBar.open(dialogResult.Message, "OK");
