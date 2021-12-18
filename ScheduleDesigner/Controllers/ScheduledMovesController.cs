@@ -2,7 +2,7 @@
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScheduleDesigner.Helpers;
+using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;

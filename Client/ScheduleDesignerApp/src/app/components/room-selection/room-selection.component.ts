@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { skip } from 'rxjs/operators';
-import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
+import { MessageObject } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
@@ -20,6 +20,7 @@ export class RoomSelectionComponent implements OnInit {
   selectedRoom:Room|null;
   actionActivated:boolean = false;
   isRoomOnlyChanging:boolean;
+  groupsSize:number = 0;
 
   courseRooms:Room[] = [];
   mappedCourseRooms:Map<number,Room[]>;
@@ -183,29 +184,32 @@ export class RoomSelectionComponent implements OnInit {
       }
     });
 
-    this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes)
-      .subscribe((courseRooms) => {
-        this.courseRooms = courseRooms;
+    forkJoin([
+      this.scheduleDesignerApiService.GetCourseEditionGroupsSize(this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId),
+      this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes),
+    ]).subscribe(([size, courseRooms]) => {
+      this.groupsSize = size;
+      this.courseRooms = courseRooms;
 
-        this.scheduleDesignerApiService.GetRoomsAvailability(
-          this.courseRooms.map((room) => room.RoomId),
-          this.data.DestIndexes[1] + 1,
-          this.data.DestIndexes[0] + 1,
-          this.data.Weeks
-        ).subscribe((rooms) => {
-          for (let i = 0; i < rooms.length; ++i) {
-            let courseRoom = this.courseRooms[i];
-            let room = rooms[i];
-            if (courseRoom.RoomId == room.RoomId) {
-              this.courseRooms[i].IsBusy = rooms[i].IsBusy;
-            }
+      this.scheduleDesignerApiService.GetRoomsAvailability(
+        this.courseRooms.map((room) => room.RoomId),
+        this.data.DestIndexes[1] + 1,
+        this.data.DestIndexes[0] + 1,
+        this.data.Weeks
+      ).subscribe((rooms) => {
+        for (let i = 0; i < rooms.length; ++i) {
+          let courseRoom = this.courseRooms[i];
+          let room = rooms[i];
+          if (courseRoom.RoomId == room.RoomId) {
+            this.courseRooms[i].IsBusy = rooms[i].IsBusy;
           }
+        }
 
-          this.mappedCourseRooms = this.getMappedCourseRooms();
+        this.mappedCourseRooms = this.getMappedCourseRooms();
 
-          this.loading = false;
-        });
+        this.loading = false;
       });
+    });
   }
 
   GET_CANCELED_RESULT():RoomSelectionDialogResult {

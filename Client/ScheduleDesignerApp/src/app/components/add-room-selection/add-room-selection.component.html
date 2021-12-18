@@ -12,7 +12,7 @@
                     [label]="data.RoomTypes.get(roomType.key)?.Name!">
                     <mat-option *ngFor="let roomSelect of roomType.value" class="option" [ngClass]="{'busy': roomSelect.IsDisabled}"
                         [value]="roomSelect.Room" [disabled]="roomSelect.IsDisabled">
-                        {{roomSelect.Room.Name}}
+                        {{roomSelect.Room.Name}} ({{roomSelect.Room.Capacity}} seats)
                     </mat-option>
                 </mat-optgroup>
             </mat-select>

@@ -1,9 +1,10 @@
-<h2 mat-dialog-title>
+<h2 *ngIf="!loading" mat-dialog-title>
     <b *ngIf="!selectedRoom?.IsBusy && data.IsMoveValid" style="color: green">You are making a move:</b>
     <b *ngIf="selectedRoom?.IsBusy || !data.IsMoveValid" style="color: #FF4800">You are scheduling a move:</b>
     <br>
     <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>
-    <u>{{data.DayLabels[data.DestIndexes[0]]}}: {{data.TimeLabels[data.DestIndexes[1]]}}</u>
+    <u>{{data.DayLabels[data.DestIndexes[0]]}}: {{data.TimeLabels[data.DestIndexes[1]]}}</u> 
+    <ng-container *ngIf="groupsSize > 0"> ({{groupsSize}} {{groupsSize > 1 ? 'students' : 'student'}})</ng-container>
 </h2>
 <div *ngIf="!loading" mat-dialog-content>
     <form>
@@ -14,10 +15,11 @@
                     [label]="data.RoomTypes.get(roomType.key)?.Name!">
                     <mat-option *ngFor="let room of roomType.value" class="option" [ngClass]="{'busy': room.IsBusy}"
                         [value]="room" [disabled]="(!data.CanBeScheduled && room.IsBusy) || (isRoomOnlyChanging && room.RoomId == data.CourseEdition.Room?.RoomId)">
-                        {{room.Name}}
+                        {{room.Name}} ({{room.Capacity}} seats)
                     </mat-option>
                 </mat-optgroup>
             </mat-select>
+            <mat-hint *ngIf="selectedRoom != null && selectedRoom.Capacity < groupsSize" style="color: #ff761b;"><b>Capacity may be too low!</b></mat-hint>
         </mat-form-field>
     </form>
 </div>

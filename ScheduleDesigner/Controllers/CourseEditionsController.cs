@@ -25,13 +25,19 @@ namespace ScheduleDesigner.Controllers
         private readonly ICourseEditionRepo _courseEditionRepo;
         private readonly ISchedulePositionRepo _schedulePositionRepo;
         private readonly ISettingsRepo _settingsRepo;
+        private readonly IStudentGroupRepo _studentGroupRepo;
 
-        public CourseEditionsController(IGroupRepo groupRepo, ICourseEditionRepo courseEditionRepo, ISchedulePositionRepo schedulePositionRepo, ISettingsRepo settingsRepo)
+        public CourseEditionsController(IGroupRepo groupRepo, 
+            ICourseEditionRepo courseEditionRepo, 
+            ISchedulePositionRepo schedulePositionRepo, 
+            ISettingsRepo settingsRepo,
+            IStudentGroupRepo studentGroupRepo)
         {
             _groupRepo = groupRepo;
             _courseEditionRepo = courseEditionRepo;
             _schedulePositionRepo = schedulePositionRepo;
             _settingsRepo = settingsRepo;
+            _studentGroupRepo = studentGroupRepo;
         }
 
         public static List<int> GetNestedGroupsIds(CourseEdition courseEdition, IGroupRepo _groupRepo)
@@ -263,6 +269,64 @@ namespace ScheduleDesigner.Controllers
                     .ThenInclude(e => e.Timestamp);
 
                 return Ok(_timestamps.Any());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [ODataRoute("({key1},{key2})/GetCourseEditionGroupsSize()")]
+        public IActionResult GetCourseEditionGroupsSize([FromODataUri] int key1, [FromODataUri] int key2)
+        {
+            try
+            {
+                var _courseEdition = _courseEditionRepo
+                    .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
+                    .Include(e => e.Groups);
+
+                if (!_courseEdition.Any())
+                {
+                    return NotFound();
+                }
+                var courseEdition = _courseEdition.FirstOrDefault();
+                var courseEditionGroupsIds = courseEdition.Groups.Select(e => e.GroupId);
+
+                var _groups = _groupRepo
+                    .Get(e => courseEditionGroupsIds.Contains(e.GroupId));
+
+                if (!_groups.Any())
+                {
+                    return NotFound();
+                }
+                var groupsIds = _groups.Select(e => e.GroupId).ToList();
+                var size = groupsIds.Count();
+
+
+                var _childGroups = _groupRepo
+                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(0, size).Contains((int)e.ParentGroupId));
+
+                var startIndex = 0;
+                var endIndex = groupsIds.Count;
+
+                while (_childGroups.Any())
+                {
+                    groupsIds.AddRange(_childGroups.Select(e => e.GroupId).ToList());
+
+                    startIndex = endIndex;
+                    endIndex += _childGroups.Count();
+
+                    _childGroups = _groupRepo
+                        .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex - startIndex).Contains((int)e.ParentGroupId));
+                }
+
+                var groupsSize = _studentGroupRepo
+                    .Get(e => groupsIds.Contains(e.GroupId))
+                    .GroupBy(e => e.StudentId)
+                    .Select(e => e.Key).Count();
+
+                return Ok(groupsSize);
             }
             catch (Exception e)
             {

@@ -360,6 +360,23 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetCourseEditionGroupsSize(courseId:number, courseEditionId:number):Observable<number> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetCourseEditionGroupsSize()`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value)
+    );
+  }
+
   public AreSchedulePositionsLocked(
     roomId:number, periodIndex:number,
     day:number, weeks:number[]
@@ -502,6 +519,7 @@ export class ScheduleDesignerApiService {
         response.value.map((element : any) => {
           const room = new Room(element.RoomId);
           room.Name = element.Name;
+          room.Capacity = element.Capacity;
           room.RoomType = roomsTypes.get(element.RoomTypeId) ?? new RoomType(0, "");
           return room;
         })
@@ -543,6 +561,7 @@ export class ScheduleDesignerApiService {
         response.value.map((element : any) => {
           const room = new Room(element.RoomId);
           room.Name = element.Room.Name;
+          room.Capacity = element.Room.Capacity;
           room.RoomType = roomsTypes.get(element.Room.RoomTypeId) ?? new RoomType(0, "");
           return room;
         })

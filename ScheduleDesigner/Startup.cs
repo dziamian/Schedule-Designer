@@ -286,6 +286,10 @@ namespace ScheduleDesigner
             isPeriodBusyFunction
                 .CollectionParameter<int>("Weeks");
 
+            builder.EntityType<CourseEdition>()
+                .Function("GetCourseEditionGroupsSize")
+                .Returns<int>();
+
             var getSchedulePositionFunction = builder.EntityType<SchedulePosition>().Collection
                 .Function("GetSchedulePositions")
                 .ReturnsCollectionFromEntitySet<SchedulePosition>("SchedulePositions");
