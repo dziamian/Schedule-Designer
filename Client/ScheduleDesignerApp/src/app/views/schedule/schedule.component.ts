@@ -254,7 +254,9 @@ export class ScheduleComponent implements OnInit {
 
       if (item.Coordinators.map(c => c.UserId).some(c => addedSchedulePositions.CoordinatorsIds.includes(c))
         || item.Groups.map(g => g.GroupId).some(g => addedSchedulePositions.GroupsIds.includes(g))) {
-          this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = false;
+          if (this.currentDragEvent != null || this.currentSelectedCourseEdition?.IsMoving) {
+            this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = false;
+          }
           
           if (event?.dropContainer.id === 'my-courses') {
             const connectedTo = event.dropContainer.connectedTo as string[];
@@ -478,7 +480,9 @@ export class ScheduleComponent implements OnInit {
 
       if (item.Coordinators.map(c => c.UserId).some(c => modifiedSchedulePositions.CoordinatorsIds.includes(c))
         || item.Groups.map(g => g.GroupId).some(g => modifiedSchedulePositions.GroupsIds.includes(g))) {
-        this.scheduleSlotsValidity[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1] = false;
+        if (this.currentDragEvent != null || this.currentSelectedCourseEdition?.IsMoving) {
+          this.scheduleSlotsValidity[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1] = false;
+        }
         
         
         if (event?.dropContainer.id === 'my-courses') {
@@ -504,8 +508,9 @@ export class ScheduleComponent implements OnInit {
           srcSchedulePosition.PeriodIndex, srcSchedulePosition.Day,
           srcSchedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
         ).subscribe((isBusy) => {
-          
-          this.scheduleSlotsValidity[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] = !isBusy;
+          if (this.currentDragEvent != null || this.currentSelectedCourseEdition?.IsMoving) {
+            this.scheduleSlotsValidity[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] = !isBusy;
+          }
 
           if (isBusy) {
             return;
@@ -647,8 +652,9 @@ export class ScheduleComponent implements OnInit {
           schedulePosition.PeriodIndex, schedulePosition.Day,
           schedulePosition.Weeks.filter(week => this.weeks[this.currentTabIndex].includes(week))
         ).subscribe((isBusy) => {
-          
-          this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = !isBusy;
+          if (this.currentDragEvent != null || this.currentSelectedCourseEdition?.IsMoving) {
+            this.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = !isBusy;
+          }
 
           if (isBusy) {
             return;
