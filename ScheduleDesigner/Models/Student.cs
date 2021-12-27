@@ -11,6 +11,8 @@ namespace ScheduleDesigner.Models
     {
         public int UserId { get; set; }
 
+        public string StudentNumber { get; set; }
+
 
         [ForeignKey("UserId")]
         public User User { get; set; }

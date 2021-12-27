@@ -81,7 +81,7 @@ namespace ScheduleDesigner.Services
         {
             var requestUrl = $"{ApplicationInfo.BaseUsosUrl}/services/users/user?";
             if (userId != null) requestUrl += "user_id=" + userId + "&";
-            requestUrl += "fields=id|first_name|last_name|student_status|staff_status|titles&format=json";
+            requestUrl += "fields=id|first_name|last_name|student_status|student_number|staff_status|titles&format=json";
             oauth.RequestUrl = requestUrl;
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
 
@@ -110,6 +110,7 @@ namespace ScheduleDesigner.Services
                 student = new Student 
                 {
                     UserId = userId,
+                    StudentNumber = userInfo.StudentNumber
                 };
             }
             
@@ -150,6 +151,11 @@ namespace ScheduleDesigner.Services
 
         public async Task<Authorization> CreateCredentials(int userId, string accessToken, string accessTokenSecret)
         {
+            return await CreateCredentials(userId, accessToken, accessTokenSecret, DateTime.Now);
+        }
+
+        public async Task<Authorization> CreateCredentials(int userId, string accessToken, string accessTokenSecret, DateTime insertedDateTime)
+        {
             var _authorization = await _authorizationRepo
                 .Get(e => e.UserId == userId)
                 .FirstOrDefaultAsync();
@@ -161,7 +167,7 @@ namespace ScheduleDesigner.Services
                     UserId = userId,
                     AccessToken = accessToken,
                     AccessTokenSecret = accessTokenSecret,
-                    InsertedDateTime = DateTime.Now
+                    InsertedDateTime = insertedDateTime
                 };
                 await _authorizationRepo.Add(authorization);
                 await _authorizationRepo.SaveChanges();
@@ -221,6 +227,9 @@ namespace ScheduleDesigner.Services
 
         [JsonPropertyName("student_status")]
         public int? StudentStatus { get; set; }
+
+        [JsonPropertyName("student_number")]
+        public string StudentNumber { get; set; }
 
         [JsonPropertyName("staff_status")]
         public int? StaffStatus { get; set; }

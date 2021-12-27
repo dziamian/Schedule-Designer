@@ -131,6 +131,7 @@ namespace ScheduleDesigner.Controllers
 
                 if (user != null)
                 {
+                    await _usosService.CreateCredentials(userId, "", "", DateTime.Now.AddMinutes(-30));
                     await _userRepo.SaveChanges();
                     return Created(user);
                 }
