@@ -125,11 +125,11 @@ namespace ScheduleDesigner.Services
             }
 
             Staff staff = null;
-            if (userInfo.StaffStatus == 1)
+            if (userInfo.StaffStatus == 1 || userInfo.StaffStatus == 2)
             {
                 staff = new Staff
                 {
-                    IsAdmin = !_staffRepo.GetAll().Any(),
+                    IsAdmin = userInfo.StaffStatus != 2 && !_staffRepo.GetAll().Any(),
                     UserId = userId,
                 };
             }

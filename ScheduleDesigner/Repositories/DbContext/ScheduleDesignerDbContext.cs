@@ -174,6 +174,11 @@ namespace ScheduleDesigner.Repositories
                 .WithOne(e => e.Origin)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<SchedulePosition>()
+                .HasOne(e => e.CourseEdition)
+                .WithMany(e => e.SchedulePositions)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //ScheduledMove
             modelBuilder.Entity<ScheduledMove>()
                 .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
