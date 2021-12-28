@@ -20,6 +20,7 @@ namespace ScheduleDesigner.Models
 
         public int? LockUserId { get; set; }
 
+        [MaxLength(50)]
         public string LockUserConnectionId { get; set; }
 
 

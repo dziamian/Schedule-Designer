@@ -11,6 +11,7 @@ namespace ScheduleDesigner.Models
     {
         public int UserId { get; set; }
 
+        [MaxLength(20)]
         public string StudentNumber { get; set; }
 
 
