@@ -41,6 +41,23 @@ namespace ScheduleDesigner.Services
             _authorizationRepo = authorizationRepo;
         }
 
+        private string HashString(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+            {
+                return String.Empty;
+            }
+
+            var sha256 = new System.Security.Cryptography.SHA256Managed();
+
+            var textBytes = System.Text.Encoding.UTF8.GetBytes(text);
+            var hashBytes = sha256.ComputeHash(textBytes);
+
+            string hash = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
+
+            return hash;
+        }
+
         public OAuthRequest GetOAuthRequest(string accessToken, string accessTokenSecret)
         {
             OAuthRequest oauth = OAuthRequest.ForProtectedResource(
@@ -65,8 +82,11 @@ namespace ScheduleDesigner.Services
 
         public async Task<int> GetUserId(string accessToken, string accessTokenSecret)
         {
+            var hashedAccessToken = HashString(accessToken);
+            var hashedAccessTokenSecret = HashString(accessTokenSecret);
+
             var _authorization = await _authorizationRepo
-                .Get(e => e.AccessToken == accessToken && e.AccessTokenSecret == accessTokenSecret)
+                .Get(e => e.AccessToken == hashedAccessToken && e.AccessTokenSecret == hashedAccessTokenSecret)
                 .FirstOrDefaultAsync();
 
             if (_authorization == null || _authorization.InsertedDateTime.AddMinutes(30) < DateTime.Now)
@@ -162,11 +182,14 @@ namespace ScheduleDesigner.Services
 
             if (_authorization == null)
             {
+                var hashedAccessToken = HashString(accessToken);
+                var hashedAccessTokenSecret = HashString(accessTokenSecret);
+
                 var authorization = new Authorization
                 {
                     UserId = userId,
-                    AccessToken = accessToken,
-                    AccessTokenSecret = accessTokenSecret,
+                    AccessToken = hashedAccessToken,
+                    AccessTokenSecret = hashedAccessTokenSecret,
                     InsertedDateTime = insertedDateTime
                 };
                 await _authorizationRepo.Add(authorization);
@@ -188,9 +211,12 @@ namespace ScheduleDesigner.Services
             {
                 return null;
             }
-            
-            _authorization.AccessToken = accessToken;
-            _authorization.AccessTokenSecret = accessTokenSecret;
+
+            var hashedAccessToken = HashString(accessToken);
+            var hashedAccessTokenSecret = HashString(accessTokenSecret);
+
+            _authorization.AccessToken = hashedAccessToken;
+            _authorization.AccessTokenSecret = hashedAccessTokenSecret;
             _authorization.InsertedDateTime = DateTime.Now;
 
             _authorizationRepo.Update(_authorization);
