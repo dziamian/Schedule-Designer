@@ -37,11 +37,10 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 var _schedulePositions = _schedulePositionRepo
-                    .Get(e => e.RoomId == RoomId && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex
-                                                 && e.CourseRoomTimestamp.Timestamp.Day == Day &&
-                                                 Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
-                    .Include(e => e.CourseRoomTimestamp)
-                        .ThenInclude(e => e.Timestamp);
+                    .Get(e => e.RoomId == RoomId && e.Timestamp.PeriodIndex == PeriodIndex
+                                                 && e.Timestamp.Day == Day &&
+                                                 Weeks.Contains(e.Timestamp.Week))
+                    .Include(e => e.Timestamp);
 
                 return Ok(_schedulePositions);
             }
@@ -62,11 +61,10 @@ namespace ScheduleDesigner.Controllers
 
                 var _schedulePositions = _schedulePositionRepo
                     .Get(e => e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId)
-                              && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
+                              && Weeks.Contains(e.Timestamp.Week))
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Coordinators)
-                    .Include(e => e.CourseRoomTimestamp)
-                        .ThenInclude(e => e.Timestamp);
+                    .Include(e => e.Timestamp);
 
                 return Ok(_schedulePositions);
             }
@@ -94,10 +92,9 @@ namespace ScheduleDesigner.Controllers
                 }
 
                 var _schedulePositions = _schedulePositionRepo
-                    .Get(e => _rooms.Contains(e.RoomId) && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex 
-                        && e.CourseRoomTimestamp.Timestamp.Day == Day && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week))
-                    .Include(e => e.CourseRoomTimestamp)
-                        .ThenInclude(e => e.Timestamp)
+                    .Get(e => _rooms.Contains(e.RoomId) && e.Timestamp.PeriodIndex == PeriodIndex 
+                        && e.Timestamp.Day == Day && Weeks.Contains(e.Timestamp.Week))
+                    .Include(e => e.Timestamp)
                     .GroupBy(e => e.RoomId)
                     .Select(e => new RoomAvailability {RoomId = e.Key});
 

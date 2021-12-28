@@ -24,6 +24,8 @@ namespace ScheduleDesigner.Models
         [ForeignKey("RoomId")]
         public Room Room { get; set; }
 
-        public virtual ICollection<CourseRoomTimestamp> Timestamps { get; set; }
+        public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
+
+        public virtual ICollection<ScheduledMove> ScheduledMoves { get; set; }
     }
 }

@@ -22,7 +22,6 @@ namespace ScheduleDesigner.Hubs
         private readonly ISettingsRepo _settingsRepo;
         private readonly ITimestampRepo _timestampRepo;
         private readonly ICourseEditionRepo _courseEditionRepo;
-        private readonly ICourseRoomTimestampRepo _courseRoomTimestampRepo;
         private readonly ISchedulePositionRepo _schedulePositionRepo;
         private readonly IScheduledMoveRepo _scheduledMoveRepo;
         private readonly IGroupRepo _groupRepo;
@@ -437,24 +436,12 @@ namespace ScheduleDesigner.Hubs
                                     continue;
                                 }
 
-                                var _courseRoomTimestamps = _courseRoomTimestampRepo
-                                    .Get(e => e.RoomId == candidateDestRoomId && candidateDestTimestamps.Contains(e.TimestampId) &&
-                                                e.CourseId == includableCourseEdition.CourseId)
-                                    .Select(e => e.TimestampId)
-                                    .OrderBy(e => e);
-
                                 var destSchedulePositions = candidateDestTimestamps.Select(timestampId => new SchedulePosition
                                 {
                                     RoomId = candidateDestRoomId,
                                     TimestampId = timestampId,
                                     CourseId = includableCourseEdition.CourseId,
-                                    CourseEditionId = includableCourseEdition.CourseEditionId,
-                                    CourseRoomTimestamp = !_courseRoomTimestamps.Contains(timestampId) ? new CourseRoomTimestamp
-                                    {
-                                        RoomId = candidateDestRoomId,
-                                        TimestampId = timestampId,
-                                        CourseId = includableCourseEdition.CourseId
-                                    } : null
+                                    CourseEditionId = includableCourseEdition.CourseEditionId
                                 }).ToList();
 
                                 var movesIds = _scheduledMoveRepo
@@ -583,7 +570,6 @@ namespace ScheduleDesigner.Hubs
             ISettingsRepo settingsRepo,
             ITimestampRepo timestampRepo,
             ICourseEditionRepo courseEditionRepo,
-            ICourseRoomTimestampRepo courseRoomTimestampRepo,
             ISchedulePositionRepo schedulePositionRepo,
             IScheduledMoveRepo scheduledMoveRepo,
             IGroupRepo groupRepo
@@ -592,7 +578,6 @@ namespace ScheduleDesigner.Hubs
             _settingsRepo = settingsRepo;
             _timestampRepo = timestampRepo;
             _courseEditionRepo = courseEditionRepo;
-            _courseRoomTimestampRepo = courseRoomTimestampRepo;
             _schedulePositionRepo = schedulePositionRepo;
             _scheduledMoveRepo = scheduledMoveRepo;
             _groupRepo = groupRepo;
@@ -1159,24 +1144,12 @@ namespace ScheduleDesigner.Hubs
                             return;
                         }
 
-                        var _courseRoomTimestamps = _courseRoomTimestampRepo
-                            .Get(e => e.RoomId == roomId && _timestamps.Contains(e.TimestampId) &&
-                                      e.CourseId == courseEdition.CourseId)
-                            .Select(e => e.TimestampId)
-                            .OrderBy(e => e);
-
                         var schedulePositions = _timestamps.Select(timestampId => new SchedulePosition
                         {
                             RoomId = roomId,
                             TimestampId = timestampId,
                             CourseId = courseEdition.CourseId,
-                            CourseEditionId = courseEdition.CourseEditionId,
-                            CourseRoomTimestamp = !_courseRoomTimestamps.Contains(timestampId) ? new CourseRoomTimestamp
-                            {
-                                RoomId = roomId,
-                                TimestampId = timestampId,
-                                CourseId = courseEdition.CourseId
-                            } : null
+                            CourseEditionId = courseEdition.CourseEditionId
                         }).ToList();
 
                         _schedulePositionRepo.GetAll().AddRange(schedulePositions);
@@ -1460,24 +1433,12 @@ namespace ScheduleDesigner.Hubs
                                 return;
                             }
 
-                            var _courseRoomTimestamps = _courseRoomTimestampRepo
-                                .Get(e => e.RoomId == destRoomId && _destTimestamps.Contains(e.TimestampId) &&
-                                          e.CourseId == includableCourseEdition.CourseId)
-                                .Select(e => e.TimestampId)
-                                .OrderBy(e => e);
-
                             var destSchedulePositions = _destTimestamps.Select(timestampId => new SchedulePosition
                             {
                                 RoomId = destRoomId,
                                 TimestampId = timestampId,
                                 CourseId = includableCourseEdition.CourseId,
-                                CourseEditionId = includableCourseEdition.CourseEditionId,
-                                CourseRoomTimestamp = !_courseRoomTimestamps.Contains(timestampId) ? new CourseRoomTimestamp
-                                {
-                                    RoomId = destRoomId,
-                                    TimestampId = timestampId,
-                                    CourseId = includableCourseEdition.CourseId
-                                } : null
+                                CourseEditionId = includableCourseEdition.CourseEditionId
                             }).ToList();
 
                             var movesIds = _scheduledMoveRepo
@@ -1967,12 +1928,6 @@ namespace ScheduleDesigner.Hubs
                                 }
                             }
 
-                            var _courseRoomTimestamps = _courseRoomTimestampRepo
-                                .Get(e => e.RoomId == destRoomId && _destTimestamps.Contains(e.TimestampId) &&
-                                          e.CourseId == courseEdition.CourseId)
-                                .Select(e => e.TimestampId)
-                                .OrderBy(e => e);
-
                             var scheduledMoveId = _scheduledMoveRepo.GetNextId();
                             var scheduleOrderDate = DateTime.Now;
 
@@ -1991,13 +1946,7 @@ namespace ScheduleDesigner.Hubs
                                     CourseId = courseEdition.CourseId,
                                     UserId = userId,
                                     IsConfirmed = true,
-                                    ScheduleOrder = scheduleOrderDate,
-                                    Destination = !_courseRoomTimestamps.Contains(destTimestamp) ? new CourseRoomTimestamp
-                                    {
-                                        RoomId = destRoomId,
-                                        TimestampId = destTimestamp,
-                                        CourseId = courseEdition.CourseId
-                                    } : null
+                                    ScheduleOrder = scheduleOrderDate
                                 });
                             }
 
@@ -2329,8 +2278,7 @@ namespace ScheduleDesigner.Hubs
 
             var _schedulePositions = _schedulePositionRepo
                 .Get(e => e.LockUserId == userId && e.LockUserConnectionId == connectionId)
-                .Include(e => e.CourseRoomTimestamp)
-                    .ThenInclude(e => e.Timestamp);
+                .Include(e => e.Timestamp);
 
             var courseEditions = _courseEditions.Any() ? _courseEditions.ToList() : new List<CourseEdition>();
             var schedulePositions = _schedulePositions.Any() ? _schedulePositions.ToList() : new List<SchedulePosition>();
@@ -2342,7 +2290,7 @@ namespace ScheduleDesigner.Hubs
 
             foreach (var schedulePosition in schedulePositions)
             {
-                var timestamp = schedulePosition.CourseRoomTimestamp.Timestamp;
+                var timestamp = schedulePosition.Timestamp;
                 UnlockSchedulePositions(schedulePosition.RoomId, timestamp.PeriodIndex, timestamp.Day, new int[]{timestamp.Week});
             }
         }

@@ -29,7 +29,6 @@ namespace ScheduleDesigner.Repositories
         public DbSet<Room> Rooms { get; set; }
         public DbSet<CourseRoom> CourseRooms { get; set; }
         public DbSet<Timestamp> Timestamps { get; set; }
-        public DbSet<CourseRoomTimestamp> CourseRoomTimestamps { get; set; }
         public DbSet<SchedulePosition> SchedulePositions { get; set; }
         public DbSet<ScheduledMove> ScheduledMoves { get; set; }
 
@@ -144,26 +143,12 @@ namespace ScheduleDesigner.Repositories
 
             //CourseRoom
             modelBuilder.Entity<CourseRoom>()
-                .HasKey(e => new { e.CourseId, e.RoomId });
+                .HasKey(e => new { e.RoomId, e.CourseId });
 
             //Timestamp
             modelBuilder.Entity<Timestamp>()
                 .HasIndex(p => new { SlotIndex = p.PeriodIndex, p.Day, p.Week })
                 .IsUnique(true);
-
-            //CourseRoomTimestamp
-            modelBuilder.Entity<CourseRoomTimestamp>()
-                .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
-
-            modelBuilder.Entity<CourseRoomTimestamp>()
-                .HasOne(e => e.SchedulePosition)
-                .WithOne(e => e.CourseRoomTimestamp)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<CourseRoomTimestamp>()
-                .HasMany(e => e.ScheduledMovesDestinations)
-                .WithOne(e => e.Destination)
-                .OnDelete(DeleteBehavior.Restrict);
 
             //SchedulePosition
             modelBuilder.Entity<SchedulePosition>()
@@ -179,9 +164,29 @@ namespace ScheduleDesigner.Repositories
                 .WithMany(e => e.SchedulePositions)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<SchedulePosition>()
+                .HasOne(e => e.CourseRoom)
+                .WithMany(e => e.SchedulePositions)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SchedulePosition>()
+                .HasOne(e => e.Timestamp)
+                .WithMany(e => e.SchedulePositions)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //ScheduledMove
             modelBuilder.Entity<ScheduledMove>()
                 .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
+
+            modelBuilder.Entity<ScheduledMove>()
+                .HasOne(e => e.DestinationRoom)
+                .WithMany(e => e.ScheduledMoves)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ScheduledMove>()
+                .HasOne(e => e.DestinationTimestamp)
+                .WithMany(e => e.ScheduledMoves)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             base.OnModelCreating(modelBuilder);

@@ -208,16 +208,15 @@ namespace ScheduleDesigner.Controllers
                 var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo);
 
                 var _timestamps = _schedulePositionRepo
-                    .Get(e => Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week) 
+                    .Get(e => Weeks.Contains(e.Timestamp.Week) 
                               && (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
                               || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))))
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Coordinators)
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Groups)
-                    .Include(e => e.CourseRoomTimestamp)
-                        .ThenInclude(e => e.Timestamp)
-                    .Select(e => e.CourseRoomTimestamp.Timestamp);
+                    .Include(e => e.Timestamp)
+                    .Select(e => e.Timestamp);
 
 
                 return Ok(_timestamps.Any() ? _timestamps : Enumerable.Empty<Timestamp>().AsQueryable());
@@ -253,11 +252,11 @@ namespace ScheduleDesigner.Controllers
                 var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo);
 
                 var _timestamps = _schedulePositionRepo
-                    .Get(e => e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex
-                              && e.CourseRoomTimestamp.Timestamp.Day == Day
-                              && Weeks.Contains(e.CourseRoomTimestamp.Timestamp.Week)
-                              && e.CourseRoomTimestamp.Timestamp.PeriodIndex == PeriodIndex &&
-                              e.CourseRoomTimestamp.Timestamp.Day == Day
+                    .Get(e => e.Timestamp.PeriodIndex == PeriodIndex
+                              && e.Timestamp.Day == Day
+                              && Weeks.Contains(e.Timestamp.Week)
+                              && e.Timestamp.PeriodIndex == PeriodIndex &&
+                              e.Timestamp.Day == Day
                               && (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId)
                                       .Any(e => coordinatorsIds.Contains(e))
                                   || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))))
@@ -265,8 +264,7 @@ namespace ScheduleDesigner.Controllers
                     .ThenInclude(e => e.Coordinators)
                     .Include(e => e.CourseEdition)
                     .ThenInclude(e => e.Groups)
-                    .Include(e => e.CourseRoomTimestamp)
-                    .ThenInclude(e => e.Timestamp);
+                    .Include(e => e.Timestamp);
 
                 return Ok(_timestamps.Any());
             }

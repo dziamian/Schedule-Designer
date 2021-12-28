@@ -83,7 +83,6 @@ namespace ScheduleDesigner
             services.AddScoped<IRoomRepo, SqlRoomRepo>();
             services.AddScoped<ICourseRoomRepo, SqlCourseRoomRepo>();
             services.AddScoped<ITimestampRepo, SqlTimestampRepo>();
-            services.AddScoped<ICourseRoomTimestampRepo, SqlCourseRoomTimestampRepo>();
             services.AddScoped<ISchedulePositionRepo, SqlSchedulePositionRepo>();
             services.AddScoped<IScheduledMoveRepo, SqlScheduledMoveRepo>();
 
@@ -215,10 +214,6 @@ namespace ScheduleDesigner
                 .HasKey(e => new { e.CourseId, e.RoomId });
 
             builder.EntitySet<Timestamp>("Timestamps");
-            
-            builder.EntitySet<CourseRoomTimestamp>("CourseRoomTimestamps")
-                .EntityType
-                .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
 
             builder.EntitySet<SchedulePosition>("SchedulePositions")
                 .EntityType

@@ -29,8 +29,11 @@ namespace ScheduleDesigner.Models
         [ForeignKey("CourseId,CourseEditionId")]
         public CourseEdition CourseEdition { get; set; }
 
-        [ForeignKey("RoomId,TimestampId,CourseId")]
-        public CourseRoomTimestamp CourseRoomTimestamp { get; set; }
+        [ForeignKey("RoomId,CourseId")]
+        public CourseRoom CourseRoom { get; set; }
+
+        [ForeignKey("TimestampId")]
+        public Timestamp Timestamp { get; set; }
 
         public virtual ICollection<ScheduledMove> ScheduledMoves { get; set; }
     }

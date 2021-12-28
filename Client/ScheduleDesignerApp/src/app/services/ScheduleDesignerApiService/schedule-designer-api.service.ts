@@ -406,7 +406,7 @@ export class ScheduleDesignerApiService {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetScheduleAsCoordinator(Weeks=[${weeks.toString()}])?` +
         '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups,SchedulePositions($count=true;$top=0)),' +
-        'CourseRoomTimestamp($expand=Timestamp),ScheduledMoves($select=MoveId,IsConfirmed)',
+        'Timestamp,ScheduledMoves($select=MoveId,IsConfirmed)',
       method: 'GET'
     };
 
@@ -450,9 +450,9 @@ export class ScheduleDesignerApiService {
           const courseId = value.CourseId;
           const courseEditionId = value.CourseEditionId;
           const roomId = value.RoomId;
-          const dayIndex = value.CourseRoomTimestamp.Timestamp.Day - 1;
-          const periodIndex = value.CourseRoomTimestamp.Timestamp.PeriodIndex - 1;
-          const week = value.CourseRoomTimestamp.Timestamp.Week;
+          const dayIndex = value.Timestamp.Day - 1;
+          const periodIndex = value.Timestamp.PeriodIndex - 1;
+          const week = value.Timestamp.Week;
           const locked = value.LockUserId != null;
           const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
           const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;

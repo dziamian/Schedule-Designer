@@ -34,7 +34,10 @@ namespace ScheduleDesigner.Models
         [ForeignKey("RoomId_1,TimestampId_1,CourseId")]
         public SchedulePosition Origin { get; set; }
 
-        [ForeignKey("RoomId_2,TimestampId_2,CourseId")]
-        public CourseRoomTimestamp Destination { get; set; }
+        [ForeignKey("RoomId_2,CourseId")]
+        public CourseRoom DestinationRoom { get; set; }
+
+        [ForeignKey("TimestampId_2")]
+        public Timestamp DestinationTimestamp { get; set; }
     }
 }
