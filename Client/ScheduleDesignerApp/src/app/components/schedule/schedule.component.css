@@ -1,0 +1,91 @@
+.schedule-course-field[selected="true"] ::ng-deep .course {
+    border: 2px dashed #0043be !important;
+}
+
+.schedule-course-field:last-child:not(:only-child) {
+    border-bottom: none;
+}
+
+.schedule {
+    border: 2px solid black;
+    box-sizing: border-box;
+    margin-left: 1%;
+    width: 84%;
+    height: 73vh;
+    float: left;
+}
+
+.schedule-header {
+    height: 3%;
+    border-bottom: 2px solid black;
+    background-color: #43da57;
+    font-weight: bold;
+}
+
+.schedule-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    box-sizing: border-box;
+    height: 95%;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.schedule-content table {
+    border: 1px solid #000000;
+}
+
+.schedule-content table td.day-column, .schedule-content table th.day-column {
+    min-width: 5vw;
+}
+
+.schedule-content table td, .schedule-content table th {
+    border: 1px solid #000000;
+    min-width: 11.6vw;
+}
+
+.schedule-content table td[course="true"] {
+    height: 10.2vh;
+    vertical-align: top;
+}
+
+.schedule-content table td[valid="true"] {
+    background-color: rgb(180, 180, 180);
+}
+
+.schedule-content table td[pointer="true"]:empty:hover{ 
+    cursor: pointer;
+    border: 3px dashed rgb(102, 102, 102);
+    box-sizing: border-box;
+}
+
+.schedule-content table td[current="true"] {
+    background-color: rgb(255, 255, 255);
+    animation: currentDrop 1.75s infinite;
+}
+
+@keyframes currentDrop {
+    0% {
+        background-color: rgb(255, 255, 255);
+    }
+    50% {
+        background-color: rgb(180, 180, 180);
+    }
+    100% {
+        background-color: rgb(255, 255, 255);
+    }
+}
+
+.schedule-content table td ::ng-deep .course {
+    width: inherit;
+    border: none;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}

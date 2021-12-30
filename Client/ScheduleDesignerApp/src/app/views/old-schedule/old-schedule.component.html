@@ -27,8 +27,8 @@
                                         [course]="course"
                                         [settings]="settings"
                                         [isSelectedMoving]="currentSelectedCourseEdition?.IsMoving"
-                                        (start)="OnStartDragging($event)"
-                                        (release)="OnReleaseDragging($event)"
+                                        (onStart)="OnStartDragging($event)"
+                                        (onRelease)="OnReleaseDragging($event)"
                                     ></app-course>
                                 </div>
                             </div>
@@ -119,9 +119,9 @@
                                                         [settings]="settings"
                                                         [weeksOnTab]="weeks[currentTabIndex]"
                                                         [isSelectedMoving]="currentSelectedCourseEdition?.IsMoving"
-                                                        (start)="OnStartDragging($event)"
-                                                        (release)="OnReleaseDragging($event)"
-                                                        (select)="Select($event,dayIndex,timeIndex)"
+                                                        (onStart)="OnStartDragging($event)"
+                                                        (onRelease)="OnReleaseDragging($event)"
+                                                        (onSelect)="Select($event,dayIndex,timeIndex)"
                                                         
                                                         [ngClass]="{'not-grabbing': IsScheduleSlotDisabled(dayIndex, timeIndex)}"
                                                     ></app-course>

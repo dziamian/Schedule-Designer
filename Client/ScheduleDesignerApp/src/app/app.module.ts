@@ -20,7 +20,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './views/login/login.component';
 import { AuthenticatedComponent } from './views/authenticated/authenticated.component';
-import { ScheduleComponent } from './views/schedule/schedule.component';
 import { ProfileComponent } from './views/profile/profile.component';
 
 import { UsosApiService } from './services/UsosApiService/usos-api.service';
@@ -34,19 +33,24 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
 import { AddRoomSelectionComponent } from './components/add-room-selection/add-room-selection.component';
 import { ScheduledChangesViewComponent } from './components/scheduled-changes-view/scheduled-changes-view.component';
 import { FormsModule } from '@angular/forms';
+import { ModifyScheduleComponent } from './views/modify-schedule/modify-schedule.component';
+import { MyCoursesComponent } from './components/my-courses/my-courses.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     AuthenticatedComponent,
-    ScheduleComponent,
+    ModifyScheduleComponent,
     ProfileComponent,
     CourseComponent,
     RoomSelectionComponent,
     RoomSelectionComponent,
     AddRoomSelectionComponent,
-    ScheduledChangesViewComponent
+    ScheduledChangesViewComponent,
+    MyCoursesComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,

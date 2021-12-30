@@ -1,5 +1,7 @@
 export class Settings {
-    periods:string[];
+    Periods:string[];
+    TimeLabels:string[];
+    DayLabels:string[];
 
     constructor(
         public CourseDurationMinutes:number,

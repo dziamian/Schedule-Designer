@@ -1,0 +1,70 @@
+.tabContent {
+    text-align: center;
+    margin-top: 2vh;
+}
+
+.board {
+    height: 80vh;
+    margin-top: 1vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    margin-bottom: 1vh;
+}
+
+.schedule-menu {
+    text-align: center;
+    margin-left: 1%;
+    margin-right: 1%;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    margin-bottom: 1vh;
+    width: 50%;
+    height: 6vh;
+    float: left;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: #008b13;
+}
+
+.schedule-menu > * {
+    margin-right: 1vw;
+}
+
+.slot-selected {
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    padding-left: 1vw;
+    font-size: 11px;
+    border: 2px solid black;
+    color: black;
+    width: 25%;
+    height: 6vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.slot-status {
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    margin: auto;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    color: black;
+    width: 8%;
+    height: 6vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.spinner {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}

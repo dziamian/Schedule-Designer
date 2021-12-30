@@ -1,0 +1,69 @@
+<div class="schedule">
+    <div class="schedule-header">Schedule</div>
+    <div *ngIf="!loading; else spinner" class="schedule-content" cdkScrollable>
+        <table>
+            <thead>
+                <tr>
+                    <th class="day-column"></th>
+                    <th *ngFor="let timeLabel of settings.TimeLabels">
+                        {{timeLabel}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dayLabel of settings.DayLabels; let dayIndex = index">
+                    <td class="day-column">
+                        <b>{{dayLabel}}</b>
+                    </td>
+                    <td *ngFor="let timeLabel of settings.TimeLabels; let timeIndex = index"
+                        cdkDropList
+                        #scheduleDrops="cdkDropList"
+                        id="{{dayIndex}},{{timeIndex}}"
+                        cdkDropListSortingDisabled
+                        [cdkDropListData]="schedule[dayIndex][timeIndex]"
+                        [cdkDropListEnterPredicate]="DragEnterPredicate"
+                        [cdkDropListDisabled]="IsDropDisabled(dayIndex,timeIndex)"
+                        (cdkDropListEntered)="OnDragEnter($event)"
+                        (cdkDropListDropped)="OnDropped($event)"
+
+                        (mouseenter)="OnMouseEnter(dayIndex,timeIndex)"
+                        (mouseleave)="OnMouseLeave()"
+                        (click)="OnDropSelect(dayIndex,timeIndex)"
+
+                        [attr.valid]="modifyingScheduleData.scheduleSlotsValidity[dayIndex][timeIndex]"
+                        [attr.current]="modifyingScheduleData.currentDragEvent?.source?.dropContainer?.id === dayIndex + ',' + timeIndex"
+                        [attr.course]="true"
+                        [attr.pointer]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"
+                    >
+                        <div *ngFor="let course of schedule[dayIndex][timeIndex]; let courseIndex = index" 
+                            class="schedule-course-field"
+                            [style.border-bottom]="courseIndex == GetMaxElementIndexOnDay(dayIndex) ? 'none' : '1px solid black'"
+                            
+                            [attr.selected]="course.IsCurrentlyActive && modifyingScheduleData.currentDragEvent == null"
+                        >
+                            <app-course 
+                                [course]="course"
+                                [settings]="settings"
+                                [weeksOnTab]="currentWeeks"
+                                [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"
+                                (onStart)="OnStarted($event)"
+                                (onRelease)="OnReleased($event)"
+                                (onSelect)="OnCourseSelect($event,dayIndex,timeIndex)"
+                                
+                                [ngClass]="{'not-grabbing': IsDropDisabled(dayIndex, timeIndex)}"
+                            ></app-course>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #spinner>
+        <mat-progress-spinner
+            class="spinner"
+            mode="indeterminate"
+            diameter="40"
+        ></mat-progress-spinner>
+    </ng-template>
+</div>

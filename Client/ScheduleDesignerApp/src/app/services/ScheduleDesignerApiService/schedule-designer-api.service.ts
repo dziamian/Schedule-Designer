@@ -418,7 +418,7 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
-        const numberOfSlots = settings.periods.length - 1;
+        const numberOfSlots = settings.Periods.length - 1;
         let schedule:CourseEdition[][][] = [];
         for (let j:number = 0; j < 5; ++j) {
           schedule.push([]);

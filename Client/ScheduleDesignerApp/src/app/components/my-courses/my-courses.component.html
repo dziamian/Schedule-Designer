@@ -1,0 +1,32 @@
+<div class="my-courses">
+    <div class="my-courses-header">Your unplanned courses</div>
+    <div *ngIf="!loading; else spinner" class="my-courses-content"
+        cdkDropList
+        #myCoursesDrop="cdkDropList"
+        id="my-courses"
+        [cdkDropListData]="myCourses"
+        [cdkDropListSortingDisabled]="true"
+        (cdkDropListEntered)="OnDropEnter($event)"
+        (cdkDropListDropped)="OnDropped($event)"
+    >
+        <div *ngFor="let course of myCourses" 
+            class="course-field"
+        >
+            <app-course 
+                [course]="course"
+                [settings]="settings"
+                [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"
+                (onStart)="OnStarted($event)"
+                (onRelease)="OnReleased($event)"
+            ></app-course>
+        </div>
+    </div>
+
+    <ng-template #spinner>
+        <mat-progress-spinner
+            class="spinner"
+            mode="indeterminate"
+            diameter="40"
+        ></mat-progress-spinner>
+    </ng-template>
+</div>

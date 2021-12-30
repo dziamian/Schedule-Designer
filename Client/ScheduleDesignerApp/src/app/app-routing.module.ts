@@ -6,11 +6,11 @@ import { AuthGuardService } from './services/AuthGuardService/auth-guard.service
 
 import { LoginComponent } from './views/login/login.component';
 import { AuthenticatedComponent } from './views/authenticated/authenticated.component';
-import { ScheduleComponent } from './views/schedule/schedule.component';
 import { ProfileComponent } from './views/profile/profile.component';
+import { ModifyScheduleComponent } from './views/modify-schedule/modify-schedule.component';
 
 const routes: Routes = [
-  { path: '', component: ScheduleComponent, canActivate: [AuthGuardService] },
+  { path: '', component: ModifyScheduleComponent, canActivate: [AuthGuardService] },
   { path: 'login', component: LoginComponent, canActivate: [NoAuthGuardService] },
   { path: 'authenticated', component: AuthenticatedComponent, canActivate: [NoAuthGuardService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] }

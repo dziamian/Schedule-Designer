@@ -19,9 +19,9 @@ export class CourseComponent implements OnInit {
   @Input() weeksOnTab:number[];
   @Input() isSelectedMoving:boolean|undefined;
   
-  @Output() select:EventEmitter<{courseEdition:CourseEdition,isDisabled:boolean}> = new EventEmitter<{courseEdition:CourseEdition,isDisabled:boolean}>();
-  @Output() start:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
-  @Output() release:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
+  @Output() onSelect:EventEmitter<{courseEdition:CourseEdition,isDisabled:boolean}> = new EventEmitter<{courseEdition:CourseEdition,isDisabled:boolean}>();
+  @Output() onStart:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
+  @Output() onRelease:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 
   account:Account;
 
@@ -40,7 +40,7 @@ export class CourseComponent implements OnInit {
   }
 
   Click(event:MouseEvent) {
-    this.select.emit({courseEdition: this.course, isDisabled: this.cdkCourse.disabled});
+    this.onSelect.emit({courseEdition: this.course, isDisabled: this.cdkCourse.disabled});
   }
 
   CheckIfItsMe(id:number):boolean {
@@ -64,11 +64,11 @@ export class CourseComponent implements OnInit {
   }
 
   OnStarted(event:CdkDragStart) {
-    this.start.emit(event);
+    this.onStart.emit(event);
   }
 
   OnReleased(event:CdkDragRelease) {
-    this.release.emit(event);
+    this.onRelease.emit(event);
   }
 
   Floor(number:number):number {
