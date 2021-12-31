@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { CourseEdition } from 'src/app/others/CourseEdition';
-import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/ScheduledChangesDialog';
+import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/dialogs/ScheduledChangesDialog';
 import { ScheduledMoveDetails } from 'src/app/others/ScheduledMove';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';

@@ -24,7 +24,7 @@ export class ScheduleComponent implements OnInit {
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
-  @Input() currentWeeks: number[];
+  @Input() currentWeeks: {weeks: number[], tabSwitched: boolean};
   @Input() userIdFilter: number;
 
   @Output() onStart: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
@@ -65,7 +65,7 @@ export class ScheduleComponent implements OnInit {
     const periodIndex = position.PeriodIndex - 1;
     const weeks = position.Weeks;
 
-    if (!this.currentWeeks.some(r => weeks.includes(r))) {
+    if (!this.currentWeeks.weeks.some(r => weeks.includes(r))) {
       return;
     }
 
@@ -93,7 +93,7 @@ export class ScheduleComponent implements OnInit {
       }
 
       const schedulePosition = addedSchedulePositions.SchedulePosition;
-      const commonWeeks = schedulePosition.Weeks.filter(week => this.currentWeeks.includes(week));
+      const commonWeeks = schedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
 
       //filter for updated board
       if (addedSchedulePositions.CoordinatorsIds.includes(this.userIdFilter)) {
@@ -154,7 +154,7 @@ export class ScheduleComponent implements OnInit {
 
       const srcSchedulePosition = modifiedSchedulePositions.SourceSchedulePosition;
       const dstSchedulePosition = modifiedSchedulePositions.DestinationSchedulePosition;
-      const commonWeeks = dstSchedulePosition.Weeks.filter(week => this.currentWeeks.includes(week));
+      const commonWeeks = dstSchedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
       const movesIds = modifiedSchedulePositions.MovesIds;
 
       //filter for updated board
@@ -338,7 +338,7 @@ export class ScheduleComponent implements OnInit {
       }
       
       const srcSchedulePosition = addedScheduledMove.sourceSchedulePosition;
-      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentWeeks.includes(week));
+      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
 
       if (commonWeeks.length == 0) {
         return;
@@ -364,7 +364,7 @@ export class ScheduleComponent implements OnInit {
       }
 
       const srcSchedulePosition = removedScheduledMove.sourceSchedulePosition;
-      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentWeeks.includes(week));
+      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
 
       if (commonWeeks.length == 0) {
         return;
@@ -388,7 +388,21 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSignalrSubscriptions();
-    this.loadMySchedule();
+    if (this.currentWeeks.weeks.length > 0) {
+      this.loadMySchedule();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.currentWeeks && !changes.currentWeeks.currentValue.tabSwitched && changes.currentWeeks.currentValue.weeks.length > 0) {
+      const currentWeeks: number[] = changes.currentWeeks.currentValue.weeks;
+      const previousWeeks: number[] = changes.currentWeeks.previousValue.weeks ?? [];
+
+      if (currentWeeks.sort((a,b) => a - b).join(',') 
+        !== previousWeeks.sort((a,b) => a - b).join(',')) {
+          this.loadMySchedule();
+      }
+    }
   }
 
   private loadMySchedule() {
@@ -396,7 +410,7 @@ export class ScheduleComponent implements OnInit {
     this.loading = true;
 
     //TODO: getFilteredSchedule (not only as Coordinator)
-    this.loadingSubscription = this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.currentWeeks, this.courseTypes, this.settings).subscribe((mySchedule) => {
+    this.loadingSubscription = this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.currentWeeks.weeks, this.courseTypes, this.settings).subscribe((mySchedule) => {
       this.schedule = mySchedule;
 
       let allGroups = new Array<Group>();

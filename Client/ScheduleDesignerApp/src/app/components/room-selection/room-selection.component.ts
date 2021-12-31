@@ -4,7 +4,7 @@ import { forkJoin } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { MessageObject } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
-import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
+import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/dialogs/RoomSelectionDialog';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 

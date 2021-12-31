@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -32,10 +32,11 @@ import { accountReducer } from './store/account.reducer';
 import { RoomSelectionComponent } from './components/room-selection/room-selection.component';
 import { AddRoomSelectionComponent } from './components/add-room-selection/add-room-selection.component';
 import { ScheduledChangesViewComponent } from './components/scheduled-changes-view/scheduled-changes-view.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModifyScheduleComponent } from './views/modify-schedule/modify-schedule.component';
 import { MyCoursesComponent } from './components/my-courses/my-courses.component';
 import { ScheduleComponent } from './components/schedule/schedule.component';
+import { SelectViewComponent } from './components/select-view/select-view.component';
 
 @NgModule({
   declarations: [
@@ -50,13 +51,15 @@ import { ScheduleComponent } from './components/schedule/schedule.component';
     AddRoomSelectionComponent,
     ScheduledChangesViewComponent,
     MyCoursesComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    SelectViewComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,

@@ -12,18 +12,20 @@ import { RoomSelectionComponent } from 'src/app/components/room-selection/room-s
 import { ScheduleComponent } from 'src/app/components/schedule/schedule.component';
 import { ScheduledChangesViewComponent } from 'src/app/components/scheduled-changes-view/scheduled-changes-view.component';
 import { Account } from 'src/app/others/Accounts';
-import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/AddRoomSelectionDialog';
+import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/dialogs/AddRoomSelectionDialog';
 import { MessageObject, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { ModifyingScheduleData } from 'src/app/others/ModifyingScheduleData';
-import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
-import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/ScheduledChangesDialog';
+import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/dialogs/RoomSelectionDialog';
+import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/dialogs/ScheduledChangesDialog';
 import { SelectedCourseEdition } from 'src/app/others/SelectedCourseEdition';
 import { Settings } from 'src/app/others/Settings';
 import { CourseType, RoomType } from 'src/app/others/Types';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
+import { SelectViewComponent } from 'src/app/components/select-view/select-view.component';
+import { SelectViewDialogData, SelectViewDialogResult } from 'src/app/others/dialogs/SelectViewDialogData';
 
 @Component({
   selector: 'app-modify-schedule',
@@ -45,6 +47,7 @@ export class ModifyScheduleComponent implements OnInit {
   tabWeeks: number[][];
   tabLabels: string[];
   currentTabIndex: number = 0;
+  currentWeeks: {weeks: number[], tabSwitched: boolean};
   
   loading: boolean = true;
   connectionStatus: boolean = false;
@@ -113,8 +116,8 @@ export class ModifyScheduleComponent implements OnInit {
   }
 
   private initializeTabs(): void {
-    this.tabLabels = ['Semester', 'Even Weeks', 'Odd Weeks'];
-    this.tabWeeks = [[],[],[]];
+    this.tabLabels = ['Semester', 'Even Weeks', 'Odd Weeks', 'Custom (1)', 'Custom (2)'];
+    this.tabWeeks = [[],[],[],[],[]];
     
     for (let i:number = 0; i < this.settings.TermDurationWeeks; ++i) {
       const weekNumber = i + 1;
@@ -451,8 +454,34 @@ export class ModifyScheduleComponent implements OnInit {
     });
   }
 
-  OnTabChange(index: number): void {
+  async OnTabChange(index: number): Promise<void> {
+    var tabSwitched = true;
+    this.currentWeeks = {weeks: [], tabSwitched: tabSwitched};
+    
+    const previousIndex = this.currentTabIndex;
     this.currentTabIndex = index;
+    
+    if (this.tabWeeks[index].length == 0) {
+      var dialogData = new SelectViewDialogData(
+        this.settings
+      );
+      
+      var dialog = this.dialogService.open(SelectViewComponent, {
+        disableClose: true,
+        data: dialogData
+      });
+      var dialogResult: SelectViewDialogResult = await dialog.afterClosed().toPromise();
+
+      if (dialogResult.SelectedWeeks.length == 0) {
+        this.currentTabIndex = previousIndex;
+        return;
+      }
+
+      this.tabWeeks[this.currentTabIndex] = dialogResult.SelectedWeeks;
+      tabSwitched = false;
+    }
+
+    this.currentWeeks = {weeks: this.tabWeeks[this.currentTabIndex], tabSwitched: tabSwitched};
   }
 
   OnTabLoaded(): void {

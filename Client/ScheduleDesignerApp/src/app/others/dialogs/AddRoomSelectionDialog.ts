@@ -1,6 +1,6 @@
-import { CourseEdition } from "./CourseEdition";
-import { Room } from "./Room";
-import { RoomType } from "./Types";
+import { CourseEdition } from "../CourseEdition";
+import { Room } from "../Room";
+import { RoomType } from "../Types";
 
 export class AddRoomSelectionDialogData {
 

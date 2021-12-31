@@ -1,6 +1,6 @@
-import { CourseEdition } from "./CourseEdition";
-import { Settings } from "./Settings";
-import { RoomType } from "./Types";
+import { CourseEdition } from "../CourseEdition";
+import { Settings } from "../Settings";
+import { RoomType } from "../Types";
 
 export class ScheduledChangesDialogData {
 

@@ -15,13 +15,13 @@ import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { Room } from 'src/app/others/Room';
-import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/RoomSelectionDialog';
+import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/dialogs/RoomSelectionDialog';
 import { MessageObject, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { Store } from '@ngrx/store';
 import { Account } from 'src/app/others/Accounts';
 import { AddRoomSelectionComponent } from 'src/app/components/add-room-selection/add-room-selection.component';
-import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/AddRoomSelectionDialog';
-import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/ScheduledChangesDialog';
+import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/dialogs/AddRoomSelectionDialog';
+import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/dialogs/ScheduledChangesDialog';
 import { ScheduledChangesViewComponent } from 'src/app/components/scheduled-changes-view/scheduled-changes-view.component';
 
 @Component({

@@ -22,7 +22,7 @@ export class MyCoursesComponent implements OnInit {
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
-  @Input() currentWeeks: number[];
+  @Input() currentWeeks: {weeks: number[], tabSwitched: boolean};
   @Input() userIdFilter: number;
 
   @Output() onDropEnter: EventEmitter<CdkDragEnter> = new EventEmitter<CdkDragEnter>();
@@ -149,7 +149,7 @@ export class MyCoursesComponent implements OnInit {
           forkJoin([
             this.scheduleDesignerApiService.GetMyCourseEdition(
               schedulePosition.CourseId, schedulePosition.CourseEditionId,
-              this.currentWeeks.length, this.courseTypes,
+              this.currentWeeks.weeks.length, this.courseTypes,
               this.settings
             ),
             this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds)
@@ -170,7 +170,21 @@ export class MyCoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSignalrSubscriptions();
-    this.loadMyCourses();
+    if (this.currentWeeks.weeks.length > 0) {
+      this.loadMyCourses();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.currentWeeks && !changes.currentWeeks.currentValue.tabSwitched && changes.currentWeeks.currentValue.weeks.length > 0) {
+      const currentWeeks: number[] = changes.currentWeeks.currentValue.weeks;
+      const previousWeeks: number[] = changes.currentWeeks.previousValue.weeks ?? [];
+
+      if (currentWeeks.sort((a,b) => a - b).join(',') 
+        !== previousWeeks.sort((a,b) => a - b).join(',')) {
+          this.loadMyCourses();
+      }
+    }
   }
 
   private loadMyCourses(): void {
@@ -178,7 +192,7 @@ export class MyCoursesComponent implements OnInit {
     this.loading = true;
 
     //TODO: getFilteredCourses (not only as Coordinator)
-    this.loadingSubscription = this.scheduleDesignerApiService.GetMyCourseEditions(this.currentWeeks.length, this.courseTypes, this.settings).subscribe((myCourses) => {
+    this.loadingSubscription = this.scheduleDesignerApiService.GetMyCourseEditions(this.currentWeeks.weeks.length, this.courseTypes, this.settings).subscribe((myCourses) => {
       this.myCourses = myCourses;
 
       let allGroups = new Array<Group>();

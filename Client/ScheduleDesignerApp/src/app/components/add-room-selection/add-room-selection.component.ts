@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
-import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult, RoomSelect } from 'src/app/others/AddRoomSelectionDialog';
+import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult, RoomSelect } from 'src/app/others/dialogs/AddRoomSelectionDialog';
 import { Room } from 'src/app/others/Room';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 

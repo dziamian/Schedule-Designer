@@ -1,7 +1,7 @@
 <div *ngIf="!loading && connectionStatus; else spinner">
     <mat-tab-group mat-align-tabs="center"
         animationDuration="0ms" 
-        ([selectedIndex])="currentTabIndex"
+        [selectedIndex]="currentTabIndex"
         (selectedIndexChange)="OnTabChange($event)"
     >
         <mat-tab *ngFor="let tabLabel of tabLabels; let tabIndex = index" label="{{tabLabel}}"
@@ -14,7 +14,7 @@
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
-                            [currentWeeks]="tabWeeks[currentTabIndex]"
+                            [currentWeeks]="currentWeeks"
                             [userIdFilter]="account.UserId"
 
                             (onDropEnter)="OnMyCoursesEnter($event)"
@@ -94,7 +94,7 @@
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
-                            [currentWeeks]="tabWeeks[currentTabIndex]"
+                            [currentWeeks]="currentWeeks"
                             [userIdFilter]="account.UserId"
 
                             (onStart)="OnScheduleStart($event)"

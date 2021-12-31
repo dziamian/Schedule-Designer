@@ -44,7 +44,7 @@
                             <app-course 
                                 [course]="course"
                                 [settings]="settings"
-                                [weeksOnTab]="currentWeeks"
+                                [weeksOnTab]="currentWeeks.weeks"
                                 [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"
                                 (onStart)="OnStarted($event)"
                                 (onRelease)="OnReleased($event)"

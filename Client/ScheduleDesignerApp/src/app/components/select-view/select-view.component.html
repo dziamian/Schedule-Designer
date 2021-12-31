@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>
+    Please select the weeks you want to see:
+</h2>
+<div mat-dialog-content>
+    <form>
+        <mat-form-field appearance="fill">
+            <mat-label>Selected weeks</mat-label>
+            <mat-select [formControl]="selectedWeeks" multiple required>
+                <mat-select-trigger>
+                    {{selectedWeeks.value ? ('Week ' + selectedWeeks.value[0]) : ''}}
+                    <span *ngIf="selectedWeeks.value?.length > 1" class="additional-selection">
+                        (+{{selectedWeeks.value.length - 1}} {{selectedWeeks.value.length === 2 ? 'other' : 'others'}})
+                    </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let weekNumber of allWeeks" [value]="weekNumber">Week {{weekNumber}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="GET_EMPTY_RESULT()">Cancel</button>
+    <button 
+        mat-raised-button
+        color="primary"
+        [disabled]="!selectedWeeks.value"
+
+        (click)="Action()"
+    >Create view</button>
+</mat-dialog-actions>
