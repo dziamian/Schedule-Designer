@@ -58,33 +58,18 @@ export class CourseEdition {
     }
 
     ShowFrequency(settings:Settings):string {
-        if (this.Weeks == null) {
-            return '';
-        }
-    
-        const courseWeeksLength = this.Weeks.length;
-        if (courseWeeksLength == 0) {
-            return '';
-        }
-    
-        const termDurationWeeks = settings.TermDurationWeeks;
-    
-        if (courseWeeksLength == termDurationWeeks) {
-            return 'Weekly';
-        }
-    
-        if (CourseEdition.checkFrequency(this.Weeks, termDurationWeeks, true)) {
-            return 'Even weeks';
-        }
-    
-        if (CourseEdition.checkFrequency(this.Weeks, termDurationWeeks, false)) {
-            return 'Odd weeks';
-        }
-    
-        return CourseEdition.frequencyToString(this.Weeks);
+        return CourseEdition.ShowWeeksDescription(settings, this.Weeks, true);
     }
 
-    static ShowFrequency(settings:Settings, weeks:number[]):string {
+    static ShowWeeks(settings: Settings, weeks: number[]): string {
+        return this.ShowWeeksDescription(settings, weeks, false);
+    }
+
+    static ShowFrequency(settings:Settings, weeks:number[]|null): string {
+        return this.ShowWeeksDescription(settings, weeks, true);
+    }
+
+    private static ShowWeeksDescription(settings:Settings, weeks:number[]|null, isFrequencyDescription: boolean):string {
         if (weeks == null) {
             return '';
         }
@@ -97,7 +82,7 @@ export class CourseEdition {
         const termDurationWeeks = settings.TermDurationWeeks;
     
         if (weeksLength == termDurationWeeks) {
-            return 'Weekly';
+            return isFrequencyDescription ? 'Weekly' : 'Semester';
         }
     
         if (CourseEdition.checkFrequency(weeks, termDurationWeeks, true)) {

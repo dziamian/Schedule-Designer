@@ -19,6 +19,7 @@ import { setAccount } from './store/account.actions';
 export class AppComponent implements OnInit {
   title:string = 'Schedule Designer';
 
+  account:Account;
   isAccountSet:boolean = false;
 
   constructor(
@@ -27,13 +28,18 @@ export class AppComponent implements OnInit {
     private usosApiService:UsosApiService, 
     private signalrService:SignalrService,
     private snackBar:MatSnackBar,
-    @Inject(DOCUMENT) private document:Document,
     private store:Store<{account:Account}>
   ) { 
     this.router.events.subscribe((value) => {
       if (!this.isAccountSet && value instanceof NavigationEnd) {
         this.trySetAccount();
       }
+    });
+    this.store.select('account').subscribe((account) => {
+      if (account.UserId == 0) {
+        return;
+      }
+      this.account = account;
     });
   }
 
@@ -45,6 +51,7 @@ export class AppComponent implements OnInit {
     if (this.IsAuthenticated()) {
       this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
         this.store.dispatch(setAccount({account}));
+        this.account = account;
         this.isAccountSet = true;
       }, (error) => {
         if (error?.status == 401) {
@@ -70,5 +77,21 @@ export class AppComponent implements OnInit {
 
   public Profile():void {
     this.router.navigate(['profile']);
+  }
+
+  public PersonalSchedule(): void {
+    this.router.navigate(['personal-schedule']);
+  }
+
+  public MyGroupsSchedule(): void {
+    this.router.navigate(['student-schedule']);
+  }
+
+  public FullSchedule(): void {
+    this.router.navigate(['full-schedule']);
+  }
+
+  public AdminPanel(): void {
+    this.router.navigate(['admin-panel']);
   }
 }

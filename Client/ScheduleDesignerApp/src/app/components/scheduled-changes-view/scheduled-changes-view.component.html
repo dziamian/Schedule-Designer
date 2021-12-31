@@ -8,6 +8,7 @@
 </h2>
 <div *ngIf="!loading" mat-dialog-content>
     <mat-list role="list">
+        <mat-divider></mat-divider>
         <mat-list-item role="listitem" *ngFor="let scheduledMove of scheduledMoves">
             <div class="item-text" matLine>
                 <b>From:</b> {{ShowFrequency(scheduledMove.SourceWeeks)}}
@@ -22,6 +23,7 @@
                 [disabled]="scheduledMove.Locked || scheduledMove.IsRemoving" 
                 (click)="Remove(scheduledMove)">Remove</button>
             </div>
+            <mat-divider></mat-divider>
         </mat-list-item>
     </mat-list>
 </div>

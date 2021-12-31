@@ -1,5 +1,15 @@
 <div class="schedule">
-    <div class="schedule-header">Schedule</div>
+    <div class="schedule-header">
+        <div class="schedule-header-left"></div>
+        <div class="schedule-header-center">
+            Schedule {{GetViewDescription()}}
+        </div>
+        <div class="schedule-header-right">
+            <button *ngIf="currentWeeks?.editable" mat-icon-button class="edit-icon-button" (click)="EditView()">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+    </div>
     <div *ngIf="!loading; else spinner" class="schedule-content" cdkScrollable>
         <table>
             <thead>

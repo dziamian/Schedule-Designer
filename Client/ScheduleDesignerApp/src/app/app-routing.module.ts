@@ -10,10 +10,12 @@ import { ProfileComponent } from './views/profile/profile.component';
 import { ModifyScheduleComponent } from './views/modify-schedule/modify-schedule.component';
 
 const routes: Routes = [
-  { path: '', component: ModifyScheduleComponent, canActivate: [AuthGuardService] },
   { path: 'login', component: LoginComponent, canActivate: [NoAuthGuardService] },
   { path: 'authenticated', component: AuthenticatedComponent, canActivate: [NoAuthGuardService] },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] }
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
+  { path: 'personal-schedule', component: ModifyScheduleComponent, canActivate: [AuthGuardService] },
+  
+  { path: '**', redirectTo: '/profile' }
 ];
 
 @NgModule({

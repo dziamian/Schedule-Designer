@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-    Please select the weeks you want to see:
+    <b>Please select the weeks you want to see:</b>
 </h2>
 <div mat-dialog-content>
     <form>
@@ -22,7 +22,7 @@
     <button 
         mat-raised-button
         color="primary"
-        [disabled]="!selectedWeeks.value"
+        [disabled]="selectedWeeks.status != 'VALID'"
 
         (click)="Action()"
     >Create view</button>

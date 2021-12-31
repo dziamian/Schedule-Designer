@@ -34,6 +34,7 @@ export class SelectViewComponent implements OnInit {
   }
 
   Action(): void {
+    console.log(this.selectedWeeks);
     this.dialogRef.close(new SelectViewDialogResult(this.selectedWeeks.value));
   }
 }

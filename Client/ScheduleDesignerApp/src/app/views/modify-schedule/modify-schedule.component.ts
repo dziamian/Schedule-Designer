@@ -47,7 +47,7 @@ export class ModifyScheduleComponent implements OnInit {
   tabWeeks: number[][];
   tabLabels: string[];
   currentTabIndex: number = 0;
-  currentWeeks: {weeks: number[], tabSwitched: boolean};
+  currentWeeks: {weeks: number[], tabSwitched: boolean, editable: boolean};
   
   loading: boolean = true;
   connectionStatus: boolean = false;
@@ -456,7 +456,11 @@ export class ModifyScheduleComponent implements OnInit {
 
   async OnTabChange(index: number): Promise<void> {
     var tabSwitched = true;
-    this.currentWeeks = {weeks: [], tabSwitched: tabSwitched};
+    this.currentWeeks = {
+      weeks: [], 
+      tabSwitched: tabSwitched, 
+      editable: false
+    };
     
     const previousIndex = this.currentTabIndex;
     this.currentTabIndex = index;
@@ -481,12 +485,43 @@ export class ModifyScheduleComponent implements OnInit {
       tabSwitched = false;
     }
 
-    this.currentWeeks = {weeks: this.tabWeeks[this.currentTabIndex], tabSwitched: tabSwitched};
+    this.currentWeeks = {
+      weeks: this.tabWeeks[this.currentTabIndex], 
+      tabSwitched: tabSwitched, 
+      editable: (index == 3 || index == 4)
+    };
   }
 
   OnTabLoaded(): void {
     this.updateBusyPeriods();
     this.selectCourseIfPossible();
+  }
+
+  async OnEditView(): Promise<void> {
+    var dialogData = new SelectViewDialogData(
+      this.settings
+    );
+    
+    var dialog = this.dialogService.open(SelectViewComponent, {
+      disableClose: true,
+      data: dialogData
+    });
+    var dialogResult: SelectViewDialogResult = await dialog.afterClosed().toPromise();
+
+    if (dialogResult.SelectedWeeks.length == 0) {
+      return;
+    }
+
+    if (this.currentWeeks.weeks.sort((a,b) => a - b).join(',') 
+        === dialogResult.SelectedWeeks.sort((a,b) => a - b).join(',')) {
+          return;
+    }
+
+    this.currentWeeks = {
+      weeks: dialogResult.SelectedWeeks,
+      tabSwitched: false, 
+      editable: true
+    };
   }
 
   private getIndexes(id: string): number[] {

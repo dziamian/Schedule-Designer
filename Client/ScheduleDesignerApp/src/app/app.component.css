@@ -28,18 +28,40 @@ a {
 
 .toolbar-left {
     float: left;
-    width: 33.33333%;
+    width: 20%;
 }
 
-.toolbar-center {
+.toolbar-title {
+    padding-left: 3vw;
+}
+
+.toolbar-middle {
     float: left;
-    width: 33.33333%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
 }
 
 .toolbar-right {
     float: left;
-    width: 33.33333%;
+    width: 20%;
+}
+
+.toolbar-admin-panel {
+    margin-right: 1vw;
+}
+
+.toolbar-full-schedule {
+    margin-right: 1vw;
+}
+
+.toolbar-student-schedule {
+    margin-right: 1vw;
+}
+
+.toolbar-coordinator-schedule {
+    margin-right: 1vw;
 }
 
 .toolbar-profile {

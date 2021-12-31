@@ -24,7 +24,7 @@ export class ScheduleComponent implements OnInit {
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
-  @Input() currentWeeks: {weeks: number[], tabSwitched: boolean};
+  @Input() currentWeeks: {weeks: number[], tabSwitched: boolean, editable: boolean};
   @Input() userIdFilter: number;
 
   @Output() onStart: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
@@ -42,6 +42,7 @@ export class ScheduleComponent implements OnInit {
   }> = new EventEmitter();
   @Output() onMouseLeave: EventEmitter<null> = new EventEmitter();
   @Output() onLoaded: EventEmitter<null> = new EventEmitter();
+  @Output() onViewEdit: EventEmitter<null> = new EventEmitter();
 
   loadingSubscription: Subscription;
   loading: boolean = true;
@@ -443,6 +444,15 @@ export class ScheduleComponent implements OnInit {
         this.onLoaded.emit();
       });
     });
+  }
+
+  async EditView(): Promise<void> {
+    this.onViewEdit.emit();
+  }
+
+  GetViewDescription(): string {
+    const weeks = CourseEdition.ShowWeeks(this.settings, this.currentWeeks.weeks);
+    return weeks == '' ? '' : `(${CourseEdition.ShowWeeks(this.settings, this.currentWeeks.weeks)})`;
   }
 
   GetMaxElementIndexOnDay(dayIndex: number): number {
