@@ -21,3 +21,25 @@
     height: 97%;
     overflow-y: auto;
 }
+
+.tree {
+    background-color: #00000000;
+}
+
+.tree .node:first-child {
+    border-top: 1px solid; 
+    border-color: #00000048;
+}
+
+.tree .node {
+    border-bottom: 1px solid;
+    border-color: #00000048;
+}
+
+.node-icon {
+    margin-left: 0.5vw;
+}
+
+.padding-button {
+    background-color: #00000000 !important;
+}

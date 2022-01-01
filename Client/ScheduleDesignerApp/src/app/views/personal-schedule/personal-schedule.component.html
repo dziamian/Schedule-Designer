@@ -10,7 +10,7 @@
             <ng-template matTabContent>
                 <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
-                        <app-my-courses
+                        <!--<app-my-courses
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -20,8 +20,8 @@
                             (onDropped)="OnMyCoursesDrop($event)"
                             (onStart)="OnMyCoursesStart($event)"
                             (onRelease)="OnRelease($event)"
-                        ></app-my-courses>
-                        <!--<app-available-resources></app-available-resources>-->
+                        ></app-my-courses>-->
+                        <app-available-resources></app-available-resources>
                         
                         <div class="schedule-menu">
                             <button mat-raised-button color="accent" 

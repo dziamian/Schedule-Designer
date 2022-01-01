@@ -1,7 +1,34 @@
 <div class="available-resources">
     <div class="available-resources-header">Available resources</div>
     <div *ngIf="loading == false; else spinner" class="available-resources-content">
-        
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
+                <button mat-icon-button disabled class="padding-button"></button>
+                {{node.item.name}} 
+                <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
+                    {{node.item.icon}}
+                </mat-icon>
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null">
+                    <mat-icon>remove_red_eye</mat-icon>
+                </button>
+            </mat-tree-node>
+            
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
+                <button mat-icon-button matTreeNodeToggle
+                    [attr.aria-label]="'Toggle ' + node.item">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                </button>
+                <b>{{node.item.name}}</b> 
+                <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
+                    {{node.item.icon}}
+                </mat-icon>
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null">
+                    <mat-icon>remove_red_eye</mat-icon>
+                </button>
+            </mat-tree-node>
+        </mat-tree>
     </div>
     <ng-template #spinner>
         <mat-progress-spinner *ngIf="loading != null"
