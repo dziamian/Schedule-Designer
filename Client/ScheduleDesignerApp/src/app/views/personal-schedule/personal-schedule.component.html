@@ -2,7 +2,7 @@
     <mat-tab-group mat-align-tabs="center"
         animationDuration="0ms" 
         [selectedIndex]="currentTabIndex"
-        (selectedIndexChange)="OnTabChange($event)"
+        (selectedIndexChange)="OnTabChange($event,false)"
     >
         <mat-tab *ngFor="let tabLabel of tabLabels; let tabIndex = index" label="{{tabLabel}}"
             [disabled]="data.currentSelectedCourseEdition != null && data.currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != tabWeeks[tabIndex].length"
@@ -14,14 +14,14 @@
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
-                            [currentWeeks]="currentWeeks"
-                            [userIdFilter]="account.UserId"
+                            [currentFilter]="currentFilter"
 
                             (onDropEnter)="OnMyCoursesEnter($event)"
                             (onDropped)="OnMyCoursesDrop($event)"
                             (onStart)="OnMyCoursesStart($event)"
                             (onRelease)="OnRelease($event)"
                         ></app-my-courses>
+                        <!--<app-available-resources></app-available-resources>-->
                         
                         <div class="schedule-menu">
                             <button mat-raised-button color="accent" 
@@ -91,11 +91,12 @@
                         </div>
 
                         <app-schedule
+                            labelBefore="Personal"
+                            
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
-                            [currentWeeks]="currentWeeks"
-                            [userIdFilter]="account.UserId"
+                            [currentFilter]="currentFilter"
 
                             (onStart)="OnScheduleStart($event)"
                             (onRelease)="OnRelease($event)"

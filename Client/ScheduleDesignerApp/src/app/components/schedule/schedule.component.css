@@ -26,13 +26,13 @@
 
 .schedule-header-left {
     float: left;
-    width: 33.33333%;
+    width: 20%;
     height: 100%;
 }
 
 .schedule-header-center {
     float: left;
-    width: 33.33333%;
+    width: 60%;
     height: 100%;
     text-align: center;
     padding-top: 0.2vh;
@@ -41,7 +41,7 @@
 
 .schedule-header-right {
     float: left;
-    width: 33.33333%;
+    width: 20%;
     height: 100%;
     text-align: right;
 }

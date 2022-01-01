@@ -7,13 +7,13 @@ import { AuthGuardService } from './services/AuthGuardService/auth-guard.service
 import { LoginComponent } from './views/login/login.component';
 import { AuthenticatedComponent } from './views/authenticated/authenticated.component';
 import { ProfileComponent } from './views/profile/profile.component';
-import { ModifyScheduleComponent } from './views/modify-schedule/modify-schedule.component';
+import { PersonalScheduleComponent } from './views/personal-schedule/personal-schedule.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [NoAuthGuardService] },
   { path: 'authenticated', component: AuthenticatedComponent, canActivate: [NoAuthGuardService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
-  { path: 'personal-schedule', component: ModifyScheduleComponent, canActivate: [AuthGuardService] },
+  { path: 'personal-schedule', component: PersonalScheduleComponent, canActivate: [AuthGuardService] },
   
   { path: '**', redirectTo: '/profile' }
 ];

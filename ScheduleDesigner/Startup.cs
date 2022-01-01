@@ -20,13 +20,13 @@ using Microsoft.OData.Edm;
 using Microsoft.OpenApi.Models;
 using ScheduleDesigner.Authentication;
 using ScheduleDesigner.Dtos;
-using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Services;
+using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner
 {
@@ -224,7 +224,6 @@ namespace ScheduleDesigner
             builder.EntitySet<ScheduledMove>("ScheduledMoves")
                 .EntityType
                 .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
-
             
             builder.Namespace = "Service";
             builder.EntityType<Settings>().Collection
@@ -259,8 +258,13 @@ namespace ScheduleDesigner
                 .CollectionParameter<int>("RoomsIds");
 
             var getMyCourseEditionsFunction = builder.EntityType<CourseEdition>().Collection
-                .Function("GetMyCourseEditions")
-                .ReturnsCollectionFromEntitySet<CourseEdition>("CourseEditions")
+                .Function("GetFilteredCourseEditions")
+                .ReturnsCollectionFromEntitySet<CourseEdition>("CourseEditions");
+            getMyCourseEditionsFunction
+                .CollectionParameter<int>("CoordinatorsIds");
+            getMyCourseEditionsFunction
+                .CollectionParameter<int>("GroupsIds");
+            getMyCourseEditionsFunction
                 .Parameter<double>("Frequency");
 
             var getMyCourseEditionFunction = builder.EntityType<CourseEdition>()
@@ -299,9 +303,16 @@ namespace ScheduleDesigner
             getSchedulePositionFunction
                 .CollectionParameter<int>("Weeks");
 
-            builder.EntityType<SchedulePosition>().Collection
-                .Function("GetScheduleAsCoordinator")
-                .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions")
+            var getScheduleForModification = builder.EntityType<SchedulePosition>().Collection
+                .Function("GetFilteredSchedule")
+                .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions");
+            getScheduleForModification
+                .CollectionParameter<int>("CoordinatorsIds");
+            getScheduleForModification
+                .CollectionParameter<int>("GroupsIds");
+            getScheduleForModification
+                .CollectionParameter<int>("RoomsIds");
+            getScheduleForModification
                 .CollectionParameter<int>("Weeks");
 
             var getRoomsAvailabilityFunction = builder.EntityType<SchedulePosition>().Collection

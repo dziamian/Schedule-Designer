@@ -1,0 +1,13 @@
+<div class="available-resources">
+    <div class="available-resources-header">Available resources</div>
+    <div *ngIf="loading == false; else spinner" class="available-resources-content">
+        
+    </div>
+    <ng-template #spinner>
+        <mat-progress-spinner *ngIf="loading != null"
+            class="spinner"
+            mode="indeterminate"
+            diameter="40"
+        ></mat-progress-spinner>
+    </ng-template>
+</div>

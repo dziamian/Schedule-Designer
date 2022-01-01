@@ -1,0 +1,23 @@
+.available-resources {
+    border: 2px solid #008700;
+    box-sizing: border-box;
+    padding-bottom: 1vh;
+    width: 15%;
+    height: 80vh;
+    float: left;
+}
+
+.available-resources-header {
+    height: 3%;
+    border-bottom: 2px solid #008700;
+    background-color: #81C781;
+    font-weight: bold;
+}
+
+.available-resources-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    box-sizing: border-box;
+    height: 97%;
+    overflow-y: auto;
+}

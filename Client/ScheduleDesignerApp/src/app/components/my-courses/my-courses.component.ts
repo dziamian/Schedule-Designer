@@ -3,6 +3,7 @@ import { Component, OnInit, Output, EventEmitter, Input, ViewChild, SimpleChange
 import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { CourseEdition } from 'src/app/others/CourseEdition';
+import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
 import { ModifyingScheduleData } from 'src/app/others/ModifyingScheduleData';
 import { Settings } from 'src/app/others/Settings';
@@ -22,8 +23,7 @@ export class MyCoursesComponent implements OnInit {
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
-  @Input() currentWeeks: {weeks: number[], tabSwitched: boolean};
-  @Input() userIdFilter: number;
+  @Input() currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean};
 
   @Output() onDropEnter: EventEmitter<CdkDragEnter> = new EventEmitter<CdkDragEnter>();
   @Output() onDropped: EventEmitter<CdkDragDrop<CourseEdition[]>> = new EventEmitter<CdkDragDrop<CourseEdition[]>>();
@@ -32,7 +32,7 @@ export class MyCoursesComponent implements OnInit {
   @Output() onLoaded: EventEmitter<null> = new EventEmitter();
 
   loadingSubscription: Subscription;
-  loading: boolean = true;
+  loading: boolean | null = null;
 
   myCourses: CourseEdition[];
 
@@ -71,7 +71,10 @@ export class MyCoursesComponent implements OnInit {
       const addedAmount = schedulePosition.Weeks.length;
 
       //filter for updated board
-      if (addedSchedulePositions.CoordinatorsIds.includes(this.userIdFilter)) {
+      const filter = new Filter(addedSchedulePositions.CoordinatorsIds, addedSchedulePositions.GroupsIds, [
+        addedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
         const courses = this.myCourses.filter((course) => 
           course.CourseId == schedulePosition.CourseId 
           && course.CourseEditionId == schedulePosition.CourseEditionId 
@@ -109,7 +112,10 @@ export class MyCoursesComponent implements OnInit {
       const removedAmount = schedulePosition.Weeks.length;
 
       //filter for updated board
-      if (removedSchedulePositions.CoordinatorsIds.includes(this.userIdFilter)) {
+      const filter = new Filter(removedSchedulePositions.CoordinatorsIds, removedSchedulePositions.GroupsIds, [
+        removedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
         const courses = this.myCourses.filter((course) => {
           if (course.CourseId == schedulePosition.CourseId 
             && course.CourseEditionId == schedulePosition.CourseEditionId) {
@@ -149,7 +155,7 @@ export class MyCoursesComponent implements OnInit {
           forkJoin([
             this.scheduleDesignerApiService.GetMyCourseEdition(
               schedulePosition.CourseId, schedulePosition.CourseEditionId,
-              this.currentWeeks.weeks.length, this.courseTypes,
+              this.currentFilter.weeks.length, this.courseTypes,
               this.settings
             ),
             this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds)
@@ -170,20 +176,28 @@ export class MyCoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSignalrSubscriptions();
-    if (this.currentWeeks.weeks.length > 0) {
+    if (this.currentFilter.weeks.length > 0 && this.currentFilter.filter) {
       this.loadMyCourses();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.currentWeeks && !changes.currentWeeks.currentValue.tabSwitched && changes.currentWeeks.currentValue.weeks.length > 0) {
-      const currentWeeks: number[] = changes.currentWeeks.currentValue.weeks;
-      const previousWeeks: number[] = changes.currentWeeks.previousValue.weeks ?? [];
+    if (changes.currentFilter && !changes.currentFilter.currentValue.tabSwitched 
+      && changes.currentFilter.currentValue.weeks.length > 0 && changes.currentFilter.currentValue.filter) {
+        if (changes.currentFilter.isFirstChange()) {
+          return;
+        }
+        
+        const currentWeeks: number[] = changes.currentFilter.currentValue.weeks;
+        const previousWeeks: number[] = changes.currentFilter.previousValue.weeks ?? [];
+        const currentFilter: Filter = changes.currentFilter.currentValue.filter;
+        const previousFilter: Filter = changes.currentFilter.previousValue.filter;
 
-      if (currentWeeks.sort((a,b) => a - b).join(',') 
-        !== previousWeeks.sort((a,b) => a - b).join(',')) {
-          this.loadMyCourses();
-      }
+        if (currentWeeks.sort((a,b) => a - b).join(',') 
+          !== previousWeeks.sort((a,b) => a - b).join(',')
+          || !currentFilter.compare(previousFilter)) {
+            this.loadMyCourses();
+        }
     }
   }
 
@@ -191,8 +205,7 @@ export class MyCoursesComponent implements OnInit {
     this.loadingSubscription?.unsubscribe();
     this.loading = true;
 
-    //TODO: getFilteredCourses (not only as Coordinator)
-    this.loadingSubscription = this.scheduleDesignerApiService.GetMyCourseEditions(this.currentWeeks.weeks.length, this.courseTypes, this.settings).subscribe((myCourses) => {
+    this.loadingSubscription = this.scheduleDesignerApiService.GetFilteredCourseEditions(this.currentFilter.weeks.length, this.currentFilter.filter, this.courseTypes, this.settings).subscribe((myCourses) => {
       this.myCourses = myCourses;
 
       let allGroups = new Array<Group>();

@@ -33,8 +33,15 @@ export class SelectViewComponent implements OnInit {
     return SelectViewDialogResult.EMPTY;
   }
 
+  SelectAll(): void {
+    this.selectedWeeks.patchValue(this.allWeeks);
+  }
+
+  SelectNone(): void {
+    this.selectedWeeks.patchValue(null);
+  }
+
   Action(): void {
-    console.log(this.selectedWeeks);
     this.dialogRef.close(new SelectViewDialogResult(this.selectedWeeks.value));
   }
 }

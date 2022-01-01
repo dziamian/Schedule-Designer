@@ -12,6 +12,7 @@ import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
 import { CourseEditionInfo } from 'src/app/others/CourseEditionInfo';
 import { ScheduledMove, ScheduledMoveDetails } from 'src/app/others/ScheduledMove';
+import { Filter } from 'src/app/others/Filter';
 
 @Injectable({
   providedIn: 'root'
@@ -295,14 +296,15 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetMyCourseEditions(
-    frequency:number, 
+  public GetFilteredCourseEditions(
+    frequency:number,
+    filter:Filter,
     courseTypes:Map<number,CourseType>, 
     settings:Settings
   ):Observable<CourseEdition[]> {
     const FREQUENCY = Math.floor(frequency);
     const request = {
-      url: this.baseUrl + `/courseEditions/Service.GetMyCourseEditions(Frequency=${FREQUENCY})?` +
+      url: this.baseUrl + `/courseEditions/Service.GetFilteredCourseEditions(${filter.toStringWithoutRooms()},Frequency=${FREQUENCY})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
@@ -398,13 +400,14 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetScheduleAsCoordinator(
-    weeks:number[], 
+  public GetFilteredSchedule(
+    weeks:number[],
+    filter: Filter,
     courseTypes:Map<number,CourseType>,
     settings:Settings
   ):Observable<CourseEdition[][][]> {
     const request = {
-      url: this.baseUrl + `/schedulePositions/Service.GetScheduleAsCoordinator(Weeks=[${weeks.toString()}])?` +
+      url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?` +
         '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups,SchedulePositions($count=true;$top=0)),' +
         'Timestamp,ScheduledMoves($select=MoveId,IsConfirmed)',
       method: 'GET'

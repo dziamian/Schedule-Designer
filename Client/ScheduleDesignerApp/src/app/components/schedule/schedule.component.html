@@ -2,15 +2,15 @@
     <div class="schedule-header">
         <div class="schedule-header-left"></div>
         <div class="schedule-header-center">
-            Schedule {{GetViewDescription()}}
+            {{labelBefore}} Schedule {{labelAfter}} {{GetViewDescription()}}
         </div>
         <div class="schedule-header-right">
-            <button *ngIf="currentWeeks?.editable" mat-icon-button class="edit-icon-button" (click)="EditView()">
+            <button *ngIf="currentFilter?.editable" mat-icon-button class="edit-icon-button" (click)="EditView()">
                 <mat-icon>edit</mat-icon>
             </button>
         </div>
     </div>
-    <div *ngIf="!loading; else spinner" class="schedule-content" cdkScrollable>
+    <div *ngIf="loading == false; else spinner" class="schedule-content" cdkScrollable>
         <table>
             <thead>
                 <tr>
@@ -54,7 +54,7 @@
                             <app-course 
                                 [course]="course"
                                 [settings]="settings"
-                                [weeksOnTab]="currentWeeks.weeks"
+                                [weeksOnTab]="currentFilter.weeks"
                                 [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"
                                 (onStart)="OnStarted($event)"
                                 (onRelease)="OnReleased($event)"
@@ -70,7 +70,7 @@
     </div>
 
     <ng-template #spinner>
-        <mat-progress-spinner
+        <mat-progress-spinner *ngIf="loading != null"
             class="spinner"
             mode="indeterminate"
             diameter="40"

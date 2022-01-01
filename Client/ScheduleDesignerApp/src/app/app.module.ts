@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
+import { MatTreeModule } from '@angular/material/tree';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -33,17 +34,19 @@ import { RoomSelectionComponent } from './components/room-selection/room-selecti
 import { AddRoomSelectionComponent } from './components/add-room-selection/add-room-selection.component';
 import { ScheduledChangesViewComponent } from './components/scheduled-changes-view/scheduled-changes-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ModifyScheduleComponent } from './views/modify-schedule/modify-schedule.component';
 import { MyCoursesComponent } from './components/my-courses/my-courses.component';
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { SelectViewComponent } from './components/select-view/select-view.component';
+import { AvailableResourcesComponent } from './components/available-resources/available-resources.component';
+import { FullScheduleComponent } from './views/full-schedule/full-schedule.component';
+import { PersonalScheduleComponent } from './views/personal-schedule/personal-schedule.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     AuthenticatedComponent,
-    ModifyScheduleComponent,
+    PersonalScheduleComponent,
     ProfileComponent,
     CourseComponent,
     RoomSelectionComponent,
@@ -52,7 +55,10 @@ import { SelectViewComponent } from './components/select-view/select-view.compon
     ScheduledChangesViewComponent,
     MyCoursesComponent,
     ScheduleComponent,
-    SelectViewComponent
+    SelectViewComponent,
+    AvailableResourcesComponent,
+    FullScheduleComponent,
+    PersonalScheduleComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +78,7 @@ import { SelectViewComponent } from './components/select-view/select-view.compon
     MatSelectModule,
     MatBadgeModule,
     MatListModule,
+    MatTreeModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],

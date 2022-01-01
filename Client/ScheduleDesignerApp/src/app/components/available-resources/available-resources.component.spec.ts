@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModifyScheduleComponent } from './modify-schedule.component';
+import { AvailableResourcesComponent } from './available-resources.component';
 
-describe('ModifyScheduleComponent', () => {
-  let component: ModifyScheduleComponent;
-  let fixture: ComponentFixture<ModifyScheduleComponent>;
+describe('AvailableResourcesComponent', () => {
+  let component: AvailableResourcesComponent;
+  let fixture: ComponentFixture<AvailableResourcesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ModifyScheduleComponent ]
+      declarations: [ AvailableResourcesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ModifyScheduleComponent);
+    fixture = TestBed.createComponent(AvailableResourcesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

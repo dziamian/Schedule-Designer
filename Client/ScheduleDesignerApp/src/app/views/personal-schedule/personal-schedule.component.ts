@@ -26,13 +26,14 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 import { SelectViewComponent } from 'src/app/components/select-view/select-view.component';
 import { SelectViewDialogData, SelectViewDialogResult } from 'src/app/others/dialogs/SelectViewDialogData';
+import { Filter } from 'src/app/others/Filter';
 
 @Component({
-  selector: 'app-modify-schedule',
-  templateUrl: './modify-schedule.component.html',
-  styleUrls: ['./modify-schedule.component.css']
+  selector: 'app-personal-schedule',
+  templateUrl: './personal-schedule.component.html',
+  styleUrls: ['./personal-schedule.component.css']
 })
-export class ModifyScheduleComponent implements OnInit {
+export class PersonalScheduleComponent implements OnInit {
 
   @ViewChild(MyCoursesComponent) myCoursesComponent!: MyCoursesComponent;
   @ViewChild(ScheduleComponent) scheduleComponent!: ScheduleComponent;
@@ -43,11 +44,12 @@ export class ModifyScheduleComponent implements OnInit {
   settings: Settings;
   courseTypes: Map<number, CourseType>;
   roomTypes: Map<number, RoomType>;
+  filter: Filter;
 
   tabWeeks: number[][];
   tabLabels: string[];
   currentTabIndex: number = 0;
-  currentWeeks: {weeks: number[], tabSwitched: boolean, editable: boolean};
+  currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean, editable: boolean};
   
   loading: boolean = true;
   connectionStatus: boolean = false;
@@ -66,6 +68,15 @@ export class ModifyScheduleComponent implements OnInit {
         return;
       }
       this.account = account;
+      this.filter = new Filter([this.account.UserId], [], []);
+      if (this.currentFilter) {
+        this.currentFilter = {
+          weeks: this.currentFilter.weeks,
+          filter: this.filter,
+          tabSwitched: this.currentFilter.tabSwitched,
+          editable: this.currentFilter.editable
+        };
+      }
     });
   }
 
@@ -441,7 +452,7 @@ export class ModifyScheduleComponent implements OnInit {
 
       this.loading = false;
 
-      this.OnTabChange(0);
+      this.OnTabChange(0, true);
     }, (error) => {
       if (error?.status == 401) {
         this.usosApiService.Deauthorize();
@@ -454,10 +465,11 @@ export class ModifyScheduleComponent implements OnInit {
     });
   }
 
-  async OnTabChange(index: number): Promise<void> {
-    var tabSwitched = true;
-    this.currentWeeks = {
-      weeks: [], 
+  async OnTabChange(index: number, isFirst: boolean): Promise<void> {
+    var tabSwitched = !isFirst;
+    this.currentFilter = {
+      weeks: [],
+      filter: this.filter,
       tabSwitched: tabSwitched, 
       editable: false
     };
@@ -485,8 +497,9 @@ export class ModifyScheduleComponent implements OnInit {
       tabSwitched = false;
     }
 
-    this.currentWeeks = {
+    this.currentFilter = {
       weeks: this.tabWeeks[this.currentTabIndex], 
+      filter: this.filter,
       tabSwitched: tabSwitched, 
       editable: (index == 3 || index == 4)
     };
@@ -512,13 +525,16 @@ export class ModifyScheduleComponent implements OnInit {
       return;
     }
 
-    if (this.currentWeeks.weeks.sort((a,b) => a - b).join(',') 
+    if (this.currentFilter.weeks.sort((a,b) => a - b).join(',') 
         === dialogResult.SelectedWeeks.sort((a,b) => a - b).join(',')) {
           return;
     }
 
-    this.currentWeeks = {
+    this.tabWeeks[this.currentTabIndex] = dialogResult.SelectedWeeks;
+
+    this.currentFilter = {
       weeks: dialogResult.SelectedWeeks,
+      filter: this.filter,
       tabSwitched: false, 
       editable: true
     };

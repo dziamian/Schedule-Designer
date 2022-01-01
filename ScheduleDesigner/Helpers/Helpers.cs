@@ -1,143 +1,189 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Models;
+using ScheduleDesigner.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ScheduleDesigner.Helpers
+namespace ScheduleDesigner
 {
-    public class ApplicationInfo
+    public static class Helpers
     {
-        public string BaseUsosUrl { get; set; }
-    }
-
-    public class Consumer
-    {
-        public string Key { get; set; }
-
-        public string Secret { get; set; }
-    }
-
-    public class CourseEditionKey : IComparable<CourseEditionKey>
-    {
-        public int CourseId { get; set; }
-
-        public int CourseEditionId { get; set; }
-
-        public int CompareTo(CourseEditionKey other)
+        public class ApplicationInfo
         {
-            int result = this.CourseId.CompareTo(other.CourseId);
-            if (result != 0)
+            public string BaseUsosUrl { get; set; }
+        }
+
+        public class Consumer
+        {
+            public string Key { get; set; }
+
+            public string Secret { get; set; }
+        }
+
+        public class CourseEditionKey : IComparable<CourseEditionKey>
+        {
+            public int CourseId { get; set; }
+
+            public int CourseEditionId { get; set; }
+
+            public int CompareTo(CourseEditionKey other)
             {
-                return result;
+                int result = this.CourseId.CompareTo(other.CourseId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                result = this.CourseEditionId.CompareTo(other.CourseEditionId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                return 0;
             }
-            result = this.CourseEditionId.CompareTo(other.CourseEditionId);
-            if (result != 0)
+
+            public bool Equals(CourseEditionKey key)
             {
-                return result;
+                return key.CourseId.Equals(CourseId) && key.CourseEditionId.Equals(CourseEditionId);
             }
-            return 0;
-        }
 
-        public bool Equals(CourseEditionKey key)
-        {
-            return key.CourseId.Equals(CourseId) && key.CourseEditionId.Equals(CourseEditionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as CourseEditionKey);
-        }
-
-        public override int GetHashCode()
-        {
-            return CourseId.GetHashCode() ^ CourseEditionId.GetHashCode();
-        }
-    }
-
-    public class SchedulePositionKey : IComparable<SchedulePositionKey>
-    {
-        public int RoomId { get; set; }
-
-        public int TimestampId { get; set; }
-
-        public int CompareTo(SchedulePositionKey other)
-        {
-            int result = this.RoomId.CompareTo(other.RoomId);
-            if (result != 0)
+            public override bool Equals(object obj)
             {
-                return result;
+                return this.Equals(obj as CourseEditionKey);
             }
-            result = this.TimestampId.CompareTo(other.TimestampId);
-            if (result != 0)
+
+            public override int GetHashCode()
             {
-                return result;
+                return CourseId.GetHashCode() ^ CourseEditionId.GetHashCode();
             }
-            return 0;
         }
 
-        public bool Equals(SchedulePositionKey key)
+        public class SchedulePositionKey : IComparable<SchedulePositionKey>
         {
-            return key.RoomId.Equals(RoomId)
-                && key.TimestampId.Equals(TimestampId);
+            public int RoomId { get; set; }
+
+            public int TimestampId { get; set; }
+
+            public int CompareTo(SchedulePositionKey other)
+            {
+                int result = this.RoomId.CompareTo(other.RoomId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                result = this.TimestampId.CompareTo(other.TimestampId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                return 0;
+            }
+
+            public bool Equals(SchedulePositionKey key)
+            {
+                return key.RoomId.Equals(RoomId)
+                    && key.TimestampId.Equals(TimestampId);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return this.Equals(obj as SchedulePositionKey);
+            }
+
+            public override int GetHashCode()
+            {
+                return RoomId.GetHashCode() ^ TimestampId.GetHashCode();
+            }
         }
 
-        public override bool Equals(object obj)
+        public class CoordinatorPositionKey
         {
-            return this.Equals(obj as SchedulePositionKey);
+            public int CoordinatorId { get; set; }
+
+            public int TimestampId { get; set; }
+
+
+            public bool Equals(CoordinatorPositionKey key)
+            {
+                return key.CoordinatorId.Equals(CoordinatorId)
+                    && key.TimestampId.Equals(TimestampId);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return this.Equals(obj as CoordinatorPositionKey);
+            }
+
+            public override int GetHashCode()
+            {
+                return CoordinatorId.GetHashCode() ^ TimestampId.GetHashCode();
+            }
         }
 
-        public override int GetHashCode()
+        public class GroupPositionKey
         {
-            return RoomId.GetHashCode() ^ TimestampId.GetHashCode();
-        }
-    }
+            public int GroupId { get; set; }
 
-    public class CoordinatorPositionKey
-    {
-        public int CoordinatorId { get; set; }
-
-        public int TimestampId { get; set; }
+            public int TimestampId { get; set; }
 
 
-        public bool Equals(CoordinatorPositionKey key)
-        {
-            return key.CoordinatorId.Equals(CoordinatorId)
-                && key.TimestampId.Equals(TimestampId);
-        }
+            public bool Equals(GroupPositionKey key)
+            {
+                return key.GroupId.Equals(GroupId)
+                    && key.TimestampId.Equals(TimestampId);
+            }
 
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as CoordinatorPositionKey);
-        }
+            public override bool Equals(object obj)
+            {
+                return this.Equals(obj as GroupPositionKey);
+            }
 
-        public override int GetHashCode()
-        {
-            return CoordinatorId.GetHashCode() ^ TimestampId.GetHashCode();
-        }
-    }
-
-    public class GroupPositionKey
-    {
-        public int GroupId { get; set; }
-
-        public int TimestampId { get; set; }
-
-
-        public bool Equals(GroupPositionKey key)
-        {
-            return key.GroupId.Equals(GroupId) 
-                && key.TimestampId.Equals(TimestampId);
+            public override int GetHashCode()
+            {
+                return GroupId.GetHashCode() ^ TimestampId.GetHashCode();
+            }
         }
 
-        public override bool Equals(object obj)
+        public static List<int> GetNestedGroupsIds(CourseEdition courseEdition, IGroupRepo _groupRepo)
         {
-            return this.Equals(obj as GroupPositionKey);
-        }
+            var groups = courseEdition.Groups.Select(e => e.Group).ToList();
+            var groupsIds = groups.Select(e => e.GroupId).ToList();
 
-        public override int GetHashCode()
-        {
-            return GroupId.GetHashCode() ^ TimestampId.GetHashCode();
+            var startIndex = 0;
+            var endIndex = groups.Count;
+            var oldSize = endIndex;
+            while (groups.GetRange(startIndex, endIndex - startIndex).Any(e => e.ParentGroupId != null))
+            {
+                var _parentGroups = _groupRepo
+                    .Get(e => groupsIds.GetRange(startIndex, endIndex - startIndex).Contains(e.GroupId) && e.ParentGroup != null)
+                    .Include(e => e.ParentGroup)
+                    .Select(e => e.ParentGroup);
+
+                groups.AddRange(_parentGroups);
+                groupsIds.AddRange(_parentGroups.Select(e => e.GroupId).ToList());
+
+                startIndex = endIndex;
+                endIndex = groups.Count;
+            }
+
+            var _childGroups = _groupRepo
+                .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(0, oldSize).Contains((int)e.ParentGroupId));
+
+            while (_childGroups.Any())
+            {
+                groupsIds.AddRange(_childGroups.Select(e => e.GroupId).ToList());
+
+                startIndex = endIndex;
+                endIndex += _childGroups.Count();
+
+                _childGroups = _groupRepo
+                    .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex - startIndex).Contains((int)e.ParentGroupId));
+            }
+
+            return groupsIds;
         }
     }
 }

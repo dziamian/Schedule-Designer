@@ -15,6 +15,20 @@
                 <mat-option *ngFor="let weekNumber of allWeeks" [value]="weekNumber">Week {{weekNumber}}</mat-option>
             </mat-select>
         </mat-form-field>
+        <button 
+            mat-raised-button
+            color="accent"
+            style="margin-left: 1vw"
+
+            (click)="SelectAll()"
+        >Select all weeks</button>
+        <button 
+            mat-raised-button
+            color="accent"
+            style="margin-left: 1vw"
+
+            (click)="SelectNone()"
+        >Select none</button>
     </form>
 </div>
 <mat-dialog-actions align="end">
@@ -22,7 +36,7 @@
     <button 
         mat-raised-button
         color="primary"
-        [disabled]="selectedWeeks.status != 'VALID'"
+        [disabled]="selectedWeeks.invalid"
 
         (click)="Action()"
     >Create view</button>

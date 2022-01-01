@@ -4,6 +4,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
+import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
 import { ModifyingScheduleData } from 'src/app/others/ModifyingScheduleData';
 import { Room } from 'src/app/others/Room';
@@ -21,11 +22,13 @@ export class ScheduleComponent implements OnInit {
 
   @ViewChildren('scheduleDrops') scheduleSlots: QueryList<DropListRef<CourseEdition[]>>;
 
+  @Input() labelBefore: string;
+  @Input() labelAfter: string;
+
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
-  @Input() currentWeeks: {weeks: number[], tabSwitched: boolean, editable: boolean};
-  @Input() userIdFilter: number;
+  @Input() currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean, editable: boolean};
 
   @Output() onStart: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() onRelease: EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
@@ -45,7 +48,7 @@ export class ScheduleComponent implements OnInit {
   @Output() onViewEdit: EventEmitter<null> = new EventEmitter();
 
   loadingSubscription: Subscription;
-  loading: boolean = true;
+  loading: boolean | null = null;
 
   schedule: CourseEdition[][][];
 
@@ -66,7 +69,7 @@ export class ScheduleComponent implements OnInit {
     const periodIndex = position.PeriodIndex - 1;
     const weeks = position.Weeks;
 
-    if (!this.currentWeeks.weeks.some(r => weeks.includes(r))) {
+    if (!this.currentFilter.weeks.some(r => weeks.includes(r))) {
       return;
     }
 
@@ -94,10 +97,13 @@ export class ScheduleComponent implements OnInit {
       }
 
       const schedulePosition = addedSchedulePositions.SchedulePosition;
-      const commonWeeks = schedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
+      const commonWeeks = schedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
 
       //filter for updated board
-      if (addedSchedulePositions.CoordinatorsIds.includes(this.userIdFilter)) {
+      const filter = new Filter(addedSchedulePositions.CoordinatorsIds, addedSchedulePositions.GroupsIds, [
+        addedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
         if (commonWeeks.length > 0) {
           const existingCourseEditions = this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].filter((courseEdition) => 
             courseEdition.CourseId == schedulePosition.CourseId 
@@ -155,15 +161,22 @@ export class ScheduleComponent implements OnInit {
 
       const srcSchedulePosition = modifiedSchedulePositions.SourceSchedulePosition;
       const dstSchedulePosition = modifiedSchedulePositions.DestinationSchedulePosition;
-      const commonWeeks = dstSchedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
+      const commonWeeks = dstSchedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
       const movesIds = modifiedSchedulePositions.MovesIds;
 
       //filter for updated board
-      if (modifiedSchedulePositions.CoordinatorsIds.includes(this.userIdFilter)) {
+      const filter = new Filter(modifiedSchedulePositions.CoordinatorsIds, modifiedSchedulePositions.GroupsIds, [
+        srcSchedulePosition.RoomId, dstSchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
         let srcScheduleSlot = this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1];
         let dstScheduleSlot = this.schedule[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1];
-        
-        if (srcSchedulePosition.PeriodIndex == dstSchedulePosition.PeriodIndex && srcSchedulePosition.Day == dstSchedulePosition.Day
+
+        const srcRoomChallenge = this.currentFilter.filter.challengeRoom(srcSchedulePosition.RoomId);
+        const dstRoomChallenge = this.currentFilter.filter.challengeRoom(dstSchedulePosition.RoomId);
+
+        if (srcRoomChallenge && dstRoomChallenge
+          && srcSchedulePosition.PeriodIndex == dstSchedulePosition.PeriodIndex && srcSchedulePosition.Day == dstSchedulePosition.Day
           && commonWeeks.length > 0) {
           //update old if only room changed or weeks
           const existingCourseEditions = this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1].filter((courseEdition) => 
@@ -201,7 +214,7 @@ export class ScheduleComponent implements OnInit {
               && courseEdition.Room!.RoomId == srcSchedulePosition.RoomId
           );
           
-          if (existingSrcCourseEditions.length > 0) {
+          if (srcRoomChallenge && existingSrcCourseEditions.length > 0) {
             existingSrcCourseEditions[0].Weeks = existingSrcCourseEditions[0].Weeks
               ?.filter(week => !srcSchedulePosition.Weeks.includes(week)) ?? [];
             
@@ -223,7 +236,7 @@ export class ScheduleComponent implements OnInit {
           }
 
           //add or update new
-          if (commonWeeks.length > 0) {
+          if (dstRoomChallenge && commonWeeks.length > 0) {
             const existingDstCourseEditions = dstScheduleSlot.filter((courseEdition) => 
               courseEdition.CourseId == dstSchedulePosition.CourseId 
                 && courseEdition.CourseEditionId == dstSchedulePosition.CourseEditionId
@@ -302,7 +315,10 @@ export class ScheduleComponent implements OnInit {
       const movesIds = removedSchedulePositions.MovesIds;
 
       //filter for updated board
-      if (removedSchedulePositions.CoordinatorsIds.includes(this.userIdFilter)) {
+      const filter = new Filter(removedSchedulePositions.CoordinatorsIds, removedSchedulePositions.GroupsIds, [
+        removedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
         let scheduleSlot = this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1];
         const existingCourseEditions = this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].filter((courseEdition) => 
           courseEdition.CourseId == schedulePosition.CourseId 
@@ -339,7 +355,7 @@ export class ScheduleComponent implements OnInit {
       }
       
       const srcSchedulePosition = addedScheduledMove.sourceSchedulePosition;
-      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
+      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
 
       if (commonWeeks.length == 0) {
         return;
@@ -365,7 +381,7 @@ export class ScheduleComponent implements OnInit {
       }
 
       const srcSchedulePosition = removedScheduledMove.sourceSchedulePosition;
-      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentWeeks.weeks.includes(week));
+      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
 
       if (commonWeeks.length == 0) {
         return;
@@ -389,20 +405,28 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSignalrSubscriptions();
-    if (this.currentWeeks.weeks.length > 0) {
+    if (this.currentFilter.weeks.length > 0 && this.currentFilter.filter) {
       this.loadMySchedule();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.currentWeeks && !changes.currentWeeks.currentValue.tabSwitched && changes.currentWeeks.currentValue.weeks.length > 0) {
-      const currentWeeks: number[] = changes.currentWeeks.currentValue.weeks;
-      const previousWeeks: number[] = changes.currentWeeks.previousValue.weeks ?? [];
+    if (changes.currentFilter && !changes.currentFilter.currentValue.tabSwitched 
+      && changes.currentFilter.currentValue.weeks.length > 0 && changes.currentFilter.currentValue.filter) {
+        if (changes.currentFilter.isFirstChange()) {
+          return;
+        }
 
-      if (currentWeeks.sort((a,b) => a - b).join(',') 
-        !== previousWeeks.sort((a,b) => a - b).join(',')) {
-          this.loadMySchedule();
-      }
+        const currentWeeks: number[] = changes.currentFilter.currentValue.weeks;
+        const previousWeeks: number[] = changes.currentFilter.previousValue.weeks;
+        const currentFilter: Filter = changes.currentFilter.currentValue.filter;
+        const previousFilter: Filter = changes.currentFilter.previousValue.filter;
+
+        if (currentWeeks.sort((a,b) => a - b).join(',') 
+          !== previousWeeks.sort((a,b) => a - b).join(',')
+          || !currentFilter.compare(previousFilter)) {
+            this.loadMySchedule();
+        }
     }
   }
 
@@ -410,8 +434,7 @@ export class ScheduleComponent implements OnInit {
     this.loadingSubscription?.unsubscribe();
     this.loading = true;
 
-    //TODO: getFilteredSchedule (not only as Coordinator)
-    this.loadingSubscription = this.scheduleDesignerApiService.GetScheduleAsCoordinator(this.currentWeeks.weeks, this.courseTypes, this.settings).subscribe((mySchedule) => {
+    this.loadingSubscription = this.scheduleDesignerApiService.GetFilteredSchedule(this.currentFilter.weeks, this.currentFilter.filter, this.courseTypes, this.settings).subscribe((mySchedule) => {
       this.schedule = mySchedule;
 
       let allGroups = new Array<Group>();
@@ -451,8 +474,8 @@ export class ScheduleComponent implements OnInit {
   }
 
   GetViewDescription(): string {
-    const weeks = CourseEdition.ShowWeeks(this.settings, this.currentWeeks.weeks);
-    return weeks == '' ? '' : `(${CourseEdition.ShowWeeks(this.settings, this.currentWeeks.weeks)})`;
+    const weeks = CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks);
+    return weeks == '' ? '' : `(${CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks)})`;
   }
 
   GetMaxElementIndexOnDay(dayIndex: number): number {

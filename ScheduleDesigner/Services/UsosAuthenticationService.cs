@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using OAuth;
-using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using System;
@@ -14,6 +13,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using ScheduleDesigner.Authentication;
+using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Services
 {

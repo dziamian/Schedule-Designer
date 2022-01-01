@@ -1,6 +1,6 @@
 <div class="my-courses">
     <div class="my-courses-header">Your unplanned courses</div>
-    <div *ngIf="!loading; else spinner" class="my-courses-content"
+    <div *ngIf="loading == false; else spinner" class="my-courses-content"
         cdkDropList
         #myCoursesDrop="cdkDropList"
         id="my-courses"
@@ -20,10 +20,13 @@
                 (onRelease)="OnReleased($event)"
             ></app-course>
         </div>
+        <div *ngIf="myCourses?.length == 0" class="no-courses">
+            There is no unplanned courses for this view.
+        </div>
     </div>
 
     <ng-template #spinner>
-        <mat-progress-spinner
+        <mat-progress-spinner *ngIf="loading != null"
             class="spinner"
             mode="indeterminate"
             diameter="40"

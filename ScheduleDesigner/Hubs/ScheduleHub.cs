@@ -9,10 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Controllers;
-using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Hubs
 {
@@ -362,7 +362,7 @@ namespace ScheduleDesigner.Hubs
                             }
 
                             var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                            var groupsIds = CourseEditionsController.GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                            var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
                             var returnableGroupsIds = new int[groupsIds.Length];
 
                             Array.Sort(coordinatorsIds);
@@ -1069,7 +1069,7 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                    var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                    var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
                     var returnableGroupsIds = new int[groupsIds.Length];
 
                     Array.Sort(coordinatorsIds);
@@ -1360,7 +1360,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = CourseEditionsController.GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -1621,7 +1621,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = schedulePosition.CourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = CourseEditionsController.GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -1825,7 +1825,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = CourseEditionsController.GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -2140,7 +2140,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = CourseEditionsController.GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);

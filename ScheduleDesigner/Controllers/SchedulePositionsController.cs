@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Dtos;
-using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -50,20 +51,43 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize]
         [HttpGet]
         [EnableQuery(MaxExpansionDepth = 4)]
-        public IActionResult GetScheduleAsCoordinator([FromODataUri] IEnumerable<int> Weeks)
+        public IActionResult GetFilteredSchedule(
+            [FromODataUri] IEnumerable<int> CoordinatorsIds, 
+            [FromODataUri] IEnumerable<int> GroupsIds, 
+            [FromODataUri] IEnumerable<int> RoomsIds, 
+            [FromODataUri] IEnumerable<int> Weeks)
         {
             try
             {
-                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var predicate = PredicateBuilder.New<SchedulePosition>();
+                if (CoordinatorsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => e.CourseEdition.Coordinators.Any(f => CoordinatorsIds.Contains(f.CoordinatorId)));
+                }
+                if (GroupsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => e.CourseEdition.Groups.Any(f => GroupsIds.Contains(f.GroupId)));
+                }
+                if (RoomsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => RoomsIds.Contains(e.RoomId));
+                }
+
+                var finalPredicate = predicate.And(e => Weeks.Contains(e.Timestamp.Week));
+
 
                 var _schedulePositions = _schedulePositionRepo
-                    .Get(e => e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId)
-                              && Weeks.Contains(e.Timestamp.Week))
+                    .Get(finalPredicate)
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Coordinators)
+                    .Include(e => e.CourseEdition)
+                        .ThenInclude(e => e.Groups)
                     .Include(e => e.Timestamp);
 
                 return Ok(_schedulePositions);
@@ -71,7 +95,7 @@ namespace ScheduleDesigner.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            } 
+            }
         }
 
         [HttpGet]

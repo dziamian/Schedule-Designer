@@ -34,6 +34,15 @@
     margin: auto;
 }
 
+.no-courses {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    width: 50%;
+    transform: translateY(-100%);
+    font-weight: bold;
+}
+
 .spinner {
     position: relative;
     top: 50%;
