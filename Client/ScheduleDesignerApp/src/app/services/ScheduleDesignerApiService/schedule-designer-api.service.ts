@@ -231,16 +231,17 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetMyCourseEdition(
+  public GetFilteredCourseEdition(
     courseId:number,
     courseEditionId:number,
     frequency:number, 
+    filter:Filter,
     courseTypes:Map<number,CourseType>, 
     settings:Settings
   ):Observable<CourseEdition[]> {
     const FREQUENCY = Math.floor(frequency);
     const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(Frequency=${FREQUENCY})?` +
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(${filter.toStringWithoutRooms()},Frequency=${FREQUENCY})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'

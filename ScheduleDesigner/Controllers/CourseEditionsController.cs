@@ -120,11 +120,15 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
+        [Authorize]
         [EnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
-        [ODataRoute("({key1},{key2})/GetMyCourseEdition(Frequency={Frequency})")]
-        public async Task<IActionResult> GetMyCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] double Frequency)
+        [ODataRoute("({key1},{key2})/GetFilteredCourseEdition(CoordinatorsIds={CoordinatorsIds},GroupsIds={GroupsIds},Frequency={Frequency})")]
+        public async Task<IActionResult> GetFilteredCourseEdition(
+            [FromODataUri] int key1, [FromODataUri] int key2,
+            [FromODataUri] IEnumerable<int> CoordinatorsIds,
+            [FromODataUri] IEnumerable<int> GroupsIds,
+            [FromODataUri] double Frequency)
         {
             var _settings = await _settingsRepo.GetSettings();
             if (_settings == null)
@@ -139,15 +143,27 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-
+                var predicate = PredicateBuilder.New<CourseEdition>();
+                if (CoordinatorsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => e.Coordinators.Any(f => CoordinatorsIds.Contains(f.CoordinatorId)));
+                }
+                if (GroupsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => e.Groups.Any(f => GroupsIds.Contains(f.GroupId)));
+                }
                 var courseDurationMinutes = _settings.CourseDurationMinutes;
                 var totalMinutes = Frequency * courseDurationMinutes;
 
+                var finalPredicate = PredicateBuilder.New<CourseEdition>()
+                    .And(e => e.CourseId == key1 && e.CourseEditionId == key2)
+                    .And(predicate)
+                    .And(e => Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency);
+
                 var _courseEditions = _courseEditionRepo
-                    .Get(e => e.CourseId == key1 && e.CourseEditionId == key2
-                        && e.Coordinators.Any(e => e.CoordinatorId == userId)
-                        && Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency)
+                    .Get(finalPredicate)
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
                     .Include(e => e.Coordinators);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Coordinator } from 'src/app/others/Accounts';
 import { Group } from 'src/app/others/Group';
 import { Room } from 'src/app/others/Room';
+import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 
 @Component({
   selector: 'app-available-resources',
@@ -16,9 +17,12 @@ export class AvailableResourcesComponent implements OnInit {
   groups:Group[];
   rooms:Room[];
 
-  constructor() { }
+  constructor(
+    private scheduleDesignerApiService: ScheduleDesignerApiService,
+  ) { }
 
   ngOnInit(): void {
+    
   }
 
 }

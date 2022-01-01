@@ -268,8 +268,13 @@ namespace ScheduleDesigner
                 .Parameter<double>("Frequency");
 
             var getMyCourseEditionFunction = builder.EntityType<CourseEdition>()
-                .Function("GetMyCourseEdition")
-                .ReturnsFromEntitySet<CourseEdition>("CourseEditions")
+                .Function("GetFilteredCourseEdition")
+                .ReturnsFromEntitySet<CourseEdition>("CourseEditions");
+            getMyCourseEditionFunction
+                .CollectionParameter<int>("CoordinatorsIds");
+            getMyCourseEditionFunction
+                .CollectionParameter<int>("GroupsIds");
+            getMyCourseEditionFunction
                 .Parameter<int>("Frequency");
 
             builder.EntityType<CourseEdition>()

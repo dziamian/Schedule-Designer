@@ -153,10 +153,10 @@ export class MyCoursesComponent implements OnInit {
           );
 
           forkJoin([
-            this.scheduleDesignerApiService.GetMyCourseEdition(
+            this.scheduleDesignerApiService.GetFilteredCourseEdition(
               schedulePosition.CourseId, schedulePosition.CourseEditionId,
-              this.currentFilter.weeks.length, this.courseTypes,
-              this.settings
+              this.currentFilter.weeks.length, this.currentFilter.filter, 
+              this.courseTypes, this.settings
             ),
             this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds)
           ]).subscribe(([myNewCourses, groupFullNames]) => {
