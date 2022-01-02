@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [NoAuthGuardService] },
   { path: 'authenticated', component: AuthenticatedComponent, canActivate: [NoAuthGuardService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
-  { path: 'personal-schedule', component: PersonalScheduleComponent, canActivate: [AuthGuardService] },
+  { path: 'personal-schedule', component: PersonalScheduleComponent, canActivate: [AuthGuardService], data: {roles: ['Coordinator']} },
   
   { path: '**', redirectTo: '/profile' }
 ];
