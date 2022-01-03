@@ -14,6 +14,7 @@ export class CourseComponent implements OnInit {
 
   @ViewChild(CdkDrag) cdkCourse : CdkDrag<CourseEdition>;
 
+  @Input() isModifying:boolean;
   @Input() course:CourseEdition;
   @Input() settings:Settings;
   @Input() weeksOnTab:number[];

@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-    <b>Managing scheduled moves for:</b>
+    <b>{{data.IsModifying ? 'Managing' : 'Showing'}} scheduled moves for:</b>
     <br>
     <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>
     <u>{{data.DayLabels[data.SrcIndexes[0]]}}: {{data.TimeLabels[data.SrcIndexes[1]]}}</u>, <i>{{data.CourseEdition.Room?.Name}}</i>
@@ -17,7 +17,7 @@
                 <b>To:</b> {{ShowFrequency(scheduledMove.DestWeeks)}}, <u>{{data.DayLabels[scheduledMove.DestDay - 1]}}: 
                 {{data.TimeLabels[scheduledMove.DestPeriodIndex - 1]}}</u>, <i>{{scheduledMove.DestRoom.Name}}</i>
             </div>
-            <div class="item-buttons">
+            <div *ngIf="data.IsModifying" class="item-buttons">
                 <button *ngIf="!scheduledMove.IsConfirmed" mat-raised-button class="confirm" style="margin-right: 1vw;">Confirm</button>
                 <button mat-raised-button color="warn" 
                 [disabled]="scheduledMove.Locked || scheduledMove.IsRemoving" 

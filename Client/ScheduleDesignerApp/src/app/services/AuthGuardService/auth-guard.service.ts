@@ -16,7 +16,7 @@ export class AuthGuardService implements CanActivate {
     private store: Store<{account: Account}>,
     private router:Router
   ) {
-    this.store.select('account').pipe(skip(1)).subscribe((account) => {
+    this.store.select('account').subscribe((account) => {
       if (account.UserId == 0) {
         return;
       }

@@ -25,6 +25,7 @@ export class ScheduleComponent implements OnInit {
   @Input() labelBefore: string;
   @Input() labelAfter: string;
 
+  @Input() isModifying: boolean;
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
@@ -405,22 +406,22 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSignalrSubscriptions();
-    if (this.currentFilter.weeks.length > 0 && this.currentFilter.filter) {
+    if (this.currentFilter?.weeks.length > 0 && this.currentFilter.filter) {
       this.loadMySchedule();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.currentFilter && !changes.currentFilter.currentValue.tabSwitched 
+    if (changes.currentFilter && changes.currentFilter.currentValue && !changes.currentFilter.currentValue.tabSwitched 
       && changes.currentFilter.currentValue.weeks.length > 0 && changes.currentFilter.currentValue.filter) {
         if (changes.currentFilter.isFirstChange()) {
           return;
         }
 
         const currentWeeks: number[] = changes.currentFilter.currentValue.weeks;
-        const previousWeeks: number[] = changes.currentFilter.previousValue.weeks;
+        const previousWeeks: number[] = changes.currentFilter.previousValue?.weeks ?? [];
         const currentFilter: Filter = changes.currentFilter.currentValue.filter;
-        const previousFilter: Filter = changes.currentFilter.previousValue.filter;
+        const previousFilter: Filter = changes.currentFilter.previousValue?.filter ?? new Filter([], [], []);
 
         if (currentWeeks.sort((a,b) => a - b).join(',') 
           !== previousWeeks.sort((a,b) => a - b).join(',')
@@ -474,8 +475,11 @@ export class ScheduleComponent implements OnInit {
   }
 
   GetViewDescription(): string {
-    const weeks = CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks);
-    return weeks == '' ? '' : `(${CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks)})`;
+    if (this.currentFilter?.weeks) {
+      const weeks = CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks);
+      return weeks == '' ? '' : `(${CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks)})`;
+    }
+    return '';
   }
 
   GetMaxElementIndexOnDay(dayIndex: number): number {

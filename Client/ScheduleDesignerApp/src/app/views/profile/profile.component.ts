@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { HubConnectionState } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { forkJoin } from 'rxjs';
 import { skip } from 'rxjs/operators';
@@ -39,43 +40,15 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+    this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;
       if (!status && !this.signalrService.connectionIntentionallyStopped) {
         this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
       }
     });
 
-    forkJoin([
-      this.signalrService.InitConnection()
-    ]).subscribe(([]) => {
-      this.connectionStatus = true;
-    }, (error) => {
-      if (error?.status == 401) {
-        this.usosApiService.Deauthorize();
-
-        this.snackBar.open('Session expired. Please log in again.', 'OK');
-        this.router.navigate(['login']);
-      } else if (!isConnectedSubscription.closed) {
-        this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
-      }
-    });
-
-    //TEST
-    forkJoin([
-      //this.signalrService.LockCourseEdition(1,1)
-      //this.signalrService.LockSchedulePositions(2, 3, 1, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
-    ]).subscribe(([result1]) => {
-      console.log(result1);
-      forkJoin([
-        //this.scheduleDesignerApiService.AddSchedulePositions(1,1,2,2,1,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]),
-        //this.signalrService.ModifySchedulePositions(3, 1, 1, [2],
-        //  2,1,1,[3])
-        //this.signalrService.RemoveSchedulePositions(2,3,1,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
-      ]).subscribe(([result1]) => {
-        console.log(result1);
-      });
-    });
+    this.connectionStatus = this.signalrService.connection.state == HubConnectionState.Connected;
+    this.loading = false;
   }
 
 }

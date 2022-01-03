@@ -9,7 +9,7 @@
     )' : course?.Type?.Color"
     
     cdkDrag
-    [cdkDragDisabled]="course?.Locked || CheckIfNotMatching() || isSelectedMoving"
+    [cdkDragDisabled]="!isModifying || course?.Locked || CheckIfNotMatching() || isSelectedMoving"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"

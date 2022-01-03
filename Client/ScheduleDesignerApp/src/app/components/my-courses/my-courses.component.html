@@ -13,6 +13,7 @@
             class="course-field"
         >
             <app-course 
+                [isModifying]="isModifying"
                 [course]="course"
                 [settings]="settings"
                 [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"

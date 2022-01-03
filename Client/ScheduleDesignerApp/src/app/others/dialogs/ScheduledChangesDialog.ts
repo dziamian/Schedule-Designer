@@ -10,7 +10,8 @@ export class ScheduledChangesDialogData {
         public DayLabels:string[],
         public TimeLabels:string[],
         public RoomTypes:Map<number,RoomType>,
-        public Settings:Settings
+        public Settings:Settings,
+        public IsModifying:boolean
     ) {}
 }
 

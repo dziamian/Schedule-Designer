@@ -45,6 +45,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.trySetAccount();
+    this.tryInitConnection();
+  }
+
+  private async tryInitConnection() {
+    if (this.IsAuthenticated()) {
+      await this.signalrService.InitConnection().toPromise();
+    }
   }
 
   private trySetAccount() {

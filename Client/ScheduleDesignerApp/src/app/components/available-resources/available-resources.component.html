@@ -8,15 +8,14 @@
                 <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
-                <button mat-icon-button color="primary" *ngIf="node.item.filter != null">
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" (click)="Action(node)">
                     <mat-icon>remove_red_eye</mat-icon>
                 </button>
             </mat-tree-node>
             
             <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
-                <button mat-icon-button matTreeNodeToggle
-                    [attr.aria-label]="'Toggle ' + node.item">
-                    <mat-icon class="mat-icon-rtl-mirror">
+                <button mat-icon-button matTreeNodeToggle>
+                    <mat-icon>
                     {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                     </mat-icon>
                 </button>
@@ -24,7 +23,7 @@
                 <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
-                <button mat-icon-button color="primary" *ngIf="node.item.filter != null">
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" (click)="Action(node)">
                     <mat-icon>remove_red_eye</mat-icon>
                 </button>
             </mat-tree-node>

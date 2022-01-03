@@ -1,6 +1,6 @@
 .tabContent {
     text-align: center;
-    margin-top: 2vh;
+    margin-top: 1.5vh;
 }
 
 .board {
@@ -58,6 +58,39 @@
     width: 8%;
     height: 6vh;
     box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.footer {
+    display: inline;
+}
+
+.footer-resource {
+    display: flex;
+    float: left;
+    align-items: center;
+    justify-content: center;
+    width: 76%;
+    height: 5.5vh;
+    margin-left: 2vw;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: #43da57;
+    overflow-y: auto;
+}
+
+.footer-schedule-menu {
+    display: flex;
+    float: right;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 5.5vh;
+    margin-right: 2vw;
+    border: 2px solid black;
+    border-left: none;
+    box-sizing: border-box;
+    background-color: #008b13;
     overflow-y: auto;
 }
 

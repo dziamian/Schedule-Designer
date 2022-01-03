@@ -1,12 +1,18 @@
 import { Filter } from "./Filter";
 
+export class ResourceItem {
+    name: string; 
+    filter: Filter | null; 
+    icon: string;
+}
+
 export class ResourceNode {
     children: ResourceNode[];
-    item: {name: string, filter: Filter | null, icon: string};
+    item: ResourceItem;
 }
 
 export class ResourceFlatNode {
-    item: {name: string, filter: Filter | null, icon: string};
+    item: ResourceItem;
     level: number;
     expandable: boolean;
 }

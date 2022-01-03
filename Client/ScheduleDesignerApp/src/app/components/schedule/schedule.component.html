@@ -52,6 +52,7 @@
                             [attr.selected]="course.IsCurrentlyActive && modifyingScheduleData.currentDragEvent == null"
                         >
                             <app-course 
+                                [isModifying]="isModifying"
                                 [course]="course"
                                 [settings]="settings"
                                 [weeksOnTab]="currentFilter.weeks"

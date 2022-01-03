@@ -10,7 +10,8 @@
             <ng-template matTabContent>
                 <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
-                        <!--<app-my-courses
+                        <app-my-courses
+                            [isModifying]="isModifying"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -20,12 +21,11 @@
                             (onDropped)="OnMyCoursesDrop($event)"
                             (onStart)="OnMyCoursesStart($event)"
                             (onRelease)="OnRelease($event)"
-                        ></app-my-courses>-->
-                        <app-available-resources></app-available-resources>
+                        ></app-my-courses>
                         
                         <div class="schedule-menu">
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentDragEvent != null 
+                                [disabled]="!isModifying || data.currentDragEvent != null 
                                     || data.currentRoomSelectionDialog != null 
                                     || data.currentSelectedCourseEdition?.IsMoving 
                                     || !data.currentSelectedCourseEdition?.CanAddRoom"
@@ -34,7 +34,7 @@
                                     Add Room
                             </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentDragEvent != null 
+                                [disabled]="!isModifying || data.currentDragEvent != null 
                                     || data.currentRoomSelectionDialog != null 
                                     || data.currentSelectedCourseEdition?.IsMoving 
                                     || !data.currentSelectedCourseEdition?.CanChangeRoom"
@@ -50,10 +50,10 @@
                                 (click)="ShowScheduledChanges()"
                                 >
                                     <mat-icon>schedule</mat-icon>
-                                    Manage Scheduled Changes
+                                    {{isModifying ? 'Manage' : 'Show'}} Scheduled Changes
                             </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentDragEvent != null 
+                                [disabled]="!isModifying || data.currentDragEvent != null 
                                     || data.currentRoomSelectionDialog != null 
                                     || !data.currentSelectedCourseEdition?.CanMakeMove"
                                 (click)="Move()"
@@ -92,7 +92,8 @@
 
                         <app-schedule
                             labelBefore="Personal"
-                            
+
+                            [isModifying]="isModifying"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -110,6 +111,20 @@
                             (onLoaded)="OnTabLoaded()"
                             (onViewEdit)="OnEditView()"
                         ></app-schedule>
+                    </div>
+                    <div class="footer">
+                        <div class="footer-resource">
+                            <b>Selected resource: {{account?.Titles?.TitleBefore}} {{account?.FirstName}} {{account?.LastName}} {{account?.Titles?.TitleAfter}}</b>
+                        </div>
+                        <div class="footer-schedule-menu">
+                            <button mat-raised-button color="accent"
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving"
+                                (click)="ModifySchedule()"
+                                >
+                                    <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>
+                                    {{isModifying ? 'View-Only Mode' : 'Modification Mode'}}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </ng-template>

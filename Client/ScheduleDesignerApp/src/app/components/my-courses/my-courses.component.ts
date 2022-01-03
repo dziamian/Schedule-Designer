@@ -20,6 +20,7 @@ export class MyCoursesComponent implements OnInit {
 
   @ViewChild('myCoursesDrop') myCoursesSlot : DropListRef<CourseEdition[]>
 
+  @Input() isModifying: boolean;
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
@@ -182,7 +183,7 @@ export class MyCoursesComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.currentFilter && !changes.currentFilter.currentValue.tabSwitched 
+    if (changes.currentFilter && changes.currentFilter.currentValue && !changes.currentFilter.currentValue.tabSwitched 
       && changes.currentFilter.currentValue.weeks.length > 0 && changes.currentFilter.currentValue.filter) {
         if (changes.currentFilter.isFirstChange()) {
           return;

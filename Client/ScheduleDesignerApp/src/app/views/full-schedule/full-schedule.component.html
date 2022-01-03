@@ -1,1 +1,146 @@
-<p>full-schedule works!</p>
+<div *ngIf="!loading && connectionStatus; else spinner">
+    <mat-tab-group mat-align-tabs="center"
+        animationDuration="0ms" 
+        [selectedIndex]="currentTabIndex"
+        (selectedIndexChange)="OnTabChange($event,false)"
+    >
+        <mat-tab *ngFor="let tabLabel of tabLabels; let tabIndex = index" label="{{tabLabel}}"
+            [disabled]="!currentFilter?.filter 
+                || (data.currentSelectedCourseEdition != null
+                && data.currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != tabWeeks[tabIndex].length)"
+        >
+            <ng-template matTabContent>
+                <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">
+                    <div class="board">
+                        <app-my-courses *ngIf="isModifying"
+                            [isModifying]="isModifying"
+                            [settings]="settings"
+                            [courseTypes]="courseTypes"
+                            [modifyingScheduleData]="data"
+                            [currentFilter]="currentFilter"
+
+                            (onDropEnter)="OnMyCoursesEnter($event)"
+                            (onDropped)="OnMyCoursesDrop($event)"
+                            (onStart)="OnMyCoursesStart($event)"
+                            (onRelease)="OnRelease($event)"
+                        ></app-my-courses>
+                        <app-available-resources *ngIf="!isModifying"
+                            (showSchedule)="ShowSchedule($event)"
+                        ></app-available-resources>
+                        
+                        <div class="schedule-menu">
+                            <button mat-raised-button color="accent" 
+                                [disabled]="!isModifying || data.currentDragEvent != null 
+                                    || data.currentRoomSelectionDialog != null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanAddRoom"
+                                (click)="AddRoom()"
+                                >
+                                    Add Room
+                            </button>
+                            <button mat-raised-button color="accent" 
+                                [disabled]="!isModifying || data.currentDragEvent != null 
+                                    || data.currentRoomSelectionDialog != null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanChangeRoom"
+                                (click)="ChangeRoom()"
+                                >
+                                    Change Room
+                            </button>
+                            <button mat-raised-button color="accent" 
+                                [disabled]="data.currentDragEvent != null 
+                                    || data.currentRoomSelectionDialog != null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanShowScheduledChanges"
+                                (click)="ShowScheduledChanges()"
+                                >
+                                    <mat-icon>schedule</mat-icon>
+                                    {{isModifying ? 'Manage' : 'Show'}} Scheduled Changes
+                            </button>
+                            <button mat-raised-button color="accent" 
+                                [disabled]="!isModifying || data.currentDragEvent != null 
+                                    || data.currentRoomSelectionDialog != null 
+                                    || !data.currentSelectedCourseEdition?.CanMakeMove"
+                                (click)="Move()"
+                                >
+                                    {{data.currentSelectedCourseEdition?.IsMoving ? 'Cancel' : 'Make'}} Move
+                            </button>
+                            <button mat-raised-button color="accent" 
+                                [disabled]="data.currentDragEvent != null 
+                                    || data.currentRoomSelectionDialog != null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanCancel"
+                                (click)="CancelSelection()"
+                                >
+                                    <mat-icon>cancel</mat-icon>
+                                    Cancel Selection
+                            </button>
+                        </div>
+                        <div class="slot-selected" [style.background]="data.currentSelectedCourseEdition?.CourseEdition?.Type?.Color">
+                            <ng-container *ngIf="data.currentSelectedCourseEdition != null">
+                                {{data.currentSelectedCourseEdition.CourseEdition.Name}} - {{data.currentSelectedCourseEdition.CourseEdition.Type.Name}}<br>
+                                <ng-container *ngIf="data.currentSelectedCourseEdition.PeriodIndex > -1 && data.currentSelectedCourseEdition.Day > -1">
+                                    {{settings.DayLabels[data.currentSelectedCourseEdition.Day]}}: 
+                                    {{settings.TimeLabels[data.currentSelectedCourseEdition.PeriodIndex]}}
+                                    <ng-container *ngIf="data.currentSelectedCourseEdition.CourseEdition.Room != null">
+                                        ({{data.currentSelectedCourseEdition.CourseEdition.Room.Name}})
+                                    </ng-container><br>
+                                </ng-container>
+                                <ng-container *ngIf="data.currentSelectedCourseEdition.CourseEdition.Weeks != null">
+                                    {{data.currentSelectedCourseEdition.CourseEdition.ShowFrequency(settings)}}
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <div class="slot-status" [style.background]="data.isCurrentMoveValid ? '#6ef84c' : ((data.isCurrentMoveValid != null) ? '#f86e4c' : 'none')">
+                            {{data.isCurrentMoveValid ? 'Correct movement' : ((data.isCurrentMoveValid != null) ? 'Only scheduling' : '')}}
+                        </div>
+
+                        <app-schedule
+                            labelAfter=""
+                            
+                            [isModifying]="isModifying"
+                            [settings]="settings"
+                            [courseTypes]="courseTypes"
+                            [modifyingScheduleData]="data"
+                            [currentFilter]="currentFilter"
+
+                            (onStart)="OnScheduleStart($event)"
+                            (onRelease)="OnRelease($event)"
+                            (onCourseSelect)="OnSelect($event)"
+                            (onDropSelect)="OnRoomSelect($event)"
+                            (onDrop)="OnScheduleDrop($event)"
+                            (onDragEnter)="OnScheduleEnter($event)"
+                            (onMouseEnter)="OnMouseEnter($event)"
+                            (onMouseLeave)="OnMouseLeave()"
+
+                            (onLoaded)="OnTabLoaded()"
+                            (onViewEdit)="OnEditView()"
+                        ></app-schedule>
+                    </div>
+                    <div class="footer">
+                        <div class="footer-resource">
+                            <b>Selected resource: {{currentResourceName ?? 'None'}}</b>
+                        </div>
+                        <div class="footer-schedule-menu">
+                            <button mat-raised-button color="accent" 
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || !account.Admin || !currentResourceName"
+                                (click)="ModifySchedule()"
+                                >
+                                    <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>
+                                    {{isModifying ? 'View-Only Mode' : 'Modification Mode'}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>
