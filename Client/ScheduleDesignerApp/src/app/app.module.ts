@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatInputModule } from '@angular/material/input';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -79,6 +80,7 @@ import { PersonalScheduleComponent } from './views/personal-schedule/personal-sc
     MatBadgeModule,
     MatListModule,
     MatTreeModule,
+    MatInputModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],

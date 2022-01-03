@@ -49,6 +49,7 @@ export class ScheduleComponent implements OnInit {
   @Output() onViewEdit: EventEmitter<null> = new EventEmitter();
 
   loadingSubscription: Subscription;
+  signalrSubscriptions: Subscription[];
   loading: boolean | null = null;
 
   schedule: CourseEdition[][][];
@@ -84,15 +85,17 @@ export class ScheduleComponent implements OnInit {
   }
 
   private setSignalrSubscriptions(): void {
-    this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
+    this.signalrSubscriptions = [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
       this.updateLockInSchedule(lockedSchedulePositions, true);
-    });
+    }));
 
-    this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
       this.updateLockInSchedule(unlockedSchedulePositions, false);
-    });
+    }));
 
-    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       if (this.loading) {
         return;
       }
@@ -153,9 +156,9 @@ export class ScheduleComponent implements OnInit {
           }
         }
       }
-    });
+    }));
 
-    this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       if (this.loading) {
         return;
       }
@@ -305,9 +308,9 @@ export class ScheduleComponent implements OnInit {
           }
         }
       }
-    });
+    }));
 
-    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       if (this.loading) {
         return;
       }
@@ -348,14 +351,15 @@ export class ScheduleComponent implements OnInit {
           }
         }
       }
-    });
+    }));
 
-    this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
+    this.signalrSubscriptions.push(this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
       if (this.loading) {
         return;
       }
       
       const srcSchedulePosition = addedScheduledMove.sourceSchedulePosition;
+      console.log(this.currentFilter);
       const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
 
       if (commonWeeks.length == 0) {
@@ -374,9 +378,9 @@ export class ScheduleComponent implements OnInit {
       }
 
       existingCourseEditions[0].ScheduledMoves.push(addedScheduledMove.scheduledMove);
-    });
+    }));
 
-    this.signalrService.lastRemovedScheduledMove.pipe(skip(1)).subscribe((removedScheduledMove) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedScheduledMove.pipe(skip(1)).subscribe((removedScheduledMove) => {
       if (this.loading) {
         return;
       }
@@ -401,7 +405,7 @@ export class ScheduleComponent implements OnInit {
 
       existingCourseEditions[0].ScheduledMoves = existingCourseEditions[0].ScheduledMoves
         .filter((scheduledMove) => scheduledMove.MoveId != removedScheduledMove.moveId);
-    });
+    }));
   }
 
   ngOnInit(): void {
@@ -540,5 +544,11 @@ export class ScheduleComponent implements OnInit {
       day: day,
       periodIndex: periodIndex
     });
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription => subscription.unsubscribe()
+    );
   }
 }

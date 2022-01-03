@@ -15,4 +15,5 @@ export class ResourceFlatNode {
     item: ResourceItem;
     level: number;
     expandable: boolean;
+    visible: boolean;
 }

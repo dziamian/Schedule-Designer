@@ -22,6 +22,17 @@
     overflow-y: auto;
 }
 
+.search-form-field {
+    display: block;
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
+}
+
+.mat-search-icon {
+    position: relative;
+    top: 6px;
+}
+
 .tree {
     background-color: #00000000;
 }

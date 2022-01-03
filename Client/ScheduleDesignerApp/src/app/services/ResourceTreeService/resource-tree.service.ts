@@ -50,6 +50,68 @@ export class ResourceTreeService {
     this.dataSource.data = this.buildTree(this.TREE_DATA, 0);
   }
 
+  private markParents(flatNode: ResourceFlatNode) {
+    var i = this.treeControl.dataNodes.findIndex(x => x == flatNode);
+    var previousLevel = this.treeControl.dataNodes[i].level - 1;
+    if (i == 0 || previousLevel < 0) {
+      return;
+    }
+
+    do {
+      var previousNode = this.treeControl.dataNodes[i - 1];
+      if (previousLevel == previousNode.level) {
+        previousNode.visible = true;
+        --previousLevel;
+      }
+      --i;
+    } while (previousNode.level != 0);
+  }
+
+  public filterByName(term: string) {
+    const filteredItems = this.treeControl.dataNodes.filter(
+      x => x.item.name.toLowerCase().indexOf(term.toLowerCase()) === -1
+    );
+    filteredItems.map(x => {
+      x.visible = false;
+    });
+
+    const visibleItems = this.treeControl.dataNodes.filter(
+      x => x.item.name.toLowerCase().indexOf(term.toLowerCase()) > -1
+    );
+    visibleItems.map(x => {
+      x.visible = true;
+      this.markParents(x);
+    });
+
+    const levelZeroItems = this.treeControl.dataNodes.filter(
+      x => x.level == 0
+    );
+    levelZeroItems.forEach(
+      item => {
+        if (this.treeControl.isExpanded(item)) {
+          this.treeControl.collapse(item);
+          this.treeControl.expand(item);
+        }
+      }
+    );
+  }
+
+  public clearFilter() {
+    this.treeControl.dataNodes.forEach(x => x.visible = true);
+
+    const levelZeroItems = this.treeControl.dataNodes.filter(
+      x => x.level == 0
+    );
+    levelZeroItems.forEach(
+      item => {
+        if (this.treeControl.isExpanded(item)) {
+          this.treeControl.collapse(item);
+          this.treeControl.expand(item);
+        }
+      }
+    );
+  }
+
   private buildTree(obj: {[key: string]: any}, level: number): ResourceNode[] {
     return Object.keys(obj).reduce<ResourceNode[]>((accumulator, key) => {
       const value = obj[key];
@@ -72,6 +134,10 @@ export class ResourceTreeService {
 
   hasChild = (_: number, _nodeData: ResourceFlatNode) => _nodeData.expandable;
 
+  isHidden = (_: number, _nodeData: ResourceFlatNode) => !_nodeData.visible;
+
+  isVisible = (_: number, _nodeData: ResourceFlatNode) => _nodeData.visible;
+
   hasNoContent = (_: number, _nodeData: ResourceFlatNode) => _nodeData.item.name === '';
 
   transformer = (node: ResourceNode, level: number) => {
@@ -80,6 +146,8 @@ export class ResourceTreeService {
     flatNode.item = node.item;
     flatNode.level = level;
     flatNode.expandable = !!node.children?.length;
+    flatNode.visible = true;
+    
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
