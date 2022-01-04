@@ -7,6 +7,7 @@ import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/dialogs/RoomSelectionDialog';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
+import { Filter } from 'src/app/others/Filter';
 
 @Component({
   selector: 'app-room-selection',
@@ -72,7 +73,8 @@ export class RoomSelectionComponent implements OnInit {
         && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
         || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
           
-          if (coordinatorsIds.includes(this.data.FilterCoordinatorId) || !this.data.CanBeScheduled) {
+          const filter = new Filter(coordinatorsIds, groupsIds, []);
+          if (this.data.Filter.challengeAll(filter) || !this.data.CanBeScheduled) {
             setTimeout(() => {
               this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
             });
@@ -109,7 +111,9 @@ export class RoomSelectionComponent implements OnInit {
           if (item != undefined 
             && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
             || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
-              if (coordinatorsIds.includes(this.data.FilterCoordinatorId) || !this.data.CanBeScheduled) {
+              
+              const filter = new Filter(coordinatorsIds, groupsIds, []);
+              if (this.data.Filter.challengeAll(filter) || !this.data.CanBeScheduled) {
                 setTimeout(() => {
                   this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
                 });
@@ -200,7 +204,13 @@ export class RoomSelectionComponent implements OnInit {
       this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes),
     ]).subscribe(([size, courseRooms]) => {
       this.groupsSize = size;
-      this.courseRooms = courseRooms;
+      
+      const filterRoomsIds = this.data.Filter.RoomsIds;
+      this.courseRooms = (filterRoomsIds.length > 0) ? courseRooms.filter(courseRoom => filterRoomsIds.includes(courseRoom.RoomId)) : courseRooms;
+
+      if (this.courseRooms.length == 1) {
+        this.selectedRoom = this.courseRooms[0];
+      }
 
       this.scheduleDesignerApiService.GetRoomsAvailability(
         this.courseRooms.map((room) => room.RoomId),
@@ -267,8 +277,8 @@ export class RoomSelectionComponent implements OnInit {
         .subscribe((messageObject) => {
           responseSubscription.unsubscribe();
           resolve(messageObject);
-        },() => {
-          reject({Message: "Connection error."});
+        },(errorObject) => {
+          reject(errorObject);
         });
         this.signalrService.AddSchedulePositions(
           courseEdition.CourseId, courseEdition.CourseEditionId,
@@ -277,8 +287,10 @@ export class RoomSelectionComponent implements OnInit {
         );
         
         setTimeout(() => {
-          responseSubscription.unsubscribe(); 
-          reject({Message: "Connection error."});
+          responseSubscription.unsubscribe();
+          const errorObject = new MessageObject(400);
+          errorObject.Message = "Request timeout.";
+          reject(errorObject);
         }, 15000);
       })
       : ((isMoveValid && !selectedRoom.IsBusy) 
@@ -287,8 +299,8 @@ export class RoomSelectionComponent implements OnInit {
         .subscribe((messageObject) => {
           responseSubscription.unsubscribe();
           resolve(messageObject);
-        },() => {
-          reject({Message: "Connection error."});
+        },(errorObject) => {
+          reject(errorObject);
         });
         this.signalrService.ModifySchedulePositions(
           courseEdition.Room!.RoomId, srcIndexes[1] + 1,
@@ -299,14 +311,17 @@ export class RoomSelectionComponent implements OnInit {
         
         setTimeout(() => {
           responseSubscription.unsubscribe(); 
-          reject({Message: "Connection error."});
+          const errorObject = new MessageObject(400);
+          errorObject.Message = "Request timeout.";
+          reject(errorObject);
         }, 15000);
       })
       : await this.signalrService.AddScheduledMove(
         courseEdition.Room!.RoomId, srcIndexes[1] + 1,
         srcIndexes[0] + 1, courseEdition.Weeks!,
         selectedRoom!.RoomId, destIndexes[1] + 1,
-        destIndexes[0] + 1, weeks
+        destIndexes[0] + 1, weeks,
+        false
       ).toPromise());
       
       if (result.StatusCode >= 400) {
@@ -325,6 +340,7 @@ export class RoomSelectionComponent implements OnInit {
       selectedRoom,
       weeks
     );
+    console.log(dialogResult);
     dialogResult.Message = message;
     this.dialogRef.close(dialogResult);
   }

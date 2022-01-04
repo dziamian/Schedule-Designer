@@ -18,10 +18,10 @@
     [matTooltip]="course.ShowFrequency(settings)"
     matTooltipShowDelay="300"
 
-    [matBadge]="(course?.Weeks == null) ? course?.CurrentAmount : course?.ScheduledMoves?.length" 
+    [matBadge]="(course?.Weeks == null) ? course?.CurrentAmount : getScheduledMovesBadge()" 
     matBadgePosition="after" 
     [matBadgeColor]="(course?.Weeks == null) ? 'primary' : 'accent'" 
-    [matBadgeHidden]="course?.Weeks != null && course?.ScheduledMoves?.length == 0"
+    [matBadgeHidden]="course?.Weeks != null && getScheduledMovesBadge() == 0"
 
     [attr.proposition]="CheckIfAnyProposition()"
 >
@@ -29,7 +29,7 @@
     <div [matBadge]="course?.ScheduleAmount" matBadgePosition="before" matBadgeColor="warn" [matBadgeHidden]="course?.Weeks != null"
         [attr.valid]="course?.ScheduleAmount == Floor(course!.FullAmount)"
     >
-        <div class="details-field">
+        <div *ngIf="isModifying" class="details-field">
             <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">
             <img *ngIf="CheckIfMatching()" src="/assets/pin2.svg" class="pin">
         </div>

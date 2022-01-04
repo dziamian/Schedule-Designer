@@ -135,7 +135,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   private updateLockInSchedule(position:SchedulePosition) {
     this.scheduleInteractionService.updateLockInSchedule(
-      position, this.data, this.loading
+      position, this.data, this.isModifying, this.loading
     );
   }
 
@@ -312,7 +312,7 @@ export class PersonalScheduleComponent implements OnInit {
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, 
-      this.account, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
+      this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
     );
   }
 
@@ -343,25 +343,25 @@ export class PersonalScheduleComponent implements OnInit {
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
-      this.roomTypes, this.account, this.scheduleComponent, this.dialogService, this.snackBar
+      this.roomTypes, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
     );
   }
 
   async AddRoom(): Promise<void> {
     this.scheduleInteractionService.addRoom(
-      this.data, this.roomTypes, this.account, this.dialogService, this.snackBar
+      this.data, this.roomTypes, this.dialogService, this.snackBar
     )
   }
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.settings, this.roomTypes, this.account, this.dialogService, this.snackBar
+      this.data, this.settings, this.roomTypes, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, false, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 

@@ -9,6 +9,7 @@ namespace ScheduleDesigner.Repositories.Interfaces
     public interface IScheduledMoveRepo : IRepoBase<ScheduledMove>
     {
         int GetNextId();
+        public int AcceptMany(Func<ScheduledMove, bool> predicate);
         public int DeleteMany(Func<ScheduledMove, bool> predicate);
     }
 }

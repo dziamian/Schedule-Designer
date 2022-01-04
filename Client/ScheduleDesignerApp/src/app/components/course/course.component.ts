@@ -37,6 +37,13 @@ export class CourseComponent implements OnInit {
     });
   }
 
+  getScheduledMovesBadge(): number  {
+    if (this.isModifying) {
+      return this.course.ScheduledMoves.length;
+    }
+    return this.course.ScheduledMoves.filter(move => move.IsConfirmed).length;
+  }
+
   ngOnInit(): void {
   }
 
@@ -61,6 +68,9 @@ export class CourseComponent implements OnInit {
   }
 
   CheckIfAnyProposition():boolean {
+    if (!this.isModifying) {
+      return false;
+    }
     return this.course.ScheduledMoves.some((scheduledMove) => !scheduledMove.IsConfirmed);
   }
 

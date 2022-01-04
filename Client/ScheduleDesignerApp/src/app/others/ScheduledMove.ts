@@ -4,6 +4,7 @@ export class ScheduledMove {
 
     constructor (
         public MoveId:number,
+        public UserId:number,
         public IsConfirmed:boolean
     ) {}
 }
@@ -11,6 +12,7 @@ export class ScheduledMove {
 export class ScheduledMoveDetails {
     Locked:boolean = false;
     IsRemoving:boolean = false;
+    IsAccepting:boolean = false;
 
     constructor (
         public MoveId:number,

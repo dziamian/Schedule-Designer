@@ -405,6 +405,38 @@ export class ScheduleComponent implements OnInit {
       existingCourseEditions[0].ScheduledMoves = existingCourseEditions[0].ScheduledMoves
         .filter((scheduledMove) => scheduledMove.MoveId != removedScheduledMove.moveId);
     }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastAcceptedScheduledMove.pipe(skip(1)).subscribe((acceptedScheduledMove) => {
+      if (this.loading) {
+        return;
+      }
+
+      const srcSchedulePosition = acceptedScheduledMove.sourceSchedulePosition;
+      const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
+
+      if (commonWeeks.length == 0) {
+        return;
+      }
+
+      const existingCourseEditions = this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1]
+        .filter((courseEdition) => 
+            courseEdition.CourseId == srcSchedulePosition.CourseId 
+              && courseEdition.CourseEditionId == srcSchedulePosition.CourseEditionId
+              && courseEdition.Room!.RoomId == srcSchedulePosition.RoomId
+      );
+
+      if (existingCourseEditions.length == 0) {
+        return;
+      }
+
+      existingCourseEditions[0].ScheduledMoves = existingCourseEditions[0].ScheduledMoves
+        .filter((scheduledMove) => {
+          if (scheduledMove.MoveId == acceptedScheduledMove.moveId) {
+            scheduledMove.IsConfirmed = true;
+          }
+          return true;
+        });
+    }));
   }
 
   ngOnInit(): void {

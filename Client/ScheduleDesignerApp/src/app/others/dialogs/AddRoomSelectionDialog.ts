@@ -6,8 +6,7 @@ export class AddRoomSelectionDialogData {
 
     constructor(
         public CourseEdition:CourseEdition,
-        public RoomTypes:Map<number,RoomType>,
-        public CoordinatorId:number
+        public RoomTypes:Map<number,RoomType>
     ) {}
 }
 

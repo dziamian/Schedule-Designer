@@ -14,6 +14,7 @@ import { CourseEdition } from 'src/app/others/CourseEdition';
 import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/dialogs/AddRoomSelectionDialog';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/dialogs/RoomSelectionDialog';
 import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/dialogs/ScheduledChangesDialog';
+import { Filter } from 'src/app/others/Filter';
 import { ModifyingScheduleData } from 'src/app/others/ModifyingScheduleData';
 import { SelectedCourseEdition } from 'src/app/others/SelectedCourseEdition';
 import { Settings } from 'src/app/others/Settings';
@@ -96,11 +97,14 @@ export class ScheduleInteractionService {
     }
   }
 
-  public updateLockInMyCourses() {}//TODO: admin took control currentDrag
+  public updateLockInMyCourses() {//TODO: admin took control currentDrag
+
+  }
 
   public updateLockInSchedule(
     position: SchedulePosition, 
     data: ModifyingScheduleData,
+    isModifying: boolean,
     loading: boolean
   ) {
     if (loading) {
@@ -114,7 +118,7 @@ export class ScheduleInteractionService {
     const periodIndex = position.PeriodIndex - 1;
     const weeks = position.Weeks;
 
-    if (data.currentSelectedCourseEdition != null 
+    if (isModifying && data.currentSelectedCourseEdition != null 
       && data.currentSelectedCourseEdition.CourseEdition.CourseId == courseId
       && data.currentSelectedCourseEdition.CourseEdition.CourseEditionId == courseEditionId
       && data.currentSelectedCourseEdition.CourseEdition.Room?.RoomId == roomId
@@ -667,7 +671,7 @@ export class ScheduleInteractionService {
     currentTabIndex: number,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
-    account: Account,
+    filter: Filter,
     scheduleComponent: ScheduleComponent,
     myCoursesComponent: MyCoursesComponent,
     dialogService: MatDialog,
@@ -729,7 +733,7 @@ export class ScheduleInteractionService {
       roomTypes,
       data.isCurrentMoveValid!,
       isScheduleSource,
-      account.UserId
+      filter
     );
 
     data.currentRoomSelectionDialog = dialogService.open(RoomSelectionComponent, {
@@ -1011,7 +1015,7 @@ export class ScheduleInteractionService {
     currentTabIndex: number,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
-    account: Account,
+    filter: Filter,
     scheduleComponent: ScheduleComponent,
     dialogService: MatDialog,
     snackBar: MatSnackBar,
@@ -1037,7 +1041,7 @@ export class ScheduleInteractionService {
       roomTypes,
       data.isCurrentMoveValid!,
       true,
-      account.UserId
+      filter
     );
 
     data.currentRoomSelectionDialog = dialogService.open(RoomSelectionComponent, {
@@ -1127,7 +1131,6 @@ export class ScheduleInteractionService {
   public async addRoom(
     data: ModifyingScheduleData,
     roomTypes: Map<number, RoomType>,
-    account: Account,
     dialogService: MatDialog,
     snackBar: MatSnackBar,
   ): Promise<void> {
@@ -1138,8 +1141,7 @@ export class ScheduleInteractionService {
 
     const dialogData = new AddRoomSelectionDialogData(
       selectedCourseEdition.CourseEdition,
-      roomTypes,
-      account.UserId
+      roomTypes
     );
 
     data.currentAddRoomSelectionDialog = dialogService.open(AddRoomSelectionComponent, {
@@ -1158,7 +1160,7 @@ export class ScheduleInteractionService {
     data: ModifyingScheduleData,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
-    account: Account,
+    filter: Filter,
     dialogService: MatDialog,
     snackBar: MatSnackBar,
   ): Promise<void> {
@@ -1195,7 +1197,7 @@ export class ScheduleInteractionService {
       roomTypes,
       true,
       true,
-      account.UserId
+      filter
     );
 
     data.currentRoomSelectionDialog = dialogService.open(RoomSelectionComponent, {
@@ -1247,6 +1249,7 @@ export class ScheduleInteractionService {
   public async showScheduledChanges(
     data: ModifyingScheduleData,
     settings: Settings,
+    RepresentativeView: boolean,
     IsModifying: boolean,
     roomTypes: Map<number, RoomType>,
     dialogService: MatDialog,
@@ -1264,6 +1267,7 @@ export class ScheduleInteractionService {
       settings.TimeLabels,
       roomTypes,
       settings,
+      RepresentativeView,
       IsModifying
     );
 
@@ -1328,7 +1332,6 @@ export class ScheduleInteractionService {
         selectedCourseEdition.CourseEdition.Room!.RoomId, selectedCourseEdition.PeriodIndex + 1,
         selectedCourseEdition.Day + 1, selectedCourseEdition.CourseEdition.Weeks!
       ).toPromise();
-      console.log(result);
       
       if (result.StatusCode >= 400) {
         throw result;
@@ -1339,19 +1342,14 @@ export class ScheduleInteractionService {
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
       }
-      console.log(error);
       return;
     }
-
-    console.log(data.scheduleSlotsValidity);
     
     let busySlots = await this.scheduleDesignerApiService.GetBusyPeriods(
       selectedCourseEdition.CourseEdition.CourseId, 
       selectedCourseEdition.CourseEdition.CourseEditionId,
       tabWeeks[currentTabIndex]
     ).toPromise();
-
-    console.log(busySlots);
     
     const numberOfSlots = settings.Periods.length - 1;
     let busySlotIndex = 0;

@@ -138,6 +138,10 @@ export class ScheduledChangesViewComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
+      if (!this.data.IsModifying && !addedScheduledMove.scheduledMove.IsConfirmed) {
+        return;
+      }
+      
       if (this.data.CourseEdition.CourseId != addedScheduledMove.sourceSchedulePosition.CourseId ||
         this.data.CourseEdition.CourseEditionId != addedScheduledMove.sourceSchedulePosition.CourseEditionId ||
         this.data.CourseEdition.Room?.RoomId != addedScheduledMove.sourceSchedulePosition.RoomId ||
@@ -172,45 +176,53 @@ export class ScheduledChangesViewComponent implements OnInit {
       }
 
       const dialogResult = new ScheduledChangesDialogResult();
-      dialogResult.Message = "No scheduled changes left for this position.";
+      dialogResult.Message = "No changes left for this position.";
       this.dialogRef.close(dialogResult);
     }));
 
+    this.signalrSubscriptions.push(this.signalrService.lastAcceptedScheduledMove.pipe(skip(1)).subscribe((acceptedScheduledMove) => {
+      this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => {
+        if (acceptedScheduledMove.moveId != scheduledMove.MoveId) {
+          scheduledMove.IsConfirmed = true;
+        }
+        return true;
+      });
+    }));
+
+    const scheduledMoves = (!this.data.IsModifying) ? this.data.CourseEdition.ScheduledMoves.filter(x => x.IsConfirmed) : this.data.CourseEdition.ScheduledMoves;
+
     this.scheduleDesignerApiService
-      .GetConcreteScheduledMoves(this.data.CourseEdition.ScheduledMoves.map(e => e.MoveId), this.data.RoomTypes)
-        .subscribe((scheduledMovesDetails) => {
-          this.scheduledMoves = scheduledMovesDetails;
+      .GetConcreteScheduledMoves(
+        scheduledMoves.map(e => e.MoveId), this.data.RoomTypes)
+          .subscribe((scheduledMovesDetails) => {
+            this.scheduledMoves = scheduledMovesDetails;
 
-          const courseEdition = this.data.CourseEdition;
-          const srcIndexes = this.data.SrcIndexes;
-          const tasks:Observable<boolean>[] = [];
-          this.scheduledMoves.forEach((scheduledMove) => {
-            tasks.push(this.scheduleDesignerApiService.AreSchedulePositionsLocked(
-              courseEdition.Room?.RoomId!, srcIndexes[1] + 1, srcIndexes[0] + 1,
-              scheduledMove.SourceWeeks
-            ));
-          });
-          
-          forkJoin(tasks).subscribe((responses) => {
-            for (let i = 0; i < this.scheduledMoves.length; ++i) {
-              this.scheduledMoves[i].Locked = responses[i];
-            }
+            const courseEdition = this.data.CourseEdition;
+            const srcIndexes = this.data.SrcIndexes;
+            const tasks:Observable<boolean>[] = [];
+            this.scheduledMoves.forEach((scheduledMove) => {
+              tasks.push(this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+                courseEdition.Room?.RoomId!, srcIndexes[1] + 1, srcIndexes[0] + 1,
+                scheduledMove.SourceWeeks
+              ));
+            });
+            
+            forkJoin(tasks).subscribe((responses) => {
+              for (let i = 0; i < this.scheduledMoves.length; ++i) {
+                this.scheduledMoves[i].Locked = responses[i];
+              }
 
-            this.loading = false;
+              this.loading = false;
+            });
+          }, () => {
+            const dialogResult = new ScheduledChangesDialogResult();
+            dialogResult.Message = "Could not find scheduled changes for this course.";
+            this.dialogRef.close(dialogResult);
           });
-        }, () => {
-          const dialogResult = new ScheduledChangesDialogResult();
-          dialogResult.Message = "Could not find scheduled changes for this course.";
-          this.dialogRef.close(dialogResult);
-        });
   }
 
   ShowFrequency(weeks:number[]) { 
     return CourseEdition.ShowFrequency(this.data.Settings, weeks);
-  }
-
-  Confirm(moveId:number) {
-    
   }
 
   async Remove(selectedScheduledMove:ScheduledMoveDetails) {
@@ -237,6 +249,48 @@ export class ScheduledChangesViewComponent implements OnInit {
       }
       
       this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => scheduledMove.MoveId != selectedScheduledMove.MoveId);
+
+      const unlockingResult = await this.signalrService.UnlockSchedulePositions(
+        this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
+        this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks
+      ).toPromise();
+
+      if (unlockingResult.StatusCode >= 400) {
+        throw unlockingResult;
+      }
+    }
+    catch (error:any) {
+      if (error.Message != undefined) {
+        this.snackBar.open(error.Message, "OK");
+      }
+      selectedScheduledMove.IsRemoving = false;
+    }
+  }
+
+  async Accept(selectedScheduledMove:ScheduledMoveDetails) {
+    selectedScheduledMove.IsAccepting = true;
+    try {
+      const lockingResult = await this.signalrService.LockSchedulePositions(
+        this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
+        this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks
+      ).toPromise();
+
+      if (lockingResult.StatusCode >= 400) {
+        throw lockingResult;
+      }
+
+      const result = await this.signalrService.AcceptProposition(
+        this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
+        this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks,
+        selectedScheduledMove.DestRoom.RoomId, selectedScheduledMove.DestPeriodIndex, 
+        selectedScheduledMove.DestDay, selectedScheduledMove.DestWeeks
+      ).toPromise();
+
+      if (result.StatusCode >= 400) {
+        throw result;
+      }
+      
+      selectedScheduledMove.IsConfirmed = true;
 
       const unlockingResult = await this.signalrService.UnlockSchedulePositions(
         this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,

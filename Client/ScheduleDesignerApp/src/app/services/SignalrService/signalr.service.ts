@@ -26,6 +26,7 @@ export class SignalrService implements OnDestroy {
 
   lastAddedScheduledMove:BehaviorSubject<{scheduledMove:ScheduledMove, sourceSchedulePosition:SchedulePosition}>
   lastRemovedScheduledMove:BehaviorSubject<{moveId:number, sourceSchedulePosition:SchedulePosition}>
+  lastAcceptedScheduledMove:BehaviorSubject<{moveId:number, sourceSchedulePosition:SchedulePosition}>
 
   lastResponse:BehaviorSubject<MessageObject>
 
@@ -67,10 +68,14 @@ export class SignalrService implements OnDestroy {
     );
 
     this.lastAddedScheduledMove = new BehaviorSubject<{scheduledMove:ScheduledMove, sourceSchedulePosition:SchedulePosition}>(
-      {scheduledMove: new ScheduledMove(-1,true),sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
+      {scheduledMove: new ScheduledMove(-1,-1,true),sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
     );
 
     this.lastRemovedScheduledMove = new BehaviorSubject<{moveId:number, sourceSchedulePosition:SchedulePosition}>(
+      {moveId: -1,sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
+    );
+
+    this.lastAcceptedScheduledMove = new BehaviorSubject<{moveId:number, sourceSchedulePosition:SchedulePosition}>(
       {moveId: -1,sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
     );
 
@@ -165,7 +170,7 @@ export class SignalrService implements OnDestroy {
     day:number,
     weeks:number[]
   ):void {
-    this.connection.invoke<MessageObject>('AddSchedulePositions', 
+    this.connection.invoke('AddSchedulePositions', 
       courseId, courseEditionId, roomId, periodIndex, day, weeks);
   }
 
@@ -179,7 +184,7 @@ export class SignalrService implements OnDestroy {
     destDay:number,
     destWeeks:number[]
   ):void {
-    this.connection.invoke<MessageObject>('ModifySchedulePositions',
+    this.connection.invoke('ModifySchedulePositions',
       roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks);
   }
 
@@ -189,7 +194,7 @@ export class SignalrService implements OnDestroy {
     day:number,
     weeks:number[]
   ):void {
-    this.connection.invoke<MessageObject>('RemoveSchedulePositions',
+    this.connection.invoke('RemoveSchedulePositions',
       roomId, periodIndex, day, weeks);
   }
 
@@ -201,10 +206,11 @@ export class SignalrService implements OnDestroy {
     destRoomId:number,
     destPeriodIndex:number,
     destDay:number,
-    destWeeks:number[]
+    destWeeks:number[],
+    isProposition:boolean
   ):Observable<MessageObject> {
     return from(this.connection.invoke<MessageObject>('AddScheduledMove', 
-    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks, isProposition))
       .pipe(map((result : any) => {
         const message = new MessageObject(result.statusCode);
         message.Message = result.message;
@@ -223,6 +229,25 @@ export class SignalrService implements OnDestroy {
     destWeeks:number[]
   ):Observable<MessageObject> {
     return from(this.connection.invoke<MessageObject>('RemoveScheduledMove', 
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public AcceptProposition(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[]
+  ):Observable<MessageObject> {
+    return from(this.connection.invoke<MessageObject>('AcceptProposition', 
     roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
       .pipe(map((result : any) => {
         const message = new MessageObject(result.statusCode);
@@ -348,7 +373,7 @@ export class SignalrService implements OnDestroy {
     });
 
     this.connection.on('AddedScheduledMove', (
-      moveId, isConfirmed,
+      moveId, userId, isConfirmed,
       courseId, courseEditionId,
       roomId, periodIndex,
       day, weeks
@@ -356,7 +381,7 @@ export class SignalrService implements OnDestroy {
       this.lastAddedScheduledMove.next(
         {
           scheduledMove: new ScheduledMove(
-            moveId, isConfirmed
+            moveId, userId, isConfirmed
           ),
           sourceSchedulePosition: new SchedulePosition(
             courseId, courseEditionId,
@@ -385,9 +410,27 @@ export class SignalrService implements OnDestroy {
       );
     });
 
+    this.connection.on('AcceptedScheduledMove', (
+      moveId,
+      courseId, courseEditionId,
+      roomId, periodIndex,
+      day, weeks
+    ) => {
+      this.lastAcceptedScheduledMove.next(
+        {
+          moveId: moveId,
+          sourceSchedulePosition: new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        }
+      );
+    });
+
     this.connection.on('SendResponse', (messageObject) => {
-      const message = new MessageObject(messageObject.StatusCode);
-      message.Message = messageObject.Message;
+      const message = new MessageObject(messageObject.statusCode);
+      message.Message = messageObject.message;
       this.lastResponse.next(message);
     });
   }

@@ -4,6 +4,7 @@ export class Account {
         public FirstName:string,
         public LastName:string,
         public Student:boolean,
+        public RepresentativeGroups:number[],
         public Coordinator:boolean,
         public Titles:Titles|null,
         public Staff:boolean,

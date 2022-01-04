@@ -90,8 +90,7 @@ export class AddRoomSelectionComponent implements OnInit {
     try {
       await this.scheduleDesignerApiService.AddCourseRoom(
         this.data.CourseEdition.CourseId,
-        selectedRoom.RoomId,
-        this.data.CoordinatorId
+        selectedRoom.RoomId
       ).toPromise();
 
       message = "Successfully added room for this course.";

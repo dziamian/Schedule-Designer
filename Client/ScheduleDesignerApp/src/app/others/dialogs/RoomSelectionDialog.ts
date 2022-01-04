@@ -1,4 +1,5 @@
 import { CourseEdition } from "../CourseEdition";
+import { Filter } from "../Filter";
 import { Room } from "../Room";
 import { RoomType } from "../Types";
 
@@ -14,7 +15,7 @@ export class RoomSelectionDialogData {
         public RoomTypes:Map<number,RoomType>,
         public IsMoveValid:boolean,
         public CanBeScheduled:boolean,
-        public FilterCoordinatorId:number
+        public Filter: Filter
     ) { }
 }
 

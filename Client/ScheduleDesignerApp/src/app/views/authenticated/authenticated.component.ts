@@ -46,12 +46,10 @@ export class AuthenticatedComponent implements OnInit {
                 this.router.navigate(['profile']);
               });
             }, (error) => {
-              console.log(error);
               this.router.navigate(['login']);
             })
           });
         }, (error) => {
-          console.log(error);
           this.router.navigate(['login']);
         }
       )

@@ -32,7 +32,7 @@ export class ScheduleDesignerApiService {
 
   public GetMyAccount():Observable<Account> {
     const request = {
-      url: this.baseUrl + '/users/Service.GetMyAccount()?$expand=Student,Coordinator,Staff',
+      url: this.baseUrl + '/users/Service.GetMyAccount()?$expand=Student($expand=Groups),Coordinator,Staff',
       method: 'GET'
     };
 
@@ -47,6 +47,7 @@ export class ScheduleDesignerApiService {
       response.FirstName,
       response.LastName,
       response.Student != null,
+      response.Student.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId),
       response.Coordinator != null,
       (response.Coordinator != null) ? new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter) : null,
       response.Staff != null,
@@ -487,7 +488,7 @@ export class ScheduleDesignerApiService {
           const locked = value.LockUserId != null;
           const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
           const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
-          const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.IsConfirmed));
+          const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.UserId, value.IsConfirmed));
           let scheduleSlot = schedule[dayIndex][periodIndex];
           let found = false;
           for (let i = 0; i < scheduleSlot.length; ++i) {
@@ -630,7 +631,7 @@ export class ScheduleDesignerApiService {
       );
   }
 
-  public AddCourseRoom(courseId:number, roomId:number, userId:number):Observable<any> {
+  public AddCourseRoom(courseId:number, roomId:number):Observable<any> {
     const request = {
       url: this.baseUrl + `/courseRooms`,
       method: 'POST'
@@ -642,8 +643,7 @@ export class ScheduleDesignerApiService {
       {
         body: {
           'CourseId': courseId,
-          'RoomId': roomId,
-          'UserId': userId
+          'RoomId': roomId
         },
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }

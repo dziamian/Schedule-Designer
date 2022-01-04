@@ -20,6 +20,30 @@ namespace ScheduleDesigner.Repositories
             return _context.GetNextScheduledMoveId();
         }
 
+        public int AcceptMany(Func<ScheduledMove, bool> predicate)
+        {
+            if (_context == null)
+            {
+                return -1;
+            }
+
+            var results = _context.Set<ScheduledMove>()
+                .Where(predicate);
+
+            if (!results.Any())
+            {
+                return -1;
+            }
+
+            foreach (var result in results)
+            {
+                result.IsConfirmed = true;
+            }
+
+            _context.Set<ScheduledMove>().UpdateRange(results);
+            return 1;
+        }
+
         public int DeleteMany(Func<ScheduledMove, bool> predicate)
         {
             if (_context == null)

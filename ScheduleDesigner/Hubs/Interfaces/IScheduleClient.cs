@@ -45,12 +45,18 @@ namespace ScheduleDesigner.Hubs.Interfaces
             int[] movesIds);
 
         Task AddedScheduledMove(
-            int moveId, bool isConfirmed,
+            int moveId, int userId, bool isConfirmed,
             int courseId, int courseEditionId,
             int roomId, int periodIndex,
             int day, int[] weeks);
 
         Task RemovedScheduledMove(
+            int moveId,
+            int courseId, int courseEditionId,
+            int roomId, int periodIndex,
+            int day, int[] weeks);
+
+        Task AcceptedScheduledMove(
             int moveId,
             int courseId, int courseEditionId,
             int roomId, int periodIndex,
