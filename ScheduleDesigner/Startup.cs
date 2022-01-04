@@ -265,6 +265,8 @@ namespace ScheduleDesigner
             getMyCourseEditionsFunction
                 .CollectionParameter<int>("GroupsIds");
             getMyCourseEditionsFunction
+                .CollectionParameter<int>("RoomsIds");
+            getMyCourseEditionsFunction
                 .Parameter<double>("Frequency");
 
             var getMyCourseEditionFunction = builder.EntityType<CourseEdition>()
@@ -274,6 +276,8 @@ namespace ScheduleDesigner
                 .CollectionParameter<int>("CoordinatorsIds");
             getMyCourseEditionFunction
                 .CollectionParameter<int>("GroupsIds");
+            getMyCourseEditionFunction
+                .CollectionParameter<int>("RoomsIds");
             getMyCourseEditionFunction
                 .Parameter<int>("Frequency");
 

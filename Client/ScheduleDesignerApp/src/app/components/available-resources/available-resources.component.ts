@@ -1,7 +1,7 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTree, MatTreeFlatDataSource } from '@angular/material/tree';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Coordinator } from 'src/app/others/Accounts';
 import { Filter } from 'src/app/others/Filter';
@@ -20,6 +20,7 @@ export class AvailableResourcesComponent implements OnInit {
   @Output() showSchedule: EventEmitter<ResourceItem> = new EventEmitter();
   
   filterChanged: Subject<string> = new Subject<string>();
+  filterChangedSub: Subscription;
 
   loading: boolean | null = null;
 
@@ -34,7 +35,7 @@ export class AvailableResourcesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.filterChanged.pipe(debounceTime(200), distinctUntilChanged()).subscribe(value => {
+    this.filterChangedSub = this.filterChanged.pipe(debounceTime(200), distinctUntilChanged()).subscribe(value => {
       if (value) {
         this.resourceTreeService.filterByName(value);
       } else {
@@ -63,5 +64,6 @@ export class AvailableResourcesComponent implements OnInit {
 
   ngOnDestroy() {
     this.resourceTreeService.clearFilter();
+    this.filterChangedSub.unsubscribe();
   }
 }

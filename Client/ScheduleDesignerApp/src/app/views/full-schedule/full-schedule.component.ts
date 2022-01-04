@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { MyCoursesComponent } from 'src/app/components/my-courses/my-courses.component';
 import { ScheduleComponent } from 'src/app/components/schedule/schedule.component';
@@ -41,7 +41,6 @@ export class FullScheduleComponent implements OnInit {
   settings: Settings;
   courseTypes: Map<number, CourseType>;
   roomTypes: Map<number, RoomType>;
-  filter: Filter;
 
   tabWeeks: number[][];
   tabLabels: string[];
@@ -51,6 +50,9 @@ export class FullScheduleComponent implements OnInit {
   
   loading: boolean = true;
   connectionStatus: boolean = false;
+
+  signalrSubscriptions: Subscription[];
+  isConnectedSubscription: Subscription;
 
   constructor(
     private store: Store<{account: Account}>,
@@ -67,15 +69,6 @@ export class FullScheduleComponent implements OnInit {
         return;
       }
       this.account = account;
-      this.filter = new Filter([this.account.UserId], [], []);
-      if (this.currentFilter) {
-        this.currentFilter = {
-          weeks: this.currentFilter.weeks,
-          filter: this.filter,
-          tabSwitched: this.currentFilter.tabSwitched,
-          editable: this.currentFilter.editable
-        };
-      }
     });
   }
 
@@ -139,35 +132,37 @@ export class FullScheduleComponent implements OnInit {
   }
 
   private setSignalrSubscriptions(): void {
-    this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
+    this.signalrSubscriptions = [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
       this.updateLockInSchedule(lockedSchedulePositions);
-    });
+    }));
 
-    this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
       this.updateLockInSchedule(unlockedSchedulePositions);
-    });
+    }));
 
-    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       this.scheduleInteractionService.lastAddedSchedulePositionsReaction(
         addedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
       );
-    });
+    }));
 
-    this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       this.scheduleInteractionService.lastModifiedSchedulePositionsReaction(
         modifiedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
       );
-    });
+    }));
 
-    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       this.scheduleInteractionService.lastRemovedSchedulePositionsReaction(
         removedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
       );
-    });
+    }));
   }
 
   ngOnInit(): void {
-    let isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+    this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;
       if (!status && !this.signalrService.connectionIntentionallyStopped) {
         this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
@@ -201,7 +196,7 @@ export class FullScheduleComponent implements OnInit {
 
         this.snackBar.open('Session expired. Please log in again.', 'OK');
         this.router.navigate(['login']);
-      } else if (!isConnectedSubscription.closed) {
+      } else if (!this.isConnectedSubscription.closed) {
         this.snackBar.open("Connection with server failed. Please refresh the page to try again.", "OK");
       }
     });
@@ -211,7 +206,7 @@ export class FullScheduleComponent implements OnInit {
     this.currentResourceName = resource.name;
     this.currentFilter = {
       weeks: this.tabWeeks[this.currentTabIndex],
-      filter: new Filter([34527],[],[]),
+      filter: resource.filter ?? new Filter([],[],[]),
       tabSwitched: false,
       editable: (this.currentTabIndex == 3 || this.currentTabIndex == 4)
     };
@@ -221,7 +216,7 @@ export class FullScheduleComponent implements OnInit {
     var tabSwitched = !isFirst;
     this.currentFilter = {
       weeks: [],
-      filter: this.filter,
+      filter: this.currentFilter.filter,
       tabSwitched: tabSwitched, 
       editable: false
     };
@@ -251,7 +246,7 @@ export class FullScheduleComponent implements OnInit {
 
     this.currentFilter = {
       weeks: this.tabWeeks[this.currentTabIndex], 
-      filter: this.filter,
+      filter: this.currentFilter.filter,
       tabSwitched: tabSwitched, 
       editable: (index == 3 || index == 4)
     };
@@ -286,7 +281,7 @@ export class FullScheduleComponent implements OnInit {
 
     this.currentFilter = {
       weeks: dialogResult.SelectedWeeks,
-      filter: this.filter,
+      filter: this.currentFilter.filter,
       tabSwitched: false, 
       editable: true
     };
@@ -312,7 +307,7 @@ export class FullScheduleComponent implements OnInit {
 
   async OnMyCoursesStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
     );
   }
 
@@ -394,5 +389,12 @@ export class FullScheduleComponent implements OnInit {
     this.scheduleInteractionService.onMouseLeave(
       this.data
     );
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription => subscription.unsubscribe()
+    );
+    this.isConnectedSubscription.unsubscribe();
   }
 }

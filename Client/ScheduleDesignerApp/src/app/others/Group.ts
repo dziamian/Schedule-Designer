@@ -1,6 +1,6 @@
 export class Group {
     FullName:string;
-    ParentGroupId:number;
+    ParentGroupId:number|null;
 
     constructor(
         public GroupId:number,

@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { Account } from 'src/app/others/Accounts';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
 
   loading:boolean = true;
   connectionStatus:boolean = false;
+  isConnectedSubscription: Subscription;
 
   account:Account;
 
@@ -40,7 +41,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+    this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;
       if (!status && !this.signalrService.connectionIntentionallyStopped) {
         this.snackBar.open("Connection with server has been lost. Please refresh the page to possibly reconnect.", "OK");
@@ -48,7 +49,9 @@ export class ProfileComponent implements OnInit {
     });
 
     this.connectionStatus = this.signalrService.connection.state == HubConnectionState.Connected;
-    this.loading = false;
   }
 
+  ngOnDestroy() {
+    this.isConnectedSubscription.unsubscribe();
+  }
 }

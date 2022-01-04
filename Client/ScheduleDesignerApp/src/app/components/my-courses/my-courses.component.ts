@@ -33,6 +33,7 @@ export class MyCoursesComponent implements OnInit {
   @Output() onLoaded: EventEmitter<null> = new EventEmitter();
 
   loadingSubscription: Subscription;
+  signalrSubscriptions: Subscription[];
   loading: boolean | null = null;
 
   myCourses: CourseEdition[];
@@ -55,15 +56,17 @@ export class MyCoursesComponent implements OnInit {
   }
 
   private setSignalrSubscriptions(): void {
-    this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
+    this.signalrSubscriptions = [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
       this.updateLockInMyCourses(courseId, courseEditionId, true);
-    });
+    }));
 
-    this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
       this.updateLockInMyCourses(courseId, courseEditionId, false);
-    });
+    }));
 
-    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       if (this.loading) {
         return;
       }
@@ -102,9 +105,9 @@ export class MyCoursesComponent implements OnInit {
           });
         }
       }
-    });
+    }));
 
-    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       if (this.loading) {
         return;
       }
@@ -172,7 +175,7 @@ export class MyCoursesComponent implements OnInit {
           }, () => {});
         }
       }
-    });
+    }));
   }
 
   ngOnInit(): void {
@@ -242,5 +245,11 @@ export class MyCoursesComponent implements OnInit {
 
   OnReleased(event: CdkDragRelease) {
     this.onRelease.emit(event);
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription => subscription.unsubscribe()
+    );
   }
 }

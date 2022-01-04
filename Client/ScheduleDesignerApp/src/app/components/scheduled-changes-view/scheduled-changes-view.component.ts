@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/dialogs/ScheduledChangesDialog';
@@ -19,6 +19,9 @@ export class ScheduledChangesViewComponent implements OnInit {
   scheduledMoves:ScheduledMoveDetails[] = [];
 
   loading:boolean = true;
+  isConnectedSubscription: Subscription;
+
+  signalrSubscriptions: Subscription[];
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -33,7 +36,15 @@ export class ScheduledChangesViewComponent implements OnInit {
       this.dialogRef.close(ScheduledChangesDialogResult.EMPTY);
     });
 
-    this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
+    this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      if (!status && !this.signalrService.connectionIntentionallyStopped) {
+        this.dialogRef.close(ScheduledChangesDialogResult.EMPTY);
+      }
+    });
+
+    this.signalrSubscriptions = [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => !modifiedSchedulePositions.MovesIds.includes(scheduledMove.MoveId));
 
       if (this.data.CourseEdition.CourseId == modifiedSchedulePositions.SourceSchedulePosition.CourseId &&
@@ -59,9 +70,9 @@ export class ScheduledChangesViewComponent implements OnInit {
         this.dialogRef.close(dialogResult);
         return;
       }
-    });
+    }));
 
-    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => !removedSchedulePositions.MovesIds.includes(scheduledMove.MoveId));
 
       if (this.data.CourseEdition.CourseId == removedSchedulePositions.SchedulePosition.CourseId &&
@@ -87,9 +98,9 @@ export class ScheduledChangesViewComponent implements OnInit {
         this.dialogRef.close(dialogResult);
         return;
       }
-    });
+    }));
 
-    this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
       if (this.data.CourseEdition.CourseId != lockedSchedulePositions.CourseId ||
         this.data.CourseEdition.CourseEditionId != lockedSchedulePositions.CourseEditionId ||
         this.data.CourseEdition.Room?.RoomId != lockedSchedulePositions.RoomId ||
@@ -103,9 +114,9 @@ export class ScheduledChangesViewComponent implements OnInit {
           scheduledMove.Locked = true;
         }
       });
-    });
+    }));
 
-    this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
       if (this.data.CourseEdition.CourseId != unlockedSchedulePositions.CourseId ||
         this.data.CourseEdition.CourseEditionId != unlockedSchedulePositions.CourseEditionId ||
         this.data.CourseEdition.Room?.RoomId != unlockedSchedulePositions.RoomId ||
@@ -124,9 +135,9 @@ export class ScheduledChangesViewComponent implements OnInit {
           })
         }
       })
-    });
+    }));
 
-    this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
+    this.signalrSubscriptions.push(this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
       if (this.data.CourseEdition.CourseId != addedScheduledMove.sourceSchedulePosition.CourseId ||
         this.data.CourseEdition.CourseEditionId != addedScheduledMove.sourceSchedulePosition.CourseEditionId ||
         this.data.CourseEdition.Room?.RoomId != addedScheduledMove.sourceSchedulePosition.RoomId ||
@@ -151,9 +162,9 @@ export class ScheduledChangesViewComponent implements OnInit {
               });
             });
       }
-    });
+    }));
 
-    this.signalrService.lastRemovedScheduledMove.pipe(skip(1)).subscribe((removedScheduledMove) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedScheduledMove.pipe(skip(1)).subscribe((removedScheduledMove) => {
       this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => removedScheduledMove.moveId != scheduledMove.MoveId);
 
       if (this.scheduledMoves.length > 0) {
@@ -163,7 +174,7 @@ export class ScheduledChangesViewComponent implements OnInit {
       const dialogResult = new ScheduledChangesDialogResult();
       dialogResult.Message = "No scheduled changes left for this position.";
       this.dialogRef.close(dialogResult);
-    });
+    }));
 
     this.scheduleDesignerApiService
       .GetConcreteScheduledMoves(this.data.CourseEdition.ScheduledMoves.map(e => e.MoveId), this.data.RoomTypes)
@@ -242,5 +253,12 @@ export class ScheduledChangesViewComponent implements OnInit {
       }
       selectedScheduledMove.IsRemoving = false;
     }
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription => subscription.unsubscribe()
+    );
+    this.isConnectedSubscription.unsubscribe();
   }
 }

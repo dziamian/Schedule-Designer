@@ -55,7 +55,7 @@
                                 (click)="ShowScheduledChanges()"
                                 >
                                     <mat-icon>schedule</mat-icon>
-                                    {{isModifying ? 'Manage' : 'Show'}} Scheduled Changes
+                                    {{isModifying ? 'Manage' : 'Show'}} Changes
                             </button>
                             <button mat-raised-button color="accent" 
                                 [disabled]="!isModifying || data.currentDragEvent != null 
@@ -123,7 +123,7 @@
                         </div>
                         <div class="footer-schedule-menu">
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || !account.Admin || !currentResourceName"
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || !account?.Admin || !currentResourceName"
                                 (click)="ModifySchedule()"
                                 >
                                     <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>

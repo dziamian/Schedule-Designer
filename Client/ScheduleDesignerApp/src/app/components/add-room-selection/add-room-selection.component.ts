@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
+import { skip } from 'rxjs/operators';
 import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult, RoomSelect } from 'src/app/others/dialogs/AddRoomSelectionDialog';
 import { Room } from 'src/app/others/Room';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
+import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
 @Component({
   selector: 'app-add-room-selection',
@@ -19,8 +21,10 @@ export class AddRoomSelectionComponent implements OnInit {
   mappedAllRooms:Map<number,RoomSelect[]>;
 
   loading:boolean = true;
+  isConnectedSubscription: Subscription;
 
   constructor(
+    private signalrService: SignalrService,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
     @Inject(MAT_DIALOG_DATA) public data:AddRoomSelectionDialogData,
     public dialogRef:MatDialogRef<AddRoomSelectionComponent>,
@@ -29,6 +33,12 @@ export class AddRoomSelectionComponent implements OnInit {
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(AddRoomSelectionDialogResult.EMPTY);
+    });
+
+    this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      if (!status && !this.signalrService.connectionIntentionallyStopped) {
+        this.dialogRef.close(AddRoomSelectionDialogResult.EMPTY);
+      }
     });
 
     forkJoin([
@@ -94,4 +104,7 @@ export class AddRoomSelectionComponent implements OnInit {
     this.dialogRef.close(result);
   }
 
+  ngOnDestroy() {
+    this.isConnectedSubscription.unsubscribe();
+  }
 }

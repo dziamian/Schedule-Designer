@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { MessageObject } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
@@ -26,6 +26,9 @@ export class RoomSelectionComponent implements OnInit {
   mappedCourseRooms:Map<number,Room[]>;
 
   loading:boolean = true;
+  isConnectedSubscription: Subscription;
+
+  signalrSubscriptions: Subscription[];
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -42,8 +45,16 @@ export class RoomSelectionComponent implements OnInit {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
     });
+
+    this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
+      if (!status && !this.signalrService.connectionIntentionallyStopped) {
+        this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+      }
+    });
     
-    this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
+    this.signalrSubscriptions = [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       const coordinatorsIds = addedSchedulePositions.CoordinatorsIds;
       const groupsIds = addedSchedulePositions.GroupsIds;
       const periodIndex = addedSchedulePositions.SchedulePosition.PeriodIndex;
@@ -76,9 +87,9 @@ export class RoomSelectionComponent implements OnInit {
       if (busyRoom != undefined) {
         busyRoom.IsBusy = true;
       }
-    });
+    }));
 
-    this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       const coordinatorsIds = modifiedSchedulePositions.CoordinatorsIds;
       const groupsIds = modifiedSchedulePositions.GroupsIds;
       const dstPeriodIndex = modifiedSchedulePositions.DestinationSchedulePosition.PeriodIndex;
@@ -144,9 +155,9 @@ export class RoomSelectionComponent implements OnInit {
             });
           }
       }
-    });
+    }));
 
-    this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
       const periodIndex = removedSchedulePositions.SchedulePosition.PeriodIndex;
       const day = removedSchedulePositions.SchedulePosition.Day;
       const weeks = removedSchedulePositions.SchedulePosition.Weeks;
@@ -182,7 +193,7 @@ export class RoomSelectionComponent implements OnInit {
             });
           }
       }
-    });
+    }));
 
     forkJoin([
       this.scheduleDesignerApiService.GetCourseEditionGroupsSize(this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId),
@@ -316,5 +327,12 @@ export class RoomSelectionComponent implements OnInit {
     );
     dialogResult.Message = message;
     this.dialogRef.close(dialogResult);
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription => subscription.unsubscribe()
+    );
+    this.isConnectedSubscription.unsubscribe();
   }
 }

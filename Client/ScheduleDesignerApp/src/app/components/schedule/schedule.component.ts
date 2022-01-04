@@ -128,7 +128,7 @@ export class ScheduleComponent implements OnInit {
               this.scheduleDesignerApiService.GetCourseEditionInfo(
                 schedulePosition.CourseId, schedulePosition.CourseEditionId, this.settings),
               this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
-              this.scheduleDesignerApiService.GetCoordinators(addedSchedulePositions.CoordinatorsIds),
+              this.scheduleDesignerApiService.GetCoordinatorsFromUsers(addedSchedulePositions.CoordinatorsIds),
               this.scheduleDesignerApiService.GetRoomsNames([schedulePosition.RoomId])
             ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) => {
               let groups:Group[] = [];
@@ -279,7 +279,7 @@ export class ScheduleComponent implements OnInit {
                 this.scheduleDesignerApiService.GetCourseEditionInfo(
                   dstSchedulePosition.CourseId, dstSchedulePosition.CourseEditionId, this.settings),
                 this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
-                this.scheduleDesignerApiService.GetCoordinators(modifiedSchedulePositions.CoordinatorsIds),
+                this.scheduleDesignerApiService.GetCoordinatorsFromUsers(modifiedSchedulePositions.CoordinatorsIds),
                 this.scheduleDesignerApiService.GetRoomsNames([dstSchedulePosition.RoomId])
               ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) => {
                 let groups:Group[] = [];
@@ -359,7 +359,6 @@ export class ScheduleComponent implements OnInit {
       }
       
       const srcSchedulePosition = addedScheduledMove.sourceSchedulePosition;
-      console.log(this.currentFilter);
       const commonWeeks = srcSchedulePosition.Weeks.filter(week => this.currentFilter.weeks.includes(week));
 
       if (commonWeeks.length == 0) {

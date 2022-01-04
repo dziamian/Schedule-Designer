@@ -481,6 +481,15 @@ export class ScheduleInteractionService {
         }
         
         courseEdition.Locked = false;
+
+        const myCoursesLength = myCoursesComponent.myCourses.length;
+        for (var i = 0; i < myCoursesLength; ++i) {
+          const currentCourseEdition = myCoursesComponent.myCourses[i];
+          if (currentCourseEdition.CourseId == courseEdition.CourseId 
+            && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
+              currentCourseEdition.Locked = false;
+          }
+        }
       } catch (error) {
         
       }
@@ -515,6 +524,7 @@ export class ScheduleInteractionService {
     tabWeeks: number[][],
     currentTabIndex: number,
     settings: Settings,
+    myCoursesComponent: MyCoursesComponent,
     scheduleComponent: ScheduleComponent,
     snackBar: MatSnackBar,
   ): Promise<void> {
@@ -543,6 +553,15 @@ export class ScheduleInteractionService {
         }
         
         courseEdition.Locked = true;
+
+        const myCoursesLength = myCoursesComponent.myCourses.length;
+        for (var i = 0; i < myCoursesLength; ++i) {
+          const currentCourseEdition = myCoursesComponent.myCourses[i];
+          if (currentCourseEdition.CourseId == courseEdition.CourseId 
+            && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
+              currentCourseEdition.Locked = true;
+          }
+        }
       } else {
         return;
       }
@@ -559,9 +578,12 @@ export class ScheduleInteractionService {
           data.currentRoomSelectionDialog.close(RoomSelectionDialogResult.CANCELED);
         }
       }
+
       courseEdition.Locked = true;
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
+      } else {
+        snackBar.open("You do not have enough permissions.", "OK");
       }
 
       data.currentDragEvent = null;
@@ -615,6 +637,15 @@ export class ScheduleInteractionService {
         }
         
         courseEdition.Locked = false;
+
+        const myCoursesLength = myCoursesComponent.myCourses.length;
+        for (var i = 0; i < myCoursesLength; ++i) {
+          const currentCourseEdition = myCoursesComponent.myCourses[i];
+          if (currentCourseEdition.CourseId == courseEdition.CourseId 
+            && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
+              currentCourseEdition.Locked = false;
+          }
+        }
       } catch (error) {
         
       }
@@ -774,6 +805,15 @@ export class ScheduleInteractionService {
         }
         
         courseEdition.Locked = false;
+        
+        const myCoursesLength = myCoursesComponent.myCourses.length;
+        for (var i = 0; i < myCoursesLength; ++i) {
+          const currentCourseEdition = myCoursesComponent.myCourses[i];
+          if (currentCourseEdition.CourseId == courseEdition.CourseId 
+            && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
+              currentCourseEdition.Locked = false;
+          }
+        }
       } catch (error) {
   
       }
@@ -863,6 +903,8 @@ export class ScheduleInteractionService {
       courseEdition.Locked = true;
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
+      } else {
+        snackBar.open("You do not have enough permissions.", "OK");
       }
       return;
     }

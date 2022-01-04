@@ -73,6 +73,7 @@ namespace ScheduleDesigner.Controllers
         public async Task<IActionResult> GetFilteredCourseEditions(
             [FromODataUri] IEnumerable<int> CoordinatorsIds,
             [FromODataUri] IEnumerable<int> GroupsIds,
+            [FromODataUri] IEnumerable<int> RoomsIds,
             [FromODataUri] int Frequency)
         {
             var _settings = await _settingsRepo.GetSettings();
@@ -99,11 +100,17 @@ namespace ScheduleDesigner.Controllers
                     predicate = predicate
                         .Or(e => e.Groups.Any(f => GroupsIds.Contains(f.GroupId)));
                 }
+                if (RoomsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => e.Course.Rooms.Any(f => RoomsIds.Contains(f.RoomId)));
+                }
 
                 var courseDurationMinutes = _settings.CourseDurationMinutes;
                 var totalMinutes = Frequency * courseDurationMinutes;
 
-                var finalPredicate = predicate.And(e => Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency);
+                var finalPredicate = predicate
+                    .And(e => Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency);
                 
                 var _courseEditions = _courseEditionRepo
                     .Get(finalPredicate) 
@@ -123,11 +130,12 @@ namespace ScheduleDesigner.Controllers
         [Authorize]
         [EnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
-        [ODataRoute("({key1},{key2})/GetFilteredCourseEdition(CoordinatorsIds={CoordinatorsIds},GroupsIds={GroupsIds},Frequency={Frequency})")]
+        [ODataRoute("({key1},{key2})/GetFilteredCourseEdition(CoordinatorsIds={CoordinatorsIds},GroupsIds={GroupsIds},RoomsIds={RoomsIds},Frequency={Frequency})")]
         public async Task<IActionResult> GetFilteredCourseEdition(
             [FromODataUri] int key1, [FromODataUri] int key2,
             [FromODataUri] IEnumerable<int> CoordinatorsIds,
             [FromODataUri] IEnumerable<int> GroupsIds,
+            [FromODataUri] IEnumerable<int> RoomsIds,
             [FromODataUri] double Frequency)
         {
             var _settings = await _settingsRepo.GetSettings();
@@ -154,6 +162,11 @@ namespace ScheduleDesigner.Controllers
                     predicate = predicate
                         .Or(e => e.Groups.Any(f => GroupsIds.Contains(f.GroupId)));
                 }
+                if (RoomsIds.Count() > 0)
+                {
+                    predicate = predicate
+                        .Or(e => e.Course.Rooms.Any(f => RoomsIds.Contains(f.RoomId)));
+                }
                 var courseDurationMinutes = _settings.CourseDurationMinutes;
                 var totalMinutes = Frequency * courseDurationMinutes;
 
@@ -166,6 +179,7 @@ namespace ScheduleDesigner.Controllers
                     .Get(finalPredicate)
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
+                        .ThenInclude(e => e.Rooms)
                     .Include(e => e.Coordinators);
 
                 return Ok(SingleResult.Create(_courseEditions));

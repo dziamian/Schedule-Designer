@@ -13,6 +13,7 @@ using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using static ScheduleDesigner.Helpers;
+using LinqKit;
 
 namespace ScheduleDesigner.Hubs
 {
@@ -584,6 +585,8 @@ namespace ScheduleDesigner.Hubs
         }
 
         [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Representative")]
+        [Authorize(Policy = "Admin")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
             CourseEditionKey courseEditionKey = null;
@@ -594,6 +597,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
+                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -604,20 +610,34 @@ namespace ScheduleDesigner.Hubs
 
                 lock (courseEditionQueue)
                 {
+                    var predicate = PredicateBuilder.New<CourseEdition>(isAdmin);
+                    if (!isAdmin && isCoordinator)
+                    {
+                        predicate = predicate
+                            .Or(e => e.Coordinators.Any(f => f.CoordinatorId == userId));
+                    }
+                    if (!isAdmin && representativeGroupsIds.Count() > 0) 
+                    {
+                        predicate = predicate
+                            .Or(e => e.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
+                    }
+
+                    var finalPredicate = predicate.And(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
+
                     var _courseEdition = _courseEditionRepo
-                        .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == courseId &&
-                                  e.CourseEditionId == courseEditionId)
-                        .Include(e => e.Coordinators);
+                        .Get(finalPredicate)
+                        .Include(e => e.Coordinators)
+                        .Include(e => e.Groups);
 
                     if (!_courseEdition.Any())
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                         
-                        return new MessageObject {StatusCode = 404};
+                        return new MessageObject {StatusCode = 404, Message = "Could not find requested course or you do not have enough permissions to lock."};
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
-                    if (!(courseEdition is {LockUserId: null}))
+                    if (!isAdmin && !(courseEdition is {LockUserId: null}))
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                         
@@ -629,7 +649,7 @@ namespace ScheduleDesigner.Hubs
                     _courseEditionRepo.Update(courseEdition);
 
                     var result1 = _courseEditionRepo.SaveChanges().Result;
-                    var result2 = Clients.All.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+                    var result2 = Clients.Others.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
@@ -653,6 +673,8 @@ namespace ScheduleDesigner.Hubs
         }
 
         [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Representative")]
+        [Authorize(Policy = "Admin")]
         public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -662,6 +684,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
+                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
 
                 var _timestamps = _timestampRepo
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -707,18 +732,35 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
+                        var predicate = PredicateBuilder.New<SchedulePosition>(isAdmin);
+                        if (!isAdmin && isCoordinator)
+                        {
+                            predicate = predicate
+                                .Or(e => e.CourseEdition.Coordinators.Any(f => f.CoordinatorId == userId));
+                        }
+                        if (!isAdmin && representativeGroupsIds.Count() > 0)
+                        {
+                            predicate = predicate
+                                .Or(e => e.CourseEdition.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
+                        }
+
+                        var finalPredicate = PredicateBuilder.New<SchedulePosition>()
+                            .And(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId)
+                            .And(predicate);
+
                         var _schedulePositions = _schedulePositionRepo
-                        .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId &&
-                                  e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        .Get(finalPredicate)
                         .Include(e => e.CourseEdition)
-                        .ThenInclude(e => e.Coordinators);
+                            .ThenInclude(e => e.Coordinators)
+                        .Include(e => e.CourseEdition)
+                            .ThenInclude(e => e.Groups);
 
                         if (_schedulePositions.Count() != weeks.Length)
                         {
-                            return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule." };
+                            return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule or you do not have enough permissions to lock." };
                         }
 
-                        if (Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != null))
+                        if (!isAdmin && Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != null))
                         {
                             return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };
                         }
@@ -771,6 +813,8 @@ namespace ScheduleDesigner.Hubs
         }
 
         [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Representative")]
+        [Authorize(Policy = "Admin")]
         public MessageObject UnlockCourseEdition(int courseId, int courseEditionId)
         {
             CourseEditionKey courseEditionKey = null;
@@ -781,6 +825,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
+                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -791,10 +838,24 @@ namespace ScheduleDesigner.Hubs
 
                 lock (courseEditionQueue)
                 {
+                    var predicate = PredicateBuilder.New<CourseEdition>(isAdmin);
+                    if (!isAdmin && isCoordinator)
+                    {
+                        predicate = predicate
+                            .Or(e => e.Coordinators.Any(f => f.CoordinatorId == userId));
+                    }
+                    if (!isAdmin && representativeGroupsIds.Count() > 0)
+                    {
+                        predicate = predicate
+                            .Or(e => e.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
+                    }
+
+                    var finalPredicate = predicate.And(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
+
                     var _courseEdition = _courseEditionRepo
-                        .Get(e => e.Coordinators.Any(e => e.CoordinatorId == userId) && e.CourseId == courseId &&
-                                  e.CourseEditionId == courseEditionId)
-                        .Include(e => e.Coordinators);
+                        .Get(finalPredicate)
+                        .Include(e => e.Coordinators)
+                        .Include(e => e.Groups);
 
                     if (!_courseEdition.Any())
                     {
@@ -823,7 +884,7 @@ namespace ScheduleDesigner.Hubs
                     _courseEditionRepo.Update(courseEdition);
 
                     var result1 = _courseEditionRepo.SaveChanges().Result;
-                    var result2 = Clients.All.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+                    var result2 = Clients.Others.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
@@ -847,6 +908,8 @@ namespace ScheduleDesigner.Hubs
         }
 
         [Authorize(Policy = "Coordinator")]
+        [Authorize(Policy = "Representative")]
+        [Authorize(Policy = "Admin")]
         public MessageObject UnlockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -856,6 +919,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
+                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
 
                 var _timestamps = _timestampRepo
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -901,11 +967,28 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
+                        var predicate = PredicateBuilder.New<SchedulePosition>(isAdmin);
+                        if (!isAdmin && isCoordinator)
+                        {
+                            predicate = predicate
+                                .Or(e => e.CourseEdition.Coordinators.Any(f => f.CoordinatorId == userId));
+                        }
+                        if (!isAdmin && representativeGroupsIds.Count() > 0)
+                        {
+                            predicate = predicate
+                                .Or(e => e.CourseEdition.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
+                        }
+
+                        var finalPredicate = PredicateBuilder.New<SchedulePosition>()
+                            .And(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId)
+                            .And(predicate);
+
                         var _schedulePositions = _schedulePositionRepo
-                        .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId &&
-                                  e.CourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        .Get(finalPredicate)
                         .Include(e => e.CourseEdition)
-                        .ThenInclude(e => e.Coordinators);
+                            .ThenInclude(e => e.Coordinators)
+                        .Include(e => e.CourseEdition)
+                            .ThenInclude(e => e.Groups);
 
                         if (_schedulePositions.Count() != weeks.Length)
                         {
@@ -916,7 +999,7 @@ namespace ScheduleDesigner.Hubs
                         {
                             if (schedulePosition.LockUserId == null)
                             {
-                                return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };
+                                return new MessageObject { StatusCode = 400, Message = "These positions in schedule are already unlocked." };
                             }
 
                             if (schedulePosition.LockUserId != userId || schedulePosition.LockUserConnectionId != Context.ConnectionId)

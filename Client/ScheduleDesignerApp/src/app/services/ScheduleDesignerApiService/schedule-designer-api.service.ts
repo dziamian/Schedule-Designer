@@ -173,7 +173,34 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetCoordinators(usersIds:number[]):Observable<Coordinator[]> {
+  public GetCoordinators(): Observable<Coordinator[]> {
+    const request = {
+      url: this.baseUrl + `/coordinators?$expand=User`,
+      method: 'GET'
+    }
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((value : any) => 
+        new Coordinator(
+          value.UserId,
+          value.User.FirstName,
+          value.User.LastName,
+          new Titles(
+            value.TitleBefore,
+            value.TitleAfter
+          )
+        ))
+      )
+    );
+  }
+
+  public GetCoordinatorsFromUsers(usersIds:number[]):Observable<Coordinator[]> {
     const request = {
       url: this.baseUrl + `/users?$expand=Coordinator&$filter=UserId in [${usersIds.toString()}]`,
       method: 'GET'
@@ -241,7 +268,7 @@ export class ScheduleDesignerApiService {
   ):Observable<CourseEdition[]> {
     const FREQUENCY = Math.floor(frequency);
     const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(${filter.toStringWithoutRooms()},Frequency=${FREQUENCY})?` +
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(${filter.toString()},Frequency=${FREQUENCY})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
@@ -305,7 +332,7 @@ export class ScheduleDesignerApiService {
   ):Observable<CourseEdition[]> {
     const FREQUENCY = Math.floor(frequency);
     const request = {
-      url: this.baseUrl + `/courseEditions/Service.GetFilteredCourseEditions(${filter.toStringWithoutRooms()},Frequency=${FREQUENCY})?` +
+      url: this.baseUrl + `/courseEditions/Service.GetFilteredCourseEditions(${filter.toString()},Frequency=${FREQUENCY})?` +
         '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
@@ -506,7 +533,9 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetRooms(roomsTypes:Map<number,RoomType>):Observable<Room[]> {
+  public GetRooms(roomsTypes:Map<number,RoomType> = new Map<number, RoomType>()):Observable<Room[]> {
+    const roomTypesSize = roomsTypes.size;
+    
     const request = {
       url: this.baseUrl + `/rooms`,
       method: 'GET'
@@ -524,7 +553,9 @@ export class ScheduleDesignerApiService {
           const room = new Room(element.RoomId);
           room.Name = element.Name;
           room.Capacity = element.Capacity;
-          room.RoomType = roomsTypes.get(element.RoomTypeId) ?? new RoomType(0, "");
+          if (roomTypesSize > 0) {
+            room.RoomType = roomsTypes.get(element.RoomTypeId) ?? new RoomType(0, "");
+          }
           return room;
         })
       )
@@ -616,6 +647,28 @@ export class ScheduleDesignerApiService {
         },
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
+    );
+  }
+
+  public GetGroups(): Observable<Group[]> {
+    const request = {
+      url: this.baseUrl + `/groups`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => {
+        const group = new Group(element.GroupId);
+        group.ParentGroupId = element.ParentGroupId;
+        group.FullName = element.Name;
+        return group;
+      }))
     );
   }
 
