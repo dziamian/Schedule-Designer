@@ -5,12 +5,12 @@
     <div class="toolbar-middle">
         <button *ngIf="IsAuthenticated()" class="toolbar-coordinator-schedule" mat-raised-button color="accent" (click)="PersonalSchedule()" [disabled]="!account?.Coordinator">
             <mat-icon>school</mat-icon>
-            Personal Schedule
+            Coordinator Schedule
         </button>
         
         <button *ngIf="IsAuthenticated()" class="toolbar-student-schedule" mat-raised-button color="accent" (click)="MyGroupsSchedule()" [disabled]="!account?.Student">
             <mat-icon>group</mat-icon>
-            My Groups' Schedule
+            Student Schedule
         </button>
 
         <button *ngIf="IsAuthenticated()" class="toolbar-full-schedule" mat-raised-button color="accent" (click)="FullSchedule()">

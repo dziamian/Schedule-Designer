@@ -3,7 +3,7 @@
     
     cdkDrag
     [cdkDragDisabled]="!isModifying || (!ignoreUsersLocks && course?.IsLocked) || CheckIfNotMatching() 
-        || isSelectedMoving || (ignoreUsersLocks && course?.IsLockedByAdmin && course?.IsLocked)"
+        || isSelectedMoving || (ignoreUsersLocks && course?.IsLockedByAdmin && course?.IsLocked) || CheckIfInvalidGroup()"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"

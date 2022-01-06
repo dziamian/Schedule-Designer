@@ -341,7 +341,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, false, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
@@ -378,7 +378,7 @@ export class PersonalScheduleComponent implements OnInit {
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, false, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, null, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 

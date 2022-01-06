@@ -41,7 +41,7 @@ import { SelectViewComponent } from './components/select-view/select-view.compon
 import { AvailableResourcesComponent } from './components/available-resources/available-resources.component';
 import { FullScheduleComponent } from './views/full-schedule/full-schedule.component';
 import { PersonalScheduleComponent } from './views/personal-schedule/personal-schedule.component';
-import { GroupScheduleComponent } from './views/group-schedule/group-schedule.component';
+import { StudentScheduleComponent } from './views/student-schedule/student-schedule.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +61,7 @@ import { GroupScheduleComponent } from './views/group-schedule/group-schedule.co
     AvailableResourcesComponent,
     FullScheduleComponent,
     PersonalScheduleComponent,
-    GroupScheduleComponent
+    StudentScheduleComponent
   ],
   imports: [
     BrowserModule,

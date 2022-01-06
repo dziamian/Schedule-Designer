@@ -26,11 +26,11 @@ import { ResourceItem } from 'src/app/others/ResourcesTree';
 import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resource-tree.service';
 
 @Component({
-  selector: 'app-full-schedule',
-  templateUrl: './full-schedule.component.html',
-  styleUrls: ['./full-schedule.component.css']
+  selector: 'app-student-schedule',
+  templateUrl: './student-schedule.component.html',
+  styleUrls: ['./student-schedule.component.css']
 })
-export class FullScheduleComponent implements OnInit {
+export class StudentScheduleComponent implements OnInit {
 
   @ViewChild(MyCoursesComponent) myCoursesComponent!: MyCoursesComponent;
   @ViewChild(ScheduleComponent) scheduleComponent!: ScheduleComponent;
@@ -73,7 +73,14 @@ export class FullScheduleComponent implements OnInit {
       this.account = account;
     });
     this.resourceTreeService.clearData();
-    this.resourceTreeService.setAllResources();
+    this.resourceTreeService.setMyGroups(this.account.UserId);
+  }
+
+  isRepresentative(): boolean {
+    if (!this.currentResourceName) {
+      return false;
+    }
+    return this.account?.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId));
   }
 
   private updateBusyPeriods(): void {
@@ -334,7 +341,7 @@ export class FullScheduleComponent implements OnInit {
 
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, true, true,
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, this.account.Admin, true,
       this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
     );
   }
@@ -347,7 +354,7 @@ export class FullScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, false, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.account.RepresentativeGroups.length > 0, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
@@ -366,7 +373,7 @@ export class FullScheduleComponent implements OnInit {
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
-      this.roomTypes, true, true, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
+      this.roomTypes, this.account.Admin, true, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
     );
   }
 
@@ -378,13 +385,13 @@ export class FullScheduleComponent implements OnInit {
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.account.Admin, this.settings, this.roomTypes, true, true, this.currentFilter.filter, this.dialogService, this.snackBar
+      this.data, this.account.Admin, this.settings, this.roomTypes, this.account.Admin, true, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, null, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, !this.account.Admin ? this.account.UserId : null, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 

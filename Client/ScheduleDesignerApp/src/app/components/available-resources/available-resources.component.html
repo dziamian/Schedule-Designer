@@ -19,9 +19,10 @@
                 <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
-                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" (click)="Action(node)">
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)">
                     <mat-icon>remove_red_eye</mat-icon>
                 </button>
+                <img *ngIf="isRepresentative(node.item.filter)" src="/assets/tie.svg" class="tie">
             </mat-tree-node>
 
             <mat-tree-node style="display: none;" *matTreeNodeDef="let node; when: isHidden" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
@@ -38,9 +39,10 @@
                 <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
-                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" (click)="Action(node)">
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)">
                     <mat-icon>remove_red_eye</mat-icon>
                 </button>
+                <img *ngIf="isRepresentative(node.item.filter)" src="/assets/tie.svg" class="tie">
             </mat-tree-node>
         </mat-tree>
     </div>

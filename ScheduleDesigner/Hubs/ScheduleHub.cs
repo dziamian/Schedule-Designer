@@ -1802,7 +1802,7 @@ namespace ScheduleDesigner.Hubs
                 }
                 if (!isAdmin && representativeGroupsIds.Count() > 0 && !isProposition)
                 {
-                    new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to create scheduled moves." };
+                    return new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to create scheduled moves." };
                 }
 
 
@@ -2296,8 +2296,8 @@ namespace ScheduleDesigner.Hubs
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
-                                .GroupBy(e => e.MoveId)
-                                .Select(e => new { MoveId = e.Key, Count = e.Count() })
+                                .GroupBy(e => new { e.MoveId, e.UserId, e.IsConfirmed })
+                                .Select(e => new { e.Key.MoveId, e.Key.UserId, e.Key.IsConfirmed, Count = e.Count() })
                                 .OrderBy(e => e.MoveId).ToList();
 
                             var _sourceTimestampsCount = _sourceTimestamps.Count();
@@ -2317,18 +2317,21 @@ namespace ScheduleDesigner.Hubs
                             {
                                 if (_scheduledMovesCountsCondition[i].Count == _scheduledMovesCounts[i].Count)
                                 {
-                                    _scheduledMoveRepo
+                                    if (isAdmin || isCoordinator || (_scheduledMovesCountsCondition[i].UserId == userId && !_scheduledMovesCountsCondition[i].IsConfirmed))
+                                    {
+                                        _scheduledMoveRepo
                                         .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
 
-                                    moveId = _scheduledMovesCountsCondition[i].MoveId;
-                                    isFound = true;
-                                    break;
+                                        moveId = _scheduledMovesCountsCondition[i].MoveId;
+                                        isFound = true;
+                                        break;
+                                    }
                                 }
                             }
 
                             if (!isFound)
                             {
-                                return new MessageObject { StatusCode = 400, Message = "Could not find scheduled move." };
+                                return new MessageObject { StatusCode = 400, Message = "Could not find scheduled move or you cannot remove it." };
                             }
 
                             var result1 = _scheduledMoveRepo.SaveChanges().Result;

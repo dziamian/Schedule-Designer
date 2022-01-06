@@ -688,7 +688,7 @@ export class ScheduleDesignerApiService {
 
   public GetStudentGroups(userId: number): Observable<Group[]> {
     const request = {
-      url: this.baseUrl + `/studentGroups?$expand=Group&filter=StudentId eq ${userId}`,
+      url: this.baseUrl + `/studentGroups?$expand=Group&$filter=StudentId eq ${userId}`,
       method: 'GET'
     };
 
@@ -787,6 +787,7 @@ export class ScheduleDesignerApiService {
         return new ScheduledMoveDetails(
           move.MoveId,
           move.IsConfirmed,
+          move.UserId,
           move.SourceWeeks,
           room,
           move.DestPeriodIndex,

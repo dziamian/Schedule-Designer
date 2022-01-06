@@ -266,6 +266,8 @@ export class ScheduledChangesViewComponent implements OnInit {
     } catch (error:any) {
       if (error.Message != undefined) {
         this.snackBar.open(error.Message, "OK");
+      } else {
+        this.snackBar.open("You are not authorized to do this.", "OK");
       }
     }
     
@@ -334,6 +336,8 @@ export class ScheduledChangesViewComponent implements OnInit {
     } catch (error:any) {
       if (error.Message != undefined) {
         this.snackBar.open(error.Message, "OK");
+      } else {
+        this.snackBar.open("You are not authorized to do this.", "OK");
       }
     }
 

@@ -18,6 +18,7 @@ export class ScheduledMoveDetails {
     constructor (
         public MoveId:number,
         public IsConfirmed:boolean,
+        public UserId:number,
         public SourceWeeks:number[],
         public DestRoom:Room,
         public DestPeriodIndex:number,

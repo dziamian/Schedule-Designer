@@ -9,12 +9,14 @@ import { AuthenticatedComponent } from './views/authenticated/authenticated.comp
 import { ProfileComponent } from './views/profile/profile.component';
 import { PersonalScheduleComponent } from './views/personal-schedule/personal-schedule.component';
 import { FullScheduleComponent } from './views/full-schedule/full-schedule.component';
+import { StudentScheduleComponent } from './views/student-schedule/student-schedule.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [NoAuthGuardService] },
   { path: 'authenticated', component: AuthenticatedComponent, canActivate: [NoAuthGuardService] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService] },
   { path: 'personal-schedule', component: PersonalScheduleComponent, canActivate: [AuthGuardService], data: {roles: ['Coordinator']} },
+  { path: 'student-schedule', component: StudentScheduleComponent, canActivate: [AuthGuardService], data: {roles: ['Student']} },
   { path: 'full-schedule', component: FullScheduleComponent, canActivate: [AuthGuardService] },
   { path: '**', redirectTo: '/profile' }
 ];

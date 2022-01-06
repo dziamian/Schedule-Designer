@@ -28,6 +28,7 @@ export class ScheduleComponent implements OnInit {
 
   @Input() isModifying: boolean;
   @Input() account: Account;
+  @Input() representativeGroupsIds:number[] = [];
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;

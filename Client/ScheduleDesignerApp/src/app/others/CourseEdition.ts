@@ -96,4 +96,11 @@ export class CourseEdition {
     
         return CourseEdition.frequencyToString(weeks);
     }
+
+    public getScheduledMovesBadge(isModifying: boolean): number  {
+        if (isModifying) {
+            return this.ScheduledMoves.length;
+        }
+        return this.ScheduledMoves.filter(move => move.IsConfirmed).length;
+    }
 }

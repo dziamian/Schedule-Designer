@@ -490,6 +490,7 @@ export class ScheduleInteractionService {
     snackBar: MatSnackBar,
   ): Promise<void> {
     if (data.isCurrentDragCanceled) {
+      data.isCurrentDragCanceled = false;
       data.currentDragEvent = null;
       if (data.currentSelectedCourseEdition != null) {
         data.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
@@ -808,6 +809,7 @@ export class ScheduleInteractionService {
     data.isCurrentDragReleased = true;
 
     if (data.isCurrentDragCanceled) {
+      data.isCurrentDragCanceled = false;
       data.currentDragEvent = null;
       if (data.currentSelectedCourseEdition != null) {
         data.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
@@ -993,6 +995,7 @@ export class ScheduleInteractionService {
     tabWeeks: number[][],
     currentTabIndex: number,
     isAdmin: boolean,
+    isRepresentative: boolean,
     settings: Settings,
     scheduleComponent: ScheduleComponent,
     snackBar: MatSnackBar
@@ -1054,7 +1057,7 @@ export class ScheduleInteractionService {
       courseEdition.CourseEditionId,
       tabWeeks[currentTabIndex]
     ).toPromise();
-    let connectedTo = ['my-courses'];
+    let connectedTo = (isRepresentative && !isAdmin) ? [] : ['my-courses'];
     
     const numberOfSlots = settings.Periods.length - 1;
     let busySlotIndex = 0;
@@ -1141,8 +1144,7 @@ export class ScheduleInteractionService {
     data.currentSelectedCourseEdition = new SelectedCourseEdition(event.courseEdition, event.periodIndex, event.day);
     data.currentSelectedCourseEdition.CanChangeRoom = !event.isDisabled;
     data.currentSelectedCourseEdition.CanMakeMove = !event.isDisabled;
-    const scheduledMoves = (!isModifying) ? event.courseEdition.ScheduledMoves.filter(x => x.IsConfirmed) : event.courseEdition.ScheduledMoves;
-    data.currentSelectedCourseEdition.CanShowScheduledChanges = scheduledMoves.length > 0;
+    data.currentSelectedCourseEdition.CanShowScheduledChanges = event.courseEdition.getScheduledMovesBadge(isModifying) > 0;
     event.courseEdition.IsCurrentlyActive = true;
   }
 
@@ -1403,7 +1405,7 @@ export class ScheduleInteractionService {
   public async showScheduledChanges(
     data: ModifyingScheduleData,
     settings: Settings,
-    representativeView: boolean,
+    isRepresentative: number | null, //userId
     ignoreLocks: boolean,
     isModifying: boolean,
     roomTypes: Map<number, RoomType>,
@@ -1422,7 +1424,7 @@ export class ScheduleInteractionService {
       settings.TimeLabels,
       roomTypes,
       settings,
-      representativeView,
+      isRepresentative,
       ignoreLocks,
       isModifying
     );
@@ -1478,7 +1480,7 @@ export class ScheduleInteractionService {
         }
         
         data.currentSelectedCourseEdition.CourseEdition.IsLocked = false;
-      data.currentSelectedCourseEdition.CourseEdition.IsLockedByAdmin = false;
+        data.currentSelectedCourseEdition.CourseEdition.IsLockedByAdmin = false;
       } catch (error) {
   
       }

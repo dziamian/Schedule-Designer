@@ -9,6 +9,8 @@ namespace ScheduleDesigner.Dtos
 
         public bool IsConfirmed { get; set; }
 
+        public int UserId { get; set; }
+
         public IEnumerable<int> SourceWeeks { get; set; }
 
         public int DestRoomId { get; set; }

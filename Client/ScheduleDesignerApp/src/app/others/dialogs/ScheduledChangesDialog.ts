@@ -11,7 +11,7 @@ export class ScheduledChangesDialogData {
         public TimeLabels:string[],
         public RoomTypes:Map<number,RoomType>,
         public Settings:Settings,
-        public RepresentativeView:boolean,
+        public IsRepresentative:number | null,//userId
         public IgnoreUsersLocks:boolean,
         public IsModifying:boolean
     ) {}

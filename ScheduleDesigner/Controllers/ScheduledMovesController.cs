@@ -59,6 +59,7 @@ namespace ScheduleDesigner.Controllers
                     }
                     var sourceTimestamps = _scheduledMove.Select(e => e.TimestampId_1).ToList();
                     var isConfirmed = _scheduledMove.FirstOrDefault().IsConfirmed;
+                    var userId = _scheduledMove.FirstOrDefault().UserId;
                     var destRoomId = _scheduledMove.FirstOrDefault().RoomId_2;
                     var scheduleOrder = _scheduledMove.FirstOrDefault().ScheduleOrder;
                     var destTimestamps = _scheduledMove.Select(e => e.TimestampId_2).ToList();
@@ -96,6 +97,7 @@ namespace ScheduleDesigner.Controllers
                     {
                         MoveId = _moveId,
                         IsConfirmed = isConfirmed,
+                        UserId = userId,
                         SourceWeeks = sourceWeeks,
                         DestRoomId = destRoom.RoomId,
                         DestRoomName = destRoom.Name,

@@ -16,6 +16,7 @@ export class CourseComponent implements OnInit {
 
   @Input() isModifying:boolean;
   @Input() ignoreUsersLocks:boolean;
+  @Input() representativeGroupsIds:number[] = [];
   @Input() course:CourseEdition;
   @Input() settings:Settings;
   @Input() weeksOnTab:number[];
@@ -39,10 +40,7 @@ export class CourseComponent implements OnInit {
   }
 
   getScheduledMovesBadge(): number  {
-    if (this.isModifying) {
-      return this.course.ScheduledMoves.length;
-    }
-    return this.course.ScheduledMoves.filter(move => move.IsConfirmed).length;
+    return this.course.getScheduledMovesBadge(this.isModifying);
   }
 
   getBackground(): string {
@@ -82,6 +80,13 @@ export class CourseComponent implements OnInit {
       return false;
     }
     return this.course.ScheduledMoves.some((scheduledMove) => !scheduledMove.IsConfirmed);
+  }
+
+  CheckIfInvalidGroup(): boolean {
+    if (this.representativeGroupsIds.length == 0) {
+      return false;
+    }
+    return !this.course.Groups.some(group => this.representativeGroupsIds.includes(group.GroupId));
   }
 
   OnStarted(event:CdkDragStart) {

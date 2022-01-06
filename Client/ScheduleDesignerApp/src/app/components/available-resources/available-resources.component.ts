@@ -1,13 +1,10 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { MatTree, MatTreeFlatDataSource } from '@angular/material/tree';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatTreeFlatDataSource } from '@angular/material/tree';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Coordinator } from 'src/app/others/Accounts';
 import { Filter } from 'src/app/others/Filter';
-import { Group } from 'src/app/others/Group';
 import { ResourceFlatNode, ResourceItem, ResourceNode } from 'src/app/others/ResourcesTree';
-import { Room } from 'src/app/others/Room';
 import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resource-tree.service';
 
 @Component({
@@ -16,6 +13,9 @@ import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resour
   styleUrls: ['./available-resources.component.css']
 })
 export class AvailableResourcesComponent implements OnInit {
+
+  @Input() representativeGroups: number[] = [];
+  @Input() disabled: boolean;
 
   @Output() showSchedule: EventEmitter<ResourceItem> = new EventEmitter();
   
@@ -51,6 +51,13 @@ export class AvailableResourcesComponent implements OnInit {
     this.isVisible = this.resourceTreeService.isVisible;
 
     this.loading = false;
+  }
+
+  isRepresentative(filter: Filter | null): boolean {
+    if (filter == null) {
+      return false;
+    }
+    return this.representativeGroups.some(groupId => filter.GroupsIds.includes(groupId));
   }
 
   FilterChanged(event: Event): void {
