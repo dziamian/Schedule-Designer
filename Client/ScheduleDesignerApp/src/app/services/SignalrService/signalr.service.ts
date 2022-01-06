@@ -16,7 +16,7 @@ export class SignalrService implements OnDestroy {
   connectionIntentionallyStopped:boolean = false;
   
   isConnected:BehaviorSubject<boolean>
-  lastLockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number}>
+  lastLockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number, byAdmin:boolean}>
   lastLockedSchedulePositions:BehaviorSubject<SchedulePosition>
   lastUnlockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number}>
   lastUnlockedSchedulePositions:BehaviorSubject<SchedulePosition>
@@ -33,8 +33,8 @@ export class SignalrService implements OnDestroy {
   constructor() {
     this.isConnected = new BehaviorSubject<boolean>(false);
     
-    this.lastLockedCourseEdition = new BehaviorSubject<{courseId:number, courseEditionId:number}>(
-      {courseId: -1,courseEditionId: -1}
+    this.lastLockedCourseEdition = new BehaviorSubject<{courseId:number, courseEditionId:number, byAdmin:boolean}>(
+      {courseId: -1,courseEditionId: -1,byAdmin: false}
     );
     
     this.lastLockedSchedulePositions = new BehaviorSubject<SchedulePosition>(
@@ -269,23 +269,26 @@ export class SignalrService implements OnDestroy {
       this.isConnected.next(false);
     });
     
-    this.connection.on('LockCourseEdition', (courseId, courseEditionId) => {
+    this.connection.on('LockCourseEdition', (courseId, courseEditionId, byAdmin) => {
       this.lastLockedCourseEdition.next({
         courseId: courseId,
-        courseEditionId: courseEditionId
+        courseEditionId: courseEditionId,
+        byAdmin: byAdmin
       });
     });
 
     this.connection.on('LockSchedulePositions', (
       courseId, courseEditionId,
       roomId, periodIndex, 
-      day, weeks
+      day, weeks, byAdmin
     ) => {
-      this.lastLockedSchedulePositions.next(new SchedulePosition(
+      const schedulePosition = new SchedulePosition(
         courseId, courseEditionId,
         roomId, periodIndex, 
         day, weeks
-      ));
+      );
+      schedulePosition.Locked = {value: true, byAdmin: byAdmin};
+      this.lastLockedSchedulePositions.next(schedulePosition);
     });
 
     this.connection.on('UnlockCourseEdition', (courseId, courseEditionId) => {

@@ -111,7 +111,7 @@ export class ScheduledChangesViewComponent implements OnInit {
 
       this.scheduledMoves.forEach((scheduledMove) => {
         if (scheduledMove.SourceWeeks.some((week) => lockedSchedulePositions.Weeks.includes(week))) {
-          scheduledMove.Locked = true;
+          scheduledMove.Locked = lockedSchedulePositions.Locked;
         }
       });
     }));
@@ -199,7 +199,7 @@ export class ScheduledChangesViewComponent implements OnInit {
 
             const courseEdition = this.data.CourseEdition;
             const srcIndexes = this.data.SrcIndexes;
-            const tasks:Observable<boolean>[] = [];
+            const tasks:Observable<{value: boolean, byAdmin: boolean}>[] = [];
             this.scheduledMoves.forEach((scheduledMove) => {
               tasks.push(this.scheduleDesignerApiService.AreSchedulePositionsLocked(
                 courseEdition.Room?.RoomId!, srcIndexes[1] + 1, srcIndexes[0] + 1,
@@ -241,7 +241,7 @@ export class ScheduledChangesViewComponent implements OnInit {
       isLocked = true;
       this.scheduledMoves.forEach((scheduledMove) => {
         if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
-          scheduledMove.Locked = true;
+          scheduledMove.Locked = {value: true, byAdmin: this.data.IgnoreUsersLocks};;
         }
       });
 
@@ -308,7 +308,7 @@ export class ScheduledChangesViewComponent implements OnInit {
       isLocked = true;
       this.scheduledMoves.forEach((scheduledMove) => {
         if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
-          scheduledMove.Locked = true;
+          scheduledMove.Locked = {value: true, byAdmin: this.data.IgnoreUsersLocks};
         }
       });
 
@@ -341,7 +341,7 @@ export class ScheduledChangesViewComponent implements OnInit {
           throw unlockingResult;
         }
         
-        selectedScheduledMove.Locked = false;
+        selectedScheduledMove.Locked = {value: false, byAdmin: false};
       } catch (error:any) {
 
       }

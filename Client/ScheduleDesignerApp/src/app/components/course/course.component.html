@@ -1,17 +1,9 @@
-<div class="course {{course?.Locked ? 'locked' : ''}}"
-    [style.background]="course?.Locked ? 
-        'repeating-linear-gradient(
-            90deg,' +
-            course?.Type?.Color + ',' +
-            course?.Type?.Color + ' 10px,' +
-        '#FFFFFF 10px,
-        #FFFFFF 20px
-    ) left / 50% 100% no-repeat, ' + 
-    course?.Type?.Color + 
-    ' right / 50% 100% no-repeat' : course?.Type?.Color"
+<div class="course {{course?.Locked?.value ? 'locked' : ''}}"
+    [style.background]="getBackground()"
     
     cdkDrag
-    [cdkDragDisabled]="!isModifying || course?.Locked || CheckIfNotMatching() || isSelectedMoving"
+    [cdkDragDisabled]="!isModifying || (!ignoreUsersLocks && course?.Locked?.value) || CheckIfNotMatching() 
+        || isSelectedMoving || (ignoreUsersLocks && course?.Locked?.byAdmin && course?.Locked?.value)"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"

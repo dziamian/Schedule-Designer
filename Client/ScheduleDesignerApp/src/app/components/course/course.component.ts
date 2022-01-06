@@ -15,6 +15,7 @@ export class CourseComponent implements OnInit {
   @ViewChild(CdkDrag) cdkCourse : CdkDrag<CourseEdition>;
 
   @Input() isModifying:boolean;
+  @Input() ignoreUsersLocks:boolean;
   @Input() course:CourseEdition;
   @Input() settings:Settings;
   @Input() weeksOnTab:number[];
@@ -42,6 +43,15 @@ export class CourseComponent implements OnInit {
       return this.course.ScheduledMoves.length;
     }
     return this.course.ScheduledMoves.filter(move => move.IsConfirmed).length;
+  }
+
+  getBackground(): string {
+    return this.course?.Locked?.value 
+      ? ((!this.course?.Locked?.byAdmin)
+        ? `repeating-linear-gradient(90deg, ${this.course?.Type?.Color}, ${this.course?.Type?.Color} 10px, #FFFFFF 10px, #FFFFFF 20px) left / 50% 100% no-repeat,
+        ${this.course?.Type?.Color} right / 50% 100% no-repeat`
+        : `repeating-linear-gradient(90deg, ${this.course?.Type?.Color}, ${this.course?.Type?.Color} 10px, #FFFFFF 10px, #FFFFFF 20px)`)
+      : `${this.course?.Type?.Color}`;
   }
 
   ngOnInit(): void {

@@ -12,7 +12,7 @@ export class CourseEdition {
     ScheduledMoves:ScheduledMove[] = [];
     Weeks:number[]|null = null;
     Room:Room|null = null;
-    Locked:boolean = false;
+    Locked: {value: boolean, byAdmin: boolean} = {value: false, byAdmin: false};
 
     constructor(
         public CourseId:number,

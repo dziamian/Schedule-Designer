@@ -12,7 +12,7 @@ export class ScheduledChangesDialogData {
         public RoomTypes:Map<number,RoomType>,
         public Settings:Settings,
         public RepresentativeView:boolean,
-        public IgnoreLocks:boolean,
+        public IgnoreUsersLocks:boolean,
         public IsModifying:boolean
     ) {}
 }

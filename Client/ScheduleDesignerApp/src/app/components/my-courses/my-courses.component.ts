@@ -2,6 +2,7 @@ import { CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, DropListRef } 
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
+import { Account } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
@@ -21,6 +22,7 @@ export class MyCoursesComponent implements OnInit {
   @ViewChild('myCoursesDrop') myCoursesSlot : DropListRef<CourseEdition[]>
 
   @Input() isModifying: boolean;
+  @Input() account: Account;
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
@@ -43,14 +45,14 @@ export class MyCoursesComponent implements OnInit {
     private scheduleDesignerApiService:ScheduleDesignerApiService
   ) { }
 
-  private updateLockInMyCourses(courseId:number, courseEditionId:number, value:boolean) {
+  private updateLockInMyCourses(courseId:number, courseEditionId:number, locked: {value:boolean, byAdmin: boolean}) {
     if (!this.myCourses) {
       return;
     }
 
     this.myCourses.forEach((myCourse) => {
       if (myCourse.CourseId == courseId && myCourse.CourseEditionId == courseEditionId) {
-        myCourse.Locked = value;
+        myCourse.Locked = locked;
       }
     });
   }
@@ -58,12 +60,12 @@ export class MyCoursesComponent implements OnInit {
   private setSignalrSubscriptions(): void {
     this.signalrSubscriptions = [];
 
-    this.signalrSubscriptions.push(this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
-      this.updateLockInMyCourses(courseId, courseEditionId, true);
+    this.signalrSubscriptions.push(this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId, byAdmin}) => {
+      this.updateLockInMyCourses(courseId, courseEditionId, {value: true, byAdmin: byAdmin});
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
-      this.updateLockInMyCourses(courseId, courseEditionId, false);
+      this.updateLockInMyCourses(courseId, courseEditionId, {value: false, byAdmin: false});
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {

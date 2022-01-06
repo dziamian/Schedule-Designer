@@ -18,13 +18,16 @@
                 {{data.TimeLabels[scheduledMove.DestPeriodIndex - 1]}}</u>, <i>{{scheduledMove.DestRoom.Name}}</i>
             </div>
             <div *ngIf="data.IsModifying" class="item-buttons">
-                <button *ngIf="!scheduledMove.IsConfirmed" 
+                <button *ngIf="!data.RepresentativeView && !scheduledMove.IsConfirmed" 
                 mat-raised-button class="confirm" style="margin-right: 1vw;"
-                [disabled]="(!data.IgnoreLocks && scheduledMove.Locked) || scheduledMove.IsAccepting"
+                [disabled]="(!data.IgnoreUsersLocks && scheduledMove.Locked.value) 
+                    || (data.IgnoreUsersLocks && scheduledMove.Locked.byAdmin && scheduledMove.Locked.value) || scheduledMove.IsAccepting"
                 (click)="Accept(scheduledMove)">Confirm</button>
                 
                 <button mat-raised-button color="warn" 
-                [disabled]="(data.RepresentativeView && !scheduledMove.IsConfirmed) || (!data.IgnoreLocks && scheduledMove.Locked) || scheduledMove.IsRemoving" 
+                [disabled]="(data.RepresentativeView && !scheduledMove.IsConfirmed) 
+                    || (!data.IgnoreUsersLocks && scheduledMove.Locked.value) 
+                    || (data.IgnoreUsersLocks && scheduledMove.Locked.byAdmin && scheduledMove.Locked.value) || scheduledMove.IsRemoving" 
                 (click)="Remove(scheduledMove)">Remove</button>
             </div>
             <mat-divider></mat-divider>

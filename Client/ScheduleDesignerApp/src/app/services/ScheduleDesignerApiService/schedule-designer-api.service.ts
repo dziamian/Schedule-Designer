@@ -157,9 +157,9 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public IsCourseEditionLocked(courseId:number, courseEditionId:number):Observable<boolean> {
+  public IsCourseEditionLocked(courseId:number, courseEditionId:number):Observable<{value: boolean, byAdmin: boolean}> {
     const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?$select=LockUserId`,
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?$expand=LockUser($select=Staff;$expand=Staff($select=IsAdmin))&$select=LockUserId`,
       method: 'GET'
     };
 
@@ -170,7 +170,11 @@ export class ScheduleDesignerApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
-      map((response : any) => response.LockUserId != null)
+      map((response : any) => {
+        return {
+          value: response.LockUserId != null, byAdmin: response.LockUser?.Staff?.IsAdmin
+        };
+      })
     );
   }
 
@@ -411,10 +415,10 @@ export class ScheduleDesignerApiService {
   public AreSchedulePositionsLocked(
     roomId:number, periodIndex:number,
     day:number, weeks:number[]
-  ):Observable<boolean> {
+  ):Observable<{value: boolean, byAdmin: boolean}> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetSchedulePositions(`
-      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])?$select=LockUserId`,
+      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])?$expand=LockUser($select=Staff;$expand=Staff($select=IsAdmin))&$select=LockUserId`,
       method: 'GET'
     };
 
@@ -425,7 +429,12 @@ export class ScheduleDesignerApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
-      map((response : any) => response.value.find((x:any) => x.LockUserId != null) != undefined)
+      map((response : any) => {
+        return {
+          value: response.value.find((x:any) => x.LockUserId != null) != undefined,
+          byAdmin: response.value.find((x:any) => x.LockUser?.Staff?.IsAdmin) != undefined
+        }
+      })
     );
   }
 
@@ -437,7 +446,7 @@ export class ScheduleDesignerApiService {
   ):Observable<CourseEdition[][][]> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?` +
-        '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),Groups,SchedulePositions($count=true;$top=0)),' +
+        '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),LockUser($select=Staff;$expand=Staff),Groups,SchedulePositions($count=true;$top=0)),' +
         'Timestamp,ScheduledMoves($select=MoveId,IsConfirmed)',
       method: 'GET'
     };
@@ -485,7 +494,7 @@ export class ScheduleDesignerApiService {
           const dayIndex = value.Timestamp.Day - 1;
           const periodIndex = value.Timestamp.PeriodIndex - 1;
           const week = value.Timestamp.Week;
-          const locked = value.LockUserId != null;
+          const locked = {value: value.LockUserId != null, byAdmin: value.LockUser?.Staff?.IsAdmin};
           const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
           const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
           const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.UserId, value.IsConfirmed));
@@ -496,8 +505,8 @@ export class ScheduleDesignerApiService {
             if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
               && courseEdition.Room!.RoomId == roomId) {
                 courseEdition.Weeks?.push(week);
-                if (locked) {
-                  courseEdition.Locked = true;
+                if (locked.value) {
+                  courseEdition.Locked = locked;
                 }
                 
                 const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);

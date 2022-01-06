@@ -499,14 +499,14 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};;
 
         const myCoursesLength = myCoursesComponent.myCourses.length;
         for (var i = 0; i < myCoursesLength; ++i) {
           const currentCourseEdition = myCoursesComponent.myCourses[i];
           if (currentCourseEdition.CourseId == courseEdition.CourseId 
             && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
-              currentCourseEdition.Locked = false;
+              currentCourseEdition.Locked = {value: false, byAdmin: false};;
           }
         }
       } catch (error) {
@@ -523,7 +523,7 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};;
       } catch (error) {
 
       }
@@ -557,6 +557,7 @@ export class ScheduleInteractionService {
     data: ModifyingScheduleData,
     tabWeeks: number[][],
     currentTabIndex: number,
+    isAdmin: boolean,
     settings: Settings,
     myCoursesComponent: MyCoursesComponent,
     scheduleComponent: ScheduleComponent,
@@ -586,14 +587,14 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = true;
+        courseEdition.Locked = {value: true, byAdmin: isAdmin};;
 
         const myCoursesLength = myCoursesComponent.myCourses.length;
         for (var i = 0; i < myCoursesLength; ++i) {
           const currentCourseEdition = myCoursesComponent.myCourses[i];
           if (currentCourseEdition.CourseId == courseEdition.CourseId 
             && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
-              currentCourseEdition.Locked = true;
+              currentCourseEdition.Locked = {value: true, byAdmin: isAdmin};;
           }
         }
       } else {
@@ -668,14 +669,14 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};
 
         const myCoursesLength = myCoursesComponent.myCourses.length;
         for (var i = 0; i < myCoursesLength; ++i) {
           const currentCourseEdition = myCoursesComponent.myCourses[i];
           if (currentCourseEdition.CourseId == courseEdition.CourseId 
             && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
-              currentCourseEdition.Locked = false;
+              currentCourseEdition.Locked = {value: false, byAdmin: false};
           }
         }
       } catch (error) {
@@ -739,7 +740,7 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};
       } catch (error) {
 
       }
@@ -840,21 +841,21 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};
         
         const myCoursesLength = myCoursesComponent.myCourses.length;
         for (var i = 0; i < myCoursesLength; ++i) {
           const currentCourseEdition = myCoursesComponent.myCourses[i];
           if (currentCourseEdition.CourseId == courseEdition.CourseId 
             && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
-              currentCourseEdition.Locked = false;
+              currentCourseEdition.Locked = {value: false, byAdmin: false};
           }
         }
       } catch (error) {
   
       }
     } else if (dialogResult.Status == RoomSelectionDialogStatus.ACCEPTED) {
-      courseEdition.Locked = false;
+      courseEdition.Locked = {value: false, byAdmin: false};
     } else {
       try {
         const result = await this.signalrService.UnlockSchedulePositions(
@@ -866,7 +867,7 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};
       } catch (error) {
   
       }
@@ -889,6 +890,7 @@ export class ScheduleInteractionService {
     data: ModifyingScheduleData,
     tabWeeks: number[][],
     currentTabIndex: number,
+    isAdmin: boolean,
     settings: Settings,
     scheduleComponent: ScheduleComponent,
     snackBar: MatSnackBar
@@ -919,7 +921,7 @@ export class ScheduleInteractionService {
           throw result;
         }
 
-        courseEdition.Locked = true;
+        courseEdition.Locked = {value: true, byAdmin: isAdmin};;
       } else {
         return;
       }
@@ -986,7 +988,7 @@ export class ScheduleInteractionService {
           throw result;
         }
 
-        courseEdition.Locked = false;
+        courseEdition.Locked = {value: false, byAdmin: false};;
       } catch (error) {
         
       }
@@ -1147,12 +1149,12 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        data.currentSelectedCourseEdition.CourseEdition.Locked = false;
+        data.currentSelectedCourseEdition.CourseEdition.Locked = {value: false, byAdmin: false};;
       } catch (error) {
   
       }
     } else {
-      data.currentSelectedCourseEdition.CourseEdition.Locked = false;
+      data.currentSelectedCourseEdition.CourseEdition.Locked = {value: false, byAdmin: false};;
     }
     
     data.isCurrentMoveValid = null;
@@ -1194,6 +1196,7 @@ export class ScheduleInteractionService {
 
   public async changeRoom(
     data: ModifyingScheduleData,
+    isAdmin: boolean,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
     isMoveAvailable: boolean,
@@ -1217,7 +1220,7 @@ export class ScheduleInteractionService {
         throw result;
       }
       
-      data.currentSelectedCourseEdition.CourseEdition.Locked = true;
+      data.currentSelectedCourseEdition.CourseEdition.Locked = {value: true, byAdmin: isAdmin};
     } catch (error:any) {
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
@@ -1277,12 +1280,12 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        data.currentSelectedCourseEdition.CourseEdition.Locked = false;
+        data.currentSelectedCourseEdition.CourseEdition.Locked = {value: false, byAdmin: false};
       } catch (error) {
   
       }
     } else {
-      data.currentSelectedCourseEdition.CourseEdition.Locked = false;
+      data.currentSelectedCourseEdition.CourseEdition.Locked = {value: false, byAdmin: false};;
     }
   }
   
@@ -1333,6 +1336,7 @@ export class ScheduleInteractionService {
     data: ModifyingScheduleData,
     tabWeeks: number[][],
     currentTabIndex: number,
+    isAdmin: boolean,
     settings: Settings,
     scheduleComponent: ScheduleComponent,
     snackBar: MatSnackBar,
@@ -1353,7 +1357,7 @@ export class ScheduleInteractionService {
           throw result;
         }
         
-        data.currentSelectedCourseEdition.CourseEdition.Locked = false;
+        data.currentSelectedCourseEdition.CourseEdition.Locked = {value: false, byAdmin: false};
       } catch (error) {
   
       }
@@ -1379,7 +1383,7 @@ export class ScheduleInteractionService {
         throw result;
       }
       
-      data.currentSelectedCourseEdition.CourseEdition.Locked = true;
+      data.currentSelectedCourseEdition.CourseEdition.Locked = {value: true, byAdmin: isAdmin};
     } catch (error:any) {
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");

@@ -2,6 +2,7 @@ import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDr
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
+import { Account } from 'src/app/others/Accounts';
 import { SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { Filter } from 'src/app/others/Filter';
@@ -26,6 +27,7 @@ export class ScheduleComponent implements OnInit {
   @Input() labelAfter: string;
 
   @Input() isModifying: boolean;
+  @Input() account: Account;
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;
@@ -79,7 +81,7 @@ export class ScheduleComponent implements OnInit {
     courseEditions.forEach((courseEdition) => {
       if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId 
         && courseEdition.Room?.RoomId == roomId) {
-        courseEdition.Locked = value;
+        courseEdition.Locked = {value: value, byAdmin: position.Locked.byAdmin};
       }
     });
   }
@@ -197,7 +199,7 @@ export class ScheduleComponent implements OnInit {
                 const room = new Room(dstSchedulePosition.RoomId);
                 room.Name = roomName[0];
                 existingCourseEditions[0].Room = room;
-                existingCourseEditions[0].Locked = false;
+                existingCourseEditions[0].Locked = {value: false, byAdmin: false};
               });
             }
             this.scheduleDesignerApiService.AreSchedulePositionsLocked(

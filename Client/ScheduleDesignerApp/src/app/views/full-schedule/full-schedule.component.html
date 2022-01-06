@@ -14,6 +14,7 @@
                     <div class="board">
                         <app-my-courses *ngIf="isModifying"
                             [isModifying]="isModifying"
+                            [account]="account"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -99,6 +100,7 @@
                             labelAfter=""
                             
                             [isModifying]="isModifying"
+                            [account]="account"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"

@@ -53,6 +53,7 @@
                         >
                             <app-course 
                                 [isModifying]="isModifying"
+                                [ignoreUsersLocks]="account.Admin"
                                 [course]="course"
                                 [settings]="settings"
                                 [weeksOnTab]="currentFilter.weeks"

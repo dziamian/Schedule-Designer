@@ -305,7 +305,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async OnMyCoursesStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
     );
   }
 
@@ -324,7 +324,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
@@ -355,7 +355,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.settings, this.roomTypes, true, this.account.Admin, this.currentFilter.filter, this.dialogService, this.snackBar
+      this.data, this.account.Admin, this.settings, this.roomTypes, true, this.account.Admin, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
@@ -367,7 +367,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async Move(): Promise<void> {
     this.scheduleInteractionService.move(
-      this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.snackBar
+      this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.settings, this.scheduleComponent, this.snackBar
     );
   }
 
