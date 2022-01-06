@@ -21,6 +21,14 @@
             </mat-select>
             <mat-hint *ngIf="selectedRoom != null && selectedRoom.Capacity < groupsSize" style="color: #ff761b;"><b>Capacity may be too low!</b></mat-hint>
         </mat-form-field>
+        <mat-slide-toggle *ngIf="data.CanBeScheduled"
+            style="margin-left: 1vw"
+            color="primary"
+            [disabled]="!data.IsMoveAvailable || !data.IsPropositionAvailable"
+            [(ngModel)]="isProposition"
+            [ngModelOptions]="{standalone: true}">
+            This is proposition
+        </mat-slide-toggle>
     </form>
 </div>
 <mat-dialog-actions align="end">

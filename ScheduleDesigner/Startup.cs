@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Builder;
@@ -110,10 +111,23 @@ namespace ScheduleDesigner
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Admin", policy => policy.RequireClaim("admin"));
-                options.AddPolicy("Coordinator", policy => policy.RequireClaim("coordinator"));
-                options.AddPolicy("Representative", policy => policy.RequireClaim("representative"));
-                options.AddPolicy("Staff", policy => policy.RequireClaim("staff"));
+                options.AddPolicy("AdministratorOnly", policy => policy.RequireClaim(claimType: ClaimTypes.Role, "Administrator"));
+                
+                options.AddPolicy("Proposing", policy => policy.RequireAssertion(context => 
+                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
+                        (c.Value == "Administrator" || c.Value == "Representative"))));
+                
+                options.AddPolicy("Designer", policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
+                        (c.Value == "Administrator" || c.Value == "Coordinator"))));
+                
+                options.AddPolicy("Assistant", policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
+                        (c.Value == "Administrator" || c.Value == "Representative" || c.Value == "Coordinator"))));
+                
+                options.AddPolicy("Recipient", policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
+                        (c.Value == "Student" || c.Value == "Coordinator"))));
             });
         }
 

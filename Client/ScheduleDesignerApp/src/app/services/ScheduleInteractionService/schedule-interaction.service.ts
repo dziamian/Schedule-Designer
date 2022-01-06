@@ -8,7 +8,6 @@ import { MyCoursesComponent } from 'src/app/components/my-courses/my-courses.com
 import { RoomSelectionComponent } from 'src/app/components/room-selection/room-selection.component';
 import { ScheduleComponent } from 'src/app/components/schedule/schedule.component';
 import { ScheduledChangesViewComponent } from 'src/app/components/scheduled-changes-view/scheduled-changes-view.component';
-import { Account } from 'src/app/others/Accounts';
 import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, RemovedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { AddRoomSelectionDialogData, AddRoomSelectionDialogResult } from 'src/app/others/dialogs/AddRoomSelectionDialog';
@@ -34,9 +33,11 @@ export class ScheduleInteractionService {
 
   private getIndexes(id: string): number[] {
     const indexes = id.split(',');
+    const parsedFirst = Number.parseInt(indexes[0]);
+    const parsedSecond = Number.parseInt(indexes[1]);
     return [
-      Number.parseInt(indexes[0]),
-      Number.parseInt(indexes[1])
+      isNaN(parsedFirst) ? -1 : parsedFirst,
+      isNaN(parsedSecond) ? -1 : parsedSecond,
     ];
   }
 
@@ -185,6 +186,8 @@ export class ScheduleInteractionService {
     data: ModifyingScheduleData,
     tabWeeks: number[][],
     currentTabIndex: number,
+    settings: Settings,
+    scheduleComponent: ScheduleComponent,
     loading: boolean
   ) {
     if (loading) {
@@ -225,6 +228,11 @@ export class ScheduleInteractionService {
             data.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
           }
           data.currentSelectedCourseEdition = null;
+          
+          const numberOfSlots = settings.Periods.length - 1;
+          for (let i = 0; i < scheduleComponent.scheduleSlots.length; ++i) {
+            data.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
+          }
         }
     }
 
@@ -408,24 +416,30 @@ export class ScheduleInteractionService {
     const currentContainer = event.container;
     const weeks = tabWeeks[currentTabIndex];
     const isScheduleSource = event.previousContainer.id !== 'my-courses';
+    const previousIndexes = this.getIndexes(previousContainer.id);
 
+    var status = true;
     if (isScheduleSource) {
-      const previousIndexes = this.getIndexes(previousContainer.id);
-
       try {
         const result = await new Promise<MessageObject>((resolve, reject) => {
           const responseSubscription = this.signalrService.lastResponse.pipe(skip(1))
           .subscribe((messageObject) => {
             responseSubscription.unsubscribe();
             resolve(messageObject);
-          },() => {
-            reject();
+          },(errorObject) => {
+            reject(errorObject);
           });
           this.signalrService.RemoveSchedulePositions(
             courseEdition.Room!.RoomId, previousIndexes[1] + 1,
             previousIndexes[0] + 1, weeks
           );
-          setTimeout(() => responseSubscription.unsubscribe(), 15000);
+          
+          setTimeout(() => {
+            responseSubscription.unsubscribe(); 
+            const errorObject = new MessageObject(400);
+            errorObject.Message = "Request timeout.";
+            reject(errorObject);
+          }, 15000);
         });
         
         if (result.StatusCode >= 400) {
@@ -463,6 +477,7 @@ export class ScheduleInteractionService {
         }
       }
       catch (error:any) {
+        status = false;
         if (error.Message != undefined) {
           snackBar.open(error.Message, "OK");
         }
@@ -496,6 +511,21 @@ export class ScheduleInteractionService {
         }
       } catch (error) {
         
+      }
+    } else if (!status) {
+      try {
+        const result = await this.signalrService.UnlockSchedulePositions(
+          courseEdition.Room!.RoomId, previousIndexes[1] + 1,
+          previousIndexes[0] + 1, weeks
+        ).toPromise();
+        
+        if (result.StatusCode >= 400) {
+          throw result;
+        }
+        
+        courseEdition.Locked = false;
+      } catch (error) {
+
       }
     } else {
       try {
@@ -582,12 +612,10 @@ export class ScheduleInteractionService {
           data.currentRoomSelectionDialog.close(RoomSelectionDialogResult.CANCELED);
         }
       }
-
-      courseEdition.Locked = true;
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
       } else {
-        snackBar.open("You do not have enough permissions.", "OK");
+        snackBar.open("You are not authorized to do this.", "OK");
       }
 
       data.currentDragEvent = null;
@@ -671,6 +699,8 @@ export class ScheduleInteractionService {
     currentTabIndex: number,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
+    isMoveAvailable: boolean,
+    isPropositionAvailable: boolean,
     filter: Filter,
     scheduleComponent: ScheduleComponent,
     myCoursesComponent: MyCoursesComponent,
@@ -733,6 +763,8 @@ export class ScheduleInteractionService {
       roomTypes,
       data.isCurrentMoveValid!,
       isScheduleSource,
+      isMoveAvailable,
+      isPropositionAvailable,
       filter
     );
 
@@ -904,11 +936,10 @@ export class ScheduleInteractionService {
           data.currentRoomSelectionDialog.close(RoomSelectionDialogResult.CANCELED);
         }
       }
-      courseEdition.Locked = true;
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
       } else {
-        snackBar.open("You do not have enough permissions.", "OK");
+        snackBar.open("You are not authorized to do this.", "OK");
       }
       return;
     }
@@ -989,7 +1020,7 @@ export class ScheduleInteractionService {
 
   public onSelect(
     event: {courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number},
-    data: ModifyingScheduleData,
+    data: ModifyingScheduleData, isModifying: boolean
   ): void {
     if (data.currentSelectedCourseEdition != null) {
       if (data.currentSelectedCourseEdition.IsMoving) {
@@ -1004,7 +1035,8 @@ export class ScheduleInteractionService {
     data.currentSelectedCourseEdition = new SelectedCourseEdition(event.courseEdition, event.periodIndex, event.day);
     data.currentSelectedCourseEdition.CanChangeRoom = !event.isDisabled;
     data.currentSelectedCourseEdition.CanMakeMove = !event.isDisabled;
-    data.currentSelectedCourseEdition.CanShowScheduledChanges = event.courseEdition.ScheduledMoves.length > 0;
+    const scheduledMoves = (!isModifying) ? event.courseEdition.ScheduledMoves.filter(x => x.IsConfirmed) : event.courseEdition.ScheduledMoves;
+    data.currentSelectedCourseEdition.CanShowScheduledChanges = scheduledMoves.length > 0;
     event.courseEdition.IsCurrentlyActive = true;
   }
 
@@ -1015,6 +1047,8 @@ export class ScheduleInteractionService {
     currentTabIndex: number,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
+    isMoveAvailable: boolean,
+    isPropositionAvailable: boolean,
     filter: Filter,
     scheduleComponent: ScheduleComponent,
     dialogService: MatDialog,
@@ -1041,6 +1075,8 @@ export class ScheduleInteractionService {
       roomTypes,
       data.isCurrentMoveValid!,
       true,
+      isMoveAvailable,
+      isPropositionAvailable,
       filter
     );
 
@@ -1160,6 +1196,8 @@ export class ScheduleInteractionService {
     data: ModifyingScheduleData,
     settings: Settings,
     roomTypes: Map<number, RoomType>,
+    isMoveAvailable: boolean,
+    isPropositionAvailable: boolean,
     filter: Filter,
     dialogService: MatDialog,
     snackBar: MatSnackBar,
@@ -1197,6 +1235,8 @@ export class ScheduleInteractionService {
       roomTypes,
       true,
       true,
+      isMoveAvailable,
+      isPropositionAvailable,
       filter
     );
 
@@ -1249,8 +1289,9 @@ export class ScheduleInteractionService {
   public async showScheduledChanges(
     data: ModifyingScheduleData,
     settings: Settings,
-    RepresentativeView: boolean,
-    IsModifying: boolean,
+    representativeView: boolean,
+    ignoreLocks: boolean,
+    isModifying: boolean,
     roomTypes: Map<number, RoomType>,
     dialogService: MatDialog,
     snackBar: MatSnackBar,
@@ -1267,8 +1308,9 @@ export class ScheduleInteractionService {
       settings.TimeLabels,
       roomTypes,
       settings,
-      RepresentativeView,
-      IsModifying
+      representativeView,
+      ignoreLocks,
+      isModifying
     );
 
     data.currentScheduledChangesDialog = dialogService.open(ScheduledChangesViewComponent, {

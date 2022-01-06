@@ -81,7 +81,7 @@ export class ResourceTreeService {
       if (group.ParentGroupId == null) {
         parentNode.children.push(resourceNode);
       } else {
-        const foundResourceNode = this.searchNodeForGroup(this.TREE_DATA[1], group);
+        const foundResourceNode = this.searchNodeForGroup(parentNode, group);
         if (foundResourceNode == null) {
           parentNode.children.push(resourceNode);
         } else {
@@ -146,18 +146,6 @@ export class ResourceTreeService {
     );
     this.treeControl = new FlatTreeControl<ResourceFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-    forkJoin([
-      this.scheduleDesignerApiService.GetCoordinators(),
-      this.scheduleDesignerApiService.GetGroups(),
-      this.scheduleDesignerApiService.GetRooms()
-    ]).subscribe(([coordinators, groups, rooms]) => {
-      this.setCoordinators(coordinators);
-      this.setGroups(groups);
-      this.setRooms(rooms);
-
-      this.dataSource.data = this.buildTree(this.TREE_DATA, 0);
-    });
   }
 
   private markParents(flatNode: ResourceFlatNode) {
@@ -175,6 +163,34 @@ export class ResourceTreeService {
       }
       --i;
     } while (previousNode.level != 0);
+  }
+
+  public setAllResources() {
+    forkJoin([
+      this.scheduleDesignerApiService.GetCoordinators(),
+      this.scheduleDesignerApiService.GetGroups(),
+      this.scheduleDesignerApiService.GetRooms()
+    ]).subscribe(([coordinators, groups, rooms]) => {
+      this.setCoordinators(coordinators);
+      this.setGroups(groups);
+      this.setRooms(rooms);
+
+      this.dataSource.data = this.buildTree(this.TREE_DATA, 0);
+    });
+  }
+
+  public setMyGroups(userId: number) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetStudentGroups(userId)
+    ]).subscribe(([groups]) => {
+      this.setGroups(groups);
+
+      this.dataSource.data = this.buildTree(this.TREE_DATA, 0);
+    });
+  }
+
+  public clearData() {
+    this.TREE_DATA = [];
   }
 
   public filterByName(term: string) {

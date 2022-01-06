@@ -74,14 +74,29 @@ namespace ScheduleDesigner.Authentication
 
             if (user?.Student != null)
             {
-                claims.Add(new Claim("student", userId.ToString()));
-                foreach (var group in user.Student.Groups) claims.Add(new Claim("representative", group.GroupId.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, "Student"));
+                bool isRepresentative = false;
+                foreach (var group in user.Student.Groups)
+                {
+                    if (group.IsRepresentative)
+                    {
+                        claims.Add(new Claim("representative_group_id", group.GroupId.ToString()));
+                        isRepresentative = true;
+                    }
+                }
+                if (isRepresentative)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "Representative"));
+                }
             }
-            if (user?.Coordinator != null) claims.Add(new Claim("coordinator", userId.ToString()));
+            if (user?.Coordinator != null) claims.Add(new Claim(ClaimTypes.Role, "Coordinator"));
             if (user?.Staff != null)
             {
-                claims.Add(new Claim("staff", userId.ToString()));
-                if (user.Staff.IsAdmin) claims.Add(new Claim("admin", userId.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, "Staff"));
+                if (user.Staff.IsAdmin)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+                }
             }
 
             var identity = new ClaimsIdentity(claims, Scheme.Name);

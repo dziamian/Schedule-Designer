@@ -6,7 +6,9 @@
             course?.Type?.Color + ' 10px,' +
         '#FFFFFF 10px,
         #FFFFFF 20px
-    )' : course?.Type?.Color"
+    ) left / 50% 100% no-repeat, ' + 
+    course?.Type?.Color + 
+    ' right / 50% 100% no-repeat' : course?.Type?.Color"
     
     cdkDrag
     [cdkDragDisabled]="!isModifying || course?.Locked || CheckIfNotMatching() || isSelectedMoving"

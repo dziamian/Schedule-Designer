@@ -672,6 +672,28 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetStudentGroups(userId: number): Observable<Group[]> {
+    const request = {
+      url: this.baseUrl + `/studentGroups?$expand=Group&filter=StudentId eq ${userId}`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => {
+        const group = new Group(element.GroupId);
+        group.ParentGroupId = element.Group.ParentGroupId;
+        group.FullName = element.Group.Name;
+        return group;
+      }))
+    );
+  }
+
   public GetGroupsFullNames(groupsIds:number[]):Observable<string[]> {
     const request = {
       url: this.baseUrl + `/groups/Service.GetGroupsFullNames(GroupsIds=[${groupsIds.toString()}])`,

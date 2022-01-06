@@ -14,6 +14,7 @@ using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using static ScheduleDesigner.Helpers;
 using LinqKit;
+using System.Security.Claims;
 
 namespace ScheduleDesigner.Hubs
 {
@@ -584,9 +585,7 @@ namespace ScheduleDesigner.Hubs
             _groupRepo = groupRepo;
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Assistant")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
             CourseEditionKey courseEditionKey = null;
@@ -597,9 +596,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
-                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -649,7 +648,7 @@ namespace ScheduleDesigner.Hubs
                     _courseEditionRepo.Update(courseEdition);
 
                     var result1 = _courseEditionRepo.SaveChanges().Result;
-                    var result2 = Clients.Others.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
+                    var result2 = Clients.Others.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId, isAdmin);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
 
@@ -672,9 +671,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Assistant")]
         public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -684,9 +681,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
-                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 var _timestamps = _timestampRepo
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -783,7 +780,7 @@ namespace ScheduleDesigner.Hubs
                         var result2 = Clients.Others.LockSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             roomId, periodIndex,
-                            day, weeks
+                            day, weeks, isAdmin
                         );
 
                         return new MessageObject { StatusCode = 200 };
@@ -812,9 +809,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Assistant")]
         public MessageObject UnlockCourseEdition(int courseId, int courseEditionId)
         {
             CourseEditionKey courseEditionKey = null;
@@ -825,9 +820,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
-                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -907,9 +902,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Assistant")]
         public MessageObject UnlockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -919,9 +912,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
-                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 var _timestamps = _timestampRepo
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -1053,9 +1046,8 @@ namespace ScheduleDesigner.Hubs
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
         }
-        
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Admin")]
+
+        [Authorize(Policy = "Designer")]
         public void AddSchedulePositions(int courseId, int courseEditionId, int roomId, int periodIndex, int day, int[] weeks)
         {
             CourseEditionKey courseEditionKey = null;
@@ -1286,8 +1278,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Designer")]
         public void ModifySchedulePositions(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks
@@ -1606,8 +1597,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Designer")]
         public void RemoveSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionKeys = new List<SchedulePositionKey>();
@@ -1691,7 +1681,8 @@ namespace ScheduleDesigner.Hubs
                             .Get(e => e.CourseId == schedulePosition.CourseId &&
                                       e.CourseEditionId == schedulePosition.CourseEditionId)
                             .Include(e => e.Groups)
-                            .ThenInclude(e => e.Group);
+                                .ThenInclude(e => e.Group)
+                            .Include(e => e.Coordinators);
 
                         var courseEdition = _courseEdition.FirstOrDefault();
                         if (courseEdition == null)
@@ -1700,7 +1691,7 @@ namespace ScheduleDesigner.Hubs
                             return;
                         }
 
-                        var coordinatorsIds = schedulePosition.CourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
+                        var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
                         var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
@@ -1764,10 +1755,8 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+
+        [Authorize(Policy = "Assistant")]
         public MessageObject AddScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks, bool isProposition)
@@ -1794,9 +1783,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
-                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 if (!isAdmin && isCoordinator && isProposition)
                 {
@@ -2095,9 +2084,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Assistant")]
         public MessageObject RemoveScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
@@ -2124,9 +2111,9 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
-                var isCoordinator = Context.User.Claims.FirstOrDefault(x => x.Type == "coordinator") != null;
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative").Select(e => int.Parse(e.Value));
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 var _sourceTimestamps = _timestampRepo
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -2382,9 +2369,8 @@ namespace ScheduleDesigner.Hubs
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
         }
-        
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Admin")]
+
+        [Authorize(Policy = "Designer")]
         public MessageObject AcceptProposition(
             int roomId, int periodIndex, int day, int[] weeks,
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)

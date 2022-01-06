@@ -67,7 +67,7 @@ export class MyCoursesComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 
@@ -108,7 +108,7 @@ export class MyCoursesComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 

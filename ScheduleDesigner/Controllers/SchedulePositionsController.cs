@@ -190,7 +190,7 @@ namespace ScheduleDesigner.Controllers
             }
         }*/
 
-        /*[Authorize(Policy = "Coordinator")]
+        /*[Authorize(Policy = "Designer")]
         [HttpPost]
         public IActionResult AddSchedulePositions(ODataActionParameters parameters)
         {

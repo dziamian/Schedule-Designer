@@ -158,7 +158,7 @@ export class PersonalScheduleComponent implements OnInit {
 
     this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       this.scheduleInteractionService.lastModifiedSchedulePositionsReaction(
-        modifiedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
+        modifiedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.loading
       );
     }));
 
@@ -311,7 +311,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, 
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, true, this.account.Admin,
       this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
     );
   }
@@ -336,14 +336,14 @@ export class PersonalScheduleComponent implements OnInit {
 
   OnSelect(event: {courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number}): void {
     this.scheduleInteractionService.onSelect(
-      event, this.data
+      event, this.data, this.isModifying
     );
   }
 
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
-      this.roomTypes, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
+      this.roomTypes, true, this.account.Admin, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
     );
   }
 
@@ -355,13 +355,13 @@ export class PersonalScheduleComponent implements OnInit {
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.settings, this.roomTypes, this.currentFilter.filter, this.dialogService, this.snackBar
+      this.data, this.settings, this.roomTypes, true, this.account.Admin, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, false, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, false, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 

@@ -31,6 +31,8 @@ export class RoomSelectionComponent implements OnInit {
 
   signalrSubscriptions: Subscription[];
 
+  isProposition: boolean;
+
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
     @Inject(MAT_DIALOG_DATA) public data:RoomSelectionDialogData,
@@ -40,6 +42,8 @@ export class RoomSelectionComponent implements OnInit {
     this.isRoomOnlyChanging = data.SrcIndexes[0] == data.DestIndexes[0] 
       && data.SrcIndexes[1] == data.DestIndexes[1] 
       && data.CourseEdition.Weeks?.sort((a,b) => a - b).join(',') === data.Weeks.sort((a,b) => a - b).join(',');
+
+    this.isProposition = !this.data.IsMoveAvailable;
   }
 
   ngOnInit(): void {
@@ -293,42 +297,43 @@ export class RoomSelectionComponent implements OnInit {
           reject(errorObject);
         }, 15000);
       })
-      : ((isMoveValid && !selectedRoom.IsBusy) 
-      ? await new Promise<MessageObject>((resolve, reject) => {
-        const responseSubscription = this.signalrService.lastResponse.pipe(skip(1))
-        .subscribe((messageObject) => {
-          responseSubscription.unsubscribe();
-          resolve(messageObject);
-        },(errorObject) => {
-          reject(errorObject);
-        });
-        this.signalrService.ModifySchedulePositions(
+      : ((isMoveValid && !selectedRoom.IsBusy && !this.isProposition) 
+        ? await new Promise<MessageObject>((resolve, reject) => {
+          const responseSubscription = this.signalrService.lastResponse.pipe(skip(1))
+          .subscribe((messageObject) => {
+            responseSubscription.unsubscribe();
+            resolve(messageObject);
+          },(errorObject) => {
+            reject(errorObject);
+          });
+          this.signalrService.ModifySchedulePositions(
+            courseEdition.Room!.RoomId, srcIndexes[1] + 1,
+            srcIndexes[0] + 1, courseEdition.Weeks!,
+            selectedRoom!.RoomId, destIndexes[1] + 1,
+            destIndexes[0] + 1, weeks
+          );
+          
+          setTimeout(() => {
+            responseSubscription.unsubscribe(); 
+            const errorObject = new MessageObject(400);
+            errorObject.Message = "Request timeout.";
+            reject(errorObject);
+          }, 15000);
+        })
+        : await this.signalrService.AddScheduledMove(
           courseEdition.Room!.RoomId, srcIndexes[1] + 1,
           srcIndexes[0] + 1, courseEdition.Weeks!,
           selectedRoom!.RoomId, destIndexes[1] + 1,
-          destIndexes[0] + 1, weeks
-        );
-        
-        setTimeout(() => {
-          responseSubscription.unsubscribe(); 
-          const errorObject = new MessageObject(400);
-          errorObject.Message = "Request timeout.";
-          reject(errorObject);
-        }, 15000);
-      })
-      : await this.signalrService.AddScheduledMove(
-        courseEdition.Room!.RoomId, srcIndexes[1] + 1,
-        srcIndexes[0] + 1, courseEdition.Weeks!,
-        selectedRoom!.RoomId, destIndexes[1] + 1,
-        destIndexes[0] + 1, weeks,
-        false
-      ).toPromise());
+          destIndexes[0] + 1, weeks,
+          this.isProposition
+        ).toPromise()
+      );
       
       if (result.StatusCode >= 400) {
         throw result;
       }
 
-      status = (isMoveValid) ? RoomSelectionDialogStatus.ACCEPTED : RoomSelectionDialogStatus.SCHEDULED;
+      status = (isMoveValid && !this.isProposition) ? RoomSelectionDialogStatus.ACCEPTED : RoomSelectionDialogStatus.SCHEDULED;
     }
     catch (error:any) {
       status = RoomSelectionDialogStatus.FAILED;
@@ -340,7 +345,6 @@ export class RoomSelectionComponent implements OnInit {
       selectedRoom,
       weeks
     );
-    console.log(dialogResult);
     dialogResult.Message = message;
     this.dialogRef.close(dialogResult);
   }

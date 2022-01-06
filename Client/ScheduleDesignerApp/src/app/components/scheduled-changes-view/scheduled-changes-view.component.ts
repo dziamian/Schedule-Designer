@@ -134,7 +134,7 @@ export class ScheduledChangesViewComponent implements OnInit {
             scheduledMove.Locked = response;
           })
         }
-      })
+      });
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
@@ -182,7 +182,7 @@ export class ScheduledChangesViewComponent implements OnInit {
 
     this.signalrSubscriptions.push(this.signalrService.lastAcceptedScheduledMove.pipe(skip(1)).subscribe((acceptedScheduledMove) => {
       this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => {
-        if (acceptedScheduledMove.moveId != scheduledMove.MoveId) {
+        if (acceptedScheduledMove.moveId == scheduledMove.MoveId) {
           scheduledMove.IsConfirmed = true;
         }
         return true;
@@ -227,6 +227,8 @@ export class ScheduledChangesViewComponent implements OnInit {
 
   async Remove(selectedScheduledMove:ScheduledMoveDetails) {
     selectedScheduledMove.IsRemoving = true;
+    var isLocked = false;
+    
     try {
       const lockingResult = await this.signalrService.LockSchedulePositions(
         this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
@@ -236,6 +238,12 @@ export class ScheduledChangesViewComponent implements OnInit {
       if (lockingResult.StatusCode >= 400) {
         throw lockingResult;
       }
+      isLocked = true;
+      this.scheduledMoves.forEach((scheduledMove) => {
+        if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
+          scheduledMove.Locked = true;
+        }
+      });
 
       const result = await this.signalrService.RemoveScheduledMove(
         this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
@@ -249,26 +257,45 @@ export class ScheduledChangesViewComponent implements OnInit {
       }
       
       this.scheduledMoves = this.scheduledMoves.filter((scheduledMove) => scheduledMove.MoveId != selectedScheduledMove.MoveId);
-
-      const unlockingResult = await this.signalrService.UnlockSchedulePositions(
-        this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
-        this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks
-      ).toPromise();
-
-      if (unlockingResult.StatusCode >= 400) {
-        throw unlockingResult;
-      }
-    }
-    catch (error:any) {
+      
+    } catch (error:any) {
       if (error.Message != undefined) {
         this.snackBar.open(error.Message, "OK");
       }
-      selectedScheduledMove.IsRemoving = false;
     }
+    
+    if (isLocked) {
+      try {
+        const unlockingResult = await this.signalrService.UnlockSchedulePositions(
+          this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
+          this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks
+        ).toPromise();
+  
+        if (unlockingResult.StatusCode >= 400) {
+          throw unlockingResult;
+        }
+
+      } catch (error:any) {
+      }
+    }
+
+    this.scheduledMoves.forEach((scheduledMove) => {
+      if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
+        this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+          this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1, this.data.SrcIndexes[0] + 1,
+            scheduledMove.SourceWeeks
+        ).subscribe((response) => {
+          scheduledMove.Locked = response;
+        })
+      }
+    });
+    selectedScheduledMove.IsRemoving = false;
   }
 
   async Accept(selectedScheduledMove:ScheduledMoveDetails) {
     selectedScheduledMove.IsAccepting = true;
+    var isLocked = false;
+
     try {
       const lockingResult = await this.signalrService.LockSchedulePositions(
         this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
@@ -278,6 +305,12 @@ export class ScheduledChangesViewComponent implements OnInit {
       if (lockingResult.StatusCode >= 400) {
         throw lockingResult;
       }
+      isLocked = true;
+      this.scheduledMoves.forEach((scheduledMove) => {
+        if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
+          scheduledMove.Locked = true;
+        }
+      });
 
       const result = await this.signalrService.AcceptProposition(
         this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
@@ -291,22 +324,40 @@ export class ScheduledChangesViewComponent implements OnInit {
       }
       
       selectedScheduledMove.IsConfirmed = true;
-
-      const unlockingResult = await this.signalrService.UnlockSchedulePositions(
-        this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
-        this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks
-      ).toPromise();
-
-      if (unlockingResult.StatusCode >= 400) {
-        throw unlockingResult;
-      }
-    }
-    catch (error:any) {
+    } catch (error:any) {
       if (error.Message != undefined) {
         this.snackBar.open(error.Message, "OK");
       }
-      selectedScheduledMove.IsRemoving = false;
     }
+
+    if (isLocked) {
+      try {
+        const unlockingResult = await this.signalrService.UnlockSchedulePositions(
+          this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1,
+          this.data.SrcIndexes[0] + 1, selectedScheduledMove.SourceWeeks
+        ).toPromise();
+  
+        if (unlockingResult.StatusCode >= 400) {
+          throw unlockingResult;
+        }
+        
+        selectedScheduledMove.Locked = false;
+      } catch (error:any) {
+
+      }
+    }
+
+    this.scheduledMoves.forEach((scheduledMove) => {
+      if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
+        this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+          this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1, this.data.SrcIndexes[0] + 1,
+            scheduledMove.SourceWeeks
+        ).subscribe((response) => {
+          scheduledMove.Locked = response;
+        })
+      }
+    });
+    selectedScheduledMove.IsAccepting = true;
   }
 
   ngOnDestroy() {

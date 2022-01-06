@@ -15,6 +15,8 @@ export class RoomSelectionDialogData {
         public RoomTypes:Map<number,RoomType>,
         public IsMoveValid:boolean,
         public CanBeScheduled:boolean,
+        public IsMoveAvailable:boolean,
+        public IsPropositionAvailable:boolean,
         public Filter: Filter
     ) { }
 }

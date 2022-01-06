@@ -96,7 +96,7 @@ export class ScheduleComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 
@@ -159,7 +159,7 @@ export class ScheduleComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 
@@ -311,7 +311,7 @@ export class ScheduleComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 
@@ -354,7 +354,7 @@ export class ScheduleComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
       
@@ -380,7 +380,7 @@ export class ScheduleComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastRemovedScheduledMove.pipe(skip(1)).subscribe((removedScheduledMove) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 
@@ -407,7 +407,7 @@ export class ScheduleComponent implements OnInit {
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAcceptedScheduledMove.pipe(skip(1)).subscribe((acceptedScheduledMove) => {
-      if (this.loading) {
+      if (this.loading || this.loading == null) {
         return;
       }
 

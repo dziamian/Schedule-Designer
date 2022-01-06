@@ -8,12 +8,12 @@ namespace ScheduleDesigner.Hubs.Interfaces
 {
     public interface IScheduleClient
     {
-        Task LockCourseEdition(int courseId, int courseEditionId);
+        Task LockCourseEdition(int courseId, int courseEditionId, bool byAdmin);
         
         Task LockSchedulePositions(
             int courseId, int courseEditionId, 
             int roomId, int periodIndex, 
-            int day, int[] weeks);
+            int day, int[] weeks, bool byAdmin);
         
         Task UnlockCourseEdition(int courseId, int courseEditionId);
         

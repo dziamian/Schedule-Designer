@@ -9,6 +9,7 @@ using Microsoft.AspNet.OData.Routing;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -24,9 +25,7 @@ namespace ScheduleDesigner.Controllers
 
         [HttpPost]
         [ODataRoute("")]
-        [Authorize(Policy = "Coordinator")]
-        [Authorize(Policy = "Representative")]
-        [Authorize(Policy = "Admin")]
+        [Authorize(Policy = "Assistant")]
         public async Task<IActionResult> CreateCourseRoom([FromBody] CourseRoom courseRoom)
         {
             if (!ModelState.IsValid)
@@ -37,7 +36,7 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "admin") != null;
+                var isAdmin = HttpContext.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
 
                 if (!isAdmin)
                 {
