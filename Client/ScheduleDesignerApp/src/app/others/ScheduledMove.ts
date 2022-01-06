@@ -10,7 +10,8 @@ export class ScheduledMove {
 }
 
 export class ScheduledMoveDetails {
-    Locked: {value: boolean, byAdmin: boolean} = {value: false, byAdmin: false};
+    IsLocked: boolean;
+    IsLockedByAdmin: boolean;
     IsRemoving:boolean = false;
     IsAccepting:boolean = false;
 

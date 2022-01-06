@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-    this.connectionStatus = this.signalrService.connection.state == HubConnectionState.Connected;
+    this.connectionStatus = this.signalrService.connection?.state == HubConnectionState.Connected;
   }
 
   ngOnDestroy() {

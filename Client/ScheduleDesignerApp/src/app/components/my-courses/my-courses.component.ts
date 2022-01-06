@@ -52,7 +52,8 @@ export class MyCoursesComponent implements OnInit {
 
     this.myCourses.forEach((myCourse) => {
       if (myCourse.CourseId == courseId && myCourse.CourseEditionId == courseEditionId) {
-        myCourse.Locked = locked;
+        myCourse.IsLocked = locked.value;
+        myCourse.IsLockedByAdmin = locked.byAdmin;
       }
     });
   }
@@ -147,7 +148,8 @@ export class MyCoursesComponent implements OnInit {
               firstCourse.CurrentAmount, firstCourse.Groups,
               firstCourse.Coordinators
             );
-            courseEdition.Locked = firstCourse.Locked;
+            courseEdition.IsLocked = firstCourse.IsLocked;
+            courseEdition.IsLockedByAdmin = firstCourse.IsLockedByAdmin;
             courseEdition.ScheduleAmount = firstCourse.ScheduleAmount;
             courseEdition.FullAmount = firstCourse.FullAmount;
             newCourses.push(courseEdition);

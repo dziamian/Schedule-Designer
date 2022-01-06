@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((value) => {
       if (!this.isAccountSet && value instanceof NavigationEnd) {
         this.trySetAccount();
+        this.tryInitConnection();
       }
     });
     this.store.select('account').subscribe((account) => {
@@ -40,6 +41,8 @@ export class AppComponent implements OnInit {
         return;
       }
       this.account = account;
+      this.isAccountSet = true;
+      this.tryInitConnection();
     });
   }
 
@@ -49,7 +52,7 @@ export class AppComponent implements OnInit {
   }
 
   private async tryInitConnection() {
-    if (this.IsAuthenticated()) {
+    if (this.IsAuthenticated() && (this.signalrService.connection == null && !this.signalrService.connectionInitializing)) {
       await this.signalrService.InitConnection().toPromise();
     }
   }

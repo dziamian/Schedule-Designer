@@ -129,14 +129,31 @@ export class FullScheduleComponent implements OnInit {
     }
   }
 
+  private updateLockInMyCourses(
+    courseId: number,
+    courseEditionId: number
+  ) {
+    this.scheduleInteractionService.updateLockInMyCourses(
+      courseId, courseEditionId, this.data, this.loading, this.snackBar
+    );
+  }
+
   private updateLockInSchedule(position:SchedulePosition) {
     this.scheduleInteractionService.updateLockInSchedule(
-      position, this.data, this.isModifying, this.loading
+      position, this.data, this.isModifying, this.settings, this.scheduleComponent, this.loading, this.snackBar
     );
   }
 
   private setSignalrSubscriptions(): void {
     this.signalrSubscriptions = [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId, byAdmin}) => {
+      this.updateLockInMyCourses(courseId, courseEditionId);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) => {
+      this.updateLockInMyCourses(courseId, courseEditionId);
+    }));
 
     this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
       this.updateLockInSchedule(lockedSchedulePositions);
@@ -154,7 +171,7 @@ export class FullScheduleComponent implements OnInit {
 
     this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) => {
       this.scheduleInteractionService.lastModifiedSchedulePositionsReaction(
-        modifiedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.loading
+        modifiedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.loading, this.snackBar
       );
     }));
 
@@ -181,7 +198,7 @@ export class FullScheduleComponent implements OnInit {
       this.scheduleDesignerApiService.GetCourseTypes(),
       this.scheduleDesignerApiService.GetRoomTypes()
     ]).subscribe(([settings,periods,courseTypes,roomTypes]) => {
-      this.connectionStatus = this.signalrService.connection.state == HubConnectionState.Connected;
+      this.connectionStatus = this.signalrService.connection?.state == HubConnectionState.Connected;
 
       this.settings = settings;
       this.settings.Periods = periods;

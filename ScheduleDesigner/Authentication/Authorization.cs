@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using ScheduleDesigner.Models;
 
 namespace ScheduleDesigner.Authentication
 {
@@ -20,5 +22,9 @@ namespace ScheduleDesigner.Authentication
         public string AccessTokenSecret { get; set; }
 
         public DateTime InsertedDateTime { get; set; }
+
+        
+        [ForeignKey("UserId")]
+        public User User { get; set; }
     }
 }

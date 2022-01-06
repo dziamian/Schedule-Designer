@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragRelease, CdkDragStart } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, SimpleChanges } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Account } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
@@ -46,8 +46,8 @@ export class CourseComponent implements OnInit {
   }
 
   getBackground(): string {
-    return this.course?.Locked?.value 
-      ? ((!this.course?.Locked?.byAdmin)
+    return this.course?.IsLocked
+      ? ((!this.course?.IsLockedByAdmin)
         ? `repeating-linear-gradient(90deg, ${this.course?.Type?.Color}, ${this.course?.Type?.Color} 10px, #FFFFFF 10px, #FFFFFF 20px) left / 50% 100% no-repeat,
         ${this.course?.Type?.Color} right / 50% 100% no-repeat`
         : `repeating-linear-gradient(90deg, ${this.course?.Type?.Color}, ${this.course?.Type?.Color} 10px, #FFFFFF 10px, #FFFFFF 20px)`)

@@ -14,6 +14,7 @@ export class SignalrService implements OnDestroy {
   
   connection:signalr.HubConnection;
   connectionIntentionallyStopped:boolean = false;
+  connectionInitializing:boolean = false;
   
   isConnected:BehaviorSubject<boolean>
   lastLockedCourseEdition:BehaviorSubject<{courseId:number, courseEditionId:number, byAdmin:boolean}>
@@ -94,6 +95,7 @@ export class SignalrService implements OnDestroy {
   public InitConnection(): Observable<void> {
     return new Observable((observer) => {
       this.connectionIntentionallyStopped = false;
+      this.connectionInitializing = true;
       
       if (this.connection?.state == "Connected") {
         observer.next();
@@ -116,11 +118,13 @@ export class SignalrService implements OnDestroy {
         .start()
         .then(() => {
           this.isConnected.next(true);
+          this.connectionInitializing = false;
           console.log(this.connection.connectionId);
           observer.next();
           observer.complete();
         })
         .catch(() => {
+          this.connectionInitializing = false;
           observer.error({status: -1});
         });
     });
@@ -287,7 +291,8 @@ export class SignalrService implements OnDestroy {
         roomId, periodIndex, 
         day, weeks
       );
-      schedulePosition.Locked = {value: true, byAdmin: byAdmin};
+      schedulePosition.IsLocked = true;
+      schedulePosition.IsLockedByAdmin = byAdmin;
       this.lastLockedSchedulePositions.next(schedulePosition);
     });
 
@@ -303,11 +308,14 @@ export class SignalrService implements OnDestroy {
       roomId, periodIndex, 
       day, weeks
     ) => {
-      this.lastUnlockedSchedulePositions.next(new SchedulePosition(
+      const schedulePosition = new SchedulePosition(
         courseId, courseEditionId,
         roomId, periodIndex, 
         day, weeks
-      ));
+      );
+      schedulePosition.IsLocked = false;
+      schedulePosition.IsLockedByAdmin = false;
+      this.lastUnlockedSchedulePositions.next(schedulePosition);
     });
 
     this.connection.on('AddedSchedulePositions', (

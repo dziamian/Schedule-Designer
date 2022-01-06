@@ -80,7 +80,9 @@ export class RoomSelectionComponent implements OnInit {
           const filter = new Filter(coordinatorsIds, groupsIds, []);
           if (this.data.Filter.challengeAll(filter) || !this.data.CanBeScheduled) {
             setTimeout(() => {
-              this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+              const result = RoomSelectionDialogResult.CANCELED;
+              result.Message = "Someone took your chosen position in schedule.";
+              this.dialogRef.close(result);
             });
             return;
           }
@@ -119,7 +121,9 @@ export class RoomSelectionComponent implements OnInit {
               const filter = new Filter(coordinatorsIds, groupsIds, []);
               if (this.data.Filter.challengeAll(filter) || !this.data.CanBeScheduled) {
                 setTimeout(() => {
-                  this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+                  const result = RoomSelectionDialogResult.CANCELED;
+                  result.Message = "Someone took your chosen position in schedule.";
+                  this.dialogRef.close(result);
                 });
                 return;
               }

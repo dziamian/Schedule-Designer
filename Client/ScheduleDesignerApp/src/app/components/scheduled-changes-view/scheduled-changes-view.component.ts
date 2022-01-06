@@ -111,7 +111,8 @@ export class ScheduledChangesViewComponent implements OnInit {
 
       this.scheduledMoves.forEach((scheduledMove) => {
         if (scheduledMove.SourceWeeks.some((week) => lockedSchedulePositions.Weeks.includes(week))) {
-          scheduledMove.Locked = lockedSchedulePositions.Locked;
+          scheduledMove.IsLocked = lockedSchedulePositions.IsLocked;
+          scheduledMove.IsLockedByAdmin = lockedSchedulePositions.IsLockedByAdmin;
         }
       });
     }));
@@ -131,7 +132,8 @@ export class ScheduledChangesViewComponent implements OnInit {
             this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1, this.data.SrcIndexes[0] + 1,
               scheduledMove.SourceWeeks
           ).subscribe((response) => {
-            scheduledMove.Locked = response;
+            scheduledMove.IsLocked = response.value;
+            scheduledMove.IsLockedByAdmin = response.byAdmin;
           })
         }
       });
@@ -160,7 +162,8 @@ export class ScheduledChangesViewComponent implements OnInit {
                 this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1, this.data.SrcIndexes[0] + 1,
                 scheduledMoveDetails[0].SourceWeeks
               ).subscribe((response) => {
-                scheduledMoveDetails[0].Locked = response;
+                scheduledMoveDetails[0].IsLocked = response.value;
+                scheduledMoveDetails[0].IsLockedByAdmin = response.byAdmin;
                 
                 this.scheduledMoves.push(scheduledMoveDetails[0]);
               });
@@ -209,7 +212,8 @@ export class ScheduledChangesViewComponent implements OnInit {
             
             forkJoin(tasks).subscribe((responses) => {
               for (let i = 0; i < this.scheduledMoves.length; ++i) {
-                this.scheduledMoves[i].Locked = responses[i];
+                this.scheduledMoves[i].IsLocked = responses[i].value;
+                this.scheduledMoves[i].IsLockedByAdmin = responses[i].byAdmin;
               }
 
               this.loading = false;
@@ -241,7 +245,8 @@ export class ScheduledChangesViewComponent implements OnInit {
       isLocked = true;
       this.scheduledMoves.forEach((scheduledMove) => {
         if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
-          scheduledMove.Locked = {value: true, byAdmin: this.data.IgnoreUsersLocks};;
+          scheduledMove.IsLocked = true;
+          scheduledMove.IsLockedByAdmin = this.data.IgnoreUsersLocks;
         }
       });
 
@@ -285,7 +290,8 @@ export class ScheduledChangesViewComponent implements OnInit {
           this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1, this.data.SrcIndexes[0] + 1,
             scheduledMove.SourceWeeks
         ).subscribe((response) => {
-          scheduledMove.Locked = response;
+          scheduledMove.IsLocked = response.value;
+          scheduledMove.IsLockedByAdmin = response.byAdmin;
         })
       }
     });
@@ -308,7 +314,8 @@ export class ScheduledChangesViewComponent implements OnInit {
       isLocked = true;
       this.scheduledMoves.forEach((scheduledMove) => {
         if (scheduledMove.SourceWeeks.some((week) => selectedScheduledMove.SourceWeeks.includes(week))) {
-          scheduledMove.Locked = {value: true, byAdmin: this.data.IgnoreUsersLocks};
+          scheduledMove.IsLocked = true;
+          scheduledMove.IsLockedByAdmin = this.data.IgnoreUsersLocks;
         }
       });
 
@@ -341,7 +348,8 @@ export class ScheduledChangesViewComponent implements OnInit {
           throw unlockingResult;
         }
         
-        selectedScheduledMove.Locked = {value: false, byAdmin: false};
+        selectedScheduledMove.IsLocked = false;
+        selectedScheduledMove.IsLockedByAdmin = false;
       } catch (error:any) {
 
       }
@@ -353,7 +361,8 @@ export class ScheduledChangesViewComponent implements OnInit {
           this.data.CourseEdition.Room?.RoomId!, this.data.SrcIndexes[1] + 1, this.data.SrcIndexes[0] + 1,
             scheduledMove.SourceWeeks
         ).subscribe((response) => {
-          scheduledMove.Locked = response;
+          scheduledMove.IsLocked = response.value;
+          scheduledMove.IsLockedByAdmin = response.byAdmin;
         })
       }
     });

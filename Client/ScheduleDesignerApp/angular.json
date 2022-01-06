@@ -57,6 +57,20 @@
               ],
               "outputHashing": "all"
             },
+            "staging": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/views/login/login.component.ts",
+                  "with": "src/app/views/login/login.component.staging.ts"
+                }
+              ]
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
@@ -73,6 +87,9 @@
           "configurations": {
             "production": {
               "browserTarget": "ScheduleDesignerApp:build:production"
+            },
+            "staging": {
+              "browserTarget": "ScheduleDesignerApp:build:staging"
             },
             "development": {
               "browserTarget": "ScheduleDesignerApp:build:development"

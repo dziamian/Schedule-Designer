@@ -47,7 +47,7 @@ export class ScheduleDesignerApiService {
       response.FirstName,
       response.LastName,
       response.Student != null,
-      response.Student.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId),
+      response.Student?.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? [],
       response.Coordinator != null,
       (response.Coordinator != null) ? new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter) : null,
       response.Staff != null,
@@ -239,7 +239,7 @@ export class ScheduleDesignerApiService {
   ):Observable<CourseEditionInfo> {
     const request = {
       url: this.baseUrl + `/courseEditions(${courseId},${courseEdition})?`
-      + `$expand=Course,SchedulePositions($count=true;$top=0)`,
+      + `$expand=Course,LockUser($expand=Staff),SchedulePositions($count=true;$top=0)`,
       method: 'GET'
     };
 
@@ -257,7 +257,8 @@ export class ScheduleDesignerApiService {
         courseEditionInfo.UnitsMinutes = response.Course.UnitsMinutes;
         courseEditionInfo.ScheduleAmount = response['SchedulePositions@odata.count'];
         courseEditionInfo.FullAmount = courseEditionInfo.UnitsMinutes / settings.CourseDurationMinutes;
-        courseEditionInfo.Locked = response.LockUserId != null;
+        courseEditionInfo.IsLocked = response.LockUserId != null;
+        courseEditionInfo.IsLockedByAdmin = response.LockUser?.Staff?.IsAdmin;
         return courseEditionInfo;
       })
     );
@@ -274,7 +275,7 @@ export class ScheduleDesignerApiService {
     const FREQUENCY = Math.floor(frequency);
     const request = {
       url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(${filter.toString()},Frequency=${FREQUENCY})?` +
-        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
+        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),LockUser($expand=Staff),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
     };
@@ -318,7 +319,8 @@ export class ScheduleDesignerApiService {
             FREQUENCY,
             groups, coordinators
           );
-          courseEdition.Locked = response.LockUserId;
+          courseEdition.IsLocked = response.LockUserId;
+          courseEdition.IsLockedByAdmin = response.LockUser?.Staff?.IsAdmin;
           courseEdition.ScheduleAmount = scheduleAmount;
           courseEdition.FullAmount = fullAmount;
           myCourseEditions.push(courseEdition);
@@ -338,7 +340,7 @@ export class ScheduleDesignerApiService {
     const FREQUENCY = Math.floor(frequency);
     const request = {
       url: this.baseUrl + `/courseEditions/Service.GetFilteredCourseEditions(${filter.toString()},Frequency=${FREQUENCY})?` +
-        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),' +
+        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),LockUser($expand=Staff),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
     };
@@ -383,7 +385,8 @@ export class ScheduleDesignerApiService {
               FREQUENCY,
               groups, coordinators
             );
-            courseEdition.Locked = value.LockUserId;
+            courseEdition.IsLocked = value.LockUserId;
+            courseEdition.IsLockedByAdmin = value.LockUser?.Staff?.IsAdmin;
             courseEdition.ScheduleAmount = scheduleAmount;
             courseEdition.FullAmount = fullAmount;
             myCourseEditions.push(courseEdition);
@@ -506,7 +509,8 @@ export class ScheduleDesignerApiService {
               && courseEdition.Room!.RoomId == roomId) {
                 courseEdition.Weeks?.push(week);
                 if (locked.value) {
-                  courseEdition.Locked = locked;
+                  courseEdition.IsLocked = locked.value;
+                  courseEdition.IsLockedByAdmin = locked.byAdmin;
                 }
                 
                 const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);
@@ -528,7 +532,8 @@ export class ScheduleDesignerApiService {
               coordinators
             );
             courseEdition.Room = new Room(roomId);
-            courseEdition.Locked = locked;
+            courseEdition.IsLocked = locked.value;
+            courseEdition.IsLockedByAdmin = locked.byAdmin;
             courseEdition.Weeks = [week];
             courseEdition.ScheduleAmount = scheduleAmount;
             courseEdition.FullAmount = fullAmount;

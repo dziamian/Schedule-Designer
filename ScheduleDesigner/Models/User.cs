@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScheduleDesigner.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,6 +27,8 @@ namespace ScheduleDesigner.Models
         public Coordinator Coordinator { get; set; }
 
         public Staff Staff { get; set; }
+
+        public Authorization Authorization { get; set; }
 
         public virtual ICollection<CourseRoom> CourseRoomsPropositions { get; set; }
 

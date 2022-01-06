@@ -2,7 +2,8 @@ export class CourseEditionInfo {
     UnitsMinutes:number = 0;
     ScheduleAmount:number = 0;
     FullAmount:number = 0;
-    Locked:boolean = false;
+    IsLocked: boolean;
+    IsLockedByAdmin: boolean;
 
     constructor(
         public CourseId:number,

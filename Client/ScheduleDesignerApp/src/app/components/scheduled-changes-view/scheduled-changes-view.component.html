@@ -20,14 +20,14 @@
             <div *ngIf="data.IsModifying" class="item-buttons">
                 <button *ngIf="!data.RepresentativeView && !scheduledMove.IsConfirmed" 
                 mat-raised-button class="confirm" style="margin-right: 1vw;"
-                [disabled]="(!data.IgnoreUsersLocks && scheduledMove.Locked.value) 
-                    || (data.IgnoreUsersLocks && scheduledMove.Locked.byAdmin && scheduledMove.Locked.value) || scheduledMove.IsAccepting"
+                [disabled]="(!data.IgnoreUsersLocks && scheduledMove.IsLocked) 
+                    || (data.IgnoreUsersLocks && scheduledMove.IsLockedByAdmin && scheduledMove.IsLocked) || scheduledMove.IsAccepting"
                 (click)="Accept(scheduledMove)">Confirm</button>
                 
                 <button mat-raised-button color="warn" 
                 [disabled]="(data.RepresentativeView && !scheduledMove.IsConfirmed) 
-                    || (!data.IgnoreUsersLocks && scheduledMove.Locked.value) 
-                    || (data.IgnoreUsersLocks && scheduledMove.Locked.byAdmin && scheduledMove.Locked.value) || scheduledMove.IsRemoving" 
+                    || (!data.IgnoreUsersLocks && scheduledMove.IsLocked) 
+                    || (data.IgnoreUsersLocks && scheduledMove.IsLockedByAdmin && scheduledMove.IsLocked) || scheduledMove.IsRemoving" 
                 (click)="Remove(scheduledMove)">Remove</button>
             </div>
             <mat-divider></mat-divider>

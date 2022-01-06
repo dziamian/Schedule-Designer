@@ -7,7 +7,8 @@ export class MessageObject {
 }
 
 export class SchedulePosition {
-    Locked: {value: boolean, byAdmin: boolean} = {value: false, byAdmin: false};
+    IsLocked: boolean;
+    IsLockedByAdmin: boolean;
 
     constructor(
         public CourseId:number,

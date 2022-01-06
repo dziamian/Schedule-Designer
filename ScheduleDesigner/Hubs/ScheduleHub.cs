@@ -626,7 +626,8 @@ namespace ScheduleDesigner.Hubs
                     var _courseEdition = _courseEditionRepo
                         .Get(finalPredicate)
                         .Include(e => e.Coordinators)
-                        .Include(e => e.Groups);
+                        .Include(e => e.Groups)
+                        .Include(e => e.LockUser).ThenInclude(e => e.Staff);
 
                     if (!_courseEdition.Any())
                     {
@@ -636,7 +637,8 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
-                    if (!isAdmin && !(courseEdition is {LockUserId: null}))
+                    var lockUserStaff = courseEdition.LockUser?.Staff;
+                    if ((!isAdmin && !(courseEdition is {LockUserId: null})) || (isAdmin && lockUserStaff != null && lockUserStaff.IsAdmin))
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                         
@@ -750,14 +752,21 @@ namespace ScheduleDesigner.Hubs
                         .Include(e => e.CourseEdition)
                             .ThenInclude(e => e.Coordinators)
                         .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Groups);
+                            .ThenInclude(e => e.Groups)
+                        .Include(e => e.LockUser)
+                            .ThenInclude(e => e.Staff);
 
                         if (_schedulePositions.Count() != weeks.Length)
                         {
                             return new MessageObject { StatusCode = 404, Message = "Could not find requested positions in schedule or you do not have enough permissions to lock." };
                         }
 
-                        if (!isAdmin && Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != null))
+                        if ((!isAdmin && Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != null))
+                            || (isAdmin && Enumerable.Any(_schedulePositions, schedulePosition =>
+                            {
+                                var lockUserStaff = schedulePosition.LockUser?.Staff;
+                                return lockUserStaff != null ? lockUserStaff.IsAdmin : false;
+                            })))
                         {
                             return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };
                         }

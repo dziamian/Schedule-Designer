@@ -61,7 +61,7 @@ export class ScheduleComponent implements OnInit {
     private scheduleDesignerApiService:ScheduleDesignerApiService
   ) { }
 
-  private updateLockInSchedule(position:SchedulePosition, value:boolean) {
+  private updateLockInSchedule(position:SchedulePosition) {
     if (!this.schedule) {
       return;
     }
@@ -72,6 +72,8 @@ export class ScheduleComponent implements OnInit {
     const day = position.Day - 1;
     const periodIndex = position.PeriodIndex - 1;
     const weeks = position.Weeks;
+    const lockedValue = position.IsLocked;
+    const lockedByAdmin = position.IsLockedByAdmin;
 
     if (!this.currentFilter.weeks.some(r => weeks.includes(r))) {
       return;
@@ -81,7 +83,8 @@ export class ScheduleComponent implements OnInit {
     courseEditions.forEach((courseEdition) => {
       if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId 
         && courseEdition.Room?.RoomId == roomId) {
-        courseEdition.Locked = {value: value, byAdmin: position.Locked.byAdmin};
+          courseEdition.IsLocked = lockedValue;
+          courseEdition.IsLockedByAdmin = lockedByAdmin;
       }
     });
   }
@@ -90,11 +93,11 @@ export class ScheduleComponent implements OnInit {
     this.signalrSubscriptions = [];
 
     this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) => {
-      this.updateLockInSchedule(lockedSchedulePositions, true);
+      this.updateLockInSchedule(lockedSchedulePositions);
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
-      this.updateLockInSchedule(unlockedSchedulePositions, false);
+      this.updateLockInSchedule(unlockedSchedulePositions);
     }));
 
     this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
@@ -199,14 +202,16 @@ export class ScheduleComponent implements OnInit {
                 const room = new Room(dstSchedulePosition.RoomId);
                 room.Name = roomName[0];
                 existingCourseEditions[0].Room = room;
-                existingCourseEditions[0].Locked = {value: false, byAdmin: false};
+                existingCourseEditions[0].IsLocked = false;
+                existingCourseEditions[0].IsLockedByAdmin = false;
               });
             }
             this.scheduleDesignerApiService.AreSchedulePositionsLocked(
               dstSchedulePosition.RoomId, dstSchedulePosition.PeriodIndex,
               dstSchedulePosition.Day, existingCourseEditions[0].Weeks!
             ).subscribe((areLocked) => {
-              existingCourseEditions[0].Locked = areLocked;
+              existingCourseEditions[0].IsLocked = areLocked.value;
+              existingCourseEditions[0].IsLockedByAdmin = areLocked.byAdmin;
             });
             
             existingCourseEditions[0].ScheduledMoves = existingCourseEditions[0].ScheduledMoves
@@ -236,7 +241,8 @@ export class ScheduleComponent implements OnInit {
                 srcSchedulePosition.RoomId, srcSchedulePosition.PeriodIndex,
                 srcSchedulePosition.Day, existingSrcCourseEditions[0].Weeks
               ).subscribe((areLocked) => {
-                existingSrcCourseEditions[0].Locked = areLocked;
+                existingSrcCourseEditions[0].IsLocked = areLocked.value;
+                existingSrcCourseEditions[0].IsLockedByAdmin = areLocked.byAdmin;
               });
             }
           }
@@ -269,7 +275,8 @@ export class ScheduleComponent implements OnInit {
                   dstSchedulePosition.RoomId, dstSchedulePosition.PeriodIndex,
                   dstSchedulePosition.Day, existingDstCourseEditions[0].Weeks!
                 ).subscribe((areLocked) => {
-                  existingSrcCourseEditions[0].Locked = areLocked;
+                  existingSrcCourseEditions[0].IsLocked = areLocked.value;
+                  existingSrcCourseEditions[0].IsLockedByAdmin = areLocked.byAdmin;
                 });
               }
             } else {
@@ -348,7 +355,8 @@ export class ScheduleComponent implements OnInit {
               schedulePosition.RoomId, schedulePosition.PeriodIndex,
               schedulePosition.Day, existingCourseEditions[0].Weeks
             ).subscribe((areLocked) => {
-              existingCourseEditions[0].Locked = areLocked;
+              existingCourseEditions[0].IsLocked = areLocked.value;
+              existingCourseEditions[0].IsLockedByAdmin = areLocked.byAdmin;
             });
           }
         }

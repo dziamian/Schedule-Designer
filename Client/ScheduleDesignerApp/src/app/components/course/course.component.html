@@ -1,9 +1,9 @@
-<div class="course {{course?.Locked?.value ? 'locked' : ''}}"
+<div class="course {{course?.IsLocked ? 'locked' : ''}}"
     [style.background]="getBackground()"
     
     cdkDrag
-    [cdkDragDisabled]="!isModifying || (!ignoreUsersLocks && course?.Locked?.value) || CheckIfNotMatching() 
-        || isSelectedMoving || (ignoreUsersLocks && course?.Locked?.byAdmin && course?.Locked?.value)"
+    [cdkDragDisabled]="!isModifying || (!ignoreUsersLocks && course?.IsLocked) || CheckIfNotMatching() 
+        || isSelectedMoving || (ignoreUsersLocks && course?.IsLockedByAdmin && course?.IsLocked)"
     [cdkDragData]="course"
     (cdkDragStarted)="OnStarted($event)"
     (cdkDragReleased)="OnReleased($event)"
