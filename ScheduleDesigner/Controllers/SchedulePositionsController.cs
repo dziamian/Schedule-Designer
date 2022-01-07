@@ -14,6 +14,7 @@ using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Controllers
@@ -21,13 +22,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("SchedulePositions")]
     public class SchedulePositionsController : ODataController
     {
-        private readonly IRoomRepo _roomRepo;
-        private readonly ISchedulePositionRepo _schedulePositionRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SchedulePositionsController(IRoomRepo roomRepo, ISchedulePositionRepo schedulePositionRepo)
+        public SchedulePositionsController(IUnitOfWork unitOfWork)
         {
-            _roomRepo = roomRepo;
-            _schedulePositionRepo = schedulePositionRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -37,7 +36,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _schedulePositions = _schedulePositionRepo
+                var _schedulePositions = _unitOfWork.SchedulePositions
                     .Get(e => e.RoomId == RoomId && e.Timestamp.PeriodIndex == PeriodIndex
                                                  && e.Timestamp.Day == Day &&
                                                  Weeks.Contains(e.Timestamp.Week))
@@ -82,7 +81,7 @@ namespace ScheduleDesigner.Controllers
                 var finalPredicate = predicate.And(e => Weeks.Contains(e.Timestamp.Week));
 
 
-                var _schedulePositions = _schedulePositionRepo
+                var _schedulePositions = _unitOfWork.SchedulePositions
                     .Get(finalPredicate)
                     .Include(e => e.CourseEdition)
                         .ThenInclude(e => e.Coordinators)
@@ -105,7 +104,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _rooms = _roomRepo
+                var _rooms = _unitOfWork.Rooms
                     .Get(e => RoomsIds.Contains(e.RoomId))
                     .Select(e => e.RoomId);
 
@@ -115,7 +114,7 @@ namespace ScheduleDesigner.Controllers
                     rooms.TryAdd(_room, new RoomAvailability {RoomId = _room, IsBusy = false});
                 }
 
-                var _schedulePositions = _schedulePositionRepo
+                var _schedulePositions = _unitOfWork.SchedulePositions
                     .Get(e => _rooms.Contains(e.RoomId) && e.Timestamp.PeriodIndex == PeriodIndex 
                         && e.Timestamp.Day == Day && Weeks.Contains(e.Timestamp.Week))
                     .Include(e => e.Timestamp)

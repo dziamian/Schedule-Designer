@@ -12,6 +12,7 @@ using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Services;
 
 namespace ScheduleDesigner.Controllers
@@ -19,12 +20,12 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("Users")]
     public class UsersController : ODataController
     {
-        private readonly IUserRepo _userRepo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UsosAuthenticationService _usosService;
         
-        public UsersController(IUserRepo userRepo, UsosAuthenticationService usosService)
+        public UsersController(IUnitOfWork unitOfWork, UsosAuthenticationService usosService)
         {
-            _userRepo = userRepo;
+            _unitOfWork = unitOfWork;
             _usosService = usosService;
         }
 
@@ -73,7 +74,7 @@ namespace ScheduleDesigner.Controllers
             {
                 var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
 
-                var _user = _userRepo.Get(e => e.UserId == userId);
+                var _user = _unitOfWork.Users.Get(e => e.UserId == userId);
                 if (_user.Any())
                 {
                     return Conflict("User is already created.");
@@ -91,7 +92,7 @@ namespace ScheduleDesigner.Controllers
                 if (user != null)
                 {
                     await _usosService.CreateCredentials(userId, accessToken, accessTokenSecret);
-                    await _userRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(user);
                 }
                 return NotFound();
@@ -114,7 +115,7 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 int userId = (int)parameters["UserId"];
-                var _user = _userRepo.Get(e => e.UserId == userId);
+                var _user = _unitOfWork.Users.Get(e => e.UserId == userId);
                 if (_user.Any())
                 {
                     return Conflict("User is already created.");
@@ -132,7 +133,7 @@ namespace ScheduleDesigner.Controllers
                 if (user != null)
                 {
                     await _usosService.CreateCredentials(userId, "", "", DateTime.Now.AddMinutes(-30));
-                    await _userRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(user);
                 }
                 return NotFound();
@@ -148,7 +149,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetUsers()
         {
-            return Ok(_userRepo.GetAll());
+            return Ok(_unitOfWork.Users.GetAll());
         }
 
         [HttpGet]
@@ -158,7 +159,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _user = _userRepo.Get(e => e.UserId == key);
+                var _user = _unitOfWork.Users.Get(e => e.UserId == key);
                 if (!_user.Any())
                 {
                     return NotFound();
@@ -180,7 +181,7 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var _user = _userRepo
+                var _user = _unitOfWork.Users
                     .Get(e => e.UserId == userId);
                 
                 if (!_user.Any())
@@ -194,7 +195,7 @@ namespace ScheduleDesigner.Controllers
                 var result = await _usosService.CreateCredentials(userId, accessToken, accessTokenSecret);
                 if (result != null)
                 {
-                    await _userRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                 }
 
                 return Ok(SingleResult.Create(_user));
@@ -216,7 +217,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _user = await _userRepo.GetFirst(e => e.UserId == key);
+                var _user = await _unitOfWork.Users.GetFirst(e => e.UserId == key);
                 if (_user == null)
                 {
                     return NotFound();
@@ -224,7 +225,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_user);
 
-                await _userRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_user);
             }
@@ -240,13 +241,13 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _userRepo.Delete(e => e.UserId == key);
+                var result = await _unitOfWork.Users.Delete(e => e.UserId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _userRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return NoContent();
             }

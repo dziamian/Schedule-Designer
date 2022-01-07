@@ -15,6 +15,7 @@ using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Controllers
@@ -22,23 +23,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("CourseEditions")]
     public class CourseEditionsController : ODataController
     {
-        private readonly IGroupRepo _groupRepo;
-        private readonly ICourseEditionRepo _courseEditionRepo;
-        private readonly ISchedulePositionRepo _schedulePositionRepo;
-        private readonly ISettingsRepo _settingsRepo;
-        private readonly IStudentGroupRepo _studentGroupRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CourseEditionsController(IGroupRepo groupRepo, 
-            ICourseEditionRepo courseEditionRepo, 
-            ISchedulePositionRepo schedulePositionRepo, 
-            ISettingsRepo settingsRepo,
-            IStudentGroupRepo studentGroupRepo)
+        public CourseEditionsController(IUnitOfWork unitOfWork)
         {
-            _groupRepo = groupRepo;
-            _courseEditionRepo = courseEditionRepo;
-            _schedulePositionRepo = schedulePositionRepo;
-            _settingsRepo = settingsRepo;
-            _studentGroupRepo = studentGroupRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -52,11 +41,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseEdition = await _courseEditionRepo.Add(courseEdition);
+                var _courseEdition = await _unitOfWork.CourseEditions.Add(courseEdition);
 
                 if (_courseEdition != null)
                 {
-                    await _courseEditionRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_courseEdition);
                 }
                 return NotFound();
@@ -76,7 +65,7 @@ namespace ScheduleDesigner.Controllers
             [FromODataUri] IEnumerable<int> RoomsIds,
             [FromODataUri] int Frequency)
         {
-            var _settings = await _settingsRepo.GetSettings();
+            var _settings = await _unitOfWork.Settings.GetSettings();
             if (_settings == null)
             {
                 return BadRequest("Application settings has not been specified.");
@@ -112,7 +101,7 @@ namespace ScheduleDesigner.Controllers
                 var finalPredicate = predicate
                     .And(e => Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency);
                 
-                var _courseEditions = _courseEditionRepo
+                var _courseEditions = _unitOfWork.CourseEditions
                     .Get(finalPredicate) 
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
@@ -138,7 +127,7 @@ namespace ScheduleDesigner.Controllers
             [FromODataUri] IEnumerable<int> RoomsIds,
             [FromODataUri] double Frequency)
         {
-            var _settings = await _settingsRepo.GetSettings();
+            var _settings = await _unitOfWork.Settings.GetSettings();
             if (_settings == null)
             {
                 return BadRequest("Application settings has not been specified.");
@@ -175,7 +164,7 @@ namespace ScheduleDesigner.Controllers
                     .And(predicate)
                     .And(e => Math.Ceiling(e.Course.UnitsMinutes / (courseDurationMinutes * 1.0) - e.SchedulePositions.Count) >= Frequency);
 
-                var _courseEditions = _courseEditionRepo
+                var _courseEditions = _unitOfWork.CourseEditions
                     .Get(finalPredicate)
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
@@ -197,7 +186,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _courseEdition = _courseEditionRepo
+                var _courseEdition = _unitOfWork.CourseEditions
                     .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
                     .Include(e => e.Coordinators)
                     .Include(e => e.Groups)
@@ -212,9 +201,9 @@ namespace ScheduleDesigner.Controllers
 
                 var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
 
-                var groupsIds = Helpers.GetNestedGroupsIds(courseEdition, _groupRepo);
+                var groupsIds = Helpers.GetNestedGroupsIds(courseEdition, _unitOfWork.Groups);
 
-                var _timestamps = _schedulePositionRepo
+                var _timestamps = _unitOfWork.SchedulePositions
                     .Get(e => Weeks.Contains(e.Timestamp.Week) 
                               && (e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Any(e => coordinatorsIds.Contains(e))
                               || e.CourseEdition.Groups.Select(e => e.GroupId).Any(e => groupsIds.Contains(e))))
@@ -241,7 +230,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _courseEdition = _courseEditionRepo
+                var _courseEdition = _unitOfWork.CourseEditions
                     .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
                     .Include(e => e.Coordinators)
                     .Include(e => e.Groups)
@@ -256,9 +245,9 @@ namespace ScheduleDesigner.Controllers
 
                 var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
 
-                var groupsIds = Helpers.GetNestedGroupsIds(courseEdition, _groupRepo);
+                var groupsIds = Helpers.GetNestedGroupsIds(courseEdition, _unitOfWork.Groups);
 
-                var _timestamps = _schedulePositionRepo
+                var _timestamps = _unitOfWork.SchedulePositions
                     .Get(e => e.Timestamp.PeriodIndex == PeriodIndex
                               && e.Timestamp.Day == Day
                               && Weeks.Contains(e.Timestamp.Week)
@@ -287,7 +276,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _courseEdition = _courseEditionRepo
+                var _courseEdition = _unitOfWork.CourseEditions
                     .Get(e => e.CourseId == key1 && e.CourseEditionId == key2)
                     .Include(e => e.Groups);
 
@@ -298,7 +287,7 @@ namespace ScheduleDesigner.Controllers
                 var courseEdition = _courseEdition.FirstOrDefault();
                 var courseEditionGroupsIds = courseEdition.Groups.Select(e => e.GroupId);
 
-                var _groups = _groupRepo
+                var _groups = _unitOfWork.Groups
                     .Get(e => courseEditionGroupsIds.Contains(e.GroupId));
 
                 if (!_groups.Any())
@@ -309,7 +298,7 @@ namespace ScheduleDesigner.Controllers
                 var size = groupsIds.Count();
 
 
-                var _childGroups = _groupRepo
+                var _childGroups = _unitOfWork.Groups
                     .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(0, size).Contains((int)e.ParentGroupId));
 
                 var startIndex = 0;
@@ -322,11 +311,11 @@ namespace ScheduleDesigner.Controllers
                     startIndex = endIndex;
                     endIndex += _childGroups.Count();
 
-                    _childGroups = _groupRepo
+                    _childGroups = _unitOfWork.Groups
                         .Get(e => (e.ParentGroupId != null) && groupsIds.GetRange(startIndex, endIndex - startIndex).Contains((int)e.ParentGroupId));
                 }
 
-                var groupsSize = _studentGroupRepo
+                var groupsSize = _unitOfWork.StudentGroups
                     .Get(e => groupsIds.Contains(e.GroupId))
                     .GroupBy(e => e.StudentId)
                     .Select(e => e.Key).Count();
@@ -344,7 +333,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetCourseEditions()
         {
-            return Ok(_courseEditionRepo.GetAll());
+            return Ok(_unitOfWork.CourseEditions.GetAll());
         }
 
         [HttpGet]
@@ -354,7 +343,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _courseEdition = _courseEditionRepo
+                var _courseEdition = _unitOfWork.CourseEditions
                     .Get(e => e.CourseId == key1 && e.CourseEditionId == key2);
                 if (!_courseEdition.Any())
                 {
@@ -380,7 +369,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseEdition = await _courseEditionRepo
+                var _courseEdition = await _unitOfWork.CourseEditions
                     .GetFirst(e => e.CourseId == key1 && e.CourseEditionId == key2);
                 if (_courseEdition == null)
                 {
@@ -389,7 +378,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_courseEdition);
 
-                await _courseEditionRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_courseEdition);
             }
@@ -405,14 +394,14 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _courseEditionRepo
+                var result = await _unitOfWork.CourseEditions
                     .Delete(e => e.CourseId == key1 && e.CourseEditionId == key2);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _courseEditionRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

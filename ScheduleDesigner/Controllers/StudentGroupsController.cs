@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +14,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("StudentGroups")]
     public class StudentGroupsController : ODataController
     {
-        private readonly IStudentGroupRepo _studentGroupRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public StudentGroupsController(IStudentGroupRepo studentGroupRepo)
+        public StudentGroupsController(IUnitOfWork unitOfWork)
         {
-            _studentGroupRepo = studentGroupRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -31,11 +32,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _student = await _studentGroupRepo.Add(studentGroup);
+                var _student = await _unitOfWork.StudentGroups.Add(studentGroup);
 
                 if (_student != null)
                 {
-                    await _studentGroupRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_student);
                 }
                 return NotFound();
@@ -51,7 +52,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetStudentGroups()
         {
-            return Ok(_studentGroupRepo.GetAll());
+            return Ok(_unitOfWork.StudentGroups.GetAll());
         }
 
         [HttpGet]
@@ -61,7 +62,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _studentGroup = _studentGroupRepo.Get(e => e.GroupId == key1 && e.StudentId == key2);
+                var _studentGroup = _unitOfWork.StudentGroups.Get(e => e.GroupId == key1 && e.StudentId == key2);
                 if (!_studentGroup.Any())
                 {
                     return NotFound();
@@ -86,7 +87,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _studentGroup = await _studentGroupRepo.GetFirst(e => e.GroupId == key1 && e.StudentId == key2);
+                var _studentGroup = await _unitOfWork.StudentGroups.GetFirst(e => e.GroupId == key1 && e.StudentId == key2);
                 if (_studentGroup == null)
                 {
                     return NotFound();
@@ -94,7 +95,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_studentGroup);
 
-                await _studentGroupRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_studentGroup);
             }
@@ -110,14 +111,14 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _studentGroupRepo
+                var result = await _unitOfWork.StudentGroups
                     .Delete(e => e.GroupId == key1 && e.StudentId == key2);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _studentGroupRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

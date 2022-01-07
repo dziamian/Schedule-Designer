@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("Courses")]
     public class CoursesController : ODataController
     {
-        private readonly ICourseRepo _courseRepo;
-        private readonly ISettingsRepo _settingsRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CoursesController(ICourseRepo courseRepo, ISettingsRepo settingsRepo)
+        public CoursesController(IUnitOfWork unitOfWork)
         {
-            _courseRepo = courseRepo;
-            _settingsRepo = settingsRepo;
+            _unitOfWork = unitOfWork;
         }
 
         private static bool IsDataValid(Course course, Settings settings)
@@ -37,13 +36,13 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(ModelState);
             }
 
-            var _settings = await _settingsRepo.GetSettings();
+            var _settings = await _unitOfWork.Settings.GetSettings();
             if (_settings == null)
             {
                 return BadRequest("Application settings has not been specified.");
             }
 
-            if (!IsDataValid(course, await _settingsRepo.GetSettings()))
+            if (!IsDataValid(course, await _unitOfWork.Settings.GetSettings()))
             {
                 ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
                 return BadRequest(ModelState);
@@ -51,11 +50,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _course = await _courseRepo.Add(course);
+                var _course = await _unitOfWork.Courses.Add(course);
 
                 if (_course != null)
                 {
-                    await _courseRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_course);
                 }
                 return NotFound();
@@ -71,7 +70,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetCourses()
         {
-            return Ok(_courseRepo.GetAll());
+            return Ok(_unitOfWork.Courses.GetAll());
         }
 
         [HttpGet]
@@ -81,7 +80,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _course = _courseRepo.Get(e => e.CourseId == key1);
+                var _course = _unitOfWork.Courses.Get(e => e.CourseId == key1);
                 if (!_course.Any())
                 {
                     return NotFound();
@@ -106,7 +105,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _course = await _courseRepo.GetFirst(e => e.CourseId == key1);
+                var _course = await _unitOfWork.Courses.GetFirst(e => e.CourseId == key1);
                 if (_course == null)
                 {
                     return NotFound();
@@ -114,14 +113,14 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_course);
 
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetSettings();
                 if (!IsDataValid(_course, _settings))
                 {
                     ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
                     return BadRequest(ModelState);
                 }
 
-                await _courseRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_course);
             }
@@ -137,13 +136,13 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _courseRepo.Delete(e => e.CourseId == key1);
+                var result = await _unitOfWork.Courses.Delete(e => e.CourseId == key1);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _courseRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

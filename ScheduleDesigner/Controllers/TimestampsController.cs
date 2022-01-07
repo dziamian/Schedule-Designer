@@ -7,17 +7,18 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("Timestamps")]
     public class TimestampsController : ControllerBase
     {
-        private readonly ITimestampRepo _timestampRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TimestampsController(ITimestampRepo timestampRepo, ISettingsRepo settingsRepo)
+        public TimestampsController(IUnitOfWork unitOfWork)
         {
-            _timestampRepo = timestampRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -25,7 +26,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetTimestamps()
         {
-            return Ok(_timestampRepo.GetAll());
+            return Ok(_unitOfWork.Timestamps.GetAll());
         }
 
         [HttpGet]
@@ -35,7 +36,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _timestamp = _timestampRepo.Get(e => e.TimestampId == key);
+                var _timestamp = _unitOfWork.Timestamps.Get(e => e.TimestampId == key);
                 if (!_timestamp.Any())
                 {
                     return NotFound();

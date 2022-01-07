@@ -10,17 +10,18 @@ using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("CourseRooms")]
     public class CourseRoomsController : ODataController
     {
-        private readonly ICourseRoomRepo _courseRoomRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CourseRoomsController(ICourseRoomRepo courseRoomRepo)
+        public CourseRoomsController(IUnitOfWork unitOfWork)
         {
-            _courseRoomRepo = courseRoomRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -47,14 +48,14 @@ namespace ScheduleDesigner.Controllers
                     courseRoom.UserId = null;
                 }
 
-                var _courseRoom = await _courseRoomRepo.Add(courseRoom);
+                var _courseRoom = await _unitOfWork.CourseRooms.Add(courseRoom);
 
                 if (_courseRoom == null)
                 {
                     return NotFound();
                 }
                 
-                await _courseRoomRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return Created(_courseRoom);
             }
             catch (Exception e)
@@ -68,7 +69,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetCourseRooms()
         {
-            return Ok(_courseRoomRepo.GetAll());
+            return Ok(_unitOfWork.CourseRooms.GetAll());
         }
 
         [HttpGet]
@@ -78,7 +79,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _courseRoom = _courseRoomRepo
+                var _courseRoom = _unitOfWork.CourseRooms
                     .Get(e => e.CourseId == key1 && e.RoomId == key2);
                 if (!_courseRoom.Any())
                 {
@@ -104,7 +105,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseRoom = await _courseRoomRepo
+                var _courseRoom = await _unitOfWork.CourseRooms
                     .GetFirst(e => e.CourseId == key1 && e.RoomId == key2);
                 if (_courseRoom == null)
                 {
@@ -113,7 +114,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_courseRoom);
 
-                await _courseRoomRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_courseRoom);
             }
@@ -129,14 +130,14 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _courseRoomRepo
+                var result = await _unitOfWork.CourseRooms
                     .Delete(e => e.CourseId == key1 && e.RoomId == key2);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _courseRoomRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

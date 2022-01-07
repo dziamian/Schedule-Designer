@@ -9,19 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("Students")]
     public class StudentsController : ODataController
     {
-        private readonly IUserRepo _userRepo;
-        private readonly IStudentRepo _studentRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public StudentsController(IUserRepo userRepo, IStudentRepo studentRepo)
+        public StudentsController(IUnitOfWork unitOfWork)
         {
-            _userRepo = userRepo;
-            _studentRepo = studentRepo;
+            _unitOfWork = unitOfWork;
         }
 
         private static bool IsDataValid(User user)
@@ -40,11 +39,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _student = await _studentRepo.Add(student);
+                var _student = await _unitOfWork.Students.Add(student);
 
                 if (_student != null)
                 {
-                    await _studentRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_student);
                 }
                 return NotFound();
@@ -60,7 +59,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetStudents()
         {
-            return Ok(_studentRepo.GetAll());
+            return Ok(_unitOfWork.Students.GetAll());
         }
 
         [HttpGet]
@@ -70,7 +69,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _student = _studentRepo.Get(e => e.UserId == key);
+                var _student = _unitOfWork.Students.Get(e => e.UserId == key);
                 if (!_student.Any())
                 {
                     return NotFound();
@@ -95,7 +94,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _student = await _studentRepo.GetFirst(e => e.UserId == key);
+                var _student = await _unitOfWork.Students.GetFirst(e => e.UserId == key);
                 if (_student == null)
                 {
                     return NotFound();
@@ -103,7 +102,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_student);
 
-                await _studentRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_student);
             }
@@ -119,7 +118,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _user = _userRepo
+                var _user = _unitOfWork.Users
                     .Get(e => e.UserId == key)
                     .Include(e => e.Student)
                     .Include(e => e.Coordinator)
@@ -130,13 +129,13 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest("You cannot remove the only existing role for this user.");
                 }
 
-                var result = await _studentRepo.Delete(e => e.UserId == key);
+                var result = await _unitOfWork.Students.Delete(e => e.UserId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _studentRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("Settings")]
     public class SettingsController : ODataController
     {
-        private readonly ISettingsRepo _settingsRepo;
-        private readonly ITimestampRepo _timestampRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SettingsController(ISettingsRepo settingsRepo, ITimestampRepo timestampRepo)
+        public SettingsController(IUnitOfWork unitOfWork)
         {
-            _settingsRepo = settingsRepo;
-            _timestampRepo = timestampRepo;
+            _unitOfWork = unitOfWork;
         }
 
         private static bool IsDataValid(Settings settings)
@@ -41,13 +40,13 @@ namespace ScheduleDesigner.Controllers
                 for (int j = 0; j < 5; ++j)
                     for (int i = 0; i < numberOfSlots; ++i)
                     {
-                        await _timestampRepo.Add(new Timestamp { PeriodIndex = i + 1, Day = j + 1, Week = k + 1 });
+                        await _unitOfWork.Timestamps.Add(new Timestamp { PeriodIndex = i + 1, Day = j + 1, Week = k + 1 });
                     }
         }
 
         private void RemoveTimestamps()
         {
-            _timestampRepo.GetAll().RemoveRange(_timestampRepo.GetAll().ToList());
+            _unitOfWork.Timestamps.GetAll().RemoveRange(_unitOfWork.Timestamps.GetAll().ToList());
         }
 
         [HttpPost]
@@ -67,13 +66,13 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetSettings();
                 if (_settings != null)
                 {
                     return Conflict("Settings already exists.");
                 }
 
-                _settings = await _settingsRepo.AddSettings(settings);
+                _settings = await _unitOfWork.Settings.AddSettings(settings);
                 if (_settings == null)
                 {
                     return NotFound();
@@ -81,7 +80,7 @@ namespace ScheduleDesigner.Controllers
 
                 await AddTimestamps(_settings);
 
-                await _timestampRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Created(_settings);
             }
@@ -98,7 +97,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetSettings();
                 if (_settings == null)
                 {
                     return NotFound();
@@ -117,7 +116,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetSettings();
                 if (_settings == null)
                 {
                     return NotFound();
@@ -157,7 +156,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _settings = await _settingsRepo.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetSettings();
                 if (_settings == null)
                 {
                     return NotFound();
@@ -174,7 +173,7 @@ namespace ScheduleDesigner.Controllers
                 RemoveTimestamps();
                 await AddTimestamps(_settings);
 
-                await _settingsRepo.SaveChanges();
+                await _unitOfWork.Settings.SaveChanges();
 
                 return Ok(_settings);
             }
@@ -193,7 +192,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var result = await _settingsRepo.DeleteSettings();
+                var result = await _unitOfWork.Settings.DeleteSettings();
                 if (result < 0)
                 {
                     return NotFound();
@@ -201,7 +200,7 @@ namespace ScheduleDesigner.Controllers
 
                 RemoveTimestamps();
 
-                await _timestampRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return NoContent();
             }

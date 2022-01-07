@@ -15,6 +15,5 @@ namespace ScheduleDesigner.Repositories.Base
         Task<T> Add(T entity);
         T Update(T entity);
         Task<int> Delete(Expression<Func<T, bool>> predicate);
-        Task<int> SaveChanges();
     }
 }

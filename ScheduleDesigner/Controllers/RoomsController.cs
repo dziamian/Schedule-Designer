@@ -10,17 +10,18 @@ using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("Rooms")]
     public class RoomsController : ODataController
     {
-        private readonly IRoomRepo _roomRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RoomsController(IRoomRepo roomRepo)
+        public RoomsController(IUnitOfWork unitOfWork)
         {
-            _roomRepo = roomRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -34,14 +35,14 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _room = await _roomRepo.Add(room);
+                var _room = await _unitOfWork.Rooms.Add(room);
 
                 if (_room == null)
                 {
                     return NotFound();
                 }
 
-                await _roomRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return Created(_room);
             }
             catch (Exception e)
@@ -55,7 +56,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetRooms()
         {
-            return Ok(_roomRepo.GetAll());
+            return Ok(_unitOfWork.Rooms.GetAll());
         }
 
         [HttpGet]
@@ -65,7 +66,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _room = _roomRepo.Get(e => e.RoomId == key);
+                var _room = _unitOfWork.Rooms.Get(e => e.RoomId == key);
                 if (!_room.Any())
                 {
                     return NotFound();
@@ -95,7 +96,7 @@ namespace ScheduleDesigner.Controllers
                         continue;
                     }
 
-                    var _room = _roomRepo
+                    var _room = _unitOfWork.Rooms
                         .Get(e => e.RoomId == _roomId);
 
                     if (!_room.Any())
@@ -129,7 +130,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _room = await _roomRepo.GetFirst(e => e.RoomId == key);
+                var _room = await _unitOfWork.Rooms.GetFirst(e => e.RoomId == key);
                 if (_room == null)
                 {
                     return NotFound();
@@ -137,7 +138,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_room);
 
-                await _roomRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_room);
             }
@@ -153,13 +154,13 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _roomRepo.Delete(e => e.RoomId == key);
+                var result = await _unitOfWork.Rooms.Delete(e => e.RoomId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _roomRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

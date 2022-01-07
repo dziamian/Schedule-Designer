@@ -25,7 +25,7 @@ using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories;
-using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Services;
 using static ScheduleDesigner.Helpers;
 
@@ -69,25 +69,7 @@ namespace ScheduleDesigner
                 });
             });
 
-            services.AddScoped<ISettingsRepo, SqlSettingsRepo>();
-            services.AddScoped<IAuthorizationRepo, SqlAuthorizationRepo>();
-            services.AddScoped<IUserRepo, SqlUserRepo>();
-            services.AddScoped<IStudentRepo, SqlStudentRepo>();
-            services.AddScoped<ICoordinatorRepo, SqlCoordinatorRepo>();
-            services.AddScoped<IStaffRepo, SqlStaffRepo>();
-            services.AddScoped<ICourseTypeRepo, SqlCourseTypeRepo>();
-            services.AddScoped<ICourseRepo, SqlCourseRepo>();
-            services.AddScoped<IGroupRepo, SqlGroupRepo>();
-            services.AddScoped<IStudentGroupRepo, SqlStudentGroupRepo>();
-            services.AddScoped<ICourseEditionRepo, SqlCourseEditionRepo>();
-            services.AddScoped<ICoordinatorCourseEditionRepo, SqlCoordinatorCourseEdition>();
-            services.AddScoped<IGroupCourseEditionRepo, SqlGroupCourseEditionRepo>();
-            services.AddScoped<IRoomTypeRepo, SqlRoomTypeRepo>();
-            services.AddScoped<IRoomRepo, SqlRoomRepo>();
-            services.AddScoped<ICourseRoomRepo, SqlCourseRoomRepo>();
-            services.AddScoped<ITimestampRepo, SqlTimestampRepo>();
-            services.AddScoped<ISchedulePositionRepo, SqlSchedulePositionRepo>();
-            services.AddScoped<IScheduledMoveRepo, SqlScheduledMoveRepo>();
+            services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
 
             services.Configure<ApplicationInfo>(Configuration.GetSection("ApplicationInfo"));
             services.Configure<Consumer>(Configuration.GetSection("UsosConsumer"));

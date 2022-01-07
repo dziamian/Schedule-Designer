@@ -8,17 +8,18 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("RoomTypes")]
     public class RoomTypesController : ODataController
     {
-        private readonly IRoomTypeRepo _roomTypeRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RoomTypesController(IRoomTypeRepo roomTypeRepo)
+        public RoomTypesController(IUnitOfWork unitOfWork)
         {
-            _roomTypeRepo = roomTypeRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -32,14 +33,14 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _roomType = await _roomTypeRepo.Add(roomType);
+                var _roomType = await _unitOfWork.RoomTypes.Add(roomType);
 
                 if (_roomType == null)
                 {
                     return NotFound();
                 }
 
-                await _roomTypeRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return Created(_roomType);
             }
             catch (Exception e)
@@ -53,7 +54,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetRoomTypes()
         {
-            return Ok(_roomTypeRepo.GetAll());
+            return Ok(_unitOfWork.RoomTypes.GetAll());
         }
 
         [HttpGet]
@@ -63,7 +64,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _roomType = _roomTypeRepo.Get(e => e.RoomTypeId == key);
+                var _roomType = _unitOfWork.RoomTypes.Get(e => e.RoomTypeId == key);
                 if (!_roomType.Any())
                 {
                     return NotFound();
@@ -88,7 +89,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _roomType = await _roomTypeRepo.GetFirst(e => e.RoomTypeId == key);
+                var _roomType = await _unitOfWork.RoomTypes.GetFirst(e => e.RoomTypeId == key);
                 if (_roomType == null)
                 {
                     return NotFound();
@@ -96,7 +97,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_roomType);
 
-                await _roomTypeRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_roomType);
             }
@@ -112,13 +113,13 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _roomTypeRepo.Delete(e => e.RoomTypeId == key);
+                var result = await _unitOfWork.RoomTypes.Delete(e => e.RoomTypeId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _roomTypeRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

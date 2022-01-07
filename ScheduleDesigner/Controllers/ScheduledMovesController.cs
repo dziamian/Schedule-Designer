@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("ScheduledMoves")]
     public class ScheduledMovesController : ODataController
     {
-        private readonly IScheduledMoveRepo _scheduledMoveRepo;
-        private readonly ITimestampRepo _timestampRepo;
-        private readonly IRoomRepo _roomRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ScheduledMovesController(IScheduledMoveRepo scheduledMoveRepo, 
-            ITimestampRepo timestampRepo,
-            IRoomRepo roomRepo)
+        public ScheduledMovesController(IUnitOfWork unitOfWork)
         {
-            _scheduledMoveRepo = scheduledMoveRepo;
-            _timestampRepo = timestampRepo;
-            _roomRepo = roomRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -31,7 +26,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetScheduledMoves()
         {
-            return Ok(_scheduledMoveRepo.GetAll());
+            return Ok(_unitOfWork.ScheduledMoves.GetAll());
         }
 
         [HttpGet]
@@ -50,7 +45,7 @@ namespace ScheduleDesigner.Controllers
                         continue;
                     }
 
-                    var _scheduledMove = _scheduledMoveRepo
+                    var _scheduledMove = _unitOfWork.ScheduledMoves
                         .Get(e => e.MoveId == _moveId);
 
                     if (!_scheduledMove.Any())
@@ -64,7 +59,7 @@ namespace ScheduleDesigner.Controllers
                     var scheduleOrder = _scheduledMove.FirstOrDefault().ScheduleOrder;
                     var destTimestamps = _scheduledMove.Select(e => e.TimestampId_2).ToList();
 
-                    var _sourceTimestamps = _timestampRepo
+                    var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => sourceTimestamps.Contains(e.TimestampId));
 
                     if (!_sourceTimestamps.Any())
@@ -73,7 +68,7 @@ namespace ScheduleDesigner.Controllers
                     }
                     var sourceWeeks = _sourceTimestamps.Select(e => e.Week).OrderBy(e => e).ToList();
                     
-                    var _destRoom = _roomRepo
+                    var _destRoom = _unitOfWork.Rooms
                         .Get(e => e.RoomId == destRoomId);
 
                     if (!_destRoom.Any())
@@ -82,7 +77,7 @@ namespace ScheduleDesigner.Controllers
                     }
                     var destRoom = _destRoom.FirstOrDefault();
 
-                    var _destTimestamps = _timestampRepo
+                    var _destTimestamps = _unitOfWork.Timestamps
                         .Get(e => destTimestamps.Contains(e.TimestampId));
 
                     if (!_destTimestamps.Any())

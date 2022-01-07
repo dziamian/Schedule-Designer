@@ -10,17 +10,18 @@ using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Dtos;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("Groups")]
     public class GroupsController : ODataController
     {
-        private readonly IGroupRepo _groupRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GroupsController(IGroupRepo groupRepo)
+        public GroupsController(IUnitOfWork unitOfWork)
         {
-            _groupRepo = groupRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -34,11 +35,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _group = await _groupRepo.Add(group);
+                var _group = await _unitOfWork.Groups.Add(group);
 
                 if (_group != null)
                 {
-                    await _groupRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_group);
                 }
                 return NotFound();
@@ -54,7 +55,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetGroups()
         {
-            return Ok(_groupRepo.GetAll());
+            return Ok(_unitOfWork.Groups.GetAll());
         }
 
         [HttpGet]
@@ -64,7 +65,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _group = _groupRepo
+                var _group = _unitOfWork.Groups
                     .Get(e => e.GroupId == key);
                 if (!_group.Any())
                 {
@@ -84,7 +85,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _group = _groupRepo
+                var _group = _unitOfWork.Groups
                     .Get(e => e.GroupId == key)
                     .Include(e => e.ParentGroup);
 
@@ -135,7 +136,7 @@ namespace ScheduleDesigner.Controllers
                         continue;
                     }
 
-                    var _group = _groupRepo
+                    var _group = _unitOfWork.Groups
                     .Get(e => e.GroupId == _groupId)
                     .Include(e => e.ParentGroup);
 
@@ -186,7 +187,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _group = await _groupRepo
+                var _group = await _unitOfWork.Groups
                     .GetFirst(e => e.GroupId == key);
                 if (_group == null)
                 {
@@ -195,7 +196,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_group);
 
-                await _groupRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_group);
             }
@@ -211,14 +212,14 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _groupRepo
+                var result = await _unitOfWork.Groups
                     .Delete(e => e.GroupId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _groupRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

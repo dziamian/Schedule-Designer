@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,11 @@ namespace ScheduleDesigner.Controllers
     [ODataRoutePrefix("CourseTypes")]
     public class CourseTypesController : ODataController
     {
-        private readonly ICourseTypeRepo _courseTypeRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CourseTypesController(ICourseTypeRepo courseTypeRepo)
+        public CourseTypesController(IUnitOfWork unitOfWork)
         {
-            _courseTypeRepo = courseTypeRepo;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -32,11 +33,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseType = await _courseTypeRepo.Add(courseType);
+                var _courseType = await _unitOfWork.CourseTypes.Add(courseType);
 
                 if (_courseType != null)
                 {
-                    await _courseTypeRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_courseType);
                 }
                 return NotFound();
@@ -52,7 +53,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetCourseTypes()
         {
-            return Ok(_courseTypeRepo.GetAll());
+            return Ok(_unitOfWork.CourseTypes.GetAll());
         }
 
         [HttpGet]
@@ -62,7 +63,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _courseType = _courseTypeRepo.Get(e => e.CourseTypeId == key);
+                var _courseType = _unitOfWork.CourseTypes.Get(e => e.CourseTypeId == key);
                 if (!_courseType.Any())
                 {
                     return NotFound();
@@ -87,7 +88,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseType = await _courseTypeRepo.GetFirst(e => e.CourseTypeId == key);
+                var _courseType = await _unitOfWork.CourseTypes.GetFirst(e => e.CourseTypeId == key);
                 if (_courseType == null)
                 {
                     return NotFound();
@@ -95,7 +96,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_courseType);
 
-                await _courseTypeRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_courseType);
             }
@@ -111,13 +112,13 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var result = await _courseTypeRepo.Delete(e => e.CourseTypeId == key);
+                var result = await _unitOfWork.CourseTypes.Delete(e => e.CourseTypeId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _courseTypeRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

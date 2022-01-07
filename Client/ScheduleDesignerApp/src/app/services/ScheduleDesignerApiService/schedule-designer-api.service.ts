@@ -441,7 +441,7 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetFilteredSchedule(
+  public GetFilteredSchedule1(
     weeks:number[],
     filter: Filter,
     courseTypes:Map<number,CourseType>,
@@ -538,6 +538,153 @@ export class ScheduleDesignerApiService {
             courseEdition.ScheduleAmount = scheduleAmount;
             courseEdition.FullAmount = fullAmount;
             courseEdition.ScheduledMoves.push(...scheduledMoves);
+            
+            scheduleSlot.push(courseEdition);
+          }
+        });
+
+        return schedule;
+      })
+    );
+  }
+
+  public GetFilteredSchedule(
+    weeks:number[],
+    filter: Filter,
+    courseTypes:Map<number,CourseType>,
+    settings:Settings
+  ):Observable<CourseEdition[][][]> {
+    const request = {
+      url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?$expand=Timestamp`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        const numberOfSlots = settings.Periods.length - 1;
+        let schedule:CourseEdition[][][] = [];
+        for (let j:number = 0; j < 5; ++j) {
+          schedule.push([]);
+          for (let i:number = 0; i < numberOfSlots; ++i) {
+            schedule[j].push([]);
+          }
+        }
+
+        response.value.forEach((value : any) => {
+          /*let groups = new Array<Group>();
+          value.CourseEdition.Groups.forEach((element : any) => {
+            groups.push(new Group(
+              element.GroupId
+            ));
+          });
+          let coordinators = new Array<Coordinator>();
+          value.CourseEdition.Coordinators.forEach((element : any) => {
+            coordinators.push(new Coordinator(
+              element.Coordinator.UserId,
+              element.Coordinator.User.FirstName,
+              element.Coordinator.User.LastName,
+              new Titles(
+                element.Coordinator.TitleBefore,
+                element.Coordinator.TitleAfter
+              )
+            ));
+          });
+
+          const courseId = value.CourseId;
+          const courseEditionId = value.CourseEditionId;
+          const roomId = value.RoomId;
+          const dayIndex = value.Timestamp.Day - 1;
+          const periodIndex = value.Timestamp.PeriodIndex - 1;
+          const week = value.Timestamp.Week;
+          const locked = {value: value.LockUserId != null, byAdmin: value.LockUser?.Staff?.IsAdmin};
+          const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
+          const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
+          const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.UserId, value.IsConfirmed));
+          let scheduleSlot = schedule[dayIndex][periodIndex];
+          let found = false;
+          for (let i = 0; i < scheduleSlot.length; ++i) {
+            let courseEdition = scheduleSlot[i];
+            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
+              && courseEdition.Room!.RoomId == roomId) {
+                courseEdition.Weeks?.push(week);
+                if (locked.value) {
+                  courseEdition.IsLocked = locked.value;
+                  courseEdition.IsLockedByAdmin = locked.byAdmin;
+                }
+                
+                const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);
+                const notAddedScheduledMoves = scheduledMoves.filter((scheduledMove : ScheduledMove) => !currentMovesIds.includes(scheduledMove.MoveId));
+                courseEdition.ScheduledMoves.push(...notAddedScheduledMoves);
+                
+                found = true;
+            }
+          }
+
+          if (!found) {
+            const courseEdition = new CourseEdition(
+              value.CourseId, 
+              value.CourseEditionId,
+              value.CourseEdition.Course.Name,
+              courseTypes.get(value.CourseEdition.Course.CourseTypeId) ?? new CourseType(0, "", ""),
+              0,
+              groups,
+              coordinators
+            );
+            courseEdition.Room = new Room(roomId);
+            courseEdition.IsLocked = locked.value;
+            courseEdition.IsLockedByAdmin = locked.byAdmin;
+            courseEdition.Weeks = [week];
+            courseEdition.ScheduleAmount = scheduleAmount;
+            courseEdition.FullAmount = fullAmount;
+            courseEdition.ScheduledMoves.push(...scheduledMoves);
+            
+            scheduleSlot.push(courseEdition);
+          }*/
+          const courseId = value.CourseId;
+          const courseEditionId = value.CourseEditionId;
+          const roomId = value.RoomId;
+          const dayIndex = value.Timestamp.Day - 1;
+          const periodIndex = value.Timestamp.PeriodIndex - 1;
+          const week = value.Timestamp.Week;
+          const locked = value.LockUserId != null;
+
+          let scheduleSlot = schedule[dayIndex][periodIndex];
+          let found = false;
+          for (let i = 0; i < scheduleSlot.length; ++i) {
+            let courseEdition = scheduleSlot[i];
+            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
+              && courseEdition.Room!.RoomId == roomId) {
+                courseEdition.Weeks?.push(week);
+                if (locked) {
+                  courseEdition.IsLocked = locked;
+                  //courseEdition.IsLockedByAdmin = locked.byAdmin;
+                }
+                found = true;
+              }
+          }
+          if (!found) {
+            const courseEdition = new CourseEdition(
+              value.CourseId, 
+              value.CourseEditionId,
+              "",
+              new CourseType(0, "", ""),
+              0,
+              [],
+              []
+            );
+            courseEdition.Room = new Room(roomId);
+            courseEdition.IsLocked = locked;
+            //courseEdition.IsLockedByAdmin = locked.byAdmin;
+            courseEdition.Weeks = [week];
+            //courseEdition.ScheduleAmount = scheduleAmount;
+            //courseEdition.FullAmount = fullAmount;
+            //courseEdition.ScheduledMoves.push(...scheduledMoves);
             
             scheduleSlot.push(courseEdition);
           }

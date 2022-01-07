@@ -9,19 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("Coordinators")]
     public class CoordinatorsController : ODataController
     {
-        private readonly IUserRepo _userRepo;
-        private readonly ICoordinatorRepo _coordinatorRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CoordinatorsController(IUserRepo userRepo, ICoordinatorRepo coordinatorRepo)
+        public CoordinatorsController(IUnitOfWork unitOfWork)
         {
-            _userRepo = userRepo;
-            _coordinatorRepo = coordinatorRepo;
+            _unitOfWork = unitOfWork;
         }
 
         private static bool IsDataValid(User user)
@@ -40,11 +39,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _coordinator = await _coordinatorRepo.Add(coordinator);
+                var _coordinator = await _unitOfWork.Coordinators.Add(coordinator);
 
                 if (_coordinator != null)
                 {
-                    await _coordinatorRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_coordinator);
                 }
                 return NotFound();
@@ -60,7 +59,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetCoordinators()
         {
-            return Ok(_coordinatorRepo.GetAll());
+            return Ok(_unitOfWork.Coordinators.GetAll());
         }
 
         [HttpGet]
@@ -70,7 +69,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _coordinator = _coordinatorRepo.Get(e => e.UserId == key);
+                var _coordinator = _unitOfWork.Coordinators.Get(e => e.UserId == key);
                 if (!_coordinator.Any())
                 {
                     return NotFound();
@@ -95,7 +94,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _coordinator = await _coordinatorRepo.GetFirst(e => e.UserId == key);
+                var _coordinator = await _unitOfWork.Coordinators.GetFirst(e => e.UserId == key);
                 if (_coordinator == null)
                 {
                     return NotFound();
@@ -103,7 +102,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_coordinator);
 
-                await _coordinatorRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_coordinator);
             }
@@ -119,7 +118,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _user = _userRepo
+                var _user = _unitOfWork.Users
                     .Get(e => e.UserId == key)
                     .Include(e => e.Student)
                     .Include(e => e.Coordinator)
@@ -130,13 +129,13 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest("You cannot remove the only existing role for this user.");
                 }
 
-                var result = await _coordinatorRepo.Delete(e => e.UserId == key);
+                var result = await _unitOfWork.Coordinators.Delete(e => e.UserId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _coordinatorRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

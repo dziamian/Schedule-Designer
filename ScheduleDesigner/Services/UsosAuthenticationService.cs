@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using ScheduleDesigner.Authentication;
 using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Services
 {
@@ -23,22 +24,15 @@ namespace ScheduleDesigner.Services
         public readonly Consumer UsosConsumer;
 
         private readonly HttpClient _client;
-        private readonly IUserRepo _userRepo;
-        private readonly IStaffRepo _staffRepo;
-        private readonly IAuthorizationRepo _authorizationRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UsosAuthenticationService(IOptions<ApplicationInfo> applicationInfo, IOptions<Consumer> usosConsumer, 
-            IUserRepo userRepo,
-            IStaffRepo staffRepo,
-            IAuthorizationRepo authorizationRepo)
+        public UsosAuthenticationService(IOptions<ApplicationInfo> applicationInfo, IOptions<Consumer> usosConsumer, IUnitOfWork unitOfWork)
         {
             ApplicationInfo = applicationInfo.Value;
             UsosConsumer = usosConsumer.Value;
 
             _client = new HttpClient();
-            _userRepo = userRepo;
-            _staffRepo = staffRepo;
-            _authorizationRepo = authorizationRepo;
+            _unitOfWork = unitOfWork;
         }
 
         private string HashString(string text)
@@ -85,7 +79,7 @@ namespace ScheduleDesigner.Services
             var hashedAccessToken = HashString(accessToken);
             var hashedAccessTokenSecret = HashString(accessTokenSecret);
 
-            var _authorization = await _authorizationRepo
+            var _authorization = await _unitOfWork.Authorizations
                 .Get(e => e.AccessToken == hashedAccessToken && e.AccessTokenSecret == hashedAccessTokenSecret)
                 .FirstOrDefaultAsync();
 
@@ -111,7 +105,7 @@ namespace ScheduleDesigner.Services
 
         public User GetUserFromDb(int userId)
         {
-            var _user = _userRepo
+            var _user = _unitOfWork.Users
                 .Get(e => e.UserId == userId)
                 .Include(e => e.Student).ThenInclude(e => e.Groups)
                 .Include(e => e.Coordinator)
@@ -150,7 +144,7 @@ namespace ScheduleDesigner.Services
             {
                 staff = new Staff
                 {
-                    IsAdmin = userInfo.StaffStatus != 2 && !_staffRepo.GetAll().Any(),
+                    IsAdmin = userInfo.StaffStatus != 2 && !_unitOfWork.Staffs.GetAll().Any(),
                     UserId = userId,
                 };
             }
@@ -165,7 +159,7 @@ namespace ScheduleDesigner.Services
                 Staff = staff
             };
 
-            await _userRepo.Add(user);
+            await _unitOfWork.Users.Add(user);
             return user;
         }
 
@@ -176,7 +170,7 @@ namespace ScheduleDesigner.Services
 
         public async Task<Authorization> CreateCredentials(int userId, string accessToken, string accessTokenSecret, DateTime insertedDateTime)
         {
-            var _authorization = await _authorizationRepo
+            var _authorization = await _unitOfWork.Authorizations
                 .Get(e => e.UserId == userId)
                 .FirstOrDefaultAsync();
 
@@ -192,8 +186,8 @@ namespace ScheduleDesigner.Services
                     AccessTokenSecret = hashedAccessTokenSecret,
                     InsertedDateTime = insertedDateTime
                 };
-                await _authorizationRepo.Add(authorization);
-                await _authorizationRepo.SaveChanges();
+                await _unitOfWork.Authorizations.Add(authorization);
+                await _unitOfWork.CompleteAsync();
 
                 return authorization;
             }
@@ -203,7 +197,7 @@ namespace ScheduleDesigner.Services
 
         public async Task<Authorization> UpdateCredentials(int userId, string accessToken, string accessTokenSecret)
         {
-            var _authorization = await _authorizationRepo
+            var _authorization = await _unitOfWork.Authorizations
                 .Get(e => e.UserId == userId)
                 .FirstOrDefaultAsync();
 
@@ -219,8 +213,8 @@ namespace ScheduleDesigner.Services
             _authorization.AccessTokenSecret = hashedAccessTokenSecret;
             _authorization.InsertedDateTime = DateTime.Now;
 
-            _authorizationRepo.Update(_authorization);
-            await _authorizationRepo.SaveChanges();
+            _unitOfWork.Authorizations.Update(_authorization);
+            await _unitOfWork.CompleteAsync();
 
             return _authorization;
         }

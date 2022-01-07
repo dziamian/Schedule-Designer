@@ -9,19 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
 {
     [ODataRoutePrefix("Staffs")]
     public class StaffsController : ODataController
     {
-        private readonly IUserRepo _userRepo;
-        private readonly IStaffRepo _staffRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public StaffsController(IUserRepo userRepo, IStaffRepo staffRepo)
+        public StaffsController(IUnitOfWork unitOfWork)
         {
-            _userRepo = userRepo;
-            _staffRepo = staffRepo;
+            _unitOfWork = unitOfWork;
         }
 
         private static bool IsDataValid(User user)
@@ -40,11 +39,11 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _staff = await _staffRepo.Add(staff);
+                var _staff = await _unitOfWork.Staffs.Add(staff);
 
                 if (_staff != null)
                 {
-                    await _staffRepo.SaveChanges();
+                    await _unitOfWork.CompleteAsync();
                     return Created(_staff);
                 }
                 return NotFound();
@@ -60,7 +59,7 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("")]
         public IActionResult GetStaffs()
         {
-            return Ok(_staffRepo.GetAll());
+            return Ok(_unitOfWork.Staffs.GetAll());
         }
 
         [HttpGet]
@@ -70,7 +69,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _staff = _staffRepo.Get(e => e.UserId == key);
+                var _staff = _unitOfWork.Staffs.Get(e => e.UserId == key);
                 if (!_staff.Any())
                 {
                     return NotFound();
@@ -95,7 +94,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _staff = await _staffRepo.GetFirst(e => e.UserId == key);
+                var _staff = await _unitOfWork.Staffs.GetFirst(e => e.UserId == key);
                 if (_staff == null)
                 {
                     return NotFound();
@@ -103,7 +102,7 @@ namespace ScheduleDesigner.Controllers
 
                 delta.Patch(_staff);
 
-                await _staffRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
 
                 return Ok(_staff);
             }
@@ -119,7 +118,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _user = _userRepo
+                var _user = _unitOfWork.Users
                     .Get(e => e.UserId == key)
                     .Include(e => e.Student)
                     .Include(e => e.Coordinator)
@@ -130,13 +129,13 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest("You cannot remove the only existing role for this user.");
                 }
 
-                var result = await _staffRepo.Delete(e => e.UserId == key);
+                var result = await _unitOfWork.Staffs.Delete(e => e.UserId == key);
                 if (result < 0)
                 {
                     return NotFound();
                 }
 
-                await _staffRepo.SaveChanges();
+                await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
             catch (Exception e)

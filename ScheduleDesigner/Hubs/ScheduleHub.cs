@@ -11,22 +11,17 @@ using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Controllers;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
-using ScheduleDesigner.Repositories.Interfaces;
 using static ScheduleDesigner.Helpers;
 using LinqKit;
 using System.Security.Claims;
+using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Hubs
 {
     [Authorize]
     public class ScheduleHub : Hub<IScheduleClient>
     {
-        private readonly ISettingsRepo _settingsRepo;
-        private readonly ITimestampRepo _timestampRepo;
-        private readonly ICourseEditionRepo _courseEditionRepo;
-        private readonly ISchedulePositionRepo _schedulePositionRepo;
-        private readonly IScheduledMoveRepo _scheduledMoveRepo;
-        private readonly IGroupRepo _groupRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
         private static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>
             CourseEditionLocks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
@@ -42,6 +37,11 @@ namespace ScheduleDesigner.Hubs
 
         private static readonly ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>
             GroupPositionLocks = new ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>();
+
+        public ScheduleHub(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         private void RemoveCourseEditionLock(ConcurrentQueue<object> courseEditionQueue, CourseEditionKey courseEditionKey)
         {
@@ -163,7 +163,7 @@ namespace ScheduleDesigner.Hubs
 
                 var timestampsIds = source.Select(e => e.TimestampId).ToList();
 
-                var movesIds = _scheduledMoveRepo
+                var movesIds = _unitOfWork.ScheduledMoves
                     .Get(e => e.IsConfirmed && timestampsIds.Contains(e.TimestampId_2)
                         && !skippedMovesIds.Contains(e.MoveId))
                     .OrderBy(e => e.ScheduleOrder)
@@ -177,7 +177,7 @@ namespace ScheduleDesigner.Hubs
 
                 var moveId = movesIds.First();
 
-                var _scheduledMove = _scheduledMoveRepo
+                var _scheduledMove = _unitOfWork.ScheduledMoves
                     .Get(e => e.MoveId == moveId);
 
                 var length = _scheduledMove.Count();
@@ -253,10 +253,10 @@ namespace ScheduleDesigner.Hubs
                         var candidateSourceRoomId = possibleMove.Item1.FirstOrDefault().RoomId;
                         var candidateDestRoomId = possibleMove.Item2.FirstOrDefault().RoomId;
 
-                        var _srcTimestamps = _timestampRepo
+                        var _srcTimestamps = _unitOfWork.Timestamps
                             .Get(e => candidateSourceTimestamps.Contains(e.TimestampId));
 
-                        var _destTimestamps = _timestampRepo
+                        var _destTimestamps = _unitOfWork.Timestamps
                             .Get(e => candidateDestTimestamps.Contains(e.TimestampId));
 
                         lock (SchedulePositionLocksL1)
@@ -326,7 +326,7 @@ namespace ScheduleDesigner.Hubs
                         }
                         try
                         {
-                            var _sourceSchedulePositions = _schedulePositionRepo
+                            var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => candidateSourceTimestamps.Contains(e.TimestampId) && e.RoomId == candidateSourceRoomId);
 
                             if (!_sourceSchedulePositions.Any() || _sourceSchedulePositions.Count() != possibleMove.Item1.Length)
@@ -338,7 +338,7 @@ namespace ScheduleDesigner.Hubs
 
                             var schedulePosition = _sourceSchedulePositions.FirstOrDefault();
 
-                            var _courseEdition = _courseEditionRepo
+                            var _courseEdition = _unitOfWork.CourseEditions
                                 .Get(e => e.CourseId == schedulePosition.CourseId &&
                                             e.CourseEditionId == schedulePosition.CourseEditionId)
                                 .Include(e => e.Coordinators)
@@ -353,7 +353,7 @@ namespace ScheduleDesigner.Hubs
                                 continue;
                             }
 
-                            var _scheduledMove = _scheduledMoveRepo
+                            var _scheduledMove = _unitOfWork.ScheduledMoves
                                 .Get(e => e.MoveId == currentMoveId);
 
                             if (_scheduledMove.Count() != possibleMove.Item2.Length)
@@ -364,7 +364,7 @@ namespace ScheduleDesigner.Hubs
                             }
 
                             var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                            var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                            var groupsIds = GetNestedGroupsIds(includableCourseEdition, _unitOfWork.Groups).ToArray();
                             var returnableGroupsIds = new int[groupsIds.Length];
 
                             Array.Sort(coordinatorsIds);
@@ -410,7 +410,7 @@ namespace ScheduleDesigner.Hubs
                             {
                                 var _destSchedulePositions = candidateSourceTimestamps.SequenceEqual(candidateDestTimestamps)
                                 ?
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                         .Get(e => candidateDestTimestamps.Contains(e.TimestampId) && e.RoomId == candidateDestRoomId)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Coordinators)
@@ -418,7 +418,7 @@ namespace ScheduleDesigner.Hubs
                                         .ThenInclude(e => e.Groups)
                                         .Select(e => new { e.TimestampId, e.RoomId })
                                 :
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                 .Get(e => candidateDestTimestamps.Contains(e.TimestampId)
                                             && (e.RoomId == candidateDestRoomId || e.CourseEdition.Coordinators
                                                                         .Select(e => e.CoordinatorId)
@@ -446,7 +446,7 @@ namespace ScheduleDesigner.Hubs
                                     CourseEditionId = includableCourseEdition.CourseEditionId
                                 }).ToList();
 
-                                var movesIds = _scheduledMoveRepo
+                                var movesIds = _unitOfWork.ScheduledMoves
                                     .Get(e => e.RoomId_1 == candidateSourceRoomId && candidateSourceTimestamps.Contains(e.TimestampId_1)
                                         && e.CourseId == includableCourseEdition.CourseId)
                                     .GroupBy(e => e.MoveId)
@@ -461,12 +461,11 @@ namespace ScheduleDesigner.Hubs
                                 var destDay = _destTimestamps.FirstOrDefault().Day;
                                 var destWeeks = _destTimestamps.Select(e => e.Week).OrderBy(e => e).ToArray();
 
-                                _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
-                                _schedulePositionRepo.GetAll().RemoveRange(_sourceSchedulePositions);
-                                _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
+                                _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
+                                _unitOfWork.SchedulePositions.GetAll().RemoveRange(_sourceSchedulePositions);
+                                _unitOfWork.SchedulePositions.GetAll().AddRange(destSchedulePositions);
 
-                                var result1a = _scheduledMoveRepo.SaveChanges().Result;
-                                var result1b = _schedulePositionRepo.SaveChanges().Result;
+                                var result1 = _unitOfWork.Complete();
                                 
                                 var result2b = Clients.All.ModifiedSchedulePositions(
                                     includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
@@ -568,23 +567,6 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        public ScheduleHub(
-            ISettingsRepo settingsRepo,
-            ITimestampRepo timestampRepo,
-            ICourseEditionRepo courseEditionRepo,
-            ISchedulePositionRepo schedulePositionRepo,
-            IScheduledMoveRepo scheduledMoveRepo,
-            IGroupRepo groupRepo
-            )
-        {
-            _settingsRepo = settingsRepo;
-            _timestampRepo = timestampRepo;
-            _courseEditionRepo = courseEditionRepo;
-            _schedulePositionRepo = schedulePositionRepo;
-            _scheduledMoveRepo = scheduledMoveRepo;
-            _groupRepo = groupRepo;
-        }
-
         [Authorize(Policy = "Assistant")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
@@ -623,7 +605,7 @@ namespace ScheduleDesigner.Hubs
 
                     var finalPredicate = predicate.And(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
 
-                    var _courseEdition = _courseEditionRepo
+                    var _courseEdition = _unitOfWork.CourseEditions
                         .Get(finalPredicate)
                         .Include(e => e.Coordinators)
                         .Include(e => e.Groups)
@@ -647,9 +629,9 @@ namespace ScheduleDesigner.Hubs
 
                     courseEdition.LockUserId = userId;
                     courseEdition.LockUserConnectionId = Context.ConnectionId;
-                    _courseEditionRepo.Update(courseEdition);
+                    _unitOfWork.CourseEditions.Update(courseEdition);
 
-                    var result1 = _courseEditionRepo.SaveChanges().Result;
+                    var result1 = _unitOfWork.Complete();
                     var result2 = Clients.Others.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId, isAdmin);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
@@ -687,7 +669,7 @@ namespace ScheduleDesigner.Hubs
                 var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
                 var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
-                var _timestamps = _timestampRepo
+                var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -747,7 +729,7 @@ namespace ScheduleDesigner.Hubs
                             .And(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId)
                             .And(predicate);
 
-                        var _schedulePositions = _schedulePositionRepo
+                        var _schedulePositions = _unitOfWork.SchedulePositions
                         .Get(finalPredicate)
                         .Include(e => e.CourseEdition)
                             .ThenInclude(e => e.Coordinators)
@@ -783,9 +765,9 @@ namespace ScheduleDesigner.Hubs
                             schedulePosition.LockUserConnectionId = Context.ConnectionId;
                         }
 
-                        _schedulePositionRepo.GetAll().UpdateRange(_schedulePositions);
+                        _unitOfWork.SchedulePositions.GetAll().UpdateRange(_schedulePositions);
 
-                        var result1 = _schedulePositionRepo.SaveChanges().Result;
+                        var result1 = _unitOfWork.Complete();
                         var result2 = Clients.Others.LockSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             roomId, periodIndex,
@@ -856,7 +838,7 @@ namespace ScheduleDesigner.Hubs
 
                     var finalPredicate = predicate.And(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
 
-                    var _courseEdition = _courseEditionRepo
+                    var _courseEdition = _unitOfWork.CourseEditions
                         .Get(finalPredicate)
                         .Include(e => e.Coordinators)
                         .Include(e => e.Groups);
@@ -885,9 +867,9 @@ namespace ScheduleDesigner.Hubs
 
                     courseEdition.LockUserId = null;
                     courseEdition.LockUserConnectionId = null;
-                    _courseEditionRepo.Update(courseEdition);
+                    _unitOfWork.CourseEditions.Update(courseEdition);
 
-                    var result1 = _courseEditionRepo.SaveChanges().Result;
+                    var result1 = _unitOfWork.Complete();
                     var result2 = Clients.Others.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
@@ -925,7 +907,7 @@ namespace ScheduleDesigner.Hubs
                 var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
                 var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
-                var _timestamps = _timestampRepo
+                var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -985,7 +967,7 @@ namespace ScheduleDesigner.Hubs
                             .And(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId)
                             .And(predicate);
 
-                        var _schedulePositions = _schedulePositionRepo
+                        var _schedulePositions = _unitOfWork.SchedulePositions
                         .Get(finalPredicate)
                         .Include(e => e.CourseEdition)
                             .ThenInclude(e => e.Coordinators)
@@ -1022,9 +1004,9 @@ namespace ScheduleDesigner.Hubs
                             schedulePosition.LockUserConnectionId = null;
                         }
 
-                        _schedulePositionRepo.GetAll().UpdateRange(_schedulePositions);
+                        _unitOfWork.SchedulePositions.GetAll().UpdateRange(_schedulePositions);
 
-                        var result1 = _schedulePositionRepo.SaveChanges().Result;
+                        var result1 = _unitOfWork.Complete();
                         var result2 = Clients.Others.UnlockSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             roomId, periodIndex,
@@ -1076,7 +1058,7 @@ namespace ScheduleDesigner.Hubs
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                var _timestamps = _timestampRepo
+                var _timestamps = _unitOfWork.Timestamps
                             .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                             .Select(e => e.TimestampId)
                             .OrderBy(e => e).ToList();
@@ -1110,7 +1092,7 @@ namespace ScheduleDesigner.Hubs
                 }
                 try
                 {
-                    var _courseEdition = _courseEditionRepo
+                    var _courseEdition = _unitOfWork.CourseEditions
                         .Get(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId)
                         .Include(e => e.Coordinators)
                         .Include(e => e.Groups)
@@ -1132,7 +1114,7 @@ namespace ScheduleDesigner.Hubs
                         return;
                     }
 
-                    var _settings = _settingsRepo.GetSettings().Result;
+                    var _settings = _unitOfWork.Settings.GetSettings().Result;
                     if (_settings == null)
                     {
                         Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Application settings has not been specified." });
@@ -1154,7 +1136,7 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                    var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                    var groupsIds = GetNestedGroupsIds(courseEdition, _unitOfWork.Groups).ToArray();
                     var returnableGroupsIds = new int[groupsIds.Length];
 
                     Array.Sort(coordinatorsIds);
@@ -1210,7 +1192,7 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var _schedulePositions = _schedulePositionRepo
+                        var _schedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => _timestamps.Contains(e.TimestampId)
                                       && (e.RoomId == roomId || e.CourseEdition.Coordinators
                                                                  .Select(e => e.CoordinatorId)
@@ -1237,9 +1219,9 @@ namespace ScheduleDesigner.Hubs
                             CourseEditionId = courseEdition.CourseEditionId
                         }).ToList();
 
-                        _schedulePositionRepo.GetAll().AddRange(schedulePositions);
+                        _unitOfWork.SchedulePositions.GetAll().AddRange(schedulePositions);
 
-                        var result1 = _schedulePositionRepo.SaveChanges().Result;
+                        var result1 = _unitOfWork.Complete();
                         var result2 = Clients.Others.AddedSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
                             returnableGroupsIds, courseEdition.Groups.Count, coordinatorsIds,
@@ -1321,7 +1303,7 @@ namespace ScheduleDesigner.Hubs
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                var _sourceTimestamps = _timestampRepo
+                var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -1332,7 +1314,7 @@ namespace ScheduleDesigner.Hubs
                     return;
                 }
 
-                var _destTimestamps = _timestampRepo
+                var _destTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == destPeriodIndex && e.Day == destDay && destWeeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -1402,7 +1384,7 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var _sourceSchedulePositions = _schedulePositionRepo
+                        var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => _sourceTimestamps.Contains(e.TimestampId) && e.RoomId == roomId);
 
                         if (_sourceSchedulePositions.Count() != _sourceTimestamps.Count)
@@ -1419,7 +1401,7 @@ namespace ScheduleDesigner.Hubs
                         
                         var schedulePosition = _sourceSchedulePositions.FirstOrDefault();
 
-                        var _courseEdition = _courseEditionRepo
+                        var _courseEdition = _unitOfWork.CourseEditions
                             .Get(e => e.CourseId == schedulePosition.CourseId &&
                                       e.CourseEditionId == schedulePosition.CourseEditionId)
                             .Include(e => e.Course)
@@ -1442,7 +1424,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _unitOfWork.Groups).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -1488,7 +1470,7 @@ namespace ScheduleDesigner.Hubs
                         {
                             var _destSchedulePositions = _sourceTimestamps.SequenceEqual(_destTimestamps)
                                 ?
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                         .Get(e => _destTimestamps.Contains(e.TimestampId) && e.RoomId == destRoomId)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Coordinators)
@@ -1496,7 +1478,7 @@ namespace ScheduleDesigner.Hubs
                                         .ThenInclude(e => e.Groups)
                                         .Select(e => new { e.TimestampId, e.RoomId })
                                 :
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                 .Get(e => _destTimestamps.Contains(e.TimestampId)
                                           && (e.RoomId == destRoomId || e.CourseEdition.Coordinators
                                                                      .Select(e => e.CoordinatorId)
@@ -1523,19 +1505,18 @@ namespace ScheduleDesigner.Hubs
                                 CourseEditionId = includableCourseEdition.CourseEditionId
                             }).ToList();
 
-                            var movesIds = _scheduledMoveRepo
+                            var movesIds = _unitOfWork.ScheduledMoves
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.CourseId == includableCourseEdition.CourseId)
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => e.Key)
                                 .OrderBy(e => e).ToList();
 
-                            _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
-                            _schedulePositionRepo.GetAll().RemoveRange(_sourceSchedulePositions);
-                            _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
+                            _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
+                            _unitOfWork.SchedulePositions.GetAll().RemoveRange(_sourceSchedulePositions);
+                            _unitOfWork.SchedulePositions.GetAll().AddRange(destSchedulePositions);
 
-                            var result1a = _scheduledMoveRepo.SaveChanges().Result;
-                            var result1b = _schedulePositionRepo.SaveChanges().Result;
+                            var result1 = _unitOfWork.Complete();
                             
                             var result2b = Clients.Others.ModifiedSchedulePositions(
                                 includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
@@ -1620,7 +1601,7 @@ namespace ScheduleDesigner.Hubs
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                var _timestamps = _timestampRepo
+                var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -1669,7 +1650,7 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var _schedulePositions = _schedulePositionRepo
+                        var _schedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId);
 
                         if (_schedulePositions.Count() != _timestamps.Count)
@@ -1686,7 +1667,7 @@ namespace ScheduleDesigner.Hubs
 
                         var schedulePosition = _schedulePositions.FirstOrDefault();
 
-                        var _courseEdition = _courseEditionRepo
+                        var _courseEdition = _unitOfWork.CourseEditions
                             .Get(e => e.CourseId == schedulePosition.CourseId &&
                                       e.CourseEditionId == schedulePosition.CourseEditionId)
                             .Include(e => e.Groups)
@@ -1701,25 +1682,24 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = GetNestedGroupsIds(courseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(courseEdition, _unitOfWork.Groups).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
                         Array.Copy(groupsIds, returnableGroupsIds, groupsIds.Length);
                         Array.Sort(groupsIds);
 
-                        var movesIds = _scheduledMoveRepo
+                        var movesIds = _unitOfWork.ScheduledMoves
                                 .Get(e => e.RoomId_1 == roomId && _timestamps.Contains(e.TimestampId_1)
                                     && e.CourseId == schedulePosition.CourseId)
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => e.Key)
                                 .OrderBy(e => e).ToList();
 
-                        _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
-                        _schedulePositionRepo.GetAll().RemoveRange(_schedulePositions);
-                        
-                        var result1a = _schedulePositionRepo.SaveChanges().Result;
-                        var resull1b = _scheduledMoveRepo.SaveChanges().Result;
+                        _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
+                        _unitOfWork.SchedulePositions.GetAll().RemoveRange(_schedulePositions);
+
+                        var result1 = _unitOfWork.Complete();
 
                         var result2b = Clients.Others.RemovedSchedulePositions(
                             courseEdition.CourseId, courseEdition.CourseEditionId,
@@ -1806,7 +1786,7 @@ namespace ScheduleDesigner.Hubs
                 }
 
 
-                var _sourceTimestamps = _timestampRepo
+                var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -1816,7 +1796,7 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." };
                 }
 
-                var _destTimestamps = _timestampRepo
+                var _destTimestamps = _unitOfWork.Timestamps
                             .Get(e => e.PeriodIndex == destPeriodIndex && e.Day == destDay && destWeeks.Contains(e.Week))
                             .Select(e => e.TimestampId)
                             .OrderBy(e => e).ToList();
@@ -1881,7 +1861,7 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var _sourceSchedulePositions = _schedulePositionRepo
+                        var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => _sourceTimestamps.Contains(e.TimestampId) && e.RoomId == roomId)
                             .Include(e => e.CourseEdition);
 
@@ -1902,7 +1882,7 @@ namespace ScheduleDesigner.Hubs
                             return new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." };
                         }
 
-                        var _courseEdition = _courseEditionRepo
+                        var _courseEdition = _unitOfWork.CourseEditions
                             .Get(e => e.CourseId == courseEdition.CourseId &&
                                       e.CourseEditionId == courseEdition.CourseEditionId)
                             .Include(e => e.Course)
@@ -1918,7 +1898,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _unitOfWork.Groups).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -1965,14 +1945,14 @@ namespace ScheduleDesigner.Hubs
                         {
                             var _destSchedulePositions = _sourceTimestamps.SequenceEqual(_destTimestamps)
                                 ?
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                         .Get(e => _destTimestamps.Contains(e.TimestampId) && e.RoomId == destRoomId)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Coordinators)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Groups)
                                 :
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                 .Get(e => _destTimestamps.Contains(e.TimestampId)
                                           && (e.RoomId == destRoomId || e.CourseEdition.Coordinators
                                                                      .Select(e => e.CoordinatorId)
@@ -1994,7 +1974,7 @@ namespace ScheduleDesigner.Hubs
                                 return new MessageObject { StatusCode = 400, Message = "Scheduled move cannot collide with your own courses." };
                             }*/
 
-                            var _scheduledMovesCountsCondition = _scheduledMoveRepo
+                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMoves
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
@@ -2006,7 +1986,7 @@ namespace ScheduleDesigner.Hubs
                             _scheduledMovesCountsCondition = _scheduledMovesCountsCondition
                                 .Where(e => e.Count == _sourceTimestampsCount).ToList();
 
-                            var _scheduledMovesCounts = _scheduledMoveRepo
+                            var _scheduledMovesCounts = _unitOfWork.ScheduledMoves
                                 .Get(e => _scheduledMovesCountsCondition.Select(e => e.MoveId).Contains(e.MoveId))
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => new { MoveId = e.Key, Count = e.Count() })
@@ -2021,7 +2001,7 @@ namespace ScheduleDesigner.Hubs
                                 }
                             }
 
-                            var scheduledMoveId = _scheduledMoveRepo.GetNextId();
+                            var scheduledMoveId = _unitOfWork.ScheduledMoves.GetNextId();
                             var scheduleOrderDate = DateTime.Now;
 
                             var scheduledMove = new List<ScheduledMove>();
@@ -2043,9 +2023,9 @@ namespace ScheduleDesigner.Hubs
                                 });
                             }
 
-                            _scheduledMoveRepo.GetAll().AddRange(scheduledMove);
+                            _unitOfWork.ScheduledMoves.GetAll().AddRange(scheduledMove);
 
-                            var result1 = _scheduledMoveRepo.SaveChanges().Result;
+                            var result1 = _unitOfWork.Complete();
                             var result2 = Clients.All.AddedScheduledMove(
                                 scheduledMoveId, userId, !isProposition,
                                 courseEdition.CourseId, courseEdition.CourseEditionId,
@@ -2124,7 +2104,7 @@ namespace ScheduleDesigner.Hubs
                 var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
                 var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
-                var _sourceTimestamps = _timestampRepo
+                var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -2134,7 +2114,7 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." };
                 }
 
-                var _destTimestamps = _timestampRepo
+                var _destTimestamps = _unitOfWork.Timestamps
                             .Get(e => e.PeriodIndex == destPeriodIndex && e.Day == destDay && destWeeks.Contains(e.Week))
                             .Select(e => e.TimestampId)
                             .OrderBy(e => e).ToList();
@@ -2210,7 +2190,7 @@ namespace ScheduleDesigner.Hubs
                             .And(e => _sourceTimestamps.Contains(e.TimestampId) && e.RoomId == roomId)
                             .And(predicate);
 
-                        var _sourceSchedulePositions = _schedulePositionRepo
+                        var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                             .Get(finalPredicate)
                             .Include(e => e.CourseEdition)
                                 .ThenInclude(e => e.Groups);
@@ -2232,7 +2212,7 @@ namespace ScheduleDesigner.Hubs
                             return new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." };
                         }
 
-                        var _courseEdition = _courseEditionRepo
+                        var _courseEdition = _unitOfWork.CourseEditions
                             .Get(e => e.CourseId == courseEdition.CourseId &&
                                       e.CourseEditionId == courseEdition.CourseEditionId)
                             .Include(e => e.Course)
@@ -2248,7 +2228,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _unitOfWork.Groups).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -2292,7 +2272,7 @@ namespace ScheduleDesigner.Hubs
                         }
                         try
                         {
-                            var _scheduledMovesCountsCondition = _scheduledMoveRepo
+                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMoves
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
@@ -2304,7 +2284,7 @@ namespace ScheduleDesigner.Hubs
                             _scheduledMovesCountsCondition = _scheduledMovesCountsCondition
                                 .Where(e => e.Count == _sourceTimestampsCount).ToList();
 
-                            var _scheduledMovesCounts = _scheduledMoveRepo
+                            var _scheduledMovesCounts = _unitOfWork.ScheduledMoves
                                 .Get(e => _scheduledMovesCountsCondition.Select(e => e.MoveId).Contains(e.MoveId))
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => new { MoveId = e.Key, Count = e.Count() })
@@ -2319,8 +2299,8 @@ namespace ScheduleDesigner.Hubs
                                 {
                                     if (isAdmin || isCoordinator || (_scheduledMovesCountsCondition[i].UserId == userId && !_scheduledMovesCountsCondition[i].IsConfirmed))
                                     {
-                                        _scheduledMoveRepo
-                                        .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
+                                        _unitOfWork.ScheduledMoves
+                                            .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
 
                                         moveId = _scheduledMovesCountsCondition[i].MoveId;
                                         isFound = true;
@@ -2334,7 +2314,7 @@ namespace ScheduleDesigner.Hubs
                                 return new MessageObject { StatusCode = 400, Message = "Could not find scheduled move or you cannot remove it." };
                             }
 
-                            var result1 = _scheduledMoveRepo.SaveChanges().Result;
+                            var result1 = _unitOfWork.Complete();
                             var result2 = Clients.All.RemovedScheduledMove(
                                 moveId,
                                 courseEdition.CourseId, courseEdition.CourseEditionId,
@@ -2410,7 +2390,7 @@ namespace ScheduleDesigner.Hubs
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                var _sourceTimestamps = _timestampRepo
+                var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
                         .Select(e => e.TimestampId)
                         .OrderBy(e => e).ToList();
@@ -2420,7 +2400,7 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject { StatusCode = 404, Message = "Could not find requested source time periods." };
                 }
 
-                var _destTimestamps = _timestampRepo
+                var _destTimestamps = _unitOfWork.Timestamps
                             .Get(e => e.PeriodIndex == destPeriodIndex && e.Day == destDay && destWeeks.Contains(e.Week))
                             .Select(e => e.TimestampId)
                             .OrderBy(e => e).ToList();
@@ -2485,7 +2465,7 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var _sourceSchedulePositions = _schedulePositionRepo
+                        var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                         .Get(e => _sourceTimestamps.Contains(e.TimestampId) && e.RoomId == roomId)
                             .Include(e => e.CourseEdition);
 
@@ -2506,7 +2486,7 @@ namespace ScheduleDesigner.Hubs
                             return new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." };
                         }
 
-                        var _courseEdition = _courseEditionRepo
+                        var _courseEdition = _unitOfWork.CourseEditions
                             .Get(e => e.CourseId == courseEdition.CourseId &&
                                       e.CourseEditionId == courseEdition.CourseEditionId)
                             .Include(e => e.Course)
@@ -2522,7 +2502,7 @@ namespace ScheduleDesigner.Hubs
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();
-                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _groupRepo).ToArray();
+                        var groupsIds = GetNestedGroupsIds(includableCourseEdition, _unitOfWork.Groups).ToArray();
                         var returnableGroupsIds = new int[groupsIds.Length];
 
                         Array.Sort(coordinatorsIds);
@@ -2566,7 +2546,7 @@ namespace ScheduleDesigner.Hubs
                         }
                         try
                         {
-                            var _scheduledMovesCountsCondition = _scheduledMoveRepo
+                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMoves
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
@@ -2578,7 +2558,7 @@ namespace ScheduleDesigner.Hubs
                             _scheduledMovesCountsCondition = _scheduledMovesCountsCondition
                                 .Where(e => e.Count == _sourceTimestampsCount).ToList();
 
-                            var _scheduledMovesCounts = _scheduledMoveRepo
+                            var _scheduledMovesCounts = _unitOfWork.ScheduledMoves
                                 .Get(e => _scheduledMovesCountsCondition.Select(e => e.MoveId).Contains(e.MoveId))
                                 .GroupBy(e => e.MoveId)
                                 .Select(e => new { MoveId = e.Key, Count = e.Count() })
@@ -2604,7 +2584,7 @@ namespace ScheduleDesigner.Hubs
 
                             var _destSchedulePositions = _sourceTimestamps.SequenceEqual(_destTimestamps)
                                 ?
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                         .Get(e => _destTimestamps.Contains(e.TimestampId) && e.RoomId == destRoomId)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Coordinators)
@@ -2612,7 +2592,7 @@ namespace ScheduleDesigner.Hubs
                                         .ThenInclude(e => e.Groups)
                                         .Select(e => new { e.TimestampId, e.RoomId })
                                 :
-                                _schedulePositionRepo
+                                _unitOfWork.SchedulePositions
                                 .Get(e => _destTimestamps.Contains(e.TimestampId)
                                           && (e.RoomId == destRoomId || e.CourseEdition.Coordinators
                                                                      .Select(e => e.CoordinatorId)
@@ -2627,10 +2607,10 @@ namespace ScheduleDesigner.Hubs
 
                             if (_destSchedulePositions.Any())
                             {
-                                _scheduledMoveRepo
+                                _unitOfWork.ScheduledMoves
                                     .AcceptMany(e => e.MoveId == moveId);
 
-                                var result1 = _scheduledMoveRepo.SaveChanges().Result;
+                                var result1 = _unitOfWork.Complete();
                                 var result2 = Clients.All.AcceptedScheduledMove(
                                     moveId,
                                     courseEdition.CourseId, courseEdition.CourseEditionId,
@@ -2648,19 +2628,18 @@ namespace ScheduleDesigner.Hubs
                                     CourseEditionId = includableCourseEdition.CourseEditionId
                                 }).ToList();
 
-                                var movesIds = _scheduledMoveRepo
+                                var movesIds = _unitOfWork.ScheduledMoves
                                     .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                         && e.CourseId == includableCourseEdition.CourseId)
                                     .GroupBy(e => e.MoveId)
                                     .Select(e => e.Key)
                                     .OrderBy(e => e).ToList();
 
-                                _scheduledMoveRepo.DeleteMany(e => movesIds.Contains(e.MoveId));
-                                _schedulePositionRepo.GetAll().RemoveRange(_sourceSchedulePositions);
-                                _schedulePositionRepo.GetAll().AddRange(destSchedulePositions);
+                                _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
+                                _unitOfWork.SchedulePositions.GetAll().RemoveRange(_sourceSchedulePositions);
+                                _unitOfWork.SchedulePositions.GetAll().AddRange(destSchedulePositions);
 
-                                var result1a = _scheduledMoveRepo.SaveChanges().Result;
-                                var result1b = _schedulePositionRepo.SaveChanges().Result;
+                                var result1 = _unitOfWork.Complete();
 
                                 var result2 = Clients.All.ModifiedSchedulePositions(
                                     includableCourseEdition.CourseId, includableCourseEdition.CourseEditionId,
@@ -2715,10 +2694,10 @@ namespace ScheduleDesigner.Hubs
 
         private void RemoveAllClientLocks(int userId, string connectionId)
         {
-            var _courseEditions = _courseEditionRepo
+            var _courseEditions = _unitOfWork.CourseEditions
                 .Get(e => e.LockUserId == userId && e.LockUserConnectionId == connectionId);
 
-            var _schedulePositions = _schedulePositionRepo
+            var _schedulePositions = _unitOfWork.SchedulePositions
                 .Get(e => e.LockUserId == userId && e.LockUserConnectionId == connectionId)
                 .Include(e => e.Timestamp);
 

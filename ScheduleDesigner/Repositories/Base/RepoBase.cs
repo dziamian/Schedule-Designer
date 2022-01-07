@@ -87,15 +87,5 @@ namespace ScheduleDesigner.Repositories.Base
             _context.Set<T>().Remove(result);
             return 1;
         }
-
-        public async Task<int> SaveChanges()
-        {
-            if (_context == null)
-            {
-                return -1;
-            }
-
-            return await _context.SaveChangesAsync();
-        }
     }
 }
