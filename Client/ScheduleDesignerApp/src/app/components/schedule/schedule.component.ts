@@ -481,38 +481,49 @@ export class ScheduleComponent implements OnInit {
     this.loadingSubscription?.unsubscribe();
     this.loading = true;
 
-    this.loadingSubscription = this.scheduleDesignerApiService.GetFilteredSchedule(this.currentFilter.weeks, this.currentFilter.filter, this.courseTypes, this.settings).subscribe((mySchedule) => {
-      this.schedule = mySchedule;
+    this.loadingSubscription = this.scheduleDesignerApiService.GetFilteredSchedule(this.currentFilter.weeks, this.currentFilter.filter, this.settings)
+      .subscribe(({schedule: schedule, courseEditions: courseEditions}) => {
+        this.schedule = schedule;
 
-      let allGroups = new Array<Group>();
-      let allRooms = new Array<Room>();
+        if (courseEditions.length == 0) {
+          this.loading = false;
+          this.onLoaded.emit();
+          return;
+        }
 
-      for (let i = 0; i < this.schedule.length; ++i) {
-        for (let j = 0; j < this.schedule[i].length; ++j) {
-          for (let k = 0; k < this.schedule[i][j].length; ++k) {
-            for (let l = 0; l < this.schedule[i][j][k].Groups.length; ++l) {
-              allGroups.push(this.schedule[i][j][k].Groups[l]);
-            }
-            allRooms.push(this.schedule[i][j][k].Room!);
+        courseEditions.sort((a,b) => a.CourseId - b.CourseId);
+        forkJoin([
+          this.scheduleDesignerApiService.GetCoursesForSchedule(courseEditions, this.courseTypes, this.settings),
+          this.scheduleDesignerApiService.GetRoomsNames(courseEditions.map((e) => e.Room?.RoomId!))
+        ]).subscribe(([,roomsNames]) => {
+          for (let i = 0; i < courseEditions.length; ++i) {
+            courseEditions[i].Room!.Name = roomsNames[i];
           }
-        }
-      }
 
-      forkJoin([
-        this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) => e.GroupId)),
-        this.scheduleDesignerApiService.GetRoomsNames(allRooms.map((e) => e.RoomId))
-      ]).subscribe(([groupsFullNames, roomsNames]) => {
-        for (let i = 0; i < groupsFullNames.length; ++i) {
-          allGroups[i].FullName = groupsFullNames[i];
-        }
+          courseEditions.sort((a,b) => a.CourseEditionId - b.CourseEditionId);
+          forkJoin([
+            this.scheduleDesignerApiService.GetScheduleAmount(courseEditions),
+            this.scheduleDesignerApiService.GetCoordinatorsForCourses(courseEditions),
+            this.scheduleDesignerApiService.GetGroupsForCourses(courseEditions),
+          ]).subscribe(() => {
+            var allGroups = new Array<Group>();
+            for (let i = 0; i < courseEditions.length; ++i) {
+              for (let j = 0; j < courseEditions[i].Groups.length; ++j) {
+                allGroups.push(courseEditions[i].Groups[j]);
+              }
+            }
 
-        for (let i = 0; i < roomsNames.length; ++i) {
-          allRooms[i].Name = roomsNames[i];
-        }
+            this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) => e.GroupId))
+              .subscribe((groupsFullNames) => {
+                for (let i = 0; i < groupsFullNames.length; ++i) {
+                  allGroups[i].FullName = groupsFullNames[i];
+                }
 
-        this.loading = false;
-        this.onLoaded.emit();
-      });
+                this.loading = false;
+                this.onLoaded.emit();
+              });
+          });
+        });
     });
   }
 

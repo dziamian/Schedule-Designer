@@ -147,6 +147,12 @@ namespace ScheduleDesigner
             }
         }
 
+        public class ScheduleAmount
+        {
+            public int CourseEditionId { get; set; }
+            public int Count { get; set; }
+        }
+
         public static List<int> GetNestedGroupsIds(CourseEdition courseEdition, IGroupRepo _groupRepo)
         {
             var groups = courseEdition.Groups.Select(e => e.Group).ToList();

@@ -19,10 +19,10 @@
                 <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
-                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)">
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)" title="Show schedule">
                     <mat-icon>remove_red_eye</mat-icon>
                 </button>
-                <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary">
+                <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary" title="You represent this group">
                     stars
                 </mat-icon>
             </mat-tree-node>
@@ -41,10 +41,10 @@
                 <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
-                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)">
+                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)" title="Show schedule">
                     <mat-icon>remove_red_eye</mat-icon>
                 </button>
-                <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary">
+                <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary" title="You represent this group">
                     stars
                 </mat-icon>
             </mat-tree-node>

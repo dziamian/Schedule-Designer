@@ -37,7 +37,7 @@
         <b>{{course?.Name}}</b>
         <br/>
         <div *ngFor="let coordinator of course?.Coordinators">
-            <span [style.text-decoration]="CheckIfItsMe(coordinator.UserId) ? 'underline' : 'none'">{{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleBefore}} {{coordinator.Titles.TitleAfter}}</span>
+            <span [style.text-decoration]="CheckIfItsMe(coordinator.UserId) ? 'underline' : 'none'">{{coordinator.Titles.TitleBefore}} {{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleAfter}}</span>
             <br/>
         </div>
         <div *ngFor="let group of course?.Groups">

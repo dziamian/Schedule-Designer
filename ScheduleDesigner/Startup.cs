@@ -308,6 +308,12 @@ namespace ScheduleDesigner
             getSchedulePositionFunction
                 .CollectionParameter<int>("Weeks");
 
+            var getScheduleAmountFunction = builder.EntityType<SchedulePosition>().Collection
+                .Function("GetScheduleAmount")
+                .ReturnsCollection<ScheduleAmount>();
+            getScheduleAmountFunction
+                .CollectionParameter<int>("CourseEditionIds");
+
             var getScheduleForModification = builder.EntityType<SchedulePosition>().Collection
                 .Function("GetFilteredSchedule")
                 .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions");

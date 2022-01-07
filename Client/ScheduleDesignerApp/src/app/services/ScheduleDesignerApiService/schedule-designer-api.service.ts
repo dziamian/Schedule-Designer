@@ -340,7 +340,7 @@ export class ScheduleDesignerApiService {
     const FREQUENCY = Math.floor(frequency);
     const request = {
       url: this.baseUrl + `/courseEditions/Service.GetFilteredCourseEditions(${filter.toString()},Frequency=${FREQUENCY})?` +
-        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),LockUser($expand=Staff),' +
+        '$expand=Course,LockUser($expand=Staff),' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
     };
@@ -356,24 +356,6 @@ export class ScheduleDesignerApiService {
         let myCourseEditions = new Array<CourseEdition>();
 
         response.value.forEach((value : any) => {
-          let groups = new Array<Group>();
-          value.Groups.forEach((element : any) => {
-            groups.push(new Group(
-              element.GroupId
-            ));
-          });
-          let coordinators = new Array<Coordinator>();
-          value.Coordinators.forEach((element : any) => {
-            coordinators.push(new Coordinator(
-              element.Coordinator.UserId,
-              element.Coordinator.User.FirstName,
-              element.Coordinator.User.LastName,
-              new Titles(
-                element.Coordinator.TitleBefore,
-                element.Coordinator.TitleAfter
-              )
-            ));
-          });
           const scheduleAmount = value['SchedulePositions@odata.count'];
           const fullAmount = value.Course.UnitsMinutes / settings.CourseDurationMinutes;
           const fullAmountInteger = Math.ceil(fullAmount);
@@ -381,9 +363,11 @@ export class ScheduleDesignerApiService {
           for (let i = 0; i < coursesAmount; ++i) {
             let courseEdition = new CourseEdition(
               value.CourseId, value.CourseEditionId,
-              value.Course.Name, courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
+              value.Course.Name, 
+              courseTypes.get(value.Course.CourseTypeId) ?? new CourseType(0, "", ""),
               FREQUENCY,
-              groups, coordinators
+              [], 
+              []
             );
             courseEdition.IsLocked = value.LockUserId;
             courseEdition.IsLockedByAdmin = value.LockUser?.Staff?.IsAdmin;
@@ -441,16 +425,13 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetFilteredSchedule1(
-    weeks:number[],
-    filter: Filter,
+  public GetCoursesForSchedule(
+    courseEditions: CourseEdition[], //sorted by courseId
     courseTypes:Map<number,CourseType>,
     settings:Settings
-  ):Observable<CourseEdition[][][]> {
+  ):Observable<CourseEdition[]> {
     const request = {
-      url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?` +
-        '$expand=CourseEdition($expand=Course,Coordinators($expand=Coordinator($expand=User)),LockUser($select=Staff;$expand=Staff),Groups,SchedulePositions($count=true;$top=0)),' +
-        'Timestamp,ScheduledMoves($select=MoveId,IsConfirmed)',
+      url: this.baseUrl + `/courses?$filter=CourseId in (${courseEditions.map(c => c.CourseId)})&$orderby=CourseId`,
       method: 'GET'
     };
 
@@ -462,88 +443,141 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
-        const numberOfSlots = settings.Periods.length - 1;
-        let schedule:CourseEdition[][][] = [];
-        for (let j:number = 0; j < 5; ++j) {
-          schedule.push([]);
-          for (let i:number = 0; i < numberOfSlots; ++i) {
-            schedule[j].push([]);
+        var j = 0;
+
+        const courseEditionsLength = courseEditions.length;
+        for (var i = 0; i < courseEditionsLength; ++i) {
+          if (response.value[j].CourseId != courseEditions[i].CourseId) {
+            ++j;
+          }
+
+          if (response.value[j].CourseId == courseEditions[i].CourseId) {
+            courseEditions[i].Name = response.value[j].Name;
+            courseEditions[i].Type = courseTypes.get(response.value[j].CourseTypeId) ?? new CourseType(0, "", "");
+            courseEditions[i].FullAmount = response.value[j].UnitsMinutes / settings.CourseDurationMinutes;
           }
         }
 
-        response.value.forEach((value : any) => {
-          let groups = new Array<Group>();
-          value.CourseEdition.Groups.forEach((element : any) => {
-            groups.push(new Group(
-              element.GroupId
-            ));
-          });
-          let coordinators = new Array<Coordinator>();
-          value.CourseEdition.Coordinators.forEach((element : any) => {
-            coordinators.push(new Coordinator(
-              element.Coordinator.UserId,
-              element.Coordinator.User.FirstName,
-              element.Coordinator.User.LastName,
+        return courseEditions;
+      })
+    );
+  }
+
+  public GetScheduleAmount(
+    courseEditions: CourseEdition[] //sorted by courseEditionId
+  ):Observable<CourseEdition[]> {
+    const request = {
+      url: this.baseUrl + `/schedulePositions/Service.GetScheduleAmount(CourseEditionIds=[${courseEditions.map(c => c.CourseEditionId)}])?$orderby=CourseEditionId`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        var j = 0;
+
+        const courseEditionsLength = courseEditions.length;
+        for (var i = 0; i < courseEditionsLength; ++i) {
+          if (response.value[j].CourseEditionId != courseEditions[i].CourseEditionId) {
+            ++j;
+          }
+
+          if (response.value[j].CourseEditionId == courseEditions[i].CourseEditionId) {
+            courseEditions[i].ScheduleAmount = response.value[j].Count;
+          }
+        }
+
+        return courseEditions;
+      })
+    );
+  }
+
+  public GetCoordinatorsForCourses(
+    courseEditions: CourseEdition[] //sorted by courseEditionId
+  ):Observable<CourseEdition[]> {
+    const request = {
+      url: this.baseUrl + `/coordinatorCourseEditions?$expand=Coordinator($expand=User)&$filter=CourseEditionId in (${courseEditions.map(c => c.CourseEditionId)})&$orderby=CourseEditionId`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        var j = 0;
+        var nextElement = j + 1;
+
+        const courseEditionsLength = courseEditions.length;
+        for (var i = 0; i < courseEditionsLength; ++i) {
+          if (response.value[j].CourseEditionId != courseEditions[i].CourseEditionId) {
+            j = nextElement;
+          }
+
+          var k = j;
+          while (response.value[k]?.CourseEditionId == courseEditions[i].CourseEditionId) {
+            courseEditions[i].Coordinators.push(new Coordinator(
+              response.value[k].Coordinator.UserId,
+              response.value[k].Coordinator.User.FirstName,
+              response.value[k].Coordinator.User.LastName,
               new Titles(
-                element.Coordinator.TitleBefore,
-                element.Coordinator.TitleAfter
-              )
-            ));
-          });
+                response.value[k].Coordinator.TitleBefore,
+                response.value[k].Coordinator.TitleAfter
+              )));
 
-          const courseId = value.CourseId;
-          const courseEditionId = value.CourseEditionId;
-          const roomId = value.RoomId;
-          const dayIndex = value.Timestamp.Day - 1;
-          const periodIndex = value.Timestamp.PeriodIndex - 1;
-          const week = value.Timestamp.Week;
-          const locked = {value: value.LockUserId != null, byAdmin: value.LockUser?.Staff?.IsAdmin};
-          const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
-          const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
-          const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.UserId, value.IsConfirmed));
-          let scheduleSlot = schedule[dayIndex][periodIndex];
-          let found = false;
-          for (let i = 0; i < scheduleSlot.length; ++i) {
-            let courseEdition = scheduleSlot[i];
-            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
-              && courseEdition.Room!.RoomId == roomId) {
-                courseEdition.Weeks?.push(week);
-                if (locked.value) {
-                  courseEdition.IsLocked = locked.value;
-                  courseEdition.IsLockedByAdmin = locked.byAdmin;
-                }
-                
-                const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);
-                const notAddedScheduledMoves = scheduledMoves.filter((scheduledMove : ScheduledMove) => !currentMovesIds.includes(scheduledMove.MoveId));
-                courseEdition.ScheduledMoves.push(...notAddedScheduledMoves);
-                
-                found = true;
-            }
+            ++k;
+          }
+          nextElement = k;
+        }
+
+        return courseEditions;
+      })
+    );
+  }
+
+  public GetGroupsForCourses(
+    courseEditions: CourseEdition[] //sorted by courseEditionId
+  ):Observable<CourseEdition[]> {
+    const request = {
+      url: this.baseUrl + `/groupCourseEditions?$filter=CourseEditionId in (${courseEditions.map(c => c.CourseEditionId)})&$orderby=CourseEditionId`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        var j = 0;
+        var nextElement = j + 1;
+
+        const courseEditionsLength = courseEditions.length;
+        for (var i = 0; i < courseEditionsLength; ++i) {
+          if (response.value[j].CourseEditionId != courseEditions[i].CourseEditionId) {
+            j = nextElement;
           }
 
-          if (!found) {
-            const courseEdition = new CourseEdition(
-              value.CourseId, 
-              value.CourseEditionId,
-              value.CourseEdition.Course.Name,
-              courseTypes.get(value.CourseEdition.Course.CourseTypeId) ?? new CourseType(0, "", ""),
-              0,
-              groups,
-              coordinators
-            );
-            courseEdition.Room = new Room(roomId);
-            courseEdition.IsLocked = locked.value;
-            courseEdition.IsLockedByAdmin = locked.byAdmin;
-            courseEdition.Weeks = [week];
-            courseEdition.ScheduleAmount = scheduleAmount;
-            courseEdition.FullAmount = fullAmount;
-            courseEdition.ScheduledMoves.push(...scheduledMoves);
-            
-            scheduleSlot.push(courseEdition);
-          }
-        });
+          var k = j;
+          while (response.value[k]?.CourseEditionId == courseEditions[i].CourseEditionId) {
+            courseEditions[i].Groups.push(new Group(response.value[k].GroupId));
 
-        return schedule;
+            ++k;
+          }
+          nextElement = k;
+        }
+
+        return courseEditions;
       })
     );
   }
@@ -551,11 +585,11 @@ export class ScheduleDesignerApiService {
   public GetFilteredSchedule(
     weeks:number[],
     filter: Filter,
-    courseTypes:Map<number,CourseType>,
     settings:Settings
-  ):Observable<CourseEdition[][][]> {
+  ):Observable<{schedule: CourseEdition[][][], courseEditions: CourseEdition[]}> {
     const request = {
-      url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?$expand=Timestamp`,
+      url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?
+        $expand=Timestamp,LockUser($expand=Staff),ScheduledMoves($select=MoveId,UserId,IsConfirmed)`,
       method: 'GET'
     };
 
@@ -568,6 +602,7 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => {
         const numberOfSlots = settings.Periods.length - 1;
+        
         let schedule:CourseEdition[][][] = [];
         for (let j:number = 0; j < 5; ++j) {
           schedule.push([]);
@@ -576,26 +611,10 @@ export class ScheduleDesignerApiService {
           }
         }
 
-        response.value.forEach((value : any) => {
-          /*let groups = new Array<Group>();
-          value.CourseEdition.Groups.forEach((element : any) => {
-            groups.push(new Group(
-              element.GroupId
-            ));
-          });
-          let coordinators = new Array<Coordinator>();
-          value.CourseEdition.Coordinators.forEach((element : any) => {
-            coordinators.push(new Coordinator(
-              element.Coordinator.UserId,
-              element.Coordinator.User.FirstName,
-              element.Coordinator.User.LastName,
-              new Titles(
-                element.Coordinator.TitleBefore,
-                element.Coordinator.TitleAfter
-              )
-            ));
-          });
+        let courseEditions: CourseEdition[] = [];
 
+        response.value.forEach((value : any) => {
+          
           const courseId = value.CourseId;
           const courseEditionId = value.CourseEditionId;
           const roomId = value.RoomId;
@@ -603,56 +622,7 @@ export class ScheduleDesignerApiService {
           const periodIndex = value.Timestamp.PeriodIndex - 1;
           const week = value.Timestamp.Week;
           const locked = {value: value.LockUserId != null, byAdmin: value.LockUser?.Staff?.IsAdmin};
-          const scheduleAmount = value.CourseEdition['SchedulePositions@odata.count'];
-          const fullAmount = value.CourseEdition.Course.UnitsMinutes / settings.CourseDurationMinutes;
           const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.UserId, value.IsConfirmed));
-          let scheduleSlot = schedule[dayIndex][periodIndex];
-          let found = false;
-          for (let i = 0; i < scheduleSlot.length; ++i) {
-            let courseEdition = scheduleSlot[i];
-            if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId
-              && courseEdition.Room!.RoomId == roomId) {
-                courseEdition.Weeks?.push(week);
-                if (locked.value) {
-                  courseEdition.IsLocked = locked.value;
-                  courseEdition.IsLockedByAdmin = locked.byAdmin;
-                }
-                
-                const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);
-                const notAddedScheduledMoves = scheduledMoves.filter((scheduledMove : ScheduledMove) => !currentMovesIds.includes(scheduledMove.MoveId));
-                courseEdition.ScheduledMoves.push(...notAddedScheduledMoves);
-                
-                found = true;
-            }
-          }
-
-          if (!found) {
-            const courseEdition = new CourseEdition(
-              value.CourseId, 
-              value.CourseEditionId,
-              value.CourseEdition.Course.Name,
-              courseTypes.get(value.CourseEdition.Course.CourseTypeId) ?? new CourseType(0, "", ""),
-              0,
-              groups,
-              coordinators
-            );
-            courseEdition.Room = new Room(roomId);
-            courseEdition.IsLocked = locked.value;
-            courseEdition.IsLockedByAdmin = locked.byAdmin;
-            courseEdition.Weeks = [week];
-            courseEdition.ScheduleAmount = scheduleAmount;
-            courseEdition.FullAmount = fullAmount;
-            courseEdition.ScheduledMoves.push(...scheduledMoves);
-            
-            scheduleSlot.push(courseEdition);
-          }*/
-          const courseId = value.CourseId;
-          const courseEditionId = value.CourseEditionId;
-          const roomId = value.RoomId;
-          const dayIndex = value.Timestamp.Day - 1;
-          const periodIndex = value.Timestamp.PeriodIndex - 1;
-          const week = value.Timestamp.Week;
-          const locked = value.LockUserId != null;
 
           let scheduleSlot = schedule[dayIndex][periodIndex];
           let found = false;
@@ -662,9 +632,13 @@ export class ScheduleDesignerApiService {
               && courseEdition.Room!.RoomId == roomId) {
                 courseEdition.Weeks?.push(week);
                 if (locked) {
-                  courseEdition.IsLocked = locked;
-                  //courseEdition.IsLockedByAdmin = locked.byAdmin;
+                  courseEdition.IsLocked = locked.value;
+                  courseEdition.IsLockedByAdmin = locked.byAdmin;
                 }
+                const currentMovesIds = courseEdition.ScheduledMoves.map(scheduledMove => scheduledMove.MoveId);
+                const notAddedScheduledMoves = scheduledMoves.filter((scheduledMove : ScheduledMove) => !currentMovesIds.includes(scheduledMove.MoveId));
+                courseEdition.ScheduledMoves.push(...notAddedScheduledMoves);
+
                 found = true;
               }
           }
@@ -679,18 +653,17 @@ export class ScheduleDesignerApiService {
               []
             );
             courseEdition.Room = new Room(roomId);
-            courseEdition.IsLocked = locked;
-            //courseEdition.IsLockedByAdmin = locked.byAdmin;
+            courseEdition.IsLocked = locked.value;
+            courseEdition.IsLockedByAdmin = locked.byAdmin;
             courseEdition.Weeks = [week];
-            //courseEdition.ScheduleAmount = scheduleAmount;
-            //courseEdition.FullAmount = fullAmount;
-            //courseEdition.ScheduledMoves.push(...scheduledMoves);
+            courseEdition.ScheduledMoves.push(...scheduledMoves);
             
             scheduleSlot.push(courseEdition);
+            courseEditions.push(courseEdition);
           }
         });
 
-        return schedule;
+        return {schedule: schedule, courseEditions: courseEditions};
       })
     );
   }

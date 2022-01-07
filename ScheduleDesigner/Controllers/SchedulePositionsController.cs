@@ -31,6 +31,14 @@ namespace ScheduleDesigner.Controllers
 
         [HttpGet]
         [EnableQuery]
+        [ODataRoute("")]
+        public IActionResult GetSchedulePositions()
+        {
+            return Ok(_unitOfWork.SchedulePositions.GetAll());
+        }
+
+        [HttpGet]
+        [EnableQuery]
         [ODataRoute("Service.GetSchedulePositions(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
         public IActionResult GetSchedulePositions([FromODataUri] int RoomId, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
         {
@@ -50,9 +58,35 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [HttpGet]
+        [EnableQuery]
+        [ODataRoute("")]
+        public IActionResult GetScheduleAmount([FromODataUri] IEnumerable<int> CourseEditionIds)
+        {
+            try
+            {
+                if (CourseEditionIds.Count() == 0)
+                {
+                    return BadRequest();
+                }
+
+                var _schedulePositions = _unitOfWork.SchedulePositions
+                    .Get(e => CourseEditionIds.Contains(e.CourseEditionId))
+                    .GroupBy(e => e.CourseEditionId)
+                    .Select(e => new ScheduleAmount { CourseEditionId = e.Key, Count = e.Count() })
+                    .ToList();
+
+                return Ok(_schedulePositions);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [Authorize]
         [HttpGet]
-        [EnableQuery(MaxExpansionDepth = 4)]
+        [EnableQuery(MaxExpansionDepth = 3)]
         public IActionResult GetFilteredSchedule(
             [FromODataUri] IEnumerable<int> CoordinatorsIds, 
             [FromODataUri] IEnumerable<int> GroupsIds, 
@@ -61,17 +95,33 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var predicate = PredicateBuilder.New<SchedulePosition>();
-                if (CoordinatorsIds.Count() > 0)
+                var coordinatorsCount = CoordinatorsIds.Count();
+                var groupsCount = GroupsIds.Count();
+
+                var coordinatorCourseEditionIds = new List<int>();
+                if (coordinatorsCount > 0)
                 {
-                    predicate = predicate
-                        .Or(e => e.CourseEdition.Coordinators.Any(f => CoordinatorsIds.Contains(f.CoordinatorId)));
+                    coordinatorCourseEditionIds = _unitOfWork.CoordinatorCourseEditions
+                        .GetAll()
+                        .Where(e => CoordinatorsIds.Contains(e.CoordinatorId))
+                        .Select(e => e.CourseEditionId).ToList();
                 }
-                if (GroupsIds.Count() > 0)
+
+                var groupCourseEditionIds = new List<int>();
+                if (groupsCount > 0)
                 {
-                    predicate = predicate
-                        .Or(e => e.CourseEdition.Groups.Any(f => GroupsIds.Contains(f.GroupId)));
+                    groupCourseEditionIds = _unitOfWork.GroupCourseEditions
+                        .GetAll()
+                        .Where(e => GroupsIds.Contains(e.GroupId))
+                        .Select(e => e.CourseEditionId)
+                        .ToList();
                 }
+                var courseEditionIds = coordinatorCourseEditionIds.Union(groupCourseEditionIds);
+
+                var predicate = PredicateBuilder.New<SchedulePosition>(false);
+                predicate = predicate
+                    .Or(e => courseEditionIds.Contains(e.CourseEditionId));
+
                 if (RoomsIds.Count() > 0)
                 {
                     predicate = predicate
@@ -83,10 +133,6 @@ namespace ScheduleDesigner.Controllers
 
                 var _schedulePositions = _unitOfWork.SchedulePositions
                     .Get(finalPredicate)
-                    .Include(e => e.CourseEdition)
-                        .ThenInclude(e => e.Coordinators)
-                    .Include(e => e.CourseEdition)
-                        .ThenInclude(e => e.Groups)
                     .Include(e => e.Timestamp);
 
                 return Ok(_schedulePositions);
@@ -100,7 +146,11 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         [EnableQuery]
         [ODataRoute("Service.GetRoomsAvailability(RoomsIds={RoomsIds},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
-        public IActionResult GetRoomsAvailibility([FromODataUri] IEnumerable<int> RoomsIds, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
+        public IActionResult GetRoomsAvailibility(
+            [FromODataUri] IEnumerable<int> RoomsIds, 
+            [FromODataUri] int PeriodIndex, 
+            [FromODataUri] int Day, 
+            [FromODataUri] IEnumerable<int> Weeks)
         {
             try
             {
