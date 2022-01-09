@@ -919,7 +919,7 @@ export class ScheduleDesignerApiService {
 
   public GetScheduledMoveInfo(moveId: number):Observable<ScheduledMoveInfo> {
     const request = {
-      url: this.baseUrl + `/scheduledMoves(${moveId})?$expand=User($expand=Coordinator)&$select=User,Message`,
+      url: this.baseUrl + `/scheduledMoves(${moveId})?$expand=User($expand=Coordinator),Message&$select=User`,
       method: 'GET'
     };
 
@@ -934,7 +934,7 @@ export class ScheduleDesignerApiService {
         response.User.FirstName,
         response.User.LastName,
         response.User?.Coordinator ? new Titles(response.User.Coordinator.TitleBefore, response.User.Coordinator.TitleAfter) : null,
-        response.Message
+        response.Message?.Content
       ))
     );
   }

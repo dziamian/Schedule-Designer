@@ -40,7 +40,7 @@
                                     Add Room
                             </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="!isModifying || data.currentDragEvent != null 
+                                [disabled]="!isModifying || currentFilter?.filter?.RoomsIds?.length == 1 || data.currentDragEvent != null 
                                     || data.currentRoomSelectionDialog != null 
                                     || data.currentSelectedCourseEdition?.IsMoving 
                                     || !data.currentSelectedCourseEdition?.CanChangeRoom"

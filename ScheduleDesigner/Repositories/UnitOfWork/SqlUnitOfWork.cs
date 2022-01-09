@@ -31,6 +31,8 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
         public IScheduledMoveRepo ScheduledMoves { get; private set; }
 
+        public IMessageRepo Messages { get; private set; }
+
         public IScheduledMovePositionRepo ScheduledMovePositions { get; private set; }
 
         public ISchedulePositionRepo SchedulePositions { get; private set; }
@@ -63,6 +65,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
             Rooms = new SqlRoomRepo(context);
             RoomTypes = new SqlRoomTypeRepo(context);
             ScheduledMoves = new SqlScheduledMoveRepo(context);
+            Messages = new SqlMessageRepo(context);
             ScheduledMovePositions = new SqlScheduledMovePositionRepo(context);
             SchedulePositions = new SqlSchedulePositionRepo(context);
             Settings = new SqlSettingsRepo(context);

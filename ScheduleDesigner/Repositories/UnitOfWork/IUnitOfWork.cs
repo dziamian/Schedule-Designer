@@ -19,6 +19,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
         IRoomTypeRepo RoomTypes { get; }
         IScheduledMoveRepo ScheduledMoves { get; }
         IScheduledMovePositionRepo ScheduledMovePositions { get; }
+        IMessageRepo Messages { get; }
         ISchedulePositionRepo SchedulePositions { get; }
         ISettingsRepo Settings { get; }
         IStaffRepo Staffs { get; }

@@ -223,6 +223,10 @@ namespace ScheduleDesigner
 
             builder.EntitySet<ScheduledMove>("ScheduledMoves");
 
+            builder.EntitySet<Message>("Messages")
+                .EntityType
+                .HasKey(e => new { e.MoveId });
+
             builder.EntitySet<Authorization>("Authorizations")
                 .EntityType
                 .HasKey(e => new { e.UserId });

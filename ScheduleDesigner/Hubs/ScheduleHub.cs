@@ -462,6 +462,7 @@ namespace ScheduleDesigner.Hubs
                                 var destDay = _destTimestamps.FirstOrDefault().Day;
                                 var destWeeks = _destTimestamps.Select(e => e.Week).OrderBy(e => e).ToArray();
 
+                                _unitOfWork.ScheduledMovePositions.DeleteMany(e => movesIds.Contains(e.MoveId));
                                 _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
                                 _unitOfWork.SchedulePositions.GetAll().RemoveRange(_sourceSchedulePositions);
                                 _unitOfWork.SchedulePositions.GetAll().AddRange(destSchedulePositions);
@@ -1513,6 +1514,7 @@ namespace ScheduleDesigner.Hubs
                                 .Select(e => e.Key)
                                 .OrderBy(e => e).ToList();
 
+                            _unitOfWork.ScheduledMovePositions.DeleteMany(e => movesIds.Contains(e.MoveId));
                             _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
                             _unitOfWork.SchedulePositions.GetAll().RemoveRange(_sourceSchedulePositions);
                             _unitOfWork.SchedulePositions.GetAll().AddRange(destSchedulePositions);
@@ -1697,6 +1699,7 @@ namespace ScheduleDesigner.Hubs
                                 .Select(e => e.Key)
                                 .OrderBy(e => e).ToList();
 
+                        _unitOfWork.ScheduledMovePositions.DeleteMany(e => movesIds.Contains(e.MoveId));
                         _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
                         _unitOfWork.SchedulePositions.GetAll().RemoveRange(_schedulePositions);
 
@@ -2013,7 +2016,7 @@ namespace ScheduleDesigner.Hubs
                                 UserId = userId,
                                 IsConfirmed = !isProposition,
                                 ScheduleOrder = DateTime.Now,
-                                Message = message,
+                                Message = message != null ? new Message { Content = message} : null,
                                 ScheduledPositions = new List<ScheduledMovePosition>(destTimestampsCount)
                             };
                             for (var i = 0; i < destTimestampsCount; ++i)
@@ -2307,6 +2310,8 @@ namespace ScheduleDesigner.Hubs
                                 {
                                     if (isAdmin || isCoordinator || (_scheduledMovesCountsCondition[i].UserId == userId && !_scheduledMovesCountsCondition[i].IsConfirmed))
                                     {
+                                        _unitOfWork.ScheduledMovePositions
+                                            .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
                                         _unitOfWork.ScheduledMoves
                                             .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
 
@@ -2616,7 +2621,8 @@ namespace ScheduleDesigner.Hubs
                             if (_destSchedulePositions.Any())
                             {
                                 var scheduledMove = _unitOfWork.ScheduledMoves
-                                    .Get(e => e.MoveId == moveId).FirstOrDefault();
+                                    .Get(e => e.MoveId == moveId)
+                                    .Include(e => e.Message).FirstOrDefault();
 
                                 if (scheduledMove == null)
                                 {
@@ -2625,6 +2631,7 @@ namespace ScheduleDesigner.Hubs
 
                                 scheduledMove.IsConfirmed = true;
                                 _unitOfWork.ScheduledMoves.Update(scheduledMove);
+                                _unitOfWork.Messages.Delete(e => e.MoveId == moveId);
 
                                 var result1 = _unitOfWork.Complete();
                                 var result2 = Clients.All.AcceptedScheduledMove(
@@ -2651,6 +2658,7 @@ namespace ScheduleDesigner.Hubs
                                     .Select(e => e.Key)
                                     .OrderBy(e => e).ToList();
 
+                                _unitOfWork.ScheduledMovePositions.DeleteMany(e => movesIds.Contains(e.MoveId));
                                 _unitOfWork.ScheduledMoves.DeleteMany(e => movesIds.Contains(e.MoveId));
                                 _unitOfWork.SchedulePositions.GetAll().RemoveRange(_sourceSchedulePositions);
                                 _unitOfWork.SchedulePositions.GetAll().AddRange(destSchedulePositions);

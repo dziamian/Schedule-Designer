@@ -18,12 +18,11 @@ namespace ScheduleDesigner.Models
         [Required]
         public DateTime ScheduleOrder { get; set; }
 
-        [MaxLength(300)]
-        public string Message { get; set; }
-
 
         [ForeignKey("UserId")]
         public User User { get; set; }
+
+        public Message Message { get; set; }
 
         public virtual ICollection<ScheduledMovePosition> ScheduledPositions { get; set; }
     }

@@ -32,7 +32,7 @@ namespace ScheduleDesigner.Repositories
         public DbSet<SchedulePosition> SchedulePositions { get; set; }
         public DbSet<ScheduledMovePosition> ScheduledMovePositions { get; set; }
         public DbSet<ScheduledMove> ScheduledMoves { get; set; }
-
+        public DbSet<Message> Messages { get; set; }
 
         public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
 
@@ -171,7 +171,7 @@ namespace ScheduleDesigner.Repositories
                 .WithMany(e => e.SchedulePositions)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //ScheduledMove
+            //ScheduledMovePosition
             modelBuilder.Entity<ScheduledMovePosition>()
                 .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
 
@@ -185,6 +185,13 @@ namespace ScheduleDesigner.Repositories
                 .WithMany(e => e.ScheduledMoves)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            //Message
+            modelBuilder.Entity<Message>()
+                .HasKey(e => e.MoveId);
+
+            modelBuilder.Entity<Message>()
+                .Property(e => e.MoveId)
+                .ValueGeneratedNever();
 
             base.OnModelCreating(modelBuilder);
         }

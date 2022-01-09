@@ -8,6 +8,6 @@ namespace ScheduleDesigner.Repositories.Interfaces
 {
     public interface IScheduledMovePositionRepo : IRepoBase<ScheduledMovePosition>
     {
-
+        public int DeleteMany(Func<ScheduledMovePosition, bool> predicate);
     }
 }
