@@ -148,7 +148,7 @@ namespace ScheduleDesigner
                 };
 
                 endpoints.MapControllers();
-                endpoints.Select().Filter().OrderBy().Count().Expand().MaxTop(100);
+                endpoints.Select().Filter().OrderBy().Count().Expand().MaxTop(10000);
                 endpoints.MapODataRoute(
                     routeName: "api", 
                     routePrefix: "api", 
@@ -217,9 +217,15 @@ namespace ScheduleDesigner
                 .EntityType
                 .HasKey(e => new { e.RoomId, e.TimestampId, e.CourseId });
 
-            builder.EntitySet<ScheduledMove>("ScheduledMoves")
+            builder.EntitySet<ScheduledMovePosition>("ScheduledMovePositions")
                 .EntityType
                 .HasKey(e => new { e.MoveId, e.RoomId_1, e.TimestampId_1, e.RoomId_2, e.TimestampId_2, e.CourseId });
+
+            builder.EntitySet<ScheduledMove>("ScheduledMoves");
+
+            builder.EntitySet<Authorization>("Authorizations")
+                .EntityType
+                .HasKey(e => new { e.UserId });
             
             builder.Namespace = "Service";
             builder.EntityType<Settings>().Collection

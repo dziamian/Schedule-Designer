@@ -11,6 +11,7 @@ using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
+using ScheduleDesigner.Attributes;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -52,7 +53,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery(PageSize = 20)]
+        [CustomEnableQuery(PageSize = 20)]
         [ODataRoute("")]
         public IActionResult GetRooms()
         {
@@ -60,7 +61,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key})")]
         public IActionResult GetRoom([FromODataUri] int key)
         {

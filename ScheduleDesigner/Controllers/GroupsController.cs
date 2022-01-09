@@ -11,6 +11,7 @@ using ScheduleDesigner.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Repositories.UnitOfWork;
+using ScheduleDesigner.Attributes;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -51,7 +52,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery(PageSize = 20)]
+        [CustomEnableQuery(PageSize = 20)]
         [ODataRoute("")]
         public IActionResult GetGroups()
         {
@@ -59,7 +60,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key})")]
         public IActionResult GetGroup([FromODataUri] int key)
         {

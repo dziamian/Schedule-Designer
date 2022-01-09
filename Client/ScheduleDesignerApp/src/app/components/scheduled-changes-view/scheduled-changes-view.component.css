@@ -4,7 +4,7 @@ h2[mat-dialog-title] {
 }
 
 div[mat-dialog-content] {
-    min-width: 50vw;
+    min-width: 55vw;
     max-height: 50vh;
     overflow-y: auto;
 }

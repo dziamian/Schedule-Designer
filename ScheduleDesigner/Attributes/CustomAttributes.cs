@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Query.Validators;
+using Microsoft.AspNetCore.Http;
+using Microsoft.OData;
+using ScheduleDesigner.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -38,6 +44,30 @@ namespace ScheduleDesigner.Attributes
             }
 
             return null;
+        }
+    }
+
+    public class CustomEnableQueryAttribute : EnableQueryAttribute
+    {
+        private readonly DefaultQuerySettings defaultQuerySettings;
+        public CustomEnableQueryAttribute()
+        {
+            this.defaultQuerySettings = new DefaultQuerySettings
+            {
+                EnableExpand = true,
+                EnableSelect = true
+            };
+        }
+        public override void ValidateQuery(HttpRequest request, ODataQueryOptions queryOpts)
+        {
+            if (queryOpts.SelectExpand != null
+                && queryOpts.SelectExpand.RawExpand != null
+                && queryOpts.SelectExpand.RawExpand.Contains("Authorization"))
+            {
+                throw new InvalidOperationException();
+            }
+
+            base.ValidateQuery(request, queryOpts);
         }
     }
 }

@@ -2,8 +2,9 @@
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Dtos;
-using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,32 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery(MaxExpansionDepth = 3)]
+        [CustomEnableQuery(MaxExpansionDepth = 3)]
         [ODataRoute("")]
         public IActionResult GetScheduledMoves()
         {
             return Ok(_unitOfWork.ScheduledMoves.GetAll());
+        }
+
+        [HttpGet]
+        [CustomEnableQuery]
+        [ODataRoute("({key})")]
+        public IActionResult GetScheduledMove([FromODataUri] int key)
+        {
+            try
+            {
+                var _scheduledMove = _unitOfWork.ScheduledMoves.Get(e => e.MoveId == key);
+                if (!_scheduledMove.Any())
+                {
+                    return NotFound();
+                }
+
+                return Ok(SingleResult.Create(_scheduledMove));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
@@ -46,18 +68,26 @@ namespace ScheduleDesigner.Controllers
                     }
 
                     var _scheduledMove = _unitOfWork.ScheduledMoves
-                        .Get(e => e.MoveId == _moveId);
+                        .Get(e => e.MoveId == _moveId)
+                        .Include(e => e.ScheduledPositions);
 
                     if (!_scheduledMove.Any())
                     {
                         return NotFound();
                     }
-                    var sourceTimestamps = _scheduledMove.Select(e => e.TimestampId_1).ToList();
-                    var isConfirmed = _scheduledMove.FirstOrDefault().IsConfirmed;
-                    var userId = _scheduledMove.FirstOrDefault().UserId;
-                    var destRoomId = _scheduledMove.FirstOrDefault().RoomId_2;
-                    var scheduleOrder = _scheduledMove.FirstOrDefault().ScheduleOrder;
-                    var destTimestamps = _scheduledMove.Select(e => e.TimestampId_2).ToList();
+
+                    var scheduledMove = _scheduledMove.FirstOrDefault();
+                    if (scheduledMove == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var sourceTimestamps = scheduledMove.ScheduledPositions.Select(e => e.TimestampId_1).ToList();
+                    var isConfirmed = scheduledMove.IsConfirmed;
+                    var userId = scheduledMove.UserId;
+                    var destRoomId = scheduledMove.ScheduledPositions.FirstOrDefault().RoomId_2;
+                    var scheduleOrder = scheduledMove.ScheduleOrder;
+                    var destTimestamps = scheduledMove.ScheduledPositions.Select(e => e.TimestampId_2).ToList();
 
                     var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => sourceTimestamps.Contains(e.TimestampId));

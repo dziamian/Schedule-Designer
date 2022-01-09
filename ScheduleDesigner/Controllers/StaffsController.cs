@@ -7,6 +7,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -55,7 +56,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery(PageSize = 20)]
+        [CustomEnableQuery(PageSize = 20)]
         [ODataRoute("")]
         public IActionResult GetStaffs()
         {
@@ -63,7 +64,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key})")]
         public IActionResult GetStaff([FromODataUri] int key)
         {

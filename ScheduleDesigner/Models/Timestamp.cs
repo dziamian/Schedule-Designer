@@ -22,6 +22,6 @@ namespace ScheduleDesigner.Models
 
         public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
 
-        public virtual ICollection<ScheduledMove> ScheduledMoves { get; set; }
+        public virtual ICollection<ScheduledMovePosition> ScheduledMoves { get; set; }
     }
 }

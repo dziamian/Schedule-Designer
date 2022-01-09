@@ -2,6 +2,7 @@
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Controllers
@@ -17,7 +18,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetGroupCourseEditions()
         {

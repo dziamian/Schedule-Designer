@@ -32,6 +32,7 @@ export class RoomSelectionComponent implements OnInit {
   signalrSubscriptions: Subscription[];
 
   isProposition: boolean;
+  message: string;
 
   constructor(
     private scheduleDesignerApiService:ScheduleDesignerApiService,
@@ -329,10 +330,10 @@ export class RoomSelectionComponent implements OnInit {
           srcIndexes[0] + 1, courseEdition.Weeks!,
           selectedRoom!.RoomId, destIndexes[1] + 1,
           destIndexes[0] + 1, weeks,
-          this.isProposition
+          this.isProposition, this.message?.length > 0 ? this.message : null
         ).toPromise()
       );
-      
+      console.log(this.message);
       if (result.StatusCode >= 400) {
         throw result;
       }

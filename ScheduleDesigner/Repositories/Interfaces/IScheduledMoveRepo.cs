@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ScheduleDesigner.Models;
+﻿using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Base;
+using System;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
     public interface IScheduledMoveRepo : IRepoBase<ScheduledMove>
     {
-        int GetNextId();
-        public int AcceptMany(Func<ScheduledMove, bool> predicate);
         public int DeleteMany(Func<ScheduledMove, bool> predicate);
     }
 }

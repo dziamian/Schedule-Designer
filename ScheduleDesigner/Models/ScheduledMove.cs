@@ -1,43 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
     public class ScheduledMove
     {
+        [Key]
         public int MoveId { get; set; }
 
-        public int RoomId_1 { get; set; }
-
-        public int TimestampId_1 { get; set; }
-
-        public int RoomId_2 { get; set; }
-
-        public int TimestampId_2 { get; set; }
-
-        public int CourseId { get; set; }
-
-
+        [Required]
         public int UserId { get; set; }
 
         public bool IsConfirmed { get; set; }
 
+        [Required]
         public DateTime ScheduleOrder { get; set; }
 
-        
+        [MaxLength(300)]
+        public string Message { get; set; }
+
+
         [ForeignKey("UserId")]
         public User User { get; set; }
 
-        [ForeignKey("RoomId_1,TimestampId_1,CourseId")]
-        public SchedulePosition Origin { get; set; }
-
-        [ForeignKey("RoomId_2,CourseId")]
-        public CourseRoom DestinationRoom { get; set; }
-
-        [ForeignKey("TimestampId_2")]
-        public Timestamp DestinationTimestamp { get; set; }
+        public virtual ICollection<ScheduledMovePosition> ScheduledPositions { get; set; }
     }
 }

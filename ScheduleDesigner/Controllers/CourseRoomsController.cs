@@ -11,6 +11,7 @@ using ScheduleDesigner.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ScheduleDesigner.Repositories.UnitOfWork;
+using ScheduleDesigner.Attributes;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -65,7 +66,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery(PageSize = 20)]
+        [CustomEnableQuery(PageSize = 20)]
         [ODataRoute("")]
         public IActionResult GetCourseRooms()
         {
@@ -73,7 +74,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
         public IActionResult GetCourseRoom([FromODataUri] int key1, [FromODataUri] int key2)
         {

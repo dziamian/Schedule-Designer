@@ -36,6 +36,6 @@ namespace ScheduleDesigner.Models
         [ForeignKey("TimestampId")]
         public Timestamp Timestamp { get; set; }
 
-        public virtual ICollection<ScheduledMove> ScheduledMoves { get; set; }
+        public virtual ICollection<ScheduledMovePosition> ScheduledMovePositions { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
@@ -57,7 +58,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [Authorize]
-        [EnableQuery(MaxExpansionDepth = 3)]
+        [CustomEnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
         public async Task<IActionResult> GetFilteredCourseEditions(
             [FromODataUri] IEnumerable<int> CoordinatorsIds,
@@ -117,7 +118,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [Authorize]
-        [EnableQuery(MaxExpansionDepth = 3)]
+        [CustomEnableQuery(MaxExpansionDepth = 3)]
         [HttpGet]
         [ODataRoute("({key1},{key2})/GetFilteredCourseEdition(CoordinatorsIds={CoordinatorsIds},GroupsIds={GroupsIds},RoomsIds={RoomsIds},Frequency={Frequency})")]
         public async Task<IActionResult> GetFilteredCourseEdition(
@@ -180,7 +181,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/GetBusyPeriods(Weeks={Weeks})")]
         public async Task<IActionResult> GetBusyPeriods([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] IEnumerable<int> Weeks)
         {
@@ -224,7 +225,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/IsPeriodBusy(PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
         public async Task<IActionResult> IsPeriodBusy([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
         {
@@ -329,7 +330,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetCourseEditions()
         {
@@ -337,7 +338,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
         public IActionResult GetCourseEdition([FromODataUri] int key1, [FromODataUri] int key2)
         {

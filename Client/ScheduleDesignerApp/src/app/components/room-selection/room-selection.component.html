@@ -29,6 +29,12 @@
             [ngModelOptions]="{standalone: true}">
             This is proposition
         </mat-slide-toggle>
+        <br>
+        <mat-form-field *ngIf="isProposition" style="width: 100%">
+            <mat-label>Leave a message to your proposition</mat-label>
+            <textarea matInput maxlength="300" placeholder="Justify your proposition..." type="text" [(ngModel)]="message" [ngModelOptions]="{standalone: true}"></textarea>
+            <mat-hint align="end">{{message?.length ?? '0'}} / 300</mat-hint>
+        </mat-form-field>
     </form>
 </div>
 <mat-dialog-actions align="end">

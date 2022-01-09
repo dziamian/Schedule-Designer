@@ -2,6 +2,7 @@
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -91,7 +92,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public async Task<IActionResult> GetSettings()
         {

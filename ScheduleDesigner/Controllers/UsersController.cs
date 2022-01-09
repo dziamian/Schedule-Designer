@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
@@ -145,7 +146,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery(PageSize = 20)]
+        [CustomEnableQuery(PageSize = 20)]
         [ODataRoute("")]
         public IActionResult GetUsers()
         {
@@ -153,7 +154,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key})")]
         public IActionResult GetUser([FromODataUri] int key)
         {
@@ -174,7 +175,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [Authorize]
-        [EnableQuery]
+        [CustomEnableQuery]
         [HttpGet]
         public async Task<IActionResult> GetMyAccount()
         {

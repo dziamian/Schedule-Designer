@@ -163,10 +163,11 @@ namespace ScheduleDesigner.Hubs
 
                 var timestampsIds = source.Select(e => e.TimestampId).ToList();
 
-                var movesIds = _unitOfWork.ScheduledMoves
-                    .Get(e => e.IsConfirmed && timestampsIds.Contains(e.TimestampId_2)
+                var movesIds = _unitOfWork.ScheduledMovePositions
+                    .Get(e => e.ScheduledMove.IsConfirmed && timestampsIds.Contains(e.TimestampId_2)
                         && !skippedMovesIds.Contains(e.MoveId))
-                    .OrderBy(e => e.ScheduleOrder)
+                    .Include(e => e.ScheduledMove)
+                    .OrderBy(e => e.ScheduledMove.ScheduleOrder)
                     .GroupBy(e => e.MoveId)
                     .Select(e => e.Key).ToList();
 
@@ -177,7 +178,7 @@ namespace ScheduleDesigner.Hubs
 
                 var moveId = movesIds.First();
 
-                var _scheduledMove = _unitOfWork.ScheduledMoves
+                var _scheduledMove = _unitOfWork.ScheduledMovePositions
                     .Get(e => e.MoveId == moveId);
 
                 var length = _scheduledMove.Count();
@@ -446,7 +447,7 @@ namespace ScheduleDesigner.Hubs
                                     CourseEditionId = includableCourseEdition.CourseEditionId
                                 }).ToList();
 
-                                var movesIds = _unitOfWork.ScheduledMoves
+                                var movesIds = _unitOfWork.ScheduledMovePositions
                                     .Get(e => e.RoomId_1 == candidateSourceRoomId && candidateSourceTimestamps.Contains(e.TimestampId_1)
                                         && e.CourseId == includableCourseEdition.CourseId)
                                     .GroupBy(e => e.MoveId)
@@ -1505,7 +1506,7 @@ namespace ScheduleDesigner.Hubs
                                 CourseEditionId = includableCourseEdition.CourseEditionId
                             }).ToList();
 
-                            var movesIds = _unitOfWork.ScheduledMoves
+                            var movesIds = _unitOfWork.ScheduledMovePositions
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.CourseId == includableCourseEdition.CourseId)
                                 .GroupBy(e => e.MoveId)
@@ -1689,7 +1690,7 @@ namespace ScheduleDesigner.Hubs
                         Array.Copy(groupsIds, returnableGroupsIds, groupsIds.Length);
                         Array.Sort(groupsIds);
 
-                        var movesIds = _unitOfWork.ScheduledMoves
+                        var movesIds = _unitOfWork.ScheduledMovePositions
                                 .Get(e => e.RoomId_1 == roomId && _timestamps.Contains(e.TimestampId_1)
                                     && e.CourseId == schedulePosition.CourseId)
                                 .GroupBy(e => e.MoveId)
@@ -1748,7 +1749,7 @@ namespace ScheduleDesigner.Hubs
         [Authorize(Policy = "Assistant")]
         public MessageObject AddScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
-            int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks, bool isProposition)
+            int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks, bool isProposition, string message)
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
             var schedulePositionKeys2 = new List<SchedulePositionKey>();
@@ -1767,6 +1768,11 @@ namespace ScheduleDesigner.Hubs
             if (weeks.Length != destWeeks.Length)
             {
                 return new MessageObject { StatusCode = 400, Message = "Amount of weeks must be equal." };
+            }
+
+            if (isProposition && message?.Length > 300)
+            {
+                return new MessageObject { StatusCode = 400, Message = "Message has too many characters." };
             }
 
             try
@@ -1974,7 +1980,7 @@ namespace ScheduleDesigner.Hubs
                                 return new MessageObject { StatusCode = 400, Message = "Scheduled move cannot collide with your own courses." };
                             }*/
 
-                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMoves
+                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMovePositions
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
@@ -2001,25 +2007,26 @@ namespace ScheduleDesigner.Hubs
                                 }
                             }
 
-                            var scheduledMoveId = _unitOfWork.ScheduledMoves.GetNextId();
-                            var scheduleOrderDate = DateTime.Now;
-
-                            var scheduledMove = new List<ScheduledMove>();
-                            for (var i = 0; i < _destTimestamps.Count; ++i)
+                            var destTimestampsCount = _destTimestamps.Count;
+                            var scheduledMove = new ScheduledMove
+                            {
+                                UserId = userId,
+                                IsConfirmed = !isProposition,
+                                ScheduleOrder = DateTime.Now,
+                                Message = message,
+                                ScheduledPositions = new List<ScheduledMovePosition>(destTimestampsCount)
+                            };
+                            for (var i = 0; i < destTimestampsCount; ++i)
                             {
                                 var srcTimestamp = _sourceTimestamps[i];
                                 var destTimestamp = _destTimestamps[i];
-                                scheduledMove.Add(new ScheduledMove
+                                scheduledMove.ScheduledPositions.Add(new ScheduledMovePosition
                                 {
-                                    MoveId = scheduledMoveId,
                                     RoomId_1 = roomId,
                                     TimestampId_1 = srcTimestamp,
                                     RoomId_2 = destRoomId,
                                     TimestampId_2 = destTimestamp,
-                                    CourseId = courseEdition.CourseId,
-                                    UserId = userId,
-                                    IsConfirmed = !isProposition,
-                                    ScheduleOrder = scheduleOrderDate
+                                    CourseId = courseEdition.CourseId
                                 });
                             }
 
@@ -2027,7 +2034,7 @@ namespace ScheduleDesigner.Hubs
 
                             var result1 = _unitOfWork.Complete();
                             var result2 = Clients.All.AddedScheduledMove(
-                                scheduledMoveId, userId, !isProposition,
+                                scheduledMove.MoveId, userId, !isProposition,
                                 courseEdition.CourseId, courseEdition.CourseEditionId,
                                 roomId, periodIndex,
                                 day, weeks
@@ -2272,11 +2279,12 @@ namespace ScheduleDesigner.Hubs
                         }
                         try
                         {
-                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMoves
+                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMovePositions
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
-                                .GroupBy(e => new { e.MoveId, e.UserId, e.IsConfirmed })
+                                .Include(e => e.ScheduledMove)
+                                .GroupBy(e => new { e.MoveId, e.ScheduledMove.UserId, e.ScheduledMove.IsConfirmed })
                                 .Select(e => new { e.Key.MoveId, e.Key.UserId, e.Key.IsConfirmed, Count = e.Count() })
                                 .OrderBy(e => e.MoveId).ToList();
 
@@ -2546,7 +2554,7 @@ namespace ScheduleDesigner.Hubs
                         }
                         try
                         {
-                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMoves
+                            var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMovePositions
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
                                     && e.CourseId == courseEdition.CourseId)
@@ -2607,8 +2615,16 @@ namespace ScheduleDesigner.Hubs
 
                             if (_destSchedulePositions.Any())
                             {
-                                _unitOfWork.ScheduledMoves
-                                    .AcceptMany(e => e.MoveId == moveId);
+                                var scheduledMove = _unitOfWork.ScheduledMoves
+                                    .Get(e => e.MoveId == moveId).FirstOrDefault();
+
+                                if (scheduledMove == null)
+                                {
+                                    return new MessageObject { StatusCode = 400, Message = "Could not find scheduled move." };
+                                }
+
+                                scheduledMove.IsConfirmed = true;
+                                _unitOfWork.ScheduledMoves.Update(scheduledMove);
 
                                 var result1 = _unitOfWork.Complete();
                                 var result2 = Clients.All.AcceptedScheduledMove(
@@ -2628,7 +2644,7 @@ namespace ScheduleDesigner.Hubs
                                     CourseEditionId = includableCourseEdition.CourseEditionId
                                 }).ToList();
 
-                                var movesIds = _unitOfWork.ScheduledMoves
+                                var movesIds = _unitOfWork.ScheduledMovePositions
                                     .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                         && e.CourseId == includableCourseEdition.CourseId)
                                     .GroupBy(e => e.MoveId)

@@ -1,3 +1,4 @@
+import { Titles } from "./Accounts";
 import { Room } from "./Room";
 
 export class ScheduledMove {
@@ -24,5 +25,15 @@ export class ScheduledMoveDetails {
         public DestPeriodIndex:number,
         public DestDay:number,
         public DestWeeks:number[]
+    ) {}
+}
+
+export class ScheduledMoveInfo {
+    
+    constructor(
+        public FirstName:string,
+        public LastName:string,
+        public Titles:Titles|null,
+        public Message:string|null
     ) {}
 }

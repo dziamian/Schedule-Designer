@@ -11,7 +11,7 @@ import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
 import { CourseEditionInfo } from 'src/app/others/CourseEditionInfo';
-import { ScheduledMove, ScheduledMoveDetails } from 'src/app/others/ScheduledMove';
+import { ScheduledMove, ScheduledMoveDetails, ScheduledMoveInfo } from 'src/app/others/ScheduledMove';
 import { Filter } from 'src/app/others/Filter';
 
 @Injectable({
@@ -589,7 +589,7 @@ export class ScheduleDesignerApiService {
   ):Observable<{schedule: CourseEdition[][][], courseEditions: CourseEdition[]}> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?
-        $expand=Timestamp,LockUser($expand=Staff),ScheduledMoves($select=MoveId,UserId,IsConfirmed)`,
+        $expand=Timestamp,LockUser($expand=Staff),ScheduledMovePositions($expand=ScheduledMove($select=MoveId,UserId,IsConfirmed))`,
       method: 'GET'
     };
 
@@ -622,7 +622,7 @@ export class ScheduleDesignerApiService {
           const periodIndex = value.Timestamp.PeriodIndex - 1;
           const week = value.Timestamp.Week;
           const locked = {value: value.LockUserId != null, byAdmin: value.LockUser?.Staff?.IsAdmin};
-          const scheduledMoves = value.ScheduledMoves.map((value : ScheduledMove) => new ScheduledMove(value.MoveId, value.UserId, value.IsConfirmed));
+          const scheduledMoves = value.ScheduledMovePositions.map((value : any) => new ScheduledMove(value.ScheduledMove.MoveId, value.ScheduledMove.UserId, value.ScheduledMove.IsConfirmed));
 
           let scheduleSlot = schedule[dayIndex][periodIndex];
           let found = false;
@@ -914,6 +914,28 @@ export class ScheduleDesignerApiService {
           move.DestDay,
           move.DestWeeks);
       }))
+    );
+  }
+
+  public GetScheduledMoveInfo(moveId: number):Observable<ScheduledMoveInfo> {
+    const request = {
+      url: this.baseUrl + `/scheduledMoves(${moveId})?$expand=User($expand=Coordinator)&$select=User,Message`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => new ScheduledMoveInfo(
+        response.User.FirstName,
+        response.User.LastName,
+        response.User?.Coordinator ? new Titles(response.User.Coordinator.TitleBefore, response.User.Coordinator.TitleAfter) : null,
+        response.Message
+      ))
     );
   }
 

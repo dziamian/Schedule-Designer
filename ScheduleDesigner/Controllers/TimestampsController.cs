@@ -6,6 +6,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
 
@@ -22,7 +23,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetTimestamps()
         {
@@ -30,7 +31,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("({key})")]
         public IActionResult GetTimestamp([FromODataUri] int key)
         {

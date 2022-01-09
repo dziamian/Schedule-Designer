@@ -211,10 +211,11 @@ export class SignalrService implements OnDestroy {
     destPeriodIndex:number,
     destDay:number,
     destWeeks:number[],
-    isProposition:boolean
+    isProposition:boolean,
+    message:string|null
   ):Observable<MessageObject> {
     return from(this.connection.invoke<MessageObject>('AddScheduledMove', 
-    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks, isProposition))
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks, isProposition, message))
       .pipe(map((result : any) => {
         const message = new MessageObject(result.statusCode);
         message.Message = result.message;

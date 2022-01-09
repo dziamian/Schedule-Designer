@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Hubs.Helpers;
 using ScheduleDesigner.Models;
@@ -30,7 +31,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetSchedulePositions()
         {
@@ -38,7 +39,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("Service.GetSchedulePositions(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
         public IActionResult GetSchedulePositions([FromODataUri] int RoomId, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
         {
@@ -59,7 +60,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetScheduleAmount([FromODataUri] IEnumerable<int> CourseEditionIds)
         {
@@ -86,7 +87,7 @@ namespace ScheduleDesigner.Controllers
 
         [Authorize]
         [HttpGet]
-        [EnableQuery(MaxExpansionDepth = 3)]
+        [CustomEnableQuery(MaxExpansionDepth = 3)]
         public IActionResult GetFilteredSchedule(
             [FromODataUri] IEnumerable<int> CoordinatorsIds, 
             [FromODataUri] IEnumerable<int> GroupsIds, 
@@ -144,7 +145,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [HttpGet]
-        [EnableQuery]
+        [CustomEnableQuery]
         [ODataRoute("Service.GetRoomsAvailability(RoomsIds={RoomsIds},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
         public IActionResult GetRoomsAvailibility(
             [FromODataUri] IEnumerable<int> RoomsIds, 

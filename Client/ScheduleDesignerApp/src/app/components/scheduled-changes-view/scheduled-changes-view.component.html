@@ -24,16 +24,36 @@
                     || (data.IgnoreUsersLocks && scheduledMove.IsLockedByAdmin && scheduledMove.IsLocked) || scheduledMove.IsAccepting"
                 (click)="Accept(scheduledMove)">Confirm</button>
                 
-                <button mat-raised-button color="warn" 
+                <button mat-raised-button color="warn" style="margin-right: 1vw;"
                 [disabled]="(data.IsRepresentative != null && (scheduledMove.IsConfirmed || (!scheduledMove.IsConfirmed && scheduledMove.UserId != data.IsRepresentative))) 
                     || (!data.IgnoreUsersLocks && scheduledMove.IsLocked) 
                     || (data.IgnoreUsersLocks && scheduledMove.IsLockedByAdmin && scheduledMove.IsLocked) || scheduledMove.IsRemoving" 
                 (click)="Remove(scheduledMove)">Remove</button>
+                
+                <button mat-icon-button color="primary" 
+                (click)="ShowInfo(scheduledMove)">
+                    <mat-icon>info</mat-icon>
+                </button>
             </div>
             <mat-divider></mat-divider>
         </mat-list-item>
     </mat-list>
+    <br>
+    <div *ngIf="isInfoVisible">
+        <mat-label>Created by: <b>{{scheduledMoveInfo?.Titles?.TitleBefore}} {{scheduledMoveInfo?.FirstName}} {{scheduledMoveInfo?.LastName}} {{scheduledMoveInfo?.Titles?.TitleAfter}}</b></mat-label>
+        <div *ngIf="scheduledMoveInfo?.Message != null; else noMessageAttached">
+            <mat-label>Attached message:</mat-label>
+            <mat-form-field style="width: 100%">
+                <textarea matInput maxlength="300" type="text" [ngModel]="scheduledMoveInfo?.Message" [ngModelOptions]="{standalone: true}" readonly cdkTextareaAutosize></textarea>
+            </mat-form-field>
+        </div>
+    </div>
 </div>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
 </mat-dialog-actions>
+
+<ng-template #noMessageAttached>
+    <br>
+    <mat-label>No message attached.</mat-label>
+</ng-template>

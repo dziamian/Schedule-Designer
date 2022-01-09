@@ -5,7 +5,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { ScheduledChangesDialogData, ScheduledChangesDialogResult } from 'src/app/others/dialogs/ScheduledChangesDialog';
-import { ScheduledMoveDetails } from 'src/app/others/ScheduledMove';
+import { ScheduledMoveDetails, ScheduledMoveInfo } from 'src/app/others/ScheduledMove';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
@@ -17,6 +17,9 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 export class ScheduledChangesViewComponent implements OnInit {
 
   scheduledMoves:ScheduledMoveDetails[] = [];
+  
+  isInfoVisible:boolean = false;
+  scheduledMoveInfo:ScheduledMoveInfo|null = null;
 
   loading:boolean = true;
   isConnectedSubscription: Subscription;
@@ -227,6 +230,17 @@ export class ScheduledChangesViewComponent implements OnInit {
 
   ShowFrequency(weeks:number[]) { 
     return CourseEdition.ShowFrequency(this.data.Settings, weeks);
+  }
+
+  ShowInfo(selectedScheduledMove:ScheduledMoveDetails) {
+    if (!this.isInfoVisible) {
+      this.isInfoVisible = true;
+    }
+    this.scheduleDesignerApiService.GetScheduledMoveInfo(selectedScheduledMove.MoveId).subscribe((info) => {
+      this.scheduledMoveInfo = info;
+    },() => {
+      this.scheduledMoveInfo = null;
+    });
   }
 
   async Remove(selectedScheduledMove:ScheduledMoveDetails) {
