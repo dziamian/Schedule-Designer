@@ -47,6 +47,7 @@ export class ScheduleDesignerApiService {
       response.FirstName,
       response.LastName,
       response.Student != null,
+      response.Student?.StudentNumber,
       response.Student?.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? [],
       response.Coordinator != null,
       (response.Coordinator != null) ? new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter) : null,

@@ -16,6 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -85,6 +86,7 @@ import { StudentScheduleComponent } from './views/student-schedule/student-sched
     MatTreeModule,
     MatInputModule,
     TextFieldModule,
+    MatChipsModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],

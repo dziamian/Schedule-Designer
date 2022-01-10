@@ -1,3 +1,63 @@
+.profile {
+    width: 40%;
+    height: 25%;
+    position: fixed;
+    margin-left: -20%;
+    margin-top: -20%;
+    top: 48%;
+    left: 50%;
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+.profile-header {
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    height: 4vh;
+    background-color: #43da57;
+}
+
+.profile-information {
+    text-align: left;
+    display: flex;
+}
+
+.profile-image-field {
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    height: 100%;
+    width: 25%;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.profile-field {
+    margin-top: 5%;
+    width: 55%;
+}
+
+.profile-roles {
+    margin-top: 10px;
+    text-align: right;
+    width: 20%;
+}
+
+.profile-roles ::ng-deep .mat-chip-list-wrapper {
+    justify-content: center;
+    flex-direction: column;
+}
+
+.profile-roles ::ng-deep .mat-chip-list-wrapper .mat-standard-chip {
+    margin: 2px;
+}
+
 .spinner {
     position: fixed;
     margin: auto;

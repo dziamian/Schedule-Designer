@@ -1,11 +1,53 @@
 <div *ngIf="!loading && connectionStatus; else spinner" style="text-align:center;">
-    {{account.UserId}}<br>
-    <b>{{account.Titles?.TitleBefore}} {{account.FirstName}} {{account.LastName}} {{account.Titles?.TitleAfter}}</b><br>
-    Student: {{account.Student}}<br>
-    Representative Groups Ids: {{account.RepresentativeGroups}}<br>
-    Coordinator: {{account.Coordinator}}<br>
-    Staff: {{account.Staff}}<br>
-    Admin: {{account.Admin}}
+    <table class="profile">
+        <tr>
+            <td class="profile-header">
+                Your profile:
+            </td>
+        </tr>
+        <tr>
+            <td class="profile-information">
+                <div class="profile-image-field">
+                    <img src="assets/profile.svg" class="profile-image">
+                </div>
+                <div class="profile-field">
+                    <span>
+                        First Name: <b>{{account.FirstName}}</b>
+                        <br>
+                    </span>
+                    <span>
+                        Last Name: <b>{{account.LastName}}</b>
+                        <br>
+                    </span>
+                    <span *ngIf="account.Titles != null && 
+                        ((account.Titles.TitleBefore != null && account.Titles.TitleBefore != '') 
+                            || (account.Titles.TitleAfter != null && account.Titles.TitleAfter != ''))">
+                        Academic Titles: <b>{{account.Titles?.TitleBefore}}, {{account.Titles?.TitleAfter}}</b>
+                        <br>
+                    </span>
+                    <span *ngIf="account.StudentNumber != null && account.StudentNumber != ''">
+                        Student Number: <b>{{account.StudentNumber}}</b>
+                    </span>
+                </div>
+                <div class="profile-roles">
+                    <mat-chip-list>
+                        <mat-chip *ngIf="account.Admin" style="background-color: #b90000; color: white;" selected>Administrator</mat-chip>
+                        <mat-chip *ngIf="account.RepresentativeGroups.length > 0" style="background-color: #0074b8; color: white;" selected>Representative</mat-chip>
+                        <mat-chip *ngIf="account.Coordinator" style="background-color: #047200; color: white;" selected>Coordinator</mat-chip>
+                        <mat-chip *ngIf="account.Student" style="background-color: #a16e00; color: white;" selected>Student</mat-chip>
+                        <mat-chip *ngIf="account.Staff" style="background-color: #ffffff; color: black;" selected>Staff</mat-chip>
+                    </mat-chip-list>
+                </div>
+                <!--{{account.UserId}}<br>
+                <b>{{account.Titles?.TitleBefore}} {{account.FirstName}} {{account.LastName}} {{account.Titles?.TitleAfter}}</b><br>
+                Student: {{account.Student}}<br>
+                Representative Groups Ids: {{account.RepresentativeGroups}}<br>
+                Coordinator: {{account.Coordinator}}<br>
+                Staff: {{account.Staff}}<br>
+                Admin: {{account.Admin}}-->
+            </td>
+        </tr>
+    </table>
 </div>
 <ng-template #spinner>
     <mat-progress-spinner

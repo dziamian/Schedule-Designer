@@ -25,10 +25,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private store:Store<{account: Account}>,
-    private usosApiService:UsosApiService,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
     private signalrService:SignalrService,
-    private router:Router,
     private snackBar:MatSnackBar
   ) { 
     this.store.select('account').subscribe((account) => {
