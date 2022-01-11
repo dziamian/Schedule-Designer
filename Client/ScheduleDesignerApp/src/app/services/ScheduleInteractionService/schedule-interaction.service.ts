@@ -1365,6 +1365,7 @@ export class ScheduleInteractionService {
       case RoomSelectionDialogStatus.ACCEPTED: {
         data.currentSelectedCourseEdition.CourseEdition.Room = dialogResult.Room;
         data.currentSelectedCourseEdition.CourseEdition.Weeks = dialogResult.Weeks;
+        data.currentSelectedCourseEdition.CourseEdition.ScheduledMoves = [];
       } break;
       case RoomSelectionDialogStatus.SCHEDULED: {
 
