@@ -34,10 +34,13 @@
             <i>{{course?.Type?.Name}}, {{course?.Room?.Name}}</i>
         </ng-template>
         <br/>
+        <span class="course-weeks">
+            <i>{{course.ShowFrequency(settings)}}</i><br/>
+        </span>
         <b>{{course?.Name}}</b>
         <br/>
         <div *ngFor="let coordinator of course?.Coordinators">
-            <span [style.text-decoration]="CheckIfItsMe(coordinator.UserId) ? 'underline' : 'none'">{{coordinator.Titles.TitleBefore}} {{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleAfter}}</span>
+            <span>{{coordinator.Titles.TitleBefore}} {{coordinator.LastName | uppercase}} {{coordinator.FirstName}} {{coordinator.Titles.TitleAfter}}</span>
             <br/>
         </div>
         <div *ngFor="let group of course?.Groups">

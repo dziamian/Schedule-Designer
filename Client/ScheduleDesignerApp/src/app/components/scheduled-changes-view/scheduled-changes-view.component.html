@@ -20,12 +20,12 @@
             <div *ngIf="data.IsModifying" class="item-buttons">
                 <button *ngIf="!scheduledMove.IsConfirmed" 
                 mat-raised-button class="confirm" style="margin-right: 1vw;"
-                [disabled]="data.IsRepresentative != null || (!data.IgnoreUsersLocks && scheduledMove.IsLocked) 
+                [disabled]="data.PropositionUserId != null || (!data.IgnoreUsersLocks && scheduledMove.IsLocked) 
                     || (data.IgnoreUsersLocks && scheduledMove.IsLockedByAdmin && scheduledMove.IsLocked) || scheduledMove.IsAccepting"
                 (click)="Accept(scheduledMove)">Confirm</button>
                 
                 <button mat-raised-button color="warn" style="margin-right: 1vw;"
-                [disabled]="(data.IsRepresentative != null && (scheduledMove.IsConfirmed || (!scheduledMove.IsConfirmed && scheduledMove.UserId != data.IsRepresentative))) 
+                [disabled]="(data.PropositionUserId != null && (scheduledMove.IsConfirmed || (!scheduledMove.IsConfirmed && scheduledMove.UserId != data.PropositionUserId))) 
                     || (!data.IgnoreUsersLocks && scheduledMove.IsLocked) 
                     || (data.IgnoreUsersLocks && scheduledMove.IsLockedByAdmin && scheduledMove.IsLocked) || scheduledMove.IsRemoving" 
                 (click)="Remove(scheduledMove)">Remove</button>

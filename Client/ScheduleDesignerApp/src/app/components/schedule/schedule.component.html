@@ -1,4 +1,4 @@
-<div class="schedule">
+<div class="schedule" id="chosen-schedule">
     <div class="schedule-header">
         <div class="schedule-header-left"></div>
         <div class="schedule-header-center">
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div *ngIf="loading == false; else spinner" class="schedule-content" cdkScrollable>
-        <table>
+        <table class="schedule-table">
             <thead>
                 <tr>
                     <th class="day-column"></th>
@@ -31,7 +31,6 @@
                         id="{{dayIndex}},{{timeIndex}}"
                         cdkDropListSortingDisabled
                         [cdkDropListData]="schedule[dayIndex][timeIndex]"
-                        [cdkDropListEnterPredicate]="DragEnterPredicate"
                         [cdkDropListDisabled]="IsDropDisabled(dayIndex,timeIndex)"
                         (cdkDropListEntered)="OnDragEnter($event)"
                         (cdkDropListDropped)="OnDropped($event)"

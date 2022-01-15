@@ -128,8 +128,14 @@
                             <b>Selected resource: {{currentResourceName ?? 'None'}}</b>
                         </div>
                         <div class="footer-schedule-menu">
+                            <button mat-mini-fab color="accent" style="margin-right: 1vw;"
+                                [disabled]="!currentResourceName"
+                                (click)="PrintSchedule()"
+                                >
+                                    <mat-icon>print</mat-icon>
+                            </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!account?.Admin && !isRepresentative()) || !currentResourceName"
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!account?.Admin && !canMakePropositions()) || !currentResourceName"
                                 (click)="ModifySchedule()"
                                 >
                                     <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>

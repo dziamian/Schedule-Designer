@@ -527,6 +527,72 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  public PrintSchedule(): void {
+    let content = document.getElementById('chosen-schedule')?.innerHTML;
+    let popupWindow = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+    if (popupWindow == null) {
+      return;
+    }
+
+    popupWindow.document.open();
+    popupWindow.document.write(`
+      <html>
+        <head>
+          <title>${this.labelBefore ?? ''} Schedule ${this.labelAfter ?? ''} ${this.GetViewDescription()}</title>
+          <style>
+          .schedule-course-field:last-child:not(:only-child) {
+            border-bottom: none;
+          }
+          .schedule-header {
+            display: none;
+          }
+          .schedule-content {
+            box-sizing: border-box;
+          }
+          .schedule-content table {
+            border: 1px solid #000000;
+          }
+          .schedule-content table td, .schedule-content table th {
+            text-align: center;
+            border: 1px solid #000000;
+          }
+          .schedule-content table td[course="true"] {
+            vertical-align: top;
+          }
+          .course {
+            padding: 2px;
+            position: relative;
+            text-align: center;
+            font-size: 12px;
+            font-family: "Rubik";
+            box-sizing: border-box;
+            line-height: 1.3;
+          }
+          .course-weeks {
+            display: inline;
+          }
+          .pin {
+            display: none;
+          }
+          .course .mat-badge-medium.mat-badge-above.mat-badge-before .mat-badge-content {
+            display: none;
+          }
+          .course.mat-badge-medium.mat-badge-above.mat-badge-after .mat-badge-content {
+            display: none;
+          }
+          .course.mat-badge-medium.mat-badge-above.mat-badge-after.mat-badge-accent[proposition="true"] .mat-badge-content {
+            display: none;
+          }
+          </style>
+        </head>
+        <body onload="window.print();">
+          ${content ?? ''}
+        </body>
+      </html>`
+    );
+    popupWindow.document.close();
+  }
+
   async EditView(): Promise<void> {
     this.onViewEdit.emit();
   }
@@ -553,11 +619,6 @@ export class ScheduleComponent implements OnInit {
 
   OnDropped(event:CdkDragDrop<CourseEdition[]>) {
     this.onDrop.emit(event);
-  }
-
-  DragEnterPredicate(drag:CdkDrag<CourseEdition>, drop:CdkDropList<CourseEdition[]>) {
-    //TODO:return drop.data.length < 1;
-    return true;
   }
 
   OnDragEnter(event:CdkDragEnter<CourseEdition[]>) {

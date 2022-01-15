@@ -308,6 +308,12 @@ export class PersonalScheduleComponent implements OnInit {
     );
   }
 
+  PrintSchedule() {
+    if (this.scheduleComponent != null) {
+      this.scheduleComponent.PrintSchedule();
+    }
+  }
+
   async OnMyCoursesDrop(event: CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesDrop(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.myCoursesComponent, this.scheduleComponent, this.snackBar
@@ -396,7 +402,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   OnMouseEnter(event: {day: number, periodIndex: number}): void {
     this.scheduleInteractionService.onMouseEnter(
-      event, this.data, this.scheduleComponent
+      event, this.data
     )
   }
 

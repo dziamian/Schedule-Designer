@@ -940,6 +940,10 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public ExportSchedule() {
+    
+  }
+
   //TESTING
   /*public AddSchedulePositions(
     courseId:number,

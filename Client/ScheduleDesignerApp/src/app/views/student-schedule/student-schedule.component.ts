@@ -76,11 +76,11 @@ export class StudentScheduleComponent implements OnInit {
     this.resourceTreeService.setMyGroups(this.account.UserId);
   }
 
-  isRepresentative(): boolean {
+  canMakePropositions(): boolean {
     if (!this.currentResourceName) {
       return false;
     }
-    return this.account?.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId));
+    return this.account?.Coordinator || this.account?.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId));
   }
 
   private updateBusyPeriods(): void {
@@ -321,6 +321,12 @@ export class StudentScheduleComponent implements OnInit {
     );
   }
 
+  PrintSchedule() {
+    if (this.scheduleComponent != null) {
+      this.scheduleComponent.PrintSchedule();
+    }
+  }
+
   async OnMyCoursesDrop(event: CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesDrop(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.myCoursesComponent, this.scheduleComponent, this.snackBar
@@ -409,7 +415,7 @@ export class StudentScheduleComponent implements OnInit {
 
   OnMouseEnter(event: {day: number, periodIndex: number}): void {
     this.scheduleInteractionService.onMouseEnter(
-      event, this.data, this.scheduleComponent
+      event, this.data
     )
   }
 

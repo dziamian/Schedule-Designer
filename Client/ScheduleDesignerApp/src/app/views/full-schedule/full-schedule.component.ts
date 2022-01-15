@@ -76,6 +76,13 @@ export class FullScheduleComponent implements OnInit {
     this.resourceTreeService.setAllResources();
   }
 
+  canMakePropositions(): boolean {
+    if (!this.currentResourceName) {
+      return false;
+    }
+    return this.account?.Coordinator || this.account?.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId));
+  }
+
   private updateBusyPeriods(): void {
     this.scheduleInteractionService.updateBusyPeriods(
       this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent
@@ -314,6 +321,12 @@ export class FullScheduleComponent implements OnInit {
     );
   }
 
+  PrintSchedule() {
+    if (this.scheduleComponent != null) {
+      this.scheduleComponent.PrintSchedule();
+    }
+  }
+
   async OnMyCoursesDrop(event: CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesDrop(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.myCoursesComponent, this.scheduleComponent, this.snackBar
@@ -384,7 +397,7 @@ export class FullScheduleComponent implements OnInit {
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, null, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, !this.account.Admin ? this.account.UserId : null, this.account.Admin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 
@@ -402,7 +415,7 @@ export class FullScheduleComponent implements OnInit {
 
   OnMouseEnter(event: {day: number, periodIndex: number}): void {
     this.scheduleInteractionService.onMouseEnter(
-      event, this.data, this.scheduleComponent
+      event, this.data
     )
   }
 

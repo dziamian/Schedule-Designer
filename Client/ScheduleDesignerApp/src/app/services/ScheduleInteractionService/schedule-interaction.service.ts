@@ -995,7 +995,7 @@ export class ScheduleInteractionService {
     tabWeeks: number[][],
     currentTabIndex: number,
     isAdmin: boolean,
-    isRepresentative: boolean,
+    isPropositionOnly: boolean,
     settings: Settings,
     scheduleComponent: ScheduleComponent,
     snackBar: MatSnackBar
@@ -1057,7 +1057,7 @@ export class ScheduleInteractionService {
       courseEdition.CourseEditionId,
       tabWeeks[currentTabIndex]
     ).toPromise();
-    let connectedTo = (isRepresentative && !isAdmin) ? [] : ['my-courses'];
+    let connectedTo = (isPropositionOnly && !isAdmin) ? [] : ['my-courses'];
     
     const numberOfSlots = settings.Periods.length - 1;
     let busySlotIndex = 0;
@@ -1163,10 +1163,6 @@ export class ScheduleInteractionService {
     snackBar: MatSnackBar,
   ): Promise<void> {
     if (!data.currentSelectedCourseEdition?.IsMoving || !data.areSlotsValiditySet) {
-      return;
-    }
-    
-    if (scheduleComponent.schedule[event.day][event.periodIndex].length > 0) {
       return;
     }
 
@@ -1406,7 +1402,7 @@ export class ScheduleInteractionService {
   public async showScheduledChanges(
     data: ModifyingScheduleData,
     settings: Settings,
-    isRepresentative: number | null, //userId
+    propositionUserId: number | null,
     ignoreLocks: boolean,
     isModifying: boolean,
     roomTypes: Map<number, RoomType>,
@@ -1425,7 +1421,7 @@ export class ScheduleInteractionService {
       settings.TimeLabels,
       roomTypes,
       settings,
-      isRepresentative,
+      propositionUserId,
       ignoreLocks,
       isModifying
     );
@@ -1550,16 +1546,11 @@ export class ScheduleInteractionService {
 
   public onMouseEnter(
     event: {day: number, periodIndex: number},
-    data: ModifyingScheduleData,
-    scheduleComponent: ScheduleComponent,
+    data: ModifyingScheduleData
   ): void {
     if (data.currentSelectedCourseEdition?.IsMoving) {
       data.currentDropContainerIndexes = [event.day, event.periodIndex];
-      if (scheduleComponent.schedule[event.day][event.periodIndex].length > 0) {
-        data.isCurrentMoveValid = null;
-      } else {
-        data.isCurrentMoveValid = data.scheduleSlotsValidity[event.day][event.periodIndex];
-      }
+      data.isCurrentMoveValid = data.scheduleSlotsValidity[event.day][event.periodIndex];
     }
   }
 

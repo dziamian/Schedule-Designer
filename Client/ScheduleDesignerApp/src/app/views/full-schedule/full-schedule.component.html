@@ -12,7 +12,7 @@
             <ng-template matTabContent>
                 <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
-                        <app-my-courses *ngIf="isModifying"
+                        <app-my-courses *ngIf="isModifying && account?.Admin"
                             [isModifying]="isModifying"
                             [account]="account"
                             [settings]="settings"
@@ -25,7 +25,7 @@
                             (onStart)="OnMyCoursesStart($event)"
                             (onRelease)="OnRelease($event)"
                         ></app-my-courses>
-                        <app-available-resources *ngIf="!isModifying"
+                        <app-available-resources *ngIf="!(isModifying && account?.Admin)"
                             (showSchedule)="ShowSchedule($event)"
                         ></app-available-resources>
                         
@@ -124,8 +124,14 @@
                             <b>Selected resource: {{currentResourceName ?? 'None'}}</b>
                         </div>
                         <div class="footer-schedule-menu">
+                            <button mat-mini-fab color="accent" style="margin-right: 1vw;"
+                                [disabled]="!currentResourceName"
+                                (click)="PrintSchedule()"
+                                >
+                                    <mat-icon>print</mat-icon>
+                            </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || !account?.Admin || !currentResourceName"
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!account?.Admin && !canMakePropositions()) || !currentResourceName"
                                 (click)="ModifySchedule()"
                                 >
                                     <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>

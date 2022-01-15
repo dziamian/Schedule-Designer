@@ -119,6 +119,11 @@
                             <b>Selected resource: {{account?.Titles?.TitleBefore}} {{account?.FirstName}} {{account?.LastName}} {{account?.Titles?.TitleAfter}}</b>
                         </div>
                         <div class="footer-schedule-menu">
+                            <button mat-mini-fab color="accent" style="margin-right: 1vw;"
+                                (click)="PrintSchedule()"
+                                >
+                                    <mat-icon>print</mat-icon>
+                            </button>
                             <button mat-raised-button color="accent"
                                 [disabled]="data.currentSelectedCourseEdition?.IsMoving"
                                 (click)="ModifySchedule()"
