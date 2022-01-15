@@ -43,7 +43,9 @@ namespace ScheduleDesigner.Hubs
             _unitOfWork = unitOfWork;
         }
 
-        private void RemoveCourseEditionLock(ConcurrentQueue<object> courseEditionQueue, CourseEditionKey courseEditionKey)
+        private void RemoveCourseEditionLock(
+            ConcurrentQueue<object> courseEditionQueue, 
+            CourseEditionKey courseEditionKey)
         {
             courseEditionQueue.TryDequeue(out _);
             if (courseEditionQueue.IsEmpty)
@@ -52,7 +54,9 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveSchedulePositionLockL1(SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions, SchedulePositionKey key)
+        private void RemoveSchedulePositionLockL1(
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions, 
+            SchedulePositionKey key)
         {
             var contains = schedulePositions.TryGetValue(key, out var queue);
             if (contains)
@@ -65,7 +69,9 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveSchedulePositionsLocksL1(List<ConcurrentQueue<object>> schedulePositionQueues, List<SchedulePositionKey> schedulePositionKeys)
+        private void RemoveSchedulePositionsLocksL1(
+            List<ConcurrentQueue<object>> schedulePositionQueues, 
+            List<SchedulePositionKey> schedulePositionKeys)
         {
             for (var i = 0; i < schedulePositionQueues.Count; ++i)
             {
@@ -77,7 +83,8 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveSchedulePositionsLocksL1(SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+        private void RemoveSchedulePositionsLocksL1(
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
             foreach (var schedulePosition in schedulePositions)
             {
@@ -89,7 +96,9 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveSchedulePositionLockL2(SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions, SchedulePositionKey key)
+        private void RemoveSchedulePositionLockL2(
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions, 
+            SchedulePositionKey key)
         {
             var contains = schedulePositions.TryGetValue(key, out var queue);
             if (contains)
@@ -102,7 +111,9 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveSchedulePositionsLocksL2(List<ConcurrentQueue<object>> schedulePositionQueues, List<SchedulePositionKey> schedulePositionKeys)
+        private void RemoveSchedulePositionsLocksL2(
+            List<ConcurrentQueue<object>> schedulePositionQueues, 
+            List<SchedulePositionKey> schedulePositionKeys)
         {
             for (var i = 0; i < schedulePositionQueues.Count; ++i)
             {
@@ -114,7 +125,8 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveSchedulePositionsLocksL2(SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+        private void RemoveSchedulePositionsLocksL2(
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
             foreach (var schedulePosition in schedulePositions)
             {
@@ -126,32 +138,128 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        private void RemoveCoordinatorPositionsLocks(List<ConcurrentQueue<object>> coordinatorPositionQueues, List<CoordinatorPositionKey> coordinatorPositionKeys)
+        private void RemoveCoordinatorPositionsLocks(
+            SortedList<CoordinatorPositionKey, ConcurrentQueue<object>> coordinatorPositions)
         {
-            for (var i = 0; i < coordinatorPositionQueues.Count; ++i)
+            foreach (var coordinatorPosition in coordinatorPositions)
             {
-                coordinatorPositionQueues[i].TryDequeue(out _);
-                if (coordinatorPositionQueues[i].IsEmpty)
+                coordinatorPosition.Value.TryDequeue(out _);
+                if (coordinatorPosition.Value.IsEmpty)
                 {
-                    CoordinatorPositionLocks.TryRemove(coordinatorPositionKeys[i], out _);
+                    CoordinatorPositionLocks.TryRemove(coordinatorPosition.Key, out _);
                 }
             }
         }
 
-        private void RemoveGroupPositionsLocks(List<ConcurrentQueue<object>> groupPositionQueues, List<GroupPositionKey> groupPositionKeys)
+        private void RemoveGroupPositionsLocks(
+            SortedList<GroupPositionKey, ConcurrentQueue<object>> groupPositions)
         {
-            for (var i = 0; i < groupPositionQueues.Count; ++i)
+            foreach (var groupPosition in groupPositions)
             {
-                groupPositionQueues[i].TryDequeue(out _);
-                if (groupPositionQueues[i].IsEmpty)
+                groupPosition.Value.TryDequeue(out _);
+                if (groupPosition.Value.IsEmpty)
                 {
-                    GroupPositionLocks.TryRemove(groupPositionKeys[i], out _);
+                    GroupPositionLocks.TryRemove(groupPosition.Key, out _);
                 }
+            }
+        }
+
+        private void AddSchedulePositionsLocksL1(
+            List<int> _timestamps, int roomId, 
+            ref List<SchedulePositionKey> schedulePositionKeys,
+            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+        {
+            foreach (var timestampId in _timestamps)
+            {
+                var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
+                schedulePositionKeys.Add(key);
+                var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
+                schedulePositions.Add(key, queue);
+                queue.Enqueue(new object());
+            }
+        }
+
+        private void AddSchedulePositionsLocksL1(
+            List<int> _timestamps, int roomId,
+            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+        {
+            foreach (var timestampId in _timestamps)
+            {
+                var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
+                var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
+                schedulePositions.Add(key, queue);
+                queue.Enqueue(new object());
+            }
+        }
+
+        private void AddSchedulePositionsLocksL1(
+            List<SchedulePositionKey> schedulePositionKeys,
+            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+        {
+            foreach (var key in schedulePositionKeys)
+            {
+                var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
+                schedulePositions.Add(key, queue);
+                queue.Enqueue(new object());
+            }
+        }
+
+        private void AddSchedulePositionsLocksL2(
+            List<SchedulePositionKey> schedulePositionKeys,
+            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+        {
+            foreach (var key in schedulePositionKeys)
+            {
+                var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
+                schedulePositions.Add(key, queue);
+                queue.Enqueue(new object());
+            }
+        }
+
+        private void AddCoordinatorPositionsLocks(
+            int[] coordinatorsIds, int timestampId,
+            ref SortedList<CoordinatorPositionKey, ConcurrentQueue<object>> coordinatorPositionQueues)
+        {
+            foreach (var coordinatorId in coordinatorsIds)
+            {
+                var key = new CoordinatorPositionKey { CoordinatorId = coordinatorId, TimestampId = timestampId };
+                var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                coordinatorPositionQueues.Add(key, queue);
+                queue.Enqueue(new object());
+            }
+        }
+
+        private void AddGroupPositionsLocks(
+            int[] groupsIds, int timestampId,
+            ref SortedList<GroupPositionKey, ConcurrentQueue<object>> groupPositionQueues)
+        {
+            foreach (var groupId in groupsIds)
+            {
+                var key = new GroupPositionKey { GroupId = groupId, TimestampId = timestampId };
+                var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
+                groupPositionQueues.Add(key, queue);
+                queue.Enqueue(new object());
+            }
+        }
+
+        private void EnterQueues(IList<ConcurrentQueue<object>> queues)
+        {
+            foreach (var queue in queues)
+            {
+                Monitor.Enter(queue);
+            }
+        }
+
+        private void ExitQueues(IList<ConcurrentQueue<object>> queues)
+        {
+            foreach (var queue in queues)
+            {
+                Monitor.Exit(queue);
             }
         }
 
         private int? GetPossibleMove(List<SchedulePositionKey> source, List<int> skippedMovesIds, 
-            out Tuple<SchedulePositionKey[], SchedulePositionKey[]> possibleMove)
+            out Tuple<List<SchedulePositionKey>, List<SchedulePositionKey>> possibleMove)
         {
             possibleMove = null;
             try
@@ -182,26 +290,24 @@ namespace ScheduleDesigner.Hubs
                     .Get(e => e.MoveId == moveId);
 
                 var length = _scheduledMove.Count();
-                var possibleMoveSource = new SchedulePositionKey[length];
-                var possibleMoveDestination = new SchedulePositionKey[length];
+                var possibleMoveSource = new List<SchedulePositionKey>();
+                var possibleMoveDestination = new List<SchedulePositionKey>();
 
-                var index = 0;
                 _scheduledMove.ToList().ForEach((move) =>
                 {
-                    possibleMoveSource[index] = new SchedulePositionKey
+                    possibleMoveSource.Add(new SchedulePositionKey
                     {
                         RoomId = move.RoomId_1,
                         TimestampId = move.TimestampId_1
-                    };
-                    possibleMoveDestination[index] = new SchedulePositionKey
+                    });
+                    possibleMoveDestination.Add(new SchedulePositionKey
                     {
                         RoomId = move.RoomId_2,
                         TimestampId = move.TimestampId_2
-                    };
-                    ++index;
+                    });
                 });
 
-                possibleMove = new Tuple<SchedulePositionKey[], SchedulePositionKey[]>(possibleMoveSource, possibleMoveDestination);
+                possibleMove = new Tuple<List<SchedulePositionKey>, List<SchedulePositionKey>>(possibleMoveSource, possibleMoveDestination);
 
                 return moveId;
             }
@@ -214,10 +320,8 @@ namespace ScheduleDesigner.Hubs
         private void MakeScheduledMoves(List<SchedulePositionKey> sourceSchedulePositionKeys, 
             ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> L1schedulePositionAllQueues, ref List<SchedulePositionKey> L1KeysToRemove)
         {
-            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
-            var groupPositionKeys = new List<GroupPositionKey>();
-            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
-            var groupPositionQueues = new List<ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
+            var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
 
             var L1scheduledMovesAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
             var L1scheduledMovesAllQueuesNotLocked = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
@@ -237,20 +341,16 @@ namespace ScheduleDesigner.Hubs
 
                     while ((currentMoveId = GetPossibleMove(_source, _skippedMovesIds, out var possibleMove)) != null)
                     {
-                        L2scheduledMovesAllQueues.Clear();
-                        L1scheduledMovesAllQueuesNotLocked.Clear();
-                        L1scheduledMovesAllQueues.Clear();
-                        coordinatorPositionKeys.Clear();
-                        groupPositionKeys.Clear();
-                        coordinatorPositionQueues.Clear();
+                        L2scheduledMovesAllQueues.Clear(); L1scheduledMovesAllQueuesNotLocked.Clear();
+                        L1scheduledMovesAllQueues.Clear(); coordinatorPositionQueues.Clear();
                         groupPositionQueues.Clear();
 
                         var isQueued = false;
                         var candidateSourceKeys = new List<SchedulePositionKey>();
                         var localKeysToRemove = new List<SchedulePositionKey>();
 
-                        var candidateSourceTimestamps = possibleMove.Item1.Select(e => e.TimestampId).ToList();
-                        var candidateDestTimestamps = possibleMove.Item2.Select(e => e.TimestampId).ToList();
+                        var candidateSourceTimestamps = possibleMove.Item1.Select(e => e.TimestampId).OrderBy(e => e).ToList();
+                        var candidateDestTimestamps = possibleMove.Item2.Select(e => e.TimestampId).OrderBy(e => e).ToList();
                         var candidateSourceRoomId = possibleMove.Item1.FirstOrDefault().RoomId;
                         var candidateDestRoomId = possibleMove.Item2.FirstOrDefault().RoomId;
 
@@ -263,22 +363,13 @@ namespace ScheduleDesigner.Hubs
                         lock (SchedulePositionLocksL1)
                         lock (SchedulePositionLocksL2)
                         {
-                            foreach (var key in possibleMove.Item1)
-                            {
-                                var queueL1 = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                                var queueL2 = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-
-                                queueL1.Enqueue(new object());
-                                L1scheduledMovesAllQueues.Add(key, queueL1);
-
-                                queueL2.Enqueue(new object());
-                                L2scheduledMovesAllQueues.Add(key, queueL2);
-                            }
+                            AddSchedulePositionsLocksL1(possibleMove.Item1, ref L1scheduledMovesAllQueues);
+                            AddSchedulePositionsLocksL2(possibleMove.Item1, ref L2scheduledMovesAllQueues);
+                            AddSchedulePositionsLocksL2(possibleMove.Item2, ref L2scheduledMovesAllQueues);
 
                             foreach (var key in possibleMove.Item2)
                             {
                                 var queueL1 = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                                var queueL2 = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
 
                                 if (!_source.Contains(key))
                                 {
@@ -289,9 +380,6 @@ namespace ScheduleDesigner.Hubs
                                 {
                                     candidateSourceKeys.Add(key);
                                 }
-
-                                queueL2.Enqueue(new object());
-                                L2scheduledMovesAllQueues.Add(key, queueL2);
                             }
                         }
 
@@ -312,10 +400,7 @@ namespace ScheduleDesigner.Hubs
                                 }
                             }
                         }
-                        foreach (var schedulePositionQueue in L2scheduledMovesAllQueues.Values)
-                        {
-                            Monitor.Enter(schedulePositionQueue);
-                        }
+                        EnterQueues(L2scheduledMovesAllQueues.Values);
                         foreach (var schedulePositionQueue in L1scheduledMovesAllQueuesNotLocked)
                         {
                             bool lockTaken = false;
@@ -330,10 +415,9 @@ namespace ScheduleDesigner.Hubs
                             var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => candidateSourceTimestamps.Contains(e.TimestampId) && e.RoomId == candidateSourceRoomId);
 
-                            if (!_sourceSchedulePositions.Any() || _sourceSchedulePositions.Count() != possibleMove.Item1.Length)
+                            if (!_sourceSchedulePositions.Any() || _sourceSchedulePositions.Count() != possibleMove.Item1.Count())
                             {
                                 _skippedMovesIds.Add((int)currentMoveId);
-
                                 continue;
                             }
 
@@ -350,17 +434,15 @@ namespace ScheduleDesigner.Hubs
                             if (includableCourseEdition == null)
                             {
                                 _skippedMovesIds.Add((int)currentMoveId);
-
                                 continue;
                             }
 
                             var _scheduledMove = _unitOfWork.ScheduledMoves
                                 .Get(e => e.MoveId == currentMoveId);
 
-                            if (_scheduledMove.Count() != possibleMove.Item2.Length)
+                            if (_scheduledMove.Count() != possibleMove.Item2.Count())
                             {
                                 _skippedMovesIds.Add((int)currentMoveId);
-
                                 continue;
                             }
 
@@ -377,36 +459,13 @@ namespace ScheduleDesigner.Hubs
                             {
                                 foreach (var timestampId in candidateDestTimestamps)
                                 {
-                                    foreach (var coordinatorId in coordinatorsIds)
-                                    {
-                                        var key = new CoordinatorPositionKey
-                                        { CoordinatorId = coordinatorId, TimestampId = timestampId };
-                                        coordinatorPositionKeys.Add(key);
-                                        var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                        coordinatorPositionQueues.Add(queue);
-                                        queue.Enqueue(new object());
-                                    }
-
-                                    foreach (var groupId in groupsIds)
-                                    {
-                                        var key = new GroupPositionKey
-                                        { GroupId = groupId, TimestampId = timestampId };
-                                        groupPositionKeys.Add(key);
-                                        var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                        groupPositionQueues.Add(queue);
-                                        queue.Enqueue(new object());
-                                    }
+                                    AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
+                                    AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
                                 }
                             }
 
-                            foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                            {
-                                Monitor.Enter(coordinatorPositionQueue);
-                            }
-                            foreach (var groupPositionQueue in groupPositionQueues)
-                            {
-                                Monitor.Enter(groupPositionQueue);
-                            }
+                            EnterQueues(coordinatorPositionQueues.Values);
+                            EnterQueues(groupPositionQueues.Values);
                             try
                             {
                                 var _destSchedulePositions = candidateSourceTimestamps.SequenceEqual(candidateDestTimestamps)
@@ -435,7 +494,6 @@ namespace ScheduleDesigner.Hubs
                                 if (_destSchedulePositions.Any())
                                 {
                                     _skippedMovesIds.Add((int)currentMoveId);
-
                                     continue;
                                 }
 
@@ -491,25 +549,16 @@ namespace ScheduleDesigner.Hubs
                             }
                             finally
                             {
-                                RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
-                                RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
-                                foreach (var groupPositionQueue in groupPositionQueues)
-                                {
-                                    Monitor.Exit(groupPositionQueue);
-                                }
-                                foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                                {
-                                    Monitor.Exit(coordinatorPositionQueue);
-                                }
+                                RemoveGroupPositionsLocks(groupPositionQueues);
+                                RemoveCoordinatorPositionsLocks(coordinatorPositionQueues);
+                                ExitQueues(groupPositionQueues.Values);
+                                ExitQueues(coordinatorPositionQueues.Values);
                             }
                         }
                         finally
                         {
                             RemoveSchedulePositionsLocksL2(L2scheduledMovesAllQueues);
-                            foreach (var scheduledMoveQueue in L2scheduledMovesAllQueues.Values)
-                            {
-                                Monitor.Exit(scheduledMoveQueue);
-                            }
+                            ExitQueues(L2scheduledMovesAllQueues.Values);
                             if (!isQueued)
                             {
                                 foreach (var keyToRemove in localKeysToRemove)
@@ -518,10 +567,7 @@ namespace ScheduleDesigner.Hubs
                                 }
 
                                 RemoveSchedulePositionsLocksL1(L1scheduledMovesAllQueues);
-                                foreach (var scheduledMoveQueue in L1scheduledMovesAllQueues.Values)
-                                {
-                                    Monitor.Exit(scheduledMoveQueue);
-                                }
+                                ExitQueues(L1scheduledMovesAllQueues.Values);
                             }
                             else
                             {
@@ -546,10 +592,7 @@ namespace ScheduleDesigner.Hubs
                                 }
 
                                 RemoveSchedulePositionsLocksL1(L1scheduledMovesAllQueues);
-                                foreach (var scheduledMoveQueue in L1scheduledMovesAllQueues.Values)
-                                {
-                                    Monitor.Exit(scheduledMoveQueue);
-                                }
+                                ExitQueues(L1scheduledMovesAllQueues.Values);
                             }
                         }
                     }
@@ -569,6 +612,26 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        private int GetUserId()
+        {
+            return int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+        }
+
+        private bool IsAdmin()
+        {
+            return Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+        }
+
+        private bool IsCoordinator()
+        {
+            return Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+        }
+
+        private IEnumerable<int> GetRepresentativeGroupsIds()
+        {
+            return Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
+        }
+
         [Authorize(Policy = "Designer")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
@@ -579,9 +642,9 @@ namespace ScheduleDesigner.Hubs
             
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
-                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
+                var isCoordinator = IsCoordinator();
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -609,7 +672,6 @@ namespace ScheduleDesigner.Hubs
                     if (!_courseEdition.Any())
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                        
                         return new MessageObject {StatusCode = 404, Message = "Could not find requested course or you do not have enough permissions to lock."};
                     }
 
@@ -618,7 +680,6 @@ namespace ScheduleDesigner.Hubs
                     if ((!isAdmin && !(courseEdition is {LockUserId: null})) || (isAdmin && lockUserStaff != null && lockUserStaff.IsAdmin))
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                        
                         return new MessageObject {StatusCode = 400, Message = "Someone has locked this course before you." };
                     }
 
@@ -630,7 +691,6 @@ namespace ScheduleDesigner.Hubs
                     var result2 = Clients.Others.LockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId, isAdmin);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-
                     return new MessageObject { StatusCode = 200 };
                 }
             }
@@ -641,11 +701,7 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject {StatusCode = 400, Message = e.Message};
                 }
 
-                lock (courseEditionQueue)
-                {
-                    RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                }
-
+                RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
         }
@@ -653,16 +709,15 @@ namespace ScheduleDesigner.Hubs
         [Authorize(Policy = "Assistant")]
         public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
-            var schedulePositionKeys = new List<SchedulePositionKey>();
-            var schedulePositionQueuesL1 = new List<ConcurrentQueue<object>>();
-            var schedulePositionQueuesL2 = new List<ConcurrentQueue<object>>();
+            var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
+            var schedulePositionQueuesL2 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
-                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
+                var isCoordinator = IsCoordinator();
+                var representativeGroupsIds = GetRepresentativeGroupsIds();
 
                 var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -676,36 +731,18 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _timestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        schedulePositionQueuesL1.Add(queue);
-                        queue.Enqueue(new object());
-                    }
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionQueuesL1);
                 }
 
-                foreach (var schedulePositionQueue in schedulePositionQueuesL1)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
+                EnterQueues(schedulePositionQueuesL1.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            schedulePositionQueuesL2.Add(queue);
-                            queue.Enqueue(new object());
-                        }
+                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), ref schedulePositionQueuesL2);
                     }
 
-                    foreach (var schedulePositionQueue in schedulePositionQueuesL2)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(schedulePositionQueuesL2.Values);
                     try
                     {
                         var predicate = PredicateBuilder.New<SchedulePosition>(true);
@@ -766,20 +803,14 @@ namespace ScheduleDesigner.Hubs
                     }
                     finally
                     {
-                        RemoveSchedulePositionsLocksL2(schedulePositionQueuesL2, schedulePositionKeys);
-                        foreach (var schedulePositionQueue in schedulePositionQueuesL2)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        RemoveSchedulePositionsLocksL2(schedulePositionQueuesL2);
+                        ExitQueues(schedulePositionQueuesL2.Values);
                     }
                 }
                 finally
                 {
-                    RemoveSchedulePositionsLocksL1(schedulePositionQueuesL1, schedulePositionKeys);
-                    foreach (var schedulePositionQueue in schedulePositionQueuesL1)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    RemoveSchedulePositionsLocksL1(schedulePositionQueuesL1);
+                    ExitQueues(schedulePositionQueuesL1.Values);
                 }
             }
             catch (Exception e)
@@ -798,7 +829,7 @@ namespace ScheduleDesigner.Hubs
             
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var userId = GetUserId();
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -815,7 +846,6 @@ namespace ScheduleDesigner.Hubs
                     if (!_courseEdition.Any())
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-
                         return new MessageObject { StatusCode = 404 };
                     }
 
@@ -823,14 +853,12 @@ namespace ScheduleDesigner.Hubs
                     if (courseEdition.LockUserId == null)
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-
                         return new MessageObject { StatusCode = 400, Message = "This course edition is already unlocked." };
                     }
 
                     if (courseEdition.LockUserId != userId || courseEdition.LockUserConnectionId != Context.ConnectionId)
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-
                         return new MessageObject { StatusCode = 400, Message = "You cannot unlock this course edition." };
                     }
 
@@ -842,7 +870,6 @@ namespace ScheduleDesigner.Hubs
                     var result2 = Clients.Others.UnlockCourseEdition(courseEdition.CourseId, courseEdition.CourseEditionId);
 
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-
                     return new MessageObject { StatusCode = 200 };
                 }
             }
@@ -852,12 +879,8 @@ namespace ScheduleDesigner.Hubs
                 {
                     return new MessageObject { StatusCode = 400, Message = e.Message };
                 }
-
-                lock (courseEditionQueue)
-                {
-                    RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                }
-
+                
+                RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                 return new MessageObject { StatusCode = 400, Message = e.Message };
             }
         }
@@ -865,13 +888,12 @@ namespace ScheduleDesigner.Hubs
         [Authorize(Policy = "Assistant")]
         public MessageObject UnlockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
-            var schedulePositionKeys = new List<SchedulePositionKey>();
-            var schedulePositionQueuesL1 = new List<ConcurrentQueue<object>>();
-            var schedulePositionQueuesL2 = new List<ConcurrentQueue<object>>();
+            var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
+            var schedulePositionQueuesL2 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var userId = GetUserId();
 
                 var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -885,36 +907,18 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _timestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        schedulePositionQueuesL1.Add(queue);
-                        queue.Enqueue(new object());
-                    }
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionQueuesL1);
                 }
 
-                foreach (var schedulePositionQueue in schedulePositionQueuesL1)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
+                EnterQueues(schedulePositionQueuesL1.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            schedulePositionQueuesL2.Add(queue);
-                            queue.Enqueue(new object());
-                        }
+                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), ref schedulePositionQueuesL2);
                     }
 
-                    foreach (var schedulePositionQueue in schedulePositionQueuesL2)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(schedulePositionQueuesL2.Values);
                     try
                     {
                         var _schedulePositions = _unitOfWork.SchedulePositions
@@ -963,20 +967,14 @@ namespace ScheduleDesigner.Hubs
                     }
                     finally
                     {
-                        RemoveSchedulePositionsLocksL2(schedulePositionQueuesL2, schedulePositionKeys);
-                        foreach (var schedulePositionQueue in schedulePositionQueuesL2)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        RemoveSchedulePositionsLocksL2(schedulePositionQueuesL2);
+                        ExitQueues(schedulePositionQueuesL2.Values);
                     }
                 }
                 finally
                 {
-                    RemoveSchedulePositionsLocksL1(schedulePositionQueuesL1, schedulePositionKeys);
-                    foreach (var schedulePositionQueue in schedulePositionQueuesL1)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    RemoveSchedulePositionsLocksL1(schedulePositionQueuesL1);
+                    ExitQueues(schedulePositionQueuesL1.Values);
                 }
             }
             catch (Exception e)
@@ -989,21 +987,18 @@ namespace ScheduleDesigner.Hubs
         public void AddSchedulePositions(int courseId, int courseEditionId, int roomId, int periodIndex, int day, int[] weeks)
         {
             CourseEditionKey courseEditionKey = null;
-            var schedulePositionKeys = new List<SchedulePositionKey>();
-            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
-            var groupPositionKeys = new List<GroupPositionKey>();
             ConcurrentQueue<object> courseEditionQueue = null;
-            var schedulePositionQueuesL1 = new List<ConcurrentQueue<object>>();
-            var schedulePositionQueuesL2 = new List<ConcurrentQueue<object>>();
-            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
-            var groupPositionQueues = new List<ConcurrentQueue<object>>();
+            var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
+            var schedulePositionQueuesL2 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
+            var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
 
             weeks = weeks.Distinct().ToArray();
             Array.Sort(weeks);
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var userId = GetUserId();
 
                 var _timestamps = _unitOfWork.Timestamps
                             .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -1022,21 +1017,11 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _timestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        schedulePositionQueuesL1.Add(queue);
-                        queue.Enqueue(new object());
-                    }
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionQueuesL1);
                 }
 
                 Monitor.Enter(courseEditionQueue);
-                foreach (var schedulePositionQueue in schedulePositionQueuesL1)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
+                EnterQueues(schedulePositionQueuesL1.Values);
                 try
                 {
                     var _courseEdition = _unitOfWork.CourseEditions
@@ -1094,49 +1079,17 @@ namespace ScheduleDesigner.Hubs
                     lock (CoordinatorPositionLocks)
                     lock (GroupPositionLocks)
                     {
-                        foreach (var key in schedulePositionKeys)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            schedulePositionQueuesL2.Add(queue);
-                            queue.Enqueue(new object());
-                        }
-
+                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), ref schedulePositionQueuesL2);
                         foreach (var timestampId in _timestamps)
                         {
-                            foreach (var coordinatorId in coordinatorsIds)
-                            {
-                                var key = new CoordinatorPositionKey
-                                    { CoordinatorId = coordinatorId, TimestampId = timestampId };
-                                coordinatorPositionKeys.Add(key);
-                                var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                coordinatorPositionQueues.Add(queue);
-                                queue.Enqueue(new object());
-                            }
-
-                            foreach (var groupId in groupsIds)
-                            {
-                                var key = new GroupPositionKey
-                                    { GroupId = groupId, TimestampId = timestampId };
-                                groupPositionKeys.Add(key);
-                                var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                groupPositionQueues.Add(queue);
-                                queue.Enqueue(new object());
-                            }
+                            AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
+                            AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
                         }
                     }
-                    
-                    foreach (var schedulePositionQueue in schedulePositionQueuesL2)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
-                    foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                    {
-                        Monitor.Enter(coordinatorPositionQueue);
-                    }
-                    foreach (var groupPositionQueue in groupPositionQueues)
-                    {
-                        Monitor.Enter(groupPositionQueue);
-                    }
+
+                    EnterQueues(schedulePositionQueuesL2.Values);
+                    EnterQueues(coordinatorPositionQueues.Values);
+                    EnterQueues(groupPositionQueues.Values);
                     try
                     {
                         var _schedulePositions = _unitOfWork.SchedulePositions
@@ -1181,31 +1134,21 @@ namespace ScheduleDesigner.Hubs
                     }
                     finally
                     {
-                        RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
-                        RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
-                        RemoveSchedulePositionsLocksL2(schedulePositionQueuesL2, schedulePositionKeys);
-                        foreach (var groupPositionQueue in groupPositionQueues)
-                        {
-                            Monitor.Exit(groupPositionQueue);
-                        }
-                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                        {
-                            Monitor.Exit(coordinatorPositionQueue);
-                        }
-                        foreach (var schedulePositionQueue in schedulePositionQueuesL2)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        RemoveGroupPositionsLocks(groupPositionQueues);
+                        RemoveCoordinatorPositionsLocks(coordinatorPositionQueues);
+                        RemoveSchedulePositionsLocksL2(schedulePositionQueuesL2);
+                        
+                        ExitQueues(groupPositionQueues.Values);
+                        ExitQueues(coordinatorPositionQueues.Values);
+                        ExitQueues(schedulePositionQueuesL2.Values);
                     }
                 }
                 finally
                 {
-                    RemoveSchedulePositionsLocksL1(schedulePositionQueuesL1, schedulePositionKeys);
+                    RemoveSchedulePositionsLocksL1(schedulePositionQueuesL1);
                     RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                    foreach (var schedulePositionQueue in schedulePositionQueuesL1)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+
+                    ExitQueues(schedulePositionQueuesL1.Values);
                     Monitor.Exit(courseEditionQueue);
                 }
             }
@@ -1224,16 +1167,10 @@ namespace ScheduleDesigner.Hubs
         {
             var schedulePositionKeys1 = new List<SchedulePositionKey>();
             var schedulePositionKeys2 = new List<SchedulePositionKey>();
-            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
-            var groupPositionKeys = new List<GroupPositionKey>();
-            var L1schedulePositionQueues1 = new List<ConcurrentQueue<object>>();
-            var L1schedulePositionQueues2 = new List<ConcurrentQueue<object>>();
-            var L2schedulePositionQueues1 = new List<ConcurrentQueue<object>>();
-            var L2schedulePositionQueues2 = new List<ConcurrentQueue<object>>();
             var L1schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
             var L2schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
-            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
-            var groupPositionQueues = new List<ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
+            var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
 
             weeks = weeks.Distinct().ToArray();
             Array.Sort(weeks);
@@ -1248,8 +1185,8 @@ namespace ScheduleDesigner.Hubs
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
 
                 var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -1275,61 +1212,21 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _sourceTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys1.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        L1schedulePositionQueues1.Add(queue);
-                        queue.Enqueue(new object());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                    }
-
-                    foreach (var timestampId in _destTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = destRoomId, TimestampId = timestampId };
-                        schedulePositionKeys2.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        L1schedulePositionQueues2.Add(queue);
-                        queue.Enqueue(new object());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                    }
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref schedulePositionKeys1, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref schedulePositionKeys2, ref L1schedulePositionAllQueues);
                 }
                 var L1KeysToRemove = new List<SchedulePositionKey>();
 
-                foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
+                EnterQueues(L1schedulePositionAllQueues.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys1)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            L2schedulePositionQueues1.Add(queue);
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
-
-                        foreach (var key in schedulePositionKeys2)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            L2schedulePositionQueues2.Add(queue);
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
+                        AddSchedulePositionsLocksL2(schedulePositionKeys1, ref L2schedulePositionAllQueues);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys2, ref L2schedulePositionAllQueues);
                     }
 
-                    foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(L2schedulePositionAllQueues.Values);
                     try
                     {
                         var _sourceSchedulePositions = _unitOfWork.SchedulePositions
@@ -1390,36 +1287,13 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                foreach (var coordinatorId in coordinatorsIds)
-                                {
-                                    var key = new CoordinatorPositionKey
-                                        { CoordinatorId = coordinatorId, TimestampId = timestampId };
-                                    coordinatorPositionKeys.Add(key);
-                                    var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    coordinatorPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
-
-                                foreach (var groupId in groupsIds)
-                                {
-                                    var key = new GroupPositionKey
-                                        { GroupId = groupId, TimestampId = timestampId };
-                                    groupPositionKeys.Add(key);
-                                    var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    groupPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
                             }
                         }
 
-                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                        {
-                            Monitor.Enter(coordinatorPositionQueue);
-                        }
-                        foreach (var groupPositionQueue in groupPositionQueues)
-                        {
-                            Monitor.Enter(groupPositionQueue);
-                        }
+                        EnterQueues(coordinatorPositionQueues.Values);
+                        EnterQueues(groupPositionQueues.Values);
                         try
                         {
                             var _destSchedulePositions = _sourceTimestamps.SequenceEqual(_destTimestamps)
@@ -1487,25 +1361,16 @@ namespace ScheduleDesigner.Hubs
                         }
                         finally
                         {
-                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
-                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
-                            foreach (var groupPositionQueue in groupPositionQueues)
-                            {
-                                Monitor.Exit(groupPositionQueue);
-                            }
-                            foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                            {
-                                Monitor.Exit(coordinatorPositionQueue);
-                            }
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues);
+                            RemoveGroupPositionsLocks(groupPositionQueues);
+                            ExitQueues(groupPositionQueues.Values);
+                            ExitQueues(coordinatorPositionQueues.Values);
                         }
                     }
                     finally
                     {
                         RemoveSchedulePositionsLocksL2(L2schedulePositionAllQueues);
-                        foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        ExitQueues(L2schedulePositionAllQueues.Values);
                     }
 
                     foreach (var schedulePositionQueue in L1schedulePositionAllQueues)
@@ -1529,10 +1394,7 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     RemoveSchedulePositionsLocksL1(L1schedulePositionAllQueues);
-                    foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    ExitQueues(L1schedulePositionAllQueues.Values);
                 }
             }
             catch (Exception e)
@@ -1554,8 +1416,8 @@ namespace ScheduleDesigner.Hubs
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
 
                 var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -1570,40 +1432,19 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _timestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys.Add(key);
-                        
-                        var queueL1 = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-
-                        L1schedulePositionQueues.Add(key, queueL1);
-                        queueL1.Enqueue(new object());
-                    }
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionKeys, ref L1schedulePositionQueues);
                 }
                 var L1KeysToRemove = new List<SchedulePositionKey>();
 
-                foreach (var schedulePositionQueue in L1schedulePositionQueues.Values)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
+                EnterQueues(L1schedulePositionQueues.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionQueues.Add(key, queue);
-                        }
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref L2schedulePositionQueues);
                     }
 
-                    foreach (var schedulePositionQueue in L2schedulePositionQueues.Values)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(L2schedulePositionQueues.Values);
                     try
                     {
                         var _schedulePositions = _unitOfWork.SchedulePositions
@@ -1677,10 +1518,7 @@ namespace ScheduleDesigner.Hubs
                     finally
                     {
                         RemoveSchedulePositionsLocksL2(L2schedulePositionQueues);
-                        foreach (var schedulePositionQueue in L2schedulePositionQueues.Values)
-                        {
-                            Monitor.Enter(schedulePositionQueue);
-                        }
+                        ExitQueues(L2schedulePositionQueues.Values);
                     }
 
                     MakeScheduledMoves(schedulePositionKeys, ref L1schedulePositionQueues, ref L1KeysToRemove);
@@ -1694,10 +1532,7 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     RemoveSchedulePositionsLocksL1(L1schedulePositionQueues);
-                    foreach (var schedulePositionQueue in L1schedulePositionQueues.Values)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    ExitQueues(L1schedulePositionQueues.Values);
                 }
             }
             catch (Exception e)
@@ -1713,14 +1548,10 @@ namespace ScheduleDesigner.Hubs
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks, bool isProposition, string message)
         {
-            var schedulePositionKeys1 = new List<SchedulePositionKey>();
-            var schedulePositionKeys2 = new List<SchedulePositionKey>();
-            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
-            var groupPositionKeys = new List<GroupPositionKey>();
             var L1schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
             var L2schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
-            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
-            var groupPositionQueues = new List<ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
+            var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
 
             weeks = weeks.Distinct().ToArray();
             Array.Sort(weeks);
@@ -1739,10 +1570,10 @@ namespace ScheduleDesigner.Hubs
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
-                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
+                var isCoordinator = IsCoordinator();
+                var representativeGroupsIds = GetRepresentativeGroupsIds();
 
                 if (!isAdmin && !isCoordinator && !isProposition)
                 {
@@ -1772,57 +1603,19 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _sourceTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys1.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        
-                        L1schedulePositionAllQueues.Add(key, queue);
-                        queue.Enqueue(new object());
-                    }
-
-                    foreach (var timestampId in _destTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = destRoomId, TimestampId = timestampId };
-                        schedulePositionKeys2.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                        queue.Enqueue(new object());
-                    }
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref L1schedulePositionAllQueues);
                 }
 
-                foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
-
+                EnterQueues(L1schedulePositionAllQueues.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys1)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
-
-                        foreach (var key in schedulePositionKeys2)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
+                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), ref L2schedulePositionAllQueues);
                     }
 
-                    foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(L2schedulePositionAllQueues.Values);
                     try
                     {
                         var _sourceSchedulePositions = _unitOfWork.SchedulePositions
@@ -1874,37 +1667,13 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                foreach (var coordinatorId in coordinatorsIds)
-                                {
-                                    var key = new CoordinatorPositionKey
-                                    { CoordinatorId = coordinatorId, TimestampId = timestampId };
-                                    coordinatorPositionKeys.Add(key);
-                                    var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    coordinatorPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
-
-                                foreach (var groupId in groupsIds)
-                                {
-                                    var key = new GroupPositionKey
-                                    { GroupId = groupId, TimestampId = timestampId };
-                                    groupPositionKeys.Add(key);
-                                    var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    groupPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
                             }
                         }
 
-                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                        {
-                            Monitor.Enter(coordinatorPositionQueue);
-                        }
-                        foreach (var groupPositionQueue in groupPositionQueues)
-                        {
-                            Monitor.Enter(groupPositionQueue);
-                        }
-
+                        EnterQueues(coordinatorPositionQueues.Values);
+                        EnterQueues(groupPositionQueues.Values);
                         try
                         {
                             var _destSchedulePositions = _sourceTimestamps.SequenceEqual(_destTimestamps)
@@ -1997,34 +1766,22 @@ namespace ScheduleDesigner.Hubs
                         }
                         finally
                         {
-                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
-                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
-                            foreach (var groupPositionQueue in groupPositionQueues)
-                            {
-                                Monitor.Exit(groupPositionQueue);
-                            }
-                            foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                            {
-                                Monitor.Exit(coordinatorPositionQueue);
-                            }
+                            RemoveGroupPositionsLocks(groupPositionQueues);
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues);
+                            ExitQueues(groupPositionQueues.Values);
+                            ExitQueues(coordinatorPositionQueues.Values);
                         }
                     }
                     finally
                     {
                         RemoveSchedulePositionsLocksL2(L2schedulePositionAllQueues);
-                        foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        ExitQueues(L2schedulePositionAllQueues.Values);
                     }
                 }
                 finally 
                 {
                     RemoveSchedulePositionsLocksL1(L1schedulePositionAllQueues);
-                    foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    ExitQueues(L1schedulePositionAllQueues.Values);
                 }
             }
             catch (Exception e)
@@ -2038,14 +1795,10 @@ namespace ScheduleDesigner.Hubs
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
-            var schedulePositionKeys1 = new List<SchedulePositionKey>();
-            var schedulePositionKeys2 = new List<SchedulePositionKey>();
-            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
-            var groupPositionKeys = new List<GroupPositionKey>();
             var L1schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
             var L2schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
-            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
-            var groupPositionQueues = new List<ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
+            var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
 
             weeks = weeks.Distinct().ToArray();
             Array.Sort(weeks);
@@ -2059,10 +1812,10 @@ namespace ScheduleDesigner.Hubs
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
-                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
+                var isCoordinator = IsCoordinator();
+                var representativeGroupsIds = GetRepresentativeGroupsIds();
 
                 var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -2086,57 +1839,19 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _sourceTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys1.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        queue.Enqueue(new object());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                    }
-
-                    foreach (var timestampId in _destTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = destRoomId, TimestampId = timestampId };
-                        schedulePositionKeys2.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        queue.Enqueue(new object());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                    }
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref L1schedulePositionAllQueues);
                 }
 
-                foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
-
+                EnterQueues(L1schedulePositionAllQueues.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys1)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
-
-                        foreach (var key in schedulePositionKeys2)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
+                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), ref L2schedulePositionAllQueues);
                     }
 
-                    foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(L2schedulePositionAllQueues.Values);
                     try
                     {
                         var predicate = PredicateBuilder.New<SchedulePosition>(true);
@@ -2202,36 +1917,13 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                foreach (var coordinatorId in coordinatorsIds)
-                                {
-                                    var key = new CoordinatorPositionKey
-                                        { CoordinatorId = coordinatorId, TimestampId = timestampId };
-                                    coordinatorPositionKeys.Add(key);
-                                    var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    coordinatorPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
-
-                                foreach (var groupId in groupsIds)
-                                {
-                                    var key = new GroupPositionKey
-                                        { GroupId = groupId, TimestampId = timestampId };
-                                    groupPositionKeys.Add(key);
-                                    var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    groupPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
                             }
                         }
 
-                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                        {
-                            Monitor.Enter(coordinatorPositionQueue);
-                        }
-                        foreach (var groupPositionQueue in groupPositionQueues)
-                        {
-                            Monitor.Enter(groupPositionQueue);
-                        }
+                        EnterQueues(coordinatorPositionQueues.Values);
+                        EnterQueues(groupPositionQueues.Values);
                         try
                         {
                             var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMovePositions
@@ -2292,34 +1984,22 @@ namespace ScheduleDesigner.Hubs
                         }
                         finally
                         {
-                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
-                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
-                            foreach (var groupPositionQueue in groupPositionQueues)
-                            {
-                                Monitor.Exit(groupPositionQueue);
-                            }
-                            foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                            {
-                                Monitor.Exit(coordinatorPositionQueue);
-                            }
+                            RemoveGroupPositionsLocks(groupPositionQueues);
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues);
+                            ExitQueues(groupPositionQueues.Values);
+                            ExitQueues(coordinatorPositionQueues.Values);
                         }
                     }
                     finally
                     {
                         RemoveSchedulePositionsLocksL2(L2schedulePositionAllQueues);
-                        foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        ExitQueues(L2schedulePositionAllQueues.Values);
                     }
                 }
                 finally
                 {
                     RemoveSchedulePositionsLocksL1(L1schedulePositionAllQueues);
-                    foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    ExitQueues(L1schedulePositionAllQueues.Values);
                 }
             }
             catch (Exception e)
@@ -2333,14 +2013,10 @@ namespace ScheduleDesigner.Hubs
             int roomId, int periodIndex, int day, int[] weeks,
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)
         {
-            var schedulePositionKeys1 = new List<SchedulePositionKey>();
-            var schedulePositionKeys2 = new List<SchedulePositionKey>();
-            var coordinatorPositionKeys = new List<CoordinatorPositionKey>();
-            var groupPositionKeys = new List<GroupPositionKey>();
             var L1schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
             var L2schedulePositionAllQueues = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
-            var coordinatorPositionQueues = new List<ConcurrentQueue<object>>();
-            var groupPositionQueues = new List<ConcurrentQueue<object>>();
+            var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
+            var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
 
             weeks = weeks.Distinct().ToArray();
             Array.Sort(weeks);
@@ -2354,8 +2030,8 @@ namespace ScheduleDesigner.Hubs
 
             try
             {
-                var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
+                var userId = GetUserId();
+                var isAdmin = IsAdmin();
 
                 var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -2379,57 +2055,19 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    foreach (var timestampId in _sourceTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = roomId, TimestampId = timestampId };
-                        schedulePositionKeys1.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        queue.Enqueue(new object());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                    }
-
-                    foreach (var timestampId in _destTimestamps)
-                    {
-                        var key = new SchedulePositionKey { RoomId = destRoomId, TimestampId = timestampId };
-                        schedulePositionKeys2.Add(key);
-                        var queue = SchedulePositionLocksL1.GetOrAdd(key, new ConcurrentQueue<object>());
-                        queue.Enqueue(new object());
-
-                        L1schedulePositionAllQueues.Add(key, queue);
-                    }
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref L1schedulePositionAllQueues);
                 }
 
-                foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                {
-                    Monitor.Enter(schedulePositionQueue);
-                }
-
+                EnterQueues(L1schedulePositionAllQueues.Values);
                 try
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        foreach (var key in schedulePositionKeys1)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
-
-                        foreach (var key in schedulePositionKeys2)
-                        {
-                            var queue = SchedulePositionLocksL2.GetOrAdd(key, new ConcurrentQueue<object>());
-                            queue.Enqueue(new object());
-
-                            L2schedulePositionAllQueues.Add(key, queue);
-                        }
+                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), ref L2schedulePositionAllQueues);
                     }
 
-                    foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Enter(schedulePositionQueue);
-                    }
+                    EnterQueues(L2schedulePositionAllQueues.Values);
                     try
                     {
                         var _sourceSchedulePositions = _unitOfWork.SchedulePositions
@@ -2486,36 +2124,13 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                foreach (var coordinatorId in coordinatorsIds)
-                                {
-                                    var key = new CoordinatorPositionKey
-                                    { CoordinatorId = coordinatorId, TimestampId = timestampId };
-                                    coordinatorPositionKeys.Add(key);
-                                    var queue = CoordinatorPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    coordinatorPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
-
-                                foreach (var groupId in groupsIds)
-                                {
-                                    var key = new GroupPositionKey
-                                    { GroupId = groupId, TimestampId = timestampId };
-                                    groupPositionKeys.Add(key);
-                                    var queue = GroupPositionLocks.GetOrAdd(key, new ConcurrentQueue<object>());
-                                    groupPositionQueues.Add(queue);
-                                    queue.Enqueue(new object());
-                                }
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
                             }
                         }
 
-                        foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                        {
-                            Monitor.Enter(coordinatorPositionQueue);
-                        }
-                        foreach (var groupPositionQueue in groupPositionQueues)
-                        {
-                            Monitor.Enter(groupPositionQueue);
-                        }
+                        EnterQueues(coordinatorPositionQueues.Values);
+                        EnterQueues(groupPositionQueues.Values);
                         try
                         {
                             var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMovePositions
@@ -2639,34 +2254,22 @@ namespace ScheduleDesigner.Hubs
                         }
                         finally
                         {
-                            RemoveGroupPositionsLocks(groupPositionQueues, groupPositionKeys);
-                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues, coordinatorPositionKeys);
-                            foreach (var groupPositionQueue in groupPositionQueues)
-                            {
-                                Monitor.Exit(groupPositionQueue);
-                            }
-                            foreach (var coordinatorPositionQueue in coordinatorPositionQueues)
-                            {
-                                Monitor.Exit(coordinatorPositionQueue);
-                            }
+                            RemoveGroupPositionsLocks(groupPositionQueues);
+                            RemoveCoordinatorPositionsLocks(coordinatorPositionQueues);
+                            ExitQueues(groupPositionQueues.Values);
+                            ExitQueues(coordinatorPositionQueues.Values);
                         }
                     }
                     finally
                     {
                         RemoveSchedulePositionsLocksL2(L2schedulePositionAllQueues);
-                        foreach (var schedulePositionQueue in L2schedulePositionAllQueues.Values)
-                        {
-                            Monitor.Exit(schedulePositionQueue);
-                        }
+                        ExitQueues(L2schedulePositionAllQueues.Values);
                     }
                 }
                 finally
                 {
                     RemoveSchedulePositionsLocksL1(L1schedulePositionAllQueues);
-                    foreach (var schedulePositionQueue in L1schedulePositionAllQueues.Values)
-                    {
-                        Monitor.Exit(schedulePositionQueue);
-                    }
+                    ExitQueues(L1schedulePositionAllQueues.Values);
                 }
             }
             catch (Exception e)
@@ -2703,7 +2306,6 @@ namespace ScheduleDesigner.Hubs
         {
             var id = int.Parse(Context.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value!);
 
-            //Context.User.Claims.ToList().ForEach(Console.WriteLine);
             Console.WriteLine($"\tConnected {Context.ConnectionId}");
             return base.OnConnectedAsync();
         }

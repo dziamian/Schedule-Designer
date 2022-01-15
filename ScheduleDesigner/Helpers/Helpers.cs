@@ -99,12 +99,26 @@ namespace ScheduleDesigner
             }
         }
 
-        public class CoordinatorPositionKey
+        public class CoordinatorPositionKey : IComparable<CoordinatorPositionKey>
         {
             public int CoordinatorId { get; set; }
 
             public int TimestampId { get; set; }
 
+            public int CompareTo(CoordinatorPositionKey other)
+            {
+                int result = this.CoordinatorId.CompareTo(other.CoordinatorId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                result = this.TimestampId.CompareTo(other.TimestampId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                return 0;
+            }
 
             public bool Equals(CoordinatorPositionKey key)
             {
@@ -123,12 +137,27 @@ namespace ScheduleDesigner
             }
         }
 
-        public class GroupPositionKey
+        public class GroupPositionKey : IComparable<GroupPositionKey>
         {
             public int GroupId { get; set; }
 
             public int TimestampId { get; set; }
 
+
+            public int CompareTo(GroupPositionKey other)
+            {
+                int result = this.GroupId.CompareTo(other.GroupId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                result = this.TimestampId.CompareTo(other.TimestampId);
+                if (result != 0)
+                {
+                    return result;
+                }
+                return 0;
+            }
 
             public bool Equals(GroupPositionKey key)
             {
