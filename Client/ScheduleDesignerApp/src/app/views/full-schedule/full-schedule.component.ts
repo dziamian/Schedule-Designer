@@ -216,8 +216,6 @@ export class FullScheduleComponent implements OnInit {
       this.initialize();
 
       this.loading = false;
-
-
     }, (error) => {
       if (error?.status == 401) {
         this.usosApiService.Deauthorize();
@@ -347,7 +345,7 @@ export class FullScheduleComponent implements OnInit {
 
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, true, true,
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, this.account.Admin, true,
       this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
     );
   }
@@ -360,7 +358,7 @@ export class FullScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, false, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.account.Coordinator, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 

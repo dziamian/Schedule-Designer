@@ -47,14 +47,35 @@ export class CourseEdition {
     }
 
     private static frequencyToString(weeks:number[]|null):string {
-        if (weeks == null) {
+        if (weeks == null || weeks.length == 0) {
             return '';
         }
-        let result = (weeks.length > 1) ? 'Weeks ' : 'Week ';  
-        weeks.sort((a, b) => a - b).forEach((week) => {
-            result += week + ', ';
-        });
-        result = result.substring(0, result.length - 2);
+        const weeksLength = weeks.length;
+        let result = (weeksLength > 1) ? 'Weeks ' : 'Week ';  
+        weeks.sort((a, b) => a - b);
+        let leftValue = -1;
+        let move = 1;
+        for (let i = 0; i < weeksLength; ++i) {
+            if (leftValue != weeks[i] - move) {
+                leftValue = weeks[i];
+                move = 0;
+            }
+            if (weeks[i + 1] == undefined) {
+                if (move == 0) {
+                    result += `${weeks[i]}`;
+                } else {
+                    result += `${leftValue}-${weeks[i]}`
+                }
+            } else if (leftValue == weeks[i + 1] - move - 1) {
+                ++move;
+            } else {
+                if (move == 0) {
+                    result += `${weeks[i]}, `;
+                } else {
+                    result += `${leftValue}-${weeks[i]}, `
+                }
+            }
+        }
         return result;
     }
 

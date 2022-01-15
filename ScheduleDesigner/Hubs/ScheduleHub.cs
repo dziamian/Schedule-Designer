@@ -569,7 +569,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Designer")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
             CourseEditionKey courseEditionKey = null;
@@ -582,7 +582,6 @@ namespace ScheduleDesigner.Hubs
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
                 var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
                 var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -599,18 +598,12 @@ namespace ScheduleDesigner.Hubs
                         predicate = predicate
                             .Or(e => e.Coordinators.Any(f => f.CoordinatorId == userId));
                     }
-                    if (!isAdmin && representativeGroupsIds.Count() > 0) 
-                    {
-                        predicate = predicate
-                            .Or(e => e.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
-                    }
 
                     var finalPredicate = predicate.And(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
 
                     var _courseEdition = _unitOfWork.CourseEditions
                         .Get(finalPredicate)
                         .Include(e => e.Coordinators)
-                        .Include(e => e.Groups)
                         .Include(e => e.LockUser).ThenInclude(e => e.Staff);
 
                     if (!_courseEdition.Any())
@@ -715,13 +708,8 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var predicate = PredicateBuilder.New<SchedulePosition>(isAdmin);
-                        if (!isAdmin && isCoordinator)
-                        {
-                            predicate = predicate
-                                .Or(e => e.CourseEdition.Coordinators.Any(f => f.CoordinatorId == userId));
-                        }
-                        if (!isAdmin && representativeGroupsIds.Count() > 0)
+                        var predicate = PredicateBuilder.New<SchedulePosition>(true);
+                        if (!isAdmin && !isCoordinator && representativeGroupsIds.Count() > 0)
                         {
                             predicate = predicate
                                 .Or(e => e.CourseEdition.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
@@ -732,13 +720,11 @@ namespace ScheduleDesigner.Hubs
                             .And(predicate);
 
                         var _schedulePositions = _unitOfWork.SchedulePositions
-                        .Get(finalPredicate)
-                        .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Coordinators)
-                        .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Groups)
-                        .Include(e => e.LockUser)
-                            .ThenInclude(e => e.Staff);
+                            .Get(finalPredicate)
+                            .Include(e => e.CourseEdition)
+                                .ThenInclude(e => e.Groups)
+                            .Include(e => e.LockUser)
+                                .ThenInclude(e => e.Staff);
 
                         if (_schedulePositions.Count() != weeks.Length)
                         {
@@ -749,7 +735,7 @@ namespace ScheduleDesigner.Hubs
                             || (isAdmin && Enumerable.Any(_schedulePositions, schedulePosition =>
                             {
                                 var lockUserStaff = schedulePosition.LockUser?.Staff;
-                                return lockUserStaff != null ? lockUserStaff.IsAdmin : false;
+                                return lockUserStaff != null && lockUserStaff.IsAdmin;
                             })))
                         {
                             return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };
@@ -802,7 +788,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Designer")]
         public MessageObject UnlockCourseEdition(int courseId, int courseEditionId)
         {
             CourseEditionKey courseEditionKey = null;
@@ -813,9 +799,6 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
-                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 courseEditionKey = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
                 courseEditionQueue = CourseEditionLocks.GetOrAdd(courseEditionKey, new ConcurrentQueue<object>());
@@ -826,24 +809,8 @@ namespace ScheduleDesigner.Hubs
 
                 lock (courseEditionQueue)
                 {
-                    var predicate = PredicateBuilder.New<CourseEdition>(isAdmin);
-                    if (!isAdmin && isCoordinator)
-                    {
-                        predicate = predicate
-                            .Or(e => e.Coordinators.Any(f => f.CoordinatorId == userId));
-                    }
-                    if (!isAdmin && representativeGroupsIds.Count() > 0)
-                    {
-                        predicate = predicate
-                            .Or(e => e.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
-                    }
-
-                    var finalPredicate = predicate.And(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
-
                     var _courseEdition = _unitOfWork.CourseEditions
-                        .Get(finalPredicate)
-                        .Include(e => e.Coordinators)
-                        .Include(e => e.Groups);
+                        .Get(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId);
 
                     if (!_courseEdition.Any())
                     {
@@ -905,9 +872,6 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
-                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
-                var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
-                var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
                 var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -953,28 +917,9 @@ namespace ScheduleDesigner.Hubs
                     }
                     try
                     {
-                        var predicate = PredicateBuilder.New<SchedulePosition>(isAdmin);
-                        if (!isAdmin && isCoordinator)
-                        {
-                            predicate = predicate
-                                .Or(e => e.CourseEdition.Coordinators.Any(f => f.CoordinatorId == userId));
-                        }
-                        if (!isAdmin && representativeGroupsIds.Count() > 0)
-                        {
-                            predicate = predicate
-                                .Or(e => e.CourseEdition.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
-                        }
-
-                        var finalPredicate = PredicateBuilder.New<SchedulePosition>()
-                            .And(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId)
-                            .And(predicate);
-
                         var _schedulePositions = _unitOfWork.SchedulePositions
-                        .Get(finalPredicate)
-                        .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Coordinators)
-                        .Include(e => e.CourseEdition)
-                            .ThenInclude(e => e.Groups);
+                            .Get(e => _timestamps.Contains(e.TimestampId) && e.RoomId == roomId)
+                            .Include(e => e.CourseEdition);
 
                         if (_schedulePositions.Count() != weeks.Length)
                         {
@@ -1304,6 +1249,7 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
 
                 var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -1416,6 +1362,12 @@ namespace ScheduleDesigner.Hubs
                         if (includableCourseEdition == null)
                         {
                             Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." });
+                            return;
+                        }
+
+                        if (!isAdmin && !includableCourseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        {
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to modify these positions." });
                             return;
                         }
 
@@ -1603,6 +1555,7 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
 
                 var _timestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -1681,6 +1634,12 @@ namespace ScheduleDesigner.Hubs
                         if (courseEdition == null)
                         {
                             Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Could not find course edition for requested positions in schedule." });
+                            return;
+                        }
+
+                        if (!isAdmin && !courseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        {
+                            Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to remove these positions." });
                             return;
                         }
 
@@ -1785,11 +1744,7 @@ namespace ScheduleDesigner.Hubs
                 var isCoordinator = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
                 var representativeGroupsIds = Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
 
-                if (!isAdmin && isCoordinator && isProposition)
-                {
-                    return new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to create propositions." };
-                }
-                if (!isAdmin && representativeGroupsIds.Count() > 0 && !isProposition)
+                if (!isAdmin && !isCoordinator && !isProposition)
                 {
                     return new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to create scheduled moves." };
                 }
@@ -1978,11 +1933,6 @@ namespace ScheduleDesigner.Hubs
                                 return new MessageObject { StatusCode = 400, Message = "This move is possible, so you should not try to schedule it." };
                             }
 
-                            /*if (_destSchedulePositions.Any(e => e.CourseEdition.Coordinators.Select(e => e.CoordinatorId).Contains(userId)))
-                            {
-                                return new MessageObject { StatusCode = 400, Message = "Scheduled move cannot collide with your own courses." };
-                            }*/
-
                             var _scheduledMovesCountsCondition = _unitOfWork.ScheduledMovePositions
                                 .Get(e => e.RoomId_1 == roomId && _sourceTimestamps.Contains(e.TimestampId_1)
                                     && e.RoomId_2 == destRoomId && _destTimestamps.Contains(e.TimestampId_2)
@@ -2006,7 +1956,7 @@ namespace ScheduleDesigner.Hubs
                             {
                                 if (_scheduledMovesCountsCondition[i].Count == _scheduledMovesCounts[i].Count)
                                 {
-                                    return new MessageObject { StatusCode = 400, Message = "This move is already scheduled." };
+                                    return new MessageObject { StatusCode = 400, Message = "This move already exists." };
                                 }
                             }
 
@@ -2196,12 +2146,14 @@ namespace ScheduleDesigner.Hubs
                                 .And(e => e.CourseEdition.Groups.Any(f => representativeGroupsIds.Contains(f.GroupId)));
                         }
 
-                        var finalPredicate = PredicateBuilder.New<SchedulePosition>()
+                        var finalPredicate = PredicateBuilder.New<SchedulePosition>(true)
                             .And(e => _sourceTimestamps.Contains(e.TimestampId) && e.RoomId == roomId)
                             .And(predicate);
 
                         var _sourceSchedulePositions = _unitOfWork.SchedulePositions
                             .Get(finalPredicate)
+                            .Include(e => e.CourseEdition)
+                                .ThenInclude(e => e.Coordinators)
                             .Include(e => e.CourseEdition)
                                 .ThenInclude(e => e.Groups);
 
@@ -2308,7 +2260,8 @@ namespace ScheduleDesigner.Hubs
                             {
                                 if (_scheduledMovesCountsCondition[i].Count == _scheduledMovesCounts[i].Count)
                                 {
-                                    if (isAdmin || isCoordinator || (_scheduledMovesCountsCondition[i].UserId == userId && !_scheduledMovesCountsCondition[i].IsConfirmed))
+                                    if (isAdmin || (isCoordinator && includableCourseEdition.Coordinators.Any(e => e.CoordinatorId == userId)) 
+                                        || (_scheduledMovesCountsCondition[i].UserId == userId && !_scheduledMovesCountsCondition[i].IsConfirmed))
                                     {
                                         _unitOfWork.ScheduledMovePositions
                                             .DeleteMany(e => e.MoveId == _scheduledMovesCountsCondition[i].MoveId);
@@ -2402,6 +2355,7 @@ namespace ScheduleDesigner.Hubs
             try
             {
                 var userId = int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                var isAdmin = Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
 
                 var _sourceTimestamps = _unitOfWork.Timestamps
                         .Get(e => e.PeriodIndex == periodIndex && e.Day == day && weeks.Contains(e.Week))
@@ -2512,6 +2466,11 @@ namespace ScheduleDesigner.Hubs
                         if (includableCourseEdition == null || !includableCourseEdition.Course.Rooms.Select(e => e.RoomId).Contains(destRoomId))
                         {
                             return new MessageObject { StatusCode = 400, Message = "Chosen room does not exist or has not been assigned to chosen course." };
+                        }
+
+                        if (!isAdmin && !courseEdition.Coordinators.Any(e => e.CoordinatorId == userId))
+                        {
+                            return new MessageObject { StatusCode = 400, Message = "You do not have enough permissions to accept this proposition." };
                         }
 
                         var coordinatorsIds = includableCourseEdition.Coordinators.Select(e => e.CoordinatorId).ToArray();

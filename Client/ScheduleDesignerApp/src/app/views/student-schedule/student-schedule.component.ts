@@ -360,7 +360,8 @@ export class StudentScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.account.RepresentativeGroups.length > 0, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Admin, this.account.Coordinator || this.account.RepresentativeGroups.length > 0, 
+      this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
