@@ -12,7 +12,12 @@ namespace ScheduleDesigner
 {
     public static class Helpers
     {
-        public class ApplicationInfo
+        public class DatabaseConnectionOptions
+        {
+            public string SchedulingDatabase { get; set; }
+        }
+
+        public class ApplicationOptions
         {
             public string BaseUsosUrl { get; set; }
         }
@@ -22,6 +27,20 @@ namespace ScheduleDesigner
             public string Key { get; set; }
 
             public string Secret { get; set; }
+        }
+
+        public class FullBackup
+        {
+            public int StartHour { get; set; }
+            public int IntervalHours { get; set; }
+            public string Path { get; set; }
+        }
+
+        public class ScheduleBackup
+        {
+            public int StartHour { get; set; }
+            public int IntervalHours { get; set; }
+            public string Path { get; set; }
         }
 
         public class CourseEditionKey : IComparable<CourseEditionKey>

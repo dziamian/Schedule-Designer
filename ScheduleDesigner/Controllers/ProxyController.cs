@@ -18,7 +18,7 @@ namespace ScheduleDesigner.Controllers
         private readonly IOptions<Consumer> _usosConsumer;
         private readonly HttpClient _client;
 
-        public ProxyController(IOptions<ApplicationInfo> applicationInfo, IOptions<Consumer> usosConsumer)
+        public ProxyController(IOptions<ApplicationOptions> applicationInfo, IOptions<Consumer> usosConsumer)
         {
             _usosConsumer = usosConsumer;
             _client = new HttpClient

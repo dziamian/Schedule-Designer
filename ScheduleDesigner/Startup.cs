@@ -45,7 +45,7 @@ namespace ScheduleDesigner
         {
             services.AddDbContext<ScheduleDesignerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("SchedulingDatabase"));
                 //options.ConfigureWarnings(options => options.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
             });
 
@@ -81,9 +81,14 @@ namespace ScheduleDesigner
             });
 
             services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
+            services.AddHostedService<FullBackupService>();
+            services.AddHostedService<ScheduleBackupService>();
 
-            services.Configure<ApplicationInfo>(Configuration.GetSection("ApplicationInfo"));
+            services.Configure<DatabaseConnectionOptions>(Configuration.GetSection("ConnectionStrings"));
+            services.Configure<ApplicationOptions>(Configuration.GetSection("ApplicationOptions"));
             services.Configure<Consumer>(Configuration.GetSection("UsosConsumer"));
+            services.Configure<FullBackup>(Configuration.GetSection("FullBackup"));
+            services.Configure<ScheduleBackup>(Configuration.GetSection("ScheduleBackup"));
 
             services.AddCors(options =>
             {

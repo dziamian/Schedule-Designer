@@ -20,13 +20,13 @@ namespace ScheduleDesigner.Services
 {
     public class UsosAuthenticationService
     {
-        public readonly ApplicationInfo ApplicationInfo;
+        public readonly ApplicationOptions ApplicationInfo;
         public readonly Consumer UsosConsumer;
 
         private readonly HttpClient _client;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UsosAuthenticationService(IOptions<ApplicationInfo> applicationInfo, IOptions<Consumer> usosConsumer, IUnitOfWork unitOfWork)
+        public UsosAuthenticationService(IOptions<ApplicationOptions> applicationInfo, IOptions<Consumer> usosConsumer, IUnitOfWork unitOfWork)
         {
             ApplicationInfo = applicationInfo.Value;
             UsosConsumer = usosConsumer.Value;
