@@ -81,14 +81,15 @@ namespace ScheduleDesigner
             });
 
             services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
+            
             services.AddHostedService<FullBackupService>();
-            services.AddHostedService<ScheduleBackupService>();
+            services.AddHostedService<DifferentialBackupService>();
 
             services.Configure<DatabaseConnectionOptions>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<ApplicationOptions>(Configuration.GetSection("ApplicationOptions"));
             services.Configure<Consumer>(Configuration.GetSection("UsosConsumer"));
             services.Configure<FullBackup>(Configuration.GetSection("FullBackup"));
-            services.Configure<ScheduleBackup>(Configuration.GetSection("ScheduleBackup"));
+            services.Configure<DifferentialBackup>(Configuration.GetSection("DifferentialBackup"));
 
             services.AddCors(options =>
             {

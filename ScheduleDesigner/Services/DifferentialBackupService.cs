@@ -1,25 +1,25 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
-using System;
 using Microsoft.Data.SqlClient;
 using System.Threading;
-using System.Threading.Tasks;
 using static ScheduleDesigner.Helpers;
+using System;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.SqlServer.Management.Common;
+using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Services
 {
-    public class FullBackupService : IHostedService
+    public class DifferentialBackupService : IHostedService
     {
-        private readonly FullBackup _fullBackup;
+        private readonly DifferentialBackup _differentialBackup;
         private readonly DatabaseConnectionOptions _databaseConnectionOptions;
 
         private Timer _timer = null;
 
-        public FullBackupService(IOptions<FullBackup> fullBackup, IOptions<DatabaseConnectionOptions> databaseConnectionOptions)
+        public DifferentialBackupService(IOptions<DifferentialBackup> differentialBackup, IOptions<DatabaseConnectionOptions> databaseConnectionOptions)
         {
-            _fullBackup = fullBackup.Value;
+            _differentialBackup = differentialBackup.Value;
             _databaseConnectionOptions = databaseConnectionOptions.Value;
         }
 
@@ -37,36 +37,35 @@ namespace ScheduleDesigner.Services
             {
                 Action = BackupActionType.Database,
                 BackupSetName = "ScheduleDesigner Backup",
-                BackupSetDescription = $"Full backup of {databaseName} on {shortDateString} {shortTimeString}",
+                BackupSetDescription = $"Differential backup of {databaseName} on {shortDateString} {shortTimeString}",
                 Database = databaseName
             };
 
-            var destinationPath = _fullBackup.Path;
+            var destinationPath = _differentialBackup.Path;
             var backupFileName = $"{databaseName}_{shortDateString}_{shortTimeString}.bak";
             var backupDeviceItem = new BackupDeviceItem(destinationPath + "\\" + backupFileName, DeviceType.File);
 
             var connection = new ServerConnection(new SqlConnection(connectionBuilder.ConnectionString));
             var sqlServer = new Server(connection);
-            
+
             sqlServer.ConnectionContext.StatementTimeout = 60 * 60;
-            
+
             sqlBackup.Initialize = false;
             sqlBackup.Devices.Add(backupDeviceItem);
-            sqlBackup.Incremental = false;
+            sqlBackup.Incremental = true;
             sqlBackup.ExpirationDate = currentTime.AddDays(7);
-            sqlBackup.LogTruncation = BackupTruncateLogType.Truncate;
-            
+
             sqlBackup.SqlBackupAsync(sqlServer);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            TimeSpan fullInterval = TimeSpan.FromHours(_fullBackup.IntervalHours);
-            
-            var nextRunTime = DateTime.Today.AddHours(_fullBackup.StartHour);
+            TimeSpan scheduleInterval = TimeSpan.FromHours(_differentialBackup.IntervalHours);
+
+            var nextRunTime = DateTime.Today.AddHours(_differentialBackup.StartHour);
             while (nextRunTime < DateTime.Now)
             {
-                nextRunTime = nextRunTime.Add(fullInterval);
+                nextRunTime = nextRunTime.Add(scheduleInterval);
             }
             var firstFullInterval = nextRunTime.Subtract(DateTime.Now);
 
@@ -75,7 +74,7 @@ namespace ScheduleDesigner.Services
                 var task = Task.Delay(firstFullInterval);
                 task.Wait();
 
-                _timer = new Timer(DoBackup, null, TimeSpan.Zero, fullInterval);
+                _timer = new Timer(DoBackup, null, TimeSpan.Zero, scheduleInterval);
             }
 
             Task.Run(action);
@@ -85,7 +84,7 @@ namespace ScheduleDesigner.Services
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _timer?.Change(Timeout.Infinite, 0);
-            
+
             return Task.CompletedTask;
         }
     }

@@ -36,7 +36,7 @@ namespace ScheduleDesigner
             public string Path { get; set; }
         }
 
-        public class ScheduleBackup
+        public class DifferentialBackup
         {
             public int StartHour { get; set; }
             public int IntervalHours { get; set; }
