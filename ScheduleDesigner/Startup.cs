@@ -99,7 +99,8 @@ namespace ScheduleDesigner
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
-                        .WithOrigins(Configuration.GetSection("CorsPolicy:AllowedOriginsList").Get<string[]>());
+                        .WithOrigins(Configuration.GetSection("CorsPolicy:AllowedOriginsList").Get<string[]>())
+                        .WithExposedHeaders("Content-Disposition");
                 });
             });
 

@@ -239,5 +239,11 @@ namespace ScheduleDesigner
 
             return groupsIds;
         }
+
+        public interface IExportCsv
+        {
+            string GetHeader();
+            string GetRow();
+        }
     }
 }

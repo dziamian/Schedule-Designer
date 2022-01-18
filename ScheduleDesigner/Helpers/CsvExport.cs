@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Models
 {
-    public class ScheduleCsvResult : FileResult
+    public class CsvExport : FileResult
     {
-        private readonly IEnumerable<SchedulePosition> _scheduleData;
+        private readonly IEnumerable<IExportCsv> _data;
 
-        public ScheduleCsvResult(IEnumerable<SchedulePosition> scheduleData, string fileDownloadName) : base("text/csv")
+        public CsvExport(IEnumerable<IExportCsv> data, string fileDownloadName) : base("text/csv")
         {
-            _scheduleData = scheduleData;
+            _data = data;
             FileDownloadName = fileDownloadName;
         }
 
@@ -20,14 +22,11 @@ namespace ScheduleDesigner.Models
             var response = context.HttpContext.Response;
             context.HttpContext.Response.Headers.Add("Content-Disposition", new[] { "attachment; filename=" + FileDownloadName });
             using var streamWriter = new StreamWriter(response.Body);
-            await streamWriter.WriteAsync(
-              $"RoomId, TimestampId, CourseId, CourseEditionId\n"
-            );
-            foreach (var p in _scheduleData)
+            var header = _data.FirstOrDefault().GetHeader();
+            await streamWriter.WriteAsync(header);
+            foreach (var p in _data)
             {
-                await streamWriter.WriteAsync(
-                  $"{p.RoomId}, {p.TimestampId}, {p.CourseId}, {p.CourseEditionId}\n"
-                );
+                await streamWriter.WriteAsync(p.GetRow());
                 await streamWriter.FlushAsync();
             }
             await streamWriter.FlushAsync();

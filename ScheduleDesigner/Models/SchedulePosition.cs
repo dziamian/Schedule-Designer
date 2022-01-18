@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using static ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Models
 {
-    public class SchedulePosition
+    public class SchedulePosition : IExportCsv
     {
         public int RoomId { get; set; }
 
@@ -37,5 +35,15 @@ namespace ScheduleDesigner.Models
         public Timestamp Timestamp { get; set; }
 
         public virtual ICollection<ScheduledMovePosition> ScheduledMovePositions { get; set; }
+
+        public string GetHeader()
+        {
+            return $"RoomId|TimestampId|CourseId|CourseEditionId\n";
+        }
+
+        public string GetRow()
+        {
+            return $"{RoomId}|{TimestampId}|{CourseId}|{CourseEditionId}\n";
+        }
     }
 }

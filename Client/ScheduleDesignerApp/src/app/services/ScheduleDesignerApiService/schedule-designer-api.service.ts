@@ -940,8 +940,21 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public ExportSchedule() {
-    
+  public DownloadSchedule():Observable<any> {
+    const request = {
+      url: this.baseUrl + `/export/schedulePositions`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        responseType: 'blob',
+        observe: 'response',
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
   }
 
   //TESTING

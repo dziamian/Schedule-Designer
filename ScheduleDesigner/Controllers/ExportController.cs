@@ -9,21 +9,22 @@ namespace ScheduleDesigner.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ScheduleController : ControllerBase
+    public class ExportController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public ScheduleController(IUnitOfWork unitOfWork)
+        public ExportController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet("export")]
+        //Authorize - Administrator
+        [HttpGet("schedulePositions"), DisableRequestSizeLimit]
         public IActionResult Export()
         {
             var scheduleData = _unitOfWork.SchedulePositions.GetAll().ToList();
-            var fileDownloadName = "schedulePositions.csv";
-            return new ScheduleCsvResult(scheduleData, fileDownloadName);
+            var fileDownloadName = "SchedulePositions.csv";
+            return new CsvExport(scheduleData, fileDownloadName);
         }
     }
 }

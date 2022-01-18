@@ -44,6 +44,7 @@ import { AvailableResourcesComponent } from './components/available-resources/av
 import { FullScheduleComponent } from './views/full-schedule/full-schedule.component';
 import { PersonalScheduleComponent } from './views/personal-schedule/personal-schedule.component';
 import { StudentScheduleComponent } from './views/student-schedule/student-schedule.component';
+import { AdministratorPanelComponent } from './views/administrator-panel/administrator-panel.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { StudentScheduleComponent } from './views/student-schedule/student-sched
     AvailableResourcesComponent,
     FullScheduleComponent,
     PersonalScheduleComponent,
-    StudentScheduleComponent
+    StudentScheduleComponent,
+    AdministratorPanelComponent
   ],
   imports: [
     BrowserModule,
