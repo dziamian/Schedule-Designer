@@ -354,6 +354,9 @@ namespace ScheduleDesigner
             getScheduleForModification
                 .CollectionParameter<int>("Weeks");
 
+            builder.EntityType<SchedulePosition>().Collection
+                .Action("ClearSchedule");
+
             var getRoomsAvailabilityFunction = builder.EntityType<SchedulePosition>().Collection
                 .Function("GetRoomsAvailability")
                 .ReturnsCollection<RoomAvailability>();

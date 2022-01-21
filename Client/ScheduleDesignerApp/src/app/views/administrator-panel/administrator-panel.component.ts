@@ -8,12 +8,28 @@ import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApi
 })
 export class AdministratorPanelComponent implements OnInit {
 
+  selectedFile:File;
+
   constructor(
     private scheduleDesignerApiService: ScheduleDesignerApiService,
   ) { }
 
   ngOnInit(): void {
 
+  }
+
+  csvInputChange(fileInputEvent: any) {
+    this.selectedFile = fileInputEvent.target.files[0];
+  }
+
+  public UploadSchedule() {
+    if (!this.selectedFile) {
+      return;
+    }
+    
+    this.scheduleDesignerApiService.UploadSchedule(this.selectedFile).subscribe((response) => {
+      //show info
+    });
   }
 
   public DownloadSchedule() {

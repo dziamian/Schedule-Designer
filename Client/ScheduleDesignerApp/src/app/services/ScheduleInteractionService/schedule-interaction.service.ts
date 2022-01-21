@@ -1451,17 +1451,12 @@ export class ScheduleInteractionService {
     }
   }
 
-  public async move(
+  private async cancelMove(
     data: ModifyingScheduleData,
-    tabWeeks: number[][],
-    currentTabIndex: number,
-    isAdmin: boolean,
     settings: Settings,
-    scheduleComponent: ScheduleComponent,
-    snackBar: MatSnackBar,
-  ): Promise<void> {
+    scheduleComponent: ScheduleComponent): Promise<boolean> {
     if (data.currentSelectedCourseEdition == null) {
-      return;
+      return false;
     }
 
     if (data.currentSelectedCourseEdition.IsMoving) {
@@ -1489,10 +1484,27 @@ export class ScheduleInteractionService {
         data.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
       }
       data.areSlotsValiditySet = false;
+      return false;
+    }
+
+    return true;
+  }
+
+  public async move(
+    data: ModifyingScheduleData,
+    tabWeeks: number[][],
+    currentTabIndex: number,
+    isAdmin: boolean,
+    settings: Settings,
+    scheduleComponent: ScheduleComponent,
+    snackBar: MatSnackBar,
+  ): Promise<void> {
+    const cancelMoveResult = await this.cancelMove(data, settings, scheduleComponent);
+    if (!cancelMoveResult) {
       return;
     }
 
-    const selectedCourseEdition = data.currentSelectedCourseEdition;
+    const selectedCourseEdition = data.currentSelectedCourseEdition!;
     try {
       const result = await this.signalrService.LockSchedulePositions(
         selectedCourseEdition.CourseEdition.Room!.RoomId, selectedCourseEdition.PeriodIndex + 1,
@@ -1503,8 +1515,8 @@ export class ScheduleInteractionService {
         throw result;
       }
 
-      data.currentSelectedCourseEdition.CourseEdition.IsLocked = true;
-      data.currentSelectedCourseEdition.CourseEdition.IsLockedByAdmin = isAdmin;
+      data.currentSelectedCourseEdition!.CourseEdition.IsLocked = true;
+      data.currentSelectedCourseEdition!.CourseEdition.IsLockedByAdmin = isAdmin;
     } catch (error:any) {
       if (error.Message != undefined) {
         snackBar.open(error.Message, "OK");
@@ -1532,7 +1544,7 @@ export class ScheduleInteractionService {
 
     data.areSlotsValiditySet = true;
 
-    data.currentSelectedCourseEdition.IsMoving = true;
+    data.currentSelectedCourseEdition!.IsMoving = true;
   }
 
   public cancelSelection(

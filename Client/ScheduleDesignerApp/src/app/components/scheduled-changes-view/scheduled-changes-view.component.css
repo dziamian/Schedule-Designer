@@ -9,6 +9,10 @@ div[mat-dialog-content] {
     overflow-y: auto;
 }
 
+.item-buttons {
+    display: flex;
+}
+
 .mat-divider {
     border-color: #00000048;
 }

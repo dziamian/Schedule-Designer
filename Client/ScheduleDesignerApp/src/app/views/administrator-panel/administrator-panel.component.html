@@ -2,4 +2,9 @@
     <button mat-raised-button color="primary" (click)="DownloadSchedule()">
         DOWNLOAD
     </button>
+    <br>
+        <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" accept=".csv"/>
+        <mat-label>Selected file: <b>{{selectedFile?.name ?? 'None'}}</b></mat-label>
+        <button mat-raised-button color="primary" (click)="csvInput.click()">SELECT FILE</button>
+        <button mat-raised-button color="primary" (click)="UploadSchedule()">UPLOAD</button>
 </div>

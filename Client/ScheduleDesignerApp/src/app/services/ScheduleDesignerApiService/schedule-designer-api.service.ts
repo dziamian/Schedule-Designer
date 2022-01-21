@@ -940,6 +940,26 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public UploadSchedule(file: File):Observable<any> {
+    const request = {
+      url: this.baseUrl + `/import/schedulePositions`,
+      method: 'POST'
+    };
+
+    const formData = new FormData();
+
+    formData.append('file', file);
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: formData,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
   public DownloadSchedule():Observable<any> {
     const request = {
       url: this.baseUrl + `/export/schedulePositions`,

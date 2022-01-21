@@ -20,7 +20,7 @@ namespace ScheduleDesigner.Controllers
 
         //Authorize - Administrator
         [HttpGet("schedulePositions"), DisableRequestSizeLimit]
-        public IActionResult Export()
+        public IActionResult ExportSchedulePositions()
         {
             var scheduleData = _unitOfWork.SchedulePositions.GetAll().ToList();
             var fileDownloadName = "SchedulePositions.csv";

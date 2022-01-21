@@ -333,7 +333,6 @@ export class RoomSelectionComponent implements OnInit {
           this.isProposition, this.message?.length > 0 ? this.message : null
         ).toPromise()
       );
-      console.log(this.message);
       if (result.StatusCode >= 400) {
         throw result;
       }

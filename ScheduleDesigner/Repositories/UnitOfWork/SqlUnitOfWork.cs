@@ -5,7 +5,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 {
     public class SqlUnitOfWork : IUnitOfWork
     {
-        private readonly ScheduleDesignerDbContext _context;
+        public ScheduleDesignerDbContext Context { get; private set; }
 
         public IAuthorizationRepo Authorizations { get; private set; }
 
@@ -51,7 +51,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
         public SqlUnitOfWork(ScheduleDesignerDbContext context)
         {
-            _context = context;
+            Context = context;
 
             Authorizations = new SqlAuthorizationRepo(context);
             CoordinatorCourseEditions = new SqlCoordinatorCourseEdition(context);
@@ -78,17 +78,17 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
         public int Complete()
         {
-            return _context.SaveChanges();
+            return Context.SaveChanges();
         }
 
         public async Task<int> CompleteAsync()
         {
-            return await _context.SaveChangesAsync();
+            return await Context.SaveChangesAsync();
         }
 
         public void Dispose()
         {
-            _context.Dispose();
+            Context.Dispose();
         }
     }
 }

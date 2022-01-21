@@ -144,6 +144,25 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearSchedule()
+        {
+            try
+            {
+                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Messages]");
+                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [ScheduledMovePositions]");
+                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [ScheduledMoves]");
+                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [SchedulePositions]");
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("Service.GetRoomsAvailability(RoomsIds={RoomsIds},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]

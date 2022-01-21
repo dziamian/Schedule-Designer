@@ -36,16 +36,6 @@ namespace ScheduleDesigner.Repositories
 
         public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
 
-        public int GetNextScheduledMoveId()
-        {
-            var result = new SqlParameter("@result", SqlDbType.Int)
-            {
-                Direction = ParameterDirection.Output
-            };
-            Database.ExecuteSqlRaw("SET @result = (NEXT VALUE FOR dbo.ScheduledMovesIds);", result);
-            return (int)result.Value;
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Authorization

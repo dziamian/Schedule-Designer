@@ -377,7 +377,7 @@ export class FullScheduleComponent implements OnInit {
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
-      this.roomTypes, true, true, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
+      this.roomTypes, this.account.Admin, true, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
     );
   }
 
@@ -389,7 +389,7 @@ export class FullScheduleComponent implements OnInit {
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.account.Admin, this.settings, this.roomTypes, true, true, this.currentFilter.filter, this.dialogService, this.snackBar
+      this.data, this.account.Admin, this.settings, this.roomTypes, this.account.Admin, true, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   

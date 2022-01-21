@@ -203,7 +203,11 @@ namespace ScheduleDesigner
 
         public static List<int> GetNestedGroupsIds(CourseEdition courseEdition, IGroupRepo _groupRepo)
         {
-            var groups = courseEdition.Groups.Select(e => e.Group).ToList();
+            return GetNestedGroupsIds(courseEdition.Groups.Select(e => e.Group).ToList(), _groupRepo);
+        }
+
+        public static List<int> GetNestedGroupsIds(List<Group> groups, IGroupRepo _groupRepo)
+        {
             var groupsIds = groups.Select(e => e.GroupId).ToList();
 
             var startIndex = 0;
@@ -242,8 +246,8 @@ namespace ScheduleDesigner
 
         public interface IExportCsv
         {
-            string GetHeader();
-            string GetRow();
+            string GetHeader(char delimiter = '|');
+            string GetRow(char delimiter = '|');
         }
     }
 }

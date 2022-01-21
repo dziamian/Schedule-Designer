@@ -6,6 +6,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        ScheduleDesignerDbContext Context { get; }
         IAuthorizationRepo Authorizations { get; }
         ICoordinatorCourseEditionRepo CoordinatorCourseEditions { get; }
         ICoordinatorRepo Coordinators { get; }

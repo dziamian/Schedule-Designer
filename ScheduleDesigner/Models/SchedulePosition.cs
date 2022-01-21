@@ -36,14 +36,14 @@ namespace ScheduleDesigner.Models
 
         public virtual ICollection<ScheduledMovePosition> ScheduledMovePositions { get; set; }
 
-        public string GetHeader()
+        public string GetHeader(char delimiter)
         {
-            return $"RoomId|TimestampId|CourseId|CourseEditionId\n";
+            return $"RoomId{delimiter}TimestampId{delimiter}CourseId{delimiter}CourseEditionId\n";
         }
 
-        public string GetRow()
+        public string GetRow(char delimiter)
         {
-            return $"{RoomId}|{TimestampId}|{CourseId}|{CourseEditionId}\n";
+            return $"{RoomId}{delimiter}{TimestampId}{delimiter}{CourseId}{delimiter}{CourseEditionId}\n";
         }
     }
 }
