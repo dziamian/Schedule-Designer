@@ -49,6 +49,13 @@ export class ScheduleInteractionService {
     scheduleComponent: ScheduleComponent
   ): void {
     if (data.currentSelectedCourseEdition != null && data.currentSelectedCourseEdition.IsMoving) {
+      data.areSlotsValiditySet = false;
+      
+      const numberOfSlots = settings.Periods.length - 1;
+      for (let i = 0; i < scheduleComponent.scheduleSlots.length; ++i) {
+        data.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
+      }
+      
       this.scheduleDesignerApiService.GetBusyPeriods(
         data.currentSelectedCourseEdition.CourseEdition.CourseId, 
         data.currentSelectedCourseEdition.CourseEdition.CourseEditionId,
@@ -65,6 +72,8 @@ export class ScheduleInteractionService {
             ++busySlotIndex;
           }
         }
+
+        data.areSlotsValiditySet = true;
       });
     }
   }
@@ -188,16 +197,7 @@ export class ScheduleInteractionService {
       && selectedCourseEdition.CourseEdition.Room?.RoomId == roomId
       && selectedCourseEdition.Day == day && selectedCourseEdition.PeriodIndex == periodIndex
       && selectedCourseEdition.CourseEdition.Weeks?.some(r => weeks.includes(r))) {
-        if (data.currentSelectedCourseEdition != null) {
-          data.currentSelectedCourseEdition.IsMoving = false;
-          data.currentSelectedCourseEdition.CourseEdition.IsCurrentlyActive = false;
-        }
-        data.currentSelectedCourseEdition = null;
-        
-        const numberOfSlots = settings.Periods.length - 1;
-        for (let i = 0; i < scheduleComponent.scheduleSlots.length; ++i) {
-          data.scheduleSlotsValidity[Math.floor(i / numberOfSlots)][i % numberOfSlots] = false;
-        }
+        this.cancelMove(data, settings, scheduleComponent);
     }
 
     //possibly admin took control

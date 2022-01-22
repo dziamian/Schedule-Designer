@@ -84,8 +84,18 @@ export class ScheduleComponent implements OnInit {
     courseEditions.forEach((courseEdition) => {
       if (courseEdition.CourseId == courseId && courseEdition.CourseEditionId == courseEditionId 
         && courseEdition.Room?.RoomId == roomId) {
-          courseEdition.IsLocked = lockedValue;
-          courseEdition.IsLockedByAdmin = lockedByAdmin;
+          if (!lockedValue) {
+            this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+              position.RoomId, position.PeriodIndex,
+              position.Day, courseEdition.Weeks!
+            ).subscribe((areLocked) => {
+              courseEdition.IsLocked = areLocked.value;
+              courseEdition.IsLockedByAdmin = areLocked.byAdmin;
+            });
+          } else {
+            courseEdition.IsLocked = lockedValue;
+            courseEdition.IsLockedByAdmin = lockedByAdmin;
+          }
       }
     });
   }

@@ -163,10 +163,6 @@ export class PersonalScheduleComponent implements OnInit {
       this.updateLockInSchedule(lockedSchedulePositions);
     }));
 
-    this.signalrSubscriptions.push(this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) => {
-      this.updateLockInSchedule(unlockedSchedulePositions);
-    }));
-
     this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) => {
       this.scheduleInteractionService.lastAddedSchedulePositionsReaction(
         addedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
