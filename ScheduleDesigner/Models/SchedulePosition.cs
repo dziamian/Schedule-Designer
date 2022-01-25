@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Models
 {
@@ -36,12 +36,12 @@ namespace ScheduleDesigner.Models
 
         public virtual ICollection<ScheduledMovePosition> ScheduledMovePositions { get; set; }
 
-        public string GetHeader(char delimiter)
+        public string GetHeader(string delimiter)
         {
             return $"RoomId{delimiter}TimestampId{delimiter}CourseId{delimiter}CourseEditionId\n";
         }
 
-        public string GetRow(char delimiter)
+        public string GetRow(string delimiter)
         {
             return $"{RoomId}{delimiter}{TimestampId}{delimiter}{CourseId}{delimiter}{CourseEditionId}\n";
         }

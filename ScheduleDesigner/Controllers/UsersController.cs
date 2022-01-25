@@ -35,38 +35,6 @@ namespace ScheduleDesigner.Controllers
             return user.Student != null || user.Coordinator != null || user.Staff != null;
         }
 
-        /*[HttpPost]
-        [ODataRoute("")]
-        public async Task<IActionResult> CreateUser([FromBody] User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (!IsDataValid(user))
-            {
-                ModelState.AddModelError("UserRoles", "User must have assigned at least one role.");
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var _user = await _userRepo.Add(user);
-
-                if (_user != null)
-                {
-                    await _userRepo.SaveChanges();
-                    return Created(_user);
-                }
-                return NotFound();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }*/
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateMyAccount()

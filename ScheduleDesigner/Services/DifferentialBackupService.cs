@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Data.SqlClient;
 using System.Threading;
-using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Helpers;
 using System;
 using Microsoft.SqlServer.Management.Smo;
 using Microsoft.SqlServer.Management.Common;

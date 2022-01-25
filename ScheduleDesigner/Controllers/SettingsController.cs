@@ -2,13 +2,17 @@
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Attributes;
+using ScheduleDesigner.Helpers;
+using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Models;
-using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
@@ -28,67 +32,9 @@ namespace ScheduleDesigner.Controllers
             return (settings.EndTime - settings.StartTime).TotalMinutes % settings.CourseDurationMinutes == 0;
         }
 
-        private static int GetNumberOfSlots(Settings settings)
+        private static int GetNumberOfPeriods(Settings settings)
         {
             return (int)(settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
-        }
-
-        private async Task AddTimestamps(Settings settings)
-        {
-            var numberOfSlots = (settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
-            var numberOfWeeks = settings.TermDurationWeeks;
-            for (int k = 0; k < numberOfWeeks; ++k)
-                for (int j = 0; j < 5; ++j)
-                    for (int i = 0; i < numberOfSlots; ++i)
-                    {
-                        await _unitOfWork.Timestamps.Add(new Timestamp { PeriodIndex = i + 1, Day = j + 1, Week = k + 1 });
-                    }
-        }
-
-        private void RemoveTimestamps()
-        {
-            _unitOfWork.Timestamps.GetAll().RemoveRange(_unitOfWork.Timestamps.GetAll().ToList());
-        }
-
-        [HttpPost]
-        [ODataRoute("")]
-        public async Task<IActionResult> CreateSettings([FromBody] Settings settings)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (!IsDataValid(settings))
-            {
-                ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var _settings = await _unitOfWork.Settings.GetSettings();
-                if (_settings != null)
-                {
-                    return Conflict("Settings already exists.");
-                }
-
-                _settings = await _unitOfWork.Settings.AddSettings(settings);
-                if (_settings == null)
-                {
-                    return NotFound();
-                }
-
-                await AddTimestamps(_settings);
-
-                await _unitOfWork.CompleteAsync();
-
-                return Created(_settings);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
         }
 
         [HttpGet]
@@ -98,7 +44,7 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _settings = await _unitOfWork.Settings.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetFirst(e => true);
                 if (_settings == null)
                 {
                     return NotFound();
@@ -117,13 +63,13 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-                var _settings = await _unitOfWork.Settings.GetSettings();
+                var _settings = await _unitOfWork.Settings.GetFirst(e => true);
                 if (_settings == null)
                 {
                     return NotFound();
                 }
 
-                var numberOfPeriods = GetNumberOfSlots(_settings) + 1;
+                var numberOfPeriods = GetNumberOfPeriods(_settings) + 1;
                 var currentPeriod = _settings.StartTime;
                 var periodsStrings = new string[numberOfPeriods];
                 var courseDuration = new TimeSpan(0, _settings.CourseDurationMinutes, 0);
@@ -143,67 +89,106 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("")]
-        public async Task<IActionResult> UpdateSettings([FromBody] Delta<Settings> delta)
+        public async Task<IActionResult> UpdateSettings([FromBody] Delta<Settings> delta, [FromQuery] string connectionId)
         {
-            /// KURSY MUSZĄ BYĆ PUSTE !!
-            /// if course table has elements -> BadRequest
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            try
+            if (connectionId == null)
             {
-                var _settings = await _unitOfWork.Settings.GetSettings();
-                if (_settings == null)
-                {
-                    return NotFound();
-                }
-
-                delta.Patch(_settings);
-
-                if (!IsDataValid(_settings))
-                {
-                    ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
-                    return BadRequest(ModelState);
-                }
-
-                RemoveTimestamps();
-                await AddTimestamps(_settings);
-
-                await _unitOfWork.Settings.SaveChanges();
-
-                return Ok(_settings);
+                return BadRequest("Could not find connection id.");
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete]
-        [ODataRoute("")]
-        public async Task<IActionResult> DeleteSettings()
-        {
-            /// KURSY MUSZĄ BYĆ PUSTE !!
-            /// if course table has elements -> BadRequest
 
             try
             {
-                var result = await _unitOfWork.Settings.DeleteSettings();
-                if (result < 0)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    return NotFound();
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
+                try
+                {
+                    var _settings = await _unitOfWork.Settings.GetFirst(e => true);
+                    if (_settings == null)
+                    {
+                        return NotFound();
+                    }
 
-                RemoveTimestamps();
+                    delta.Patch(_settings);
 
-                await _unitOfWork.CompleteAsync();
+                    if (!IsDataValid(_settings))
+                    {
+                        ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
+                        return BadRequest(ModelState);
+                    }
 
-                return NoContent();
+                    if (delta.GetChangedPropertyNames().Contains("CourseDurationMinutes"))
+                    {
+                        var courses = _unitOfWork.Courses.GetAll().FirstOrDefault();
+
+                        if (courses != null)
+                        {
+                            return BadRequest("Courses must be empty in order to change their durations.");
+                        }
+                    }
+
+                    var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+
+                    var courseEditionQueues = new SortedList<CourseEditionKey, ConcurrentQueue<object>>();
+
+                    var courseEditions = _unitOfWork.CourseEditions.GetAll()
+                        .ToList();
+
+                    var courseEditionKeys = courseEditions.Select(e => new CourseEditionKey
+                    {
+                        CourseId = e.CourseId,
+                        CourseEditionId = e.CourseEditionId
+                    }).ToList();
+
+                    lock (ScheduleHub.CourseEditionLocks)
+                    {
+                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    }
+
+                    ScheduleHub.EnterQueues(courseEditionQueues.Values);
+                    try
+                    {
+                        var schedulePositions = _unitOfWork.SchedulePositions.GetAll().FirstOrDefault();
+
+                        if (schedulePositions != null)
+                        {
+                            return BadRequest("Schedule must be empty in order to change settings.");
+                        }
+
+                        var notLockedCourseEditions = _unitOfWork.CourseEditions
+                            .Get(e => e.LockUserId != userId || e.LockUserConnectionId != connectionId);
+
+                        if (notLockedCourseEditions.Any())
+                        {
+                            return BadRequest("You did not lock all course editions.");
+                        }
+
+                        Methods.RemoveTimestamps(_unitOfWork);
+                        Methods.AddTimestamps(_settings, _unitOfWork.Context.Database.GetConnectionString());
+
+                        _unitOfWork.Complete();
+
+                        return Ok(_settings);
+                    }
+                    finally
+                    {
+                        ScheduleHub.RemoveCourseEditionsLocks(courseEditionQueues);
+                        ScheduleHub.ExitQueues(courseEditionQueues.Values);
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {

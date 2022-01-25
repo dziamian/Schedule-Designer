@@ -1,4 +1,5 @@
 ﻿using ScheduleDesigner.Models;
+using ScheduleDesigner.Repositories.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
-    public interface ISettingsRepo
+    public interface ISettingsRepo : IRepoBase<Settings>
     {
-        Task<Settings> GetSettings();
-        Task<Settings> AddSettings(Settings settings);
-        Task<Settings> UpdateSettings(Settings settings);
-        Task<int> DeleteSettings();
-        Task<int> SaveChanges();
+
     }
 }

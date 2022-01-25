@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -18,7 +19,7 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        //Authorize - Administrator
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet("schedulePositions"), DisableRequestSizeLimit]
         public IActionResult ExportSchedulePositions()
         {

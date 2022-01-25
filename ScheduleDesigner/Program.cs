@@ -12,12 +12,23 @@ namespace ScheduleDesigner
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args)
-                .Build()
-                .UnlockAllResources()
-                .Run();
+            try
+            {
+                CreateHostBuilder(args)
+                    .Build()
+                    .SetDefaultSettings()
+                    .UnlockAllResources()
+                    .Run();
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.Message);
+                return -1;
+            }
+
+            return 0;
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

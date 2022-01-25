@@ -17,7 +17,7 @@ using ScheduleDesigner.Hubs.Interfaces;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
-using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -66,7 +66,7 @@ namespace ScheduleDesigner.Controllers
             [FromODataUri] IEnumerable<int> RoomsIds,
             [FromODataUri] int Frequency)
         {
-            var _settings = await _unitOfWork.Settings.GetSettings();
+            var _settings = await _unitOfWork.Settings.GetFirst(e => true);
             if (_settings == null)
             {
                 return BadRequest("Application settings has not been specified.");
@@ -128,7 +128,7 @@ namespace ScheduleDesigner.Controllers
             [FromODataUri] IEnumerable<int> RoomsIds,
             [FromODataUri] double Frequency)
         {
-            var _settings = await _unitOfWork.Settings.GetSettings();
+            var _settings = await _unitOfWork.Settings.GetFirst(e => true);
             if (_settings == null)
             {
                 return BadRequest("Application settings has not been specified.");
@@ -202,7 +202,7 @@ namespace ScheduleDesigner.Controllers
 
                 var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
 
-                var groupsIds = Helpers.GetNestedGroupsIds(courseEdition, _unitOfWork.Groups);
+                var groupsIds = Methods.GetNestedGroupsIds(courseEdition, _unitOfWork.Groups);
 
                 var _timestamps = _unitOfWork.SchedulePositions
                     .Get(e => Weeks.Contains(e.Timestamp.Week) 
@@ -246,7 +246,7 @@ namespace ScheduleDesigner.Controllers
 
                 var coordinatorsIds = courseEdition.Coordinators.Select(e => e.CoordinatorId).ToList();
 
-                var groupsIds = Helpers.GetNestedGroupsIds(courseEdition, _unitOfWork.Groups);
+                var groupsIds = Methods.GetNestedGroupsIds(courseEdition, _unitOfWork.Groups);
 
                 var _timestamps = _unitOfWork.SchedulePositions
                     .Get(e => e.Timestamp.PeriodIndex == PeriodIndex

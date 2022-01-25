@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using ScheduleDesigner.Authentication;
-using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Services

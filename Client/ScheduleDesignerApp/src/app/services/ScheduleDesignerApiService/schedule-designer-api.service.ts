@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, min } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { Account, Coordinator, Titles } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
@@ -937,43 +937,6 @@ export class ScheduleDesignerApiService {
         response.User?.Coordinator ? new Titles(response.User.Coordinator.TitleBefore, response.User.Coordinator.TitleAfter) : null,
         response.Message?.Content
       ))
-    );
-  }
-
-  public UploadSchedule(file: File):Observable<any> {
-    const request = {
-      url: this.baseUrl + `/import/schedulePositions`,
-      method: 'POST'
-    };
-
-    const formData = new FormData();
-
-    formData.append('file', file);
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: formData,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public DownloadSchedule():Observable<any> {
-    const request = {
-      url: this.baseUrl + `/export/schedulePositions`,
-      method: 'GET'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        responseType: 'blob',
-        observe: 'response',
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
     );
   }
 

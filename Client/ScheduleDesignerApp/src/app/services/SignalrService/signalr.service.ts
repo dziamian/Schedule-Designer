@@ -261,6 +261,24 @@ export class SignalrService implements OnDestroy {
       }));
   }
 
+  public LockAllCourseEditions() {
+    return from(this.connection.invoke<MessageObject>('LockAllCourseEditions'))
+    .pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
+  }
+
+  public UnlockAllCourseEditions() {
+    return from(this.connection.invoke<MessageObject>('UnlockAllCourseEditions'))
+    .pipe(map((result : any) => {
+      const message = new MessageObject(result.statusCode);
+      message.Message = result.message;
+      return message;
+    }));
+  }
+
   public Disconnect() {
     if (this.connection?.state == "Connected") {
       this.connectionIntentionallyStopped = true;

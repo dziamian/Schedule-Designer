@@ -1,14 +1,11 @@
-import { Component, Inject, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
-import { forkJoin, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { Account } from 'src/app/others/Accounts';
-import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
-import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,7 +22,6 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private store:Store<{account: Account}>,
-    private scheduleDesignerApiService:ScheduleDesignerApiService,
     private signalrService:SignalrService,
     private snackBar:MatSnackBar
   ) { 

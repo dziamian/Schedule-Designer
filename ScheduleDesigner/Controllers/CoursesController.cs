@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScheduleDesigner.Attributes;
+using ScheduleDesigner.Helpers;
+using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
@@ -23,11 +28,6 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        private static bool IsDataValid(Course course, Settings settings)
-        {
-            return (course.UnitsMinutes % settings.CourseDurationMinutes == 0) || (course.UnitsMinutes * 2 / settings.CourseDurationMinutes % settings.TermDurationWeeks == 0);
-        }
-
         [HttpPost]
         [ODataRoute("")]
         public async Task<IActionResult> CreateCourse([FromBody] Course course)
@@ -37,28 +37,39 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(ModelState);
             }
 
-            var _settings = await _unitOfWork.Settings.GetSettings();
-            if (_settings == null)
-            {
-                return BadRequest("Application settings has not been specified.");
-            }
-
-            if (!IsDataValid(course, await _unitOfWork.Settings.GetSettings()))
-            {
-                ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
-                return BadRequest(ModelState);
-            }
-
             try
             {
-                var _course = await _unitOfWork.Courses.Add(course);
-
-                if (_course != null)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    await _unitOfWork.CompleteAsync();
-                    return Created(_course);
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
-                return NotFound();
+                try
+                {
+                    var _settings = await _unitOfWork.Settings.GetFirst(e => true);
+                    if (_settings == null)
+                    {
+                        return BadRequest("Application settings has not been specified.");
+                    }
+
+                    if (!Methods.AreUnitsMinutesValid(course.UnitsMinutes, await _unitOfWork.Settings.GetFirst(e => true)))
+                    {
+                        ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
+                        return BadRequest(ModelState);
+                    }
+
+                    var _course = await _unitOfWork.Courses.Add(course);
+
+                    if (_course != null)
+                    {
+                        await _unitOfWork.CompleteAsync();
+                        return Created(_course);
+                    }
+                    return NotFound();
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {
@@ -95,35 +106,119 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        //[Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key1})")]
-        public async Task<IActionResult> UpdateCourse([FromODataUri] int key1, [FromBody] Delta<Course> delta)
+        public IActionResult UpdateCourse([FromODataUri] int key1, [FromBody] Delta<Course> delta, [FromQuery] string connectionId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var settings = _unitOfWork.Settings.GetFirst(e => true).Result;
+
+            if (settings == null)
+            {
+                return BadRequest("Application settings are not specified.");
+            }
+
             try
             {
-                var _course = await _unitOfWork.Courses.GetFirst(e => e.CourseId == key1);
-                if (_course == null)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    return NotFound();
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
-
-                delta.Patch(_course);
-
-                var _settings = await _unitOfWork.Settings.GetSettings();
-                if (!IsDataValid(_course, _settings))
+                try
                 {
-                    ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
-                    return BadRequest(ModelState);
+                    var _course = _unitOfWork.Courses.GetFirst(e => e.CourseId == key1).Result;
+                    if (_course == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (!delta.GetChangedPropertyNames().Contains("UnitsMinutes"))
+                    {
+                        delta.Patch(_course);
+
+                        _unitOfWork.Complete();
+
+                        return Ok(_course);
+                    }
+
+                    var _settings = _unitOfWork.Settings.GetFirst(e => true).Result;
+                    if (!Methods.AreUnitsMinutesValid(_course.UnitsMinutes, _settings))
+                    {
+                        ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
+                        return BadRequest(ModelState);
+                    }
+
+                    var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
+                    if (connectionId == null)
+                    {
+                        return BadRequest("Connection id not found.");
+                    }
+                    
+                    var courseEditionQueues = new SortedList<CourseEditionKey, ConcurrentQueue<object>>();
+
+                    var courseEditionKeys = _unitOfWork.CourseEditions
+                        .Get(e => e.CourseId == key1).Select(e => new CourseEditionKey
+                        {
+                            CourseId = e.CourseId,
+                            CourseEditionId = e.CourseEditionId
+                        }).ToList();
+
+                    lock (ScheduleHub.CourseEditionLocks)
+                    {
+                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    }
+
+                    ScheduleHub.EnterQueues(courseEditionQueues.Values);
+                    try
+                    {
+                        var notLockedCourseEditions = _unitOfWork.CourseEditions
+                            .Get(e => e.CourseId == key1 
+                                && (e.LockUserId != userId || e.LockUserConnectionId != connectionId));
+
+                        if (notLockedCourseEditions.Any())
+                        {
+                            return BadRequest("You did not lock all editions for chosen course.");
+                        }
+                        
+                        delta.TryGetPropertyValue("UnitsMinutes", out var unitsMinutesObject);
+                        var unitsMinutes = (int)unitsMinutesObject;
+
+                        if (_course.UnitsMinutes > unitsMinutes) 
+                        {
+                            var schedulePositionCounts = _unitOfWork.SchedulePositions
+                                .Get(e => e.CourseId == key1)
+                                .GroupBy(e => e.CourseEditionId)
+                                .Select(e => new { e.Key, Count = e.Count() })
+                                .ToList();
+
+                            var maxCourseUnits = (int)Math.Ceiling(unitsMinutes / (settings.CourseDurationMinutes * 1.0));
+                            if (schedulePositionCounts.Any(e => e.Count > maxCourseUnits))
+                            {
+                                return BadRequest("There is already too many units of some course edition in the schedule.");
+                            }
+                        }
+
+                        delta.Patch(_course);
+
+                        _unitOfWork.Complete();
+
+                        return Ok(_course);
+                    }
+                    finally
+                    {
+                        ScheduleHub.RemoveCourseEditionsLocks(courseEditionQueues);
+                        ScheduleHub.ExitQueues(courseEditionQueues.Values);
+                    }
                 }
-
-                await _unitOfWork.CompleteAsync();
-
-                return Ok(_course);
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {

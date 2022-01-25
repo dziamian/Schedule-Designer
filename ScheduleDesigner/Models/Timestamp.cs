@@ -23,5 +23,10 @@ namespace ScheduleDesigner.Models
         public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
 
         public virtual ICollection<ScheduledMovePosition> ScheduledMoves { get; set; }
+
+        public override string ToString()
+        {
+            return $"({PeriodIndex},{Day},{Week})";
+        }
     }
 }

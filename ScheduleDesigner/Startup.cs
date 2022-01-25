@@ -28,7 +28,7 @@ using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Services;
-using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner
 {

@@ -6,7 +6,7 @@ using System;
 using Microsoft.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-using static ScheduleDesigner.Helpers;
+using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Services
 {
