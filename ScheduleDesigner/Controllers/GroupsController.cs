@@ -33,7 +33,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateGroup([FromBody] Group group)
+        public IActionResult CreateGroup([FromBody] GroupDto groupDto)
         {
             if (!ModelState.IsValid)
             {
@@ -48,10 +48,10 @@ namespace ScheduleDesigner.Controllers
                 }
                 try
                 {
-                    if (group.ParentGroupId != null)
+                    if (groupDto.ParentGroupId != null)
                     {
                         var parentGroup = _unitOfWork.Groups
-                            .Get(e => e.GroupId == group.ParentGroupId)
+                            .Get(e => e.GroupId == groupDto.ParentGroupId)
                             .FirstOrDefault();
 
                         if (parentGroup == null) 
@@ -60,11 +60,11 @@ namespace ScheduleDesigner.Controllers
                         }
                     }
 
-                    var _group = await _unitOfWork.Groups.Add(group);
+                    var _group = _unitOfWork.Groups.Add(groupDto.FromDto()).Result;
 
                     if (_group != null)
                     {
-                        await _unitOfWork.CompleteAsync();
+                        _unitOfWork.Complete();
                         return Created(_group);
                     }
                     return NotFound();
@@ -80,14 +80,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetGroups()
         {
             return Ok(_unitOfWork.Groups.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
@@ -109,7 +111,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetGroupFullName([FromODataUri] int key)
         {
@@ -149,7 +152,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetGroupsFullNames([FromODataUri] IEnumerable<int> GroupsIds)
         {
@@ -393,7 +397,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key})")]
         public async Task<IActionResult> DeleteGroup([FromODataUri] int key)
@@ -409,6 +414,23 @@ namespace ScheduleDesigner.Controllers
 
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearGroups()
+        {
+            try
+            {
+                int studentGroupsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [StudentGroups]");
+                int groupsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Groups]");
+
+                return Ok(new { StudentGroupsAffected = studentGroupsAffected, GroupsAffected = groupsAffected });
             }
             catch (Exception e)
             {

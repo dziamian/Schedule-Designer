@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery(MaxExpansionDepth = 3)]
         [ODataRoute("")]
@@ -30,6 +32,7 @@ namespace ScheduleDesigner.Controllers
             return Ok(_unitOfWork.ScheduledMoves.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
@@ -51,6 +54,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetConcreteScheduledMoves([FromODataUri] IEnumerable<int> MovesIds)
         {

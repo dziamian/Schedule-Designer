@@ -1,4 +1,5 @@
 ﻿using ScheduleDesigner.Authentication;
+using ScheduleDesigner.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class User
+    public class User : IExportCsv
     {
         public int UserId { get; set; }
 
@@ -37,5 +38,15 @@ namespace ScheduleDesigner.Models
         public virtual ICollection<SchedulePosition> LockedPositions { get; set; }
 
         public virtual ICollection<CourseEdition> LockedCourseEditions { get; set; }
+
+        public string GetHeader(string delimiter)
+        {
+            return $"UserId{delimiter}FirstName{delimiter}LastName\n";
+        }
+
+        public string GetRow(string delimiter)
+        {
+            return $"{UserId}{delimiter}{FirstName}{delimiter}{LastName}\n";
+        }
     }
 }

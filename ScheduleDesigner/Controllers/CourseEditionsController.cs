@@ -18,6 +18,8 @@ using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Helpers;
+using ScheduleDesigner.Dtos;
+using System.Threading;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -31,9 +33,10 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateCourseEdition([FromBody] CourseEdition courseEdition)
+        public IActionResult CreateCourseEdition([FromBody] CourseEditionDto courseEditionDto)
         {
             if (!ModelState.IsValid)
             {
@@ -42,14 +45,25 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseEdition = await _unitOfWork.CourseEditions.Add(courseEdition);
-
-                if (_courseEdition != null)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    await _unitOfWork.CompleteAsync();
-                    return Created(_courseEdition);
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
-                return NotFound();
+                try
+                {
+                    var _courseEdition = _unitOfWork.CourseEditions.Add(courseEditionDto.FromDto()).Result;
+
+                    if (_courseEdition != null)
+                    {
+                        _unitOfWork.Complete();
+                        return Created(_courseEdition);
+                    }
+                    return NotFound();
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {
@@ -180,6 +194,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/GetBusyPeriods(Weeks={Weeks})")]
@@ -224,6 +239,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/IsPeriodBusy(PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
@@ -271,6 +287,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [ODataRoute("({key1},{key2})/GetCourseEditionGroupsSize()")]
         public IActionResult GetCourseEditionGroupsSize([FromODataUri] int key1, [FromODataUri] int key2)
@@ -329,6 +346,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -337,6 +355,7 @@ namespace ScheduleDesigner.Controllers
             return Ok(_unitOfWork.CourseEditions.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
@@ -358,7 +377,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key1},{key2})")]
         public async Task<IActionResult> UpdateCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<CourseEdition> delta)
@@ -389,6 +409,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key1},{key2})")]
         public async Task<IActionResult> DeleteCourseEdition([FromODataUri] int key1, [FromODataUri] int key2)
@@ -404,6 +425,29 @@ namespace ScheduleDesigner.Controllers
 
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearCourseEditions()
+        {
+            try
+            {
+                int groupCourseEditionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [GroupCourseEditions]");
+                int coordinatorCourseEditionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CoordinatorCourseEditions]");
+                int courseEditionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CourseEditions]");
+
+                return Ok(new
+                { 
+                    GroupCourseEditionsAffected = groupCourseEditionsAffected,
+                    CoordinatorCourseEditionsAffected = coordinatorCourseEditionsAffected,
+                    CourseEditionsAffected = courseEditionsAffected
+                });
             }
             catch (Exception e)
             {

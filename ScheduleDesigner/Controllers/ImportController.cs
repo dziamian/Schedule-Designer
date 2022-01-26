@@ -434,20 +434,33 @@ namespace ScheduleDesigner.Controllers
 
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("groups"), DisableRequestSizeLimit]
-        public IActionResult ImportCourses([FromForm] IFormFile file)
+        public IActionResult ImportCourses(
+            [FromForm] IFormFile coursesFile,
+            [FromForm] IFormFile roomsFile)
         {
-            if (file == null)
+            if (coursesFile == null)
             {
-                return BadRequest("File is not included.");
+                return BadRequest("File with courses is not included.");
+            }
+
+            if (roomsFile == null)
+            {
+                return BadRequest("File with rooms is not included.");
             }
 
             try
             {
-                var records = BulkImport<CourseDto>.ReadCsv(file).Result;
+                var courseRecords = BulkImport<CourseDto>.ReadCsv(coursesFile).Result;
+                var roomsRecords = BulkImport<CourseRoomDto>.ReadCsv(roomsFile).Result;
 
-                if (records == null || !records.Any())
+                if (courseRecords == null || !courseRecords.Any())
                 {
-                    return BadRequest("No records has been read from the file.");
+                    return BadRequest("No records has been read from the course file.");
+                }
+
+                if (roomsRecords == null || !roomsRecords.Any())
+                {
+                    return BadRequest("No records has been read from the room file.");
                 }
 
                 if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
@@ -470,7 +483,7 @@ namespace ScheduleDesigner.Controllers
                         return BadRequest("You need to clear courses in order to import them.");
                     }
 
-                    foreach (var record in records)
+                    foreach (var record in courseRecords)
                     {
                         if (!Methods.AreUnitsMinutesValid(record.UnitsMinutes, settings))
                         {
@@ -480,9 +493,14 @@ namespace ScheduleDesigner.Controllers
 
                     var connectionString = _unitOfWork.Context.Database.GetConnectionString();
 
-                    if (BulkImport<CourseDto>.Execute(connectionString, "dbo.Courses", records) <= 0)
+                    if (BulkImport<CourseDto>.Execute(connectionString, "dbo.Courses", courseRecords) <= 0)
                     {
                         return BadRequest("Could not import courses to database.");
+                    }
+
+                    if (BulkImport<CourseRoomDto>.Execute(connectionString, "dbo.CourseRooms", roomsRecords) <= 0)
+                    {
+                        return BadRequest("Could not import course rooms to database.");
                     }
 
                     return Ok();
@@ -491,6 +509,138 @@ namespace ScheduleDesigner.Controllers
                 {
                     Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost("courseTypes"), DisableRequestSizeLimit]
+        public IActionResult ImportCourseTypes([FromForm] IFormFile file)
+        {
+            if (file == null)
+            {
+                return BadRequest("File is not included.");
+            }
+
+            try
+            {
+                var records = BulkImport<CourseTypeDto>.ReadCsv(file).Result;
+
+                if (records == null || !records.Any())
+                {
+                    return BadRequest("No records has been read from the file.");
+                }
+
+                var connectionString = _unitOfWork.Context.Database.GetConnectionString();
+
+                if (BulkImport<CourseTypeDto>.Execute(connectionString, "dbo.CourseTypes", records) <= 0)
+                {
+                    return BadRequest("Could not import course types to database.");
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost("roomTypes"), DisableRequestSizeLimit]
+        public IActionResult ImportRoomTypes([FromForm] IFormFile file)
+        {
+            if (file == null)
+            {
+                return BadRequest("File is not included.");
+            }
+
+            try
+            {
+                var records = BulkImport<RoomTypeDto>.ReadCsv(file).Result;
+
+                if (records == null || !records.Any())
+                {
+                    return BadRequest("No records has been read from the file.");
+                }
+
+                var connectionString = _unitOfWork.Context.Database.GetConnectionString();
+
+                if (BulkImport<RoomTypeDto>.Execute(connectionString, "dbo.RoomTypes", records) <= 0)
+                {
+                    return BadRequest("Could not import room types to database.");
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost("rooms"), DisableRequestSizeLimit]
+        public IActionResult ImportRooms([FromForm] IFormFile file)
+        {
+            if (file == null)
+            {
+                return BadRequest("File is not included.");
+            }
+
+            try
+            {
+                var records = BulkImport<RoomDto>.ReadCsv(file).Result;
+
+                if (records == null || !records.Any())
+                {
+                    return BadRequest("No records has been read from the file.");
+                }
+
+                var connectionString = _unitOfWork.Context.Database.GetConnectionString();
+
+                if (BulkImport<RoomDto>.Execute(connectionString, "dbo.Rooms", records) <= 0)
+                {
+                    return BadRequest("Could not import rooms to database.");
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost("studentGroups"), DisableRequestSizeLimit]
+        public IActionResult ImportStudentGroups([FromForm] IFormFile file)
+        {
+            if (file == null)
+            {
+                return BadRequest("File is not included.");
+            }
+
+            try
+            {
+                var records = BulkImport<StudentGroupDto>.ReadCsv(file).Result;
+
+                if (records == null || !records.Any())
+                {
+                    return BadRequest("No records has been read from the file.");
+                }
+
+                var connectionString = _unitOfWork.Context.Database.GetConnectionString();
+
+                if (BulkImport<StudentGroupDto>.Execute(connectionString, "dbo.StudentGroups", records) <= 0)
+                {
+                    return BadRequest("Could not import student groups to database.");
+                }
+
+                return Ok();
             }
             catch (Exception e)
             {

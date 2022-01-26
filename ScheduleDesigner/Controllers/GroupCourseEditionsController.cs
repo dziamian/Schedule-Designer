@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -28,6 +29,7 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -39,7 +41,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public IActionResult CreateGroupCourseEdition([FromBody] GroupCourseEdition groupCourseEdition, [FromQuery] string connectionId)
+        public IActionResult CreateGroupCourseEdition([FromBody] GroupCourseEditionDto groupCourseEditionDto, [FromQuery] string connectionId)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +63,7 @@ namespace ScheduleDesigner.Controllers
                 {
                     var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                    var group = _unitOfWork.Groups.Get(e => e.GroupId == groupCourseEdition.GroupId).FirstOrDefault();
+                    var group = _unitOfWork.Groups.Get(e => e.GroupId == groupCourseEditionDto.GroupId).FirstOrDefault();
 
                     if (group == null)
                     {
@@ -70,7 +72,7 @@ namespace ScheduleDesigner.Controllers
 
                     var groupsIds = Methods.GetNestedGroupsIds(new List<Group>() { group }, _unitOfWork.Groups);
                     var currentCourseEdition = _unitOfWork.CourseEditions
-                        .Get(e => e.CourseId == groupCourseEdition.CourseId && e.CourseEditionId == groupCourseEdition.CourseEditionId)
+                        .Get(e => e.CourseId == groupCourseEditionDto.CourseId && e.CourseEditionId == groupCourseEditionDto.CourseEditionId)
                         .Include(e => e.Groups)
                         .FirstOrDefault();
 
@@ -110,7 +112,7 @@ namespace ScheduleDesigner.Controllers
                     try
                     {
                         var notLockedCurrentCourseEdition = _unitOfWork.CourseEditions
-                            .Get(e => e.CourseId == groupCourseEdition.CourseId && e.CourseEditionId == groupCourseEdition.CourseEditionId
+                            .Get(e => e.CourseId == groupCourseEditionDto.CourseId && e.CourseEditionId == groupCourseEditionDto.CourseEditionId
                                 && (e.LockUserId != userId || e.LockUserConnectionId != connectionId))
                             .ToList();
 
@@ -184,7 +186,7 @@ namespace ScheduleDesigner.Controllers
                             }
 
                             //add
-                            var _groupCourseEdition = _unitOfWork.GroupCourseEditions.Add(groupCourseEdition).Result;
+                            var _groupCourseEdition = _unitOfWork.GroupCourseEditions.Add(groupCourseEditionDto.FromDto()).Result;
 
                             if (_groupCourseEdition != null)
                             {
@@ -211,6 +213,29 @@ namespace ScheduleDesigner.Controllers
                 {
                     Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpDelete]
+        [ODataRoute("({key1},{key2},{key3})")]
+        public async Task<IActionResult> DeleteGroupCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int key3)
+        {
+            try
+            {
+                var result = await _unitOfWork.GroupCourseEditions
+                    .Delete(e => e.CourseId == key1 && e.CourseEditionId == key2 && e.GroupId == key3);
+                if (result < 0)
+                {
+                    return NotFound();
+                }
+
+                await _unitOfWork.CompleteAsync();
+                return NoContent();
             }
             catch (Exception e)
             {

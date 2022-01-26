@@ -3,7 +3,9 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Attributes;
+using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Models;
@@ -28,9 +30,10 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateCourse([FromBody] Course course)
+        public IActionResult CreateCourse([FromBody] CourseDto courseDto)
         {
             if (!ModelState.IsValid)
             {
@@ -45,23 +48,23 @@ namespace ScheduleDesigner.Controllers
                 }
                 try
                 {
-                    var _settings = await _unitOfWork.Settings.GetFirst(e => true);
+                    var _settings = _unitOfWork.Settings.GetFirst(e => true).Result;
                     if (_settings == null)
                     {
                         return BadRequest("Application settings has not been specified.");
                     }
 
-                    if (!Methods.AreUnitsMinutesValid(course.UnitsMinutes, await _unitOfWork.Settings.GetFirst(e => true)))
+                    if (!Methods.AreUnitsMinutesValid(courseDto.UnitsMinutes, _unitOfWork.Settings.GetFirst(e => true).Result))
                     {
                         ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
                         return BadRequest(ModelState);
                     }
 
-                    var _course = await _unitOfWork.Courses.Add(course);
+                    var _course = _unitOfWork.Courses.Add(courseDto.FromDto()).Result;
 
                     if (_course != null)
                     {
-                        await _unitOfWork.CompleteAsync();
+                        _unitOfWork.Complete();
                         return Created(_course);
                     }
                     return NotFound();
@@ -77,14 +80,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetCourses()
         {
             return Ok(_unitOfWork.Courses.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1})")]
@@ -106,7 +111,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        //[Authorize(Policy = "AdministratorOnly")]
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key1})")]
         public IActionResult UpdateCourse([FromODataUri] int key1, [FromBody] Delta<Course> delta, [FromQuery] string connectionId)
@@ -226,6 +231,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key1})")]
         public async Task<IActionResult> DeleteCourse([FromODataUri] int key1)
@@ -240,6 +246,23 @@ namespace ScheduleDesigner.Controllers
 
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearCourses()
+        {
+            try
+            {
+                int courseRoomsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CourseRooms]");
+                int coursesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Courses]");
+
+                return Ok(new { CourseRoomsAffected = courseRoomsAffected, CoursesAffected = coursesAffected });
             }
             catch (Exception e)
             {

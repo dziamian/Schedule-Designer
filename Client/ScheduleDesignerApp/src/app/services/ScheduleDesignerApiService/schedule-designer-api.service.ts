@@ -432,7 +432,7 @@ export class ScheduleDesignerApiService {
     settings:Settings
   ):Observable<CourseEdition[]> {
     const request = {
-      url: this.baseUrl + `/courses?$filter=CourseId in (${courseEditions.map(c => c.CourseId)})&$orderby=CourseId`,
+      url: this.baseUrl + `/courses?$filter=CourseId in (${[...new Set(courseEditions.map(c => c.CourseId))]})&$orderby=CourseId`,
       method: 'GET'
     };
 
@@ -468,7 +468,7 @@ export class ScheduleDesignerApiService {
     courseEditions: CourseEdition[] //sorted by courseEditionId
   ):Observable<CourseEdition[]> {
     const request = {
-      url: this.baseUrl + `/schedulePositions/Service.GetScheduleAmount(CourseEditionIds=[${courseEditions.map(c => c.CourseEditionId)}])?$orderby=CourseEditionId`,
+      url: this.baseUrl + `/schedulePositions/Service.GetScheduleAmount(CourseEditionIds=[${[...new Set(courseEditions.map(c => c.CourseEditionId))]}])?$orderby=CourseEditionId`,
       method: 'GET'
     };
 
@@ -502,7 +502,7 @@ export class ScheduleDesignerApiService {
     courseEditions: CourseEdition[] //sorted by courseEditionId
   ):Observable<CourseEdition[]> {
     const request = {
-      url: this.baseUrl + `/coordinatorCourseEditions?$expand=Coordinator($expand=User)&$filter=CourseEditionId in (${courseEditions.map(c => c.CourseEditionId)})&$orderby=CourseEditionId`,
+      url: this.baseUrl + `/coordinatorCourseEditions?$expand=Coordinator($expand=User)&$filter=CourseEditionId in (${[...new Set(courseEditions.map(c => c.CourseEditionId))]})&$orderby=CourseEditionId`,
       method: 'GET'
     };
 
@@ -548,7 +548,7 @@ export class ScheduleDesignerApiService {
     courseEditions: CourseEdition[] //sorted by courseEditionId
   ):Observable<CourseEdition[]> {
     const request = {
-      url: this.baseUrl + `/groupCourseEditions?$filter=CourseEditionId in (${courseEditions.map(c => c.CourseEditionId)})&$orderby=CourseEditionId`,
+      url: this.baseUrl + `/groupCourseEditions?$filter=CourseEditionId in (${[...new Set(courseEditions.map(c => c.CourseEditionId))]})&$orderby=CourseEditionId`,
       method: 'GET'
     };
 

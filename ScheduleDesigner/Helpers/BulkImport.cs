@@ -27,7 +27,7 @@ namespace ScheduleDesigner.Helpers
             return csvReader.GetRecords<T>().ToList();
         }
 
-        public static int Execute(string connectionString, string destinationTable, List<T> records) //dbo.SchedulePositions
+        public static int Execute(string connectionString, string destinationTable, List<T> records)
         {
             using var connection = new SqlConnection(connectionString);
             connection.Open();

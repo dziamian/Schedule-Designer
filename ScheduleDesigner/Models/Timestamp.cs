@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScheduleDesigner.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class Timestamp
+    public class Timestamp : IExportCsv
     {
         [Key]
         public int TimestampId { get; set; }
@@ -23,6 +24,16 @@ namespace ScheduleDesigner.Models
         public virtual ICollection<SchedulePosition> SchedulePositions { get; set; }
 
         public virtual ICollection<ScheduledMovePosition> ScheduledMoves { get; set; }
+
+        public string GetHeader(string delimiter)
+        {
+            return $"TimestampId{delimiter}PeriodIndex{delimiter}Day{delimiter}Week\n";
+        }
+
+        public string GetRow(string delimiter)
+        {
+            return $"{TimestampId}{delimiter}{PeriodIndex}{delimiter}{Day}{delimiter}{Week}\n";
+        }
 
         public override string ToString()
         {

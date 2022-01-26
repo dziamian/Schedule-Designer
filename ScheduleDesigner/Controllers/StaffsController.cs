@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Attributes;
+using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -24,14 +26,10 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        private static bool IsDataValid(User user)
-        {
-            return user.Student != null || user.Coordinator != null;
-        }
-
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateStaff([FromBody] Staff staff)
+        public async Task<IActionResult> CreateStaff([FromBody] StaffDto staffDto)
         {
             if (!ModelState.IsValid)
             {
@@ -40,7 +38,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _staff = await _unitOfWork.Staffs.Add(staff);
+                var _staff = await _unitOfWork.Staffs.Add(staffDto.FromDto());
 
                 if (_staff != null)
                 {
@@ -55,14 +53,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetStaffs()
         {
             return Ok(_unitOfWork.Staffs.GetAll());
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
@@ -83,7 +83,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key})")]
         public async Task<IActionResult> UpdateStaff([FromODataUri] int key, [FromBody] Delta<Staff> delta)
@@ -113,23 +114,13 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key})")]
         public async Task<IActionResult> DeleteStaff([FromODataUri] int key)
         {
             try
             {
-                var _user = _unitOfWork.Users
-                    .Get(e => e.UserId == key)
-                    .Include(e => e.Student)
-                    .Include(e => e.Coordinator)
-                    .Include(e => e.Staff);
-
-                if (!IsDataValid(_user.First()))
-                {
-                    return BadRequest("You cannot remove the only existing role for this user.");
-                }
-
                 var result = await _unitOfWork.Staffs.Delete(e => e.UserId == key);
                 if (result < 0)
                 {

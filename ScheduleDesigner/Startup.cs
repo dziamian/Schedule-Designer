@@ -354,9 +354,6 @@ namespace ScheduleDesigner
             getScheduleForModification
                 .CollectionParameter<int>("Weeks");
 
-            builder.EntityType<SchedulePosition>().Collection
-                .Action("ClearSchedule");
-
             var getRoomsAvailabilityFunction = builder.EntityType<SchedulePosition>().Collection
                 .Function("GetRoomsAvailability")
                 .ReturnsCollection<RoomAvailability>();
@@ -374,21 +371,29 @@ namespace ScheduleDesigner
                 .ReturnsCollection<ScheduledMoveRead>()
                 .CollectionParameter<int>("MovesIds");
 
-            /*var addSchedulePositionsAction = builder.EntityType<SchedulePosition>().Collection
-                .Action("AddSchedulePositions");
+            builder.EntityType<SchedulePosition>().Collection
+                .Action("ClearSchedule");
 
-            addSchedulePositionsAction
-                .Parameter<int>("CourseId");
-            addSchedulePositionsAction
-                .Parameter<int>("CourseEditionId");
-            addSchedulePositionsAction
-                .Parameter<int>("RoomId");
-            addSchedulePositionsAction
-                .Parameter<int>("PeriodIndex");
-            addSchedulePositionsAction
-                .Parameter<int>("Day");
-            addSchedulePositionsAction
-                .CollectionParameter<int>("Weeks");*/
+            builder.EntityType<CourseEdition>().Collection
+                .Action("ClearCourseEditions");
+
+            builder.EntityType<Group>().Collection
+                .Action("ClearGroups");
+
+            builder.EntityType<Course>().Collection
+                .Action("ClearCourses");
+
+            builder.EntityType<CourseType>().Collection
+                .Action("ClearCourseTypes");
+
+            builder.EntityType<Room>().Collection
+                .Action("ClearRooms");
+
+            builder.EntityType<RoomType>().Collection
+                .Action("ClearRoomTypes");
+
+            builder.EntityType<StudentGroup>().Collection
+                .Action("ClearStudentGroups");
 
             return builder.GetEdmModel();
         }

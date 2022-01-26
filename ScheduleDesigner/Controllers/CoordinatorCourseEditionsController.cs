@@ -30,6 +30,7 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -41,7 +42,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public IActionResult CreateCoordinatorCourseEdition([FromBody] CoordinatorCourseEdition coordinatorCourseEdition, [FromQuery] string connectionId)
+        public IActionResult CreateCoordinatorCourseEdition([FromBody] CoordinatorCourseEditionDto coordinatorCourseEdition, [FromQuery] string connectionId)
         {
             if (!ModelState.IsValid)
             {
@@ -181,7 +182,7 @@ namespace ScheduleDesigner.Controllers
                             }
 
                             //add
-                            var _coordinatorCourseEdition = _unitOfWork.CoordinatorCourseEditions.Add(coordinatorCourseEdition).Result;
+                            var _coordinatorCourseEdition = _unitOfWork.CoordinatorCourseEditions.Add(coordinatorCourseEdition.FromDto()).Result;
 
                             if (_coordinatorCourseEdition != null)
                             {

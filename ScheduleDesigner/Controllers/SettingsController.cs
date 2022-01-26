@@ -36,7 +36,8 @@ namespace ScheduleDesigner.Controllers
         {
             return (int)(settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
         }
-
+        
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -57,7 +58,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetPeriods()
         {
@@ -92,7 +94,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("")]
-        public async Task<IActionResult> UpdateSettings([FromBody] Delta<Settings> delta, [FromQuery] string connectionId)
+        public IActionResult UpdateSettings([FromBody] Delta<Settings> delta, [FromQuery] string connectionId)
         {
             if (!ModelState.IsValid)
             {
@@ -112,7 +114,7 @@ namespace ScheduleDesigner.Controllers
                 }
                 try
                 {
-                    var _settings = await _unitOfWork.Settings.GetFirst(e => true);
+                    var _settings = _unitOfWork.Settings.GetFirst(e => true).Result;
                     if (_settings == null)
                     {
                         return NotFound();

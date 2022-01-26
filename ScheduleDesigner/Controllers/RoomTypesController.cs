@@ -10,6 +10,9 @@ using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Attributes;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using ScheduleDesigner.Dtos;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -23,9 +26,10 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateRoomType([FromBody] RoomType roomType)
+        public async Task<IActionResult> CreateRoomType([FromBody] RoomTypeDto roomTypeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +38,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _roomType = await _unitOfWork.RoomTypes.Add(roomType);
+                var _roomType = await _unitOfWork.RoomTypes.Add(roomTypeDto.FromDto());
 
                 if (_roomType == null)
                 {
@@ -50,14 +54,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetRoomTypes()
         {
             return Ok(_unitOfWork.RoomTypes.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
@@ -79,6 +85,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key})")]
         public async Task<IActionResult> UpdateRoomType([FromODataUri] int key, [FromBody] Delta<RoomType> delta)
@@ -107,7 +114,8 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key})")]
         public async Task<IActionResult> DeleteRoomType([FromODataUri] int key)
@@ -122,6 +130,22 @@ namespace ScheduleDesigner.Controllers
 
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearRoomTypes()
+        {
+            try
+            {
+                int roomTypesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [RoomTypes]");
+
+                return Ok(new { RoomTypesAffected = roomTypesAffected });
             }
             catch (Exception e)
             {

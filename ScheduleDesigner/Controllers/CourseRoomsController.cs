@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Attributes;
+using ScheduleDesigner.Dtos;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -25,10 +26,10 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Policy = "Assistant")]
         [HttpPost]
         [ODataRoute("")]
-        [Authorize(Policy = "Assistant")]
-        public async Task<IActionResult> CreateCourseRoom([FromBody] CourseRoom courseRoom)
+        public async Task<IActionResult> CreateCourseRoom([FromBody] CourseRoomDto courseRoomDto)
         {
             if (!ModelState.IsValid)
             {
@@ -42,14 +43,14 @@ namespace ScheduleDesigner.Controllers
 
                 if (!isAdmin)
                 {
-                    courseRoom.UserId = userId;
+                    courseRoomDto.UserId = userId;
                 } 
                 else
                 {
-                    courseRoom.UserId = null;
+                    courseRoomDto.UserId = null;
                 }
 
-                var _courseRoom = await _unitOfWork.CourseRooms.Add(courseRoom);
+                var _courseRoom = await _unitOfWork.CourseRooms.Add(courseRoomDto.FromDto());
 
                 if (_courseRoom == null)
                 {
@@ -65,14 +66,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetCourseRooms()
         {
             return Ok(_unitOfWork.CourseRooms.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
@@ -95,6 +98,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key1},{key2})")]
         public async Task<IActionResult> UpdateCourseRoom([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<CourseRoom> delta)
@@ -125,6 +129,8 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key1},{key2})")]
         public async Task<IActionResult> DeleteCourseRoom([FromODataUri] int key1, [FromODataUri] int key2)

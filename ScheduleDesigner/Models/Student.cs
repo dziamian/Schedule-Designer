@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScheduleDesigner.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class Student
+    public class Student : IExportCsv
     {
         public int UserId { get; set; }
 
@@ -19,5 +20,15 @@ namespace ScheduleDesigner.Models
         public User User { get; set; }
 
         public virtual ICollection<StudentGroup> Groups { get; set; }
+
+        public string GetHeader(string delimiter)
+        {
+            return $"UserId{delimiter}StudentNumber\n";
+        }
+
+        public string GetRow(string delimiter)
+        {
+            return $"{UserId}{delimiter}{StudentNumber}\n";
+        }
     }
 }

@@ -33,6 +33,7 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -40,7 +41,8 @@ namespace ScheduleDesigner.Controllers
         {
             return Ok(_unitOfWork.SchedulePositions.GetAll());
         }
-
+        
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("Service.GetSchedulePositions(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
@@ -62,6 +64,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -147,25 +150,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
-        public IActionResult ClearSchedule()
-        {
-            try
-            {
-                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Messages]");
-                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [ScheduledMovePositions]");
-                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [ScheduledMoves]");
-                _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [SchedulePositions]");
-
-                return NoContent();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("Service.GetRoomsAvailability(RoomsIds={RoomsIds},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
@@ -202,6 +187,31 @@ namespace ScheduleDesigner.Controllers
                 }
 
                 return Ok(rooms.Values);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearSchedule()
+        {
+            try
+            {
+                int messagesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Messages]");
+                int scheduledMovePositionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [ScheduledMovePositions]");
+                int scheduledMovesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [ScheduledMoves]");
+                int schedulePositionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [SchedulePositions]");
+
+                return Ok(new 
+                {
+                    MessagesAffected = messagesAffected,
+                    ScheduledMovePositionsAffected = scheduledMovePositionsAffected,
+                    ScheduledMovesAffected = scheduledMovesAffected,
+                    SchedulePositionsAffected = schedulePositionsAffected
+                });
             }
             catch (Exception e)
             {

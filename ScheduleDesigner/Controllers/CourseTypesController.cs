@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Attributes;
+using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -23,9 +26,10 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateCourseType([FromBody] CourseType courseType)
+        public async Task<IActionResult> CreateCourseType([FromBody] CourseTypeDto courseTypeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +38,7 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _courseType = await _unitOfWork.CourseTypes.Add(courseType);
+                var _courseType = await _unitOfWork.CourseTypes.Add(courseTypeDto.FromDto());
 
                 if (_courseType != null)
                 {
@@ -49,14 +53,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetCourseTypes()
         {
             return Ok(_unitOfWork.CourseTypes.GetAll());
         }
 
+        [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
@@ -78,6 +84,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key})")]
         public async Task<IActionResult> UpdateCourseType([FromODataUri] int key, [FromBody] Delta<CourseType> delta)
@@ -107,6 +114,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key})")]
         public async Task<IActionResult> DeleteCourseType([FromODataUri] int key)
@@ -121,6 +129,22 @@ namespace ScheduleDesigner.Controllers
 
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpPost]
+        public IActionResult ClearCourseTypes()
+        {
+            try
+            {
+                int courseTypesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CourseTypes]");
+
+                return Ok(new { CourseTypesAffected = courseTypesAffected });
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScheduleDesigner.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
-    public class RoomType
+    public class RoomType : IExportCsv
     {
         [Key]
         public int RoomTypeId { get; set; }
@@ -17,5 +18,15 @@ namespace ScheduleDesigner.Models
 
         
         public virtual ICollection<Room> Rooms { get; set; }
+
+        public string GetHeader(string delimiter)
+        {
+            return $"RoomTypeId{delimiter}Name\n";
+        }
+
+        public string GetRow(string delimiter)
+        {
+            return $"{RoomTypeId}{delimiter}{Name}\n";
+        }
     }
 }

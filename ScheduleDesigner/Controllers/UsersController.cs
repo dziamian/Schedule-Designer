@@ -30,11 +30,6 @@ namespace ScheduleDesigner.Controllers
             _usosService = usosService;
         }
 
-        private static bool IsDataValid(User user)
-        {
-            return user.Student != null || user.Coordinator != null || user.Staff != null;
-        }
-
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateMyAccount()
@@ -72,7 +67,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         public async Task<IActionResult> CreateAccountFromUsos(ODataActionParameters parameters)
         {
@@ -113,14 +108,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
-        [CustomEnableQuery(PageSize = 20)]
+        [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetUsers()
         {
             return Ok(_unitOfWork.Users.GetAll());
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
@@ -175,6 +172,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key})")]
         public async Task<IActionResult> UpdateUser([FromODataUri] int key, [FromBody] Delta<User> delta)
@@ -204,6 +202,7 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key})")]
         public async Task<IActionResult> DeleteUser([FromODataUri] int key)
