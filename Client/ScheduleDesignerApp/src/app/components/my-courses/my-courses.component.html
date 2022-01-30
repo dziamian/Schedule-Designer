@@ -14,7 +14,7 @@
         >
             <app-course 
                 [isModifying]="isModifying"
-                [ignoreUsersLocks]="account.Admin"
+                [ignoreUsersLocks]="account.Staff?.IsAdmin ?? false"
                 [course]="course"
                 [settings]="settings"
                 [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"

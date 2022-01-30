@@ -116,7 +116,7 @@
                     </div>
                     <div class="footer">
                         <div class="footer-resource">
-                            <b>Selected resource: {{account?.Titles?.TitleBefore}} {{account?.FirstName}} {{account?.LastName}} {{account?.Titles?.TitleAfter}}</b>
+                            <b>Selected resource: {{account?.Coordinator?.Titles?.TitleBefore}} {{account?.User?.FirstName}} {{account?.User?.LastName}} {{account?.Coordinator?.Titles?.TitleAfter}}</b>
                         </div>
                         <div class="footer-schedule-menu">
                             <button mat-mini-fab color="accent" style="margin-right: 1vw;"
@@ -128,7 +128,7 @@
                                 [disabled]="data.currentSelectedCourseEdition?.IsMoving"
                                 (click)="ModifySchedule()"
                                 >
-                                    <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>
+                                    <mat-icon>{{isModifying ? 'visibility' : 'edit'}}</mat-icon>
                                     {{isModifying ? 'View-Only Mode' : 'Modification Mode'}}
                             </button>
                         </div>

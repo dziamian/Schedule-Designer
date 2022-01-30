@@ -1,0 +1,69 @@
+<div class="available-resources" [ngStyle]="{'visibility': visible ? 'visible' : 'hidden'}">
+    <div class="available-resources-header">{{header}}</div>
+    <div *ngIf="loading == false; else spinner" class="available-resources-content">
+        <form>
+            <mat-form-field class="search-form-field">
+                <mat-label>Search for resource...</mat-label>
+                <input
+                    type="search"
+                    matInput
+                    [(ngModel)]="filterValue"
+                    name="filterValue"
+                    (input)="FilterChanged($event)"
+                >
+                <mat-icon matPrefix class="mat-search-icon">search</mat-icon>
+                <button *ngIf="filterValue" matSuffix mat-icon-button (click)="ClearFilter()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+        <mat-tree #matTree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
+            <mat-tree-node *matTreeNodeDef="let node; when: " matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
+                <button mat-icon-button disabled class="padding-button"></button>
+                {{node.item.name}}
+                <button mat-icon-button color="primary" *ngIf="node.item.id != null" 
+                    (click)="Click(node.item.id, node.item.type, actionType === 'select' ? 'select' : 'view', node)"
+                    [disabled]="excludeTypes.includes(node.item.type) || excludeIds.includes(node.item.id)"
+                    [title]="(actionType === 'select' ? 'Select' : 'Show') + ' resource'">
+                    <mat-icon>{{actionType === 'select' ? 'add_circle' : 'visibility'}}</mat-icon>
+                </button>
+                <button mat-icon-button *ngIf="node.item.addActionType != null && actionType == 'add'" 
+                    (click)="Click(node.item.id, node.item.addActionType, 'add', node)" 
+                    title="Add resource">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </mat-tree-node>
+
+            <mat-tree-node style="display: none;" *matTreeNodeDef="let node; when: isHidden" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
+
+            </mat-tree-node>
+            
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
+                <button mat-icon-button matTreeNodeToggle>
+                    <mat-icon>
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                </button>
+                <b>{{node.item.name}}</b>
+                <button mat-icon-button color="primary" *ngIf="node.item.id != null" 
+                    (click)="Click(node.item.id, node.item.type, actionType === 'select' ? 'select' : 'view', node)"
+                    [disabled]="excludeTypes.includes(node.item.type) || excludeIds.includes(node.item.id)"
+                    [title]="(actionType === 'select' ? 'Select' : 'Show') + ' resource'">
+                    <mat-icon>{{actionType === 'select' ? 'add_circle' : 'visibility'}}</mat-icon>
+                </button>
+                <button mat-icon-button *ngIf="node.item.addActionType != null && actionType == 'add'" 
+                    (click)="Click(node.item.id, node.item.addActionType, 'add', node)" 
+                    title="Add resource">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </mat-tree-node>
+        </mat-tree>
+    </div>
+    <ng-template #spinner>
+        <mat-progress-spinner *ngIf="loading != null"
+            class="spinner"
+            mode="indeterminate"
+            diameter="40"
+        ></mat-progress-spinner>
+    </ng-template>
+</div>

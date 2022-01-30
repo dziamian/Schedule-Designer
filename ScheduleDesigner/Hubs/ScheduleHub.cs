@@ -723,11 +723,11 @@ namespace ScheduleDesigner.Hubs
             {
                 if (!enqueued)
                 {
-                    return new MessageObject { StatusCode = 400, Message = e.Message };
+                    return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
                 }
 
                 RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -821,7 +821,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -916,7 +916,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1106,7 +1106,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1310,7 +1310,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1514,7 +1514,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1627,7 +1627,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1689,11 +1689,11 @@ namespace ScheduleDesigner.Hubs
             {
                 if (!enqueued)
                 {
-                    return new MessageObject { StatusCode = 400, Message = e.Message };
+                    return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
                 }
                 
                 RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1798,7 +1798,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1884,7 +1884,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -1970,7 +1970,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -2149,7 +2149,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -2339,7 +2339,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -2532,7 +2532,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -2707,7 +2707,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = e.Message });
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." });
                 return;
             }
         }
@@ -2952,7 +2952,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = e.Message });
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." });
                 return;
             }
         }
@@ -3090,7 +3090,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = e.Message });
+                Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." });
                 return;
             }
         }
@@ -3339,7 +3339,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -3557,7 +3557,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 
@@ -3827,7 +3827,7 @@ namespace ScheduleDesigner.Hubs
             }
             catch (Exception e)
             {
-                return new MessageObject { StatusCode = 400, Message = e.Message };
+                return new MessageObject { StatusCode = 400, Message = "Unexpected error. Please try again later." };
             }
         }
 

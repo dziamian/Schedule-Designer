@@ -19,6 +19,7 @@ export class AvailableResourcesComponent implements OnInit {
 
   @Output() showSchedule: EventEmitter<ResourceItem> = new EventEmitter();
   
+  filterValue: string = '';
   filterChanged: Subject<string> = new Subject<string>();
   filterChangedSub: Subscription;
 
@@ -35,6 +36,8 @@ export class AvailableResourcesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loading = true;
+
     this.filterChangedSub = this.filterChanged.pipe(debounceTime(200), distinctUntilChanged()).subscribe(value => {
       if (value) {
         this.resourceTreeService.filterByName(value);
@@ -63,6 +66,11 @@ export class AvailableResourcesComponent implements OnInit {
   FilterChanged(event: Event): void {
     const value = (<HTMLInputElement>event.target).value;
     this.filterChanged.next(value);
+  }
+
+  ClearFilter() {
+    this.filterValue = '';
+    this.filterChanged.next('');
   }
 
   Action(node: ResourceNode): void {

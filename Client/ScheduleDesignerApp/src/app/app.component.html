@@ -18,7 +18,7 @@
             Full Schedule
         </button>
 
-        <button *ngIf="IsAuthenticated()" class="toolbar-admin-panel" mat-raised-button color="accent" (click)="AdminPanel()" [disabled]="!account?.Admin">
+        <button *ngIf="IsAuthenticated()" class="toolbar-admin-panel" mat-raised-button color="accent" (click)="AdminPanel()" [disabled]="!account?.Staff?.IsAdmin">
             <mat-icon>settings_applications</mat-icon>
             Admin Panel
         </button>

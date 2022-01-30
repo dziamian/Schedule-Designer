@@ -18,3 +18,7 @@ body {
 .mat-button-disabled {
     background-color: #CCCCCC !important;
 }
+
+.mat-form-field-appearance-fill.mat-form-field-disabled .mat-form-field-flex {
+    background-color: #0000000f !important;
+}

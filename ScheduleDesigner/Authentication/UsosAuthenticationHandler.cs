@@ -59,7 +59,7 @@ namespace ScheduleDesigner.Authentication
             }
             catch (Exception e)
             {
-                return AuthenticateResult.Fail(e.Message);
+                return AuthenticateResult.Fail("Unexpected error. Please try again later.");
             }
         }
 

@@ -47,9 +47,9 @@ export class ScheduleComponent implements OnInit {
   @Output() onMouseEnter: EventEmitter<{
     day:number, periodIndex:number
   }> = new EventEmitter();
-  @Output() onMouseLeave: EventEmitter<null> = new EventEmitter();
-  @Output() onLoaded: EventEmitter<null> = new EventEmitter();
-  @Output() onViewEdit: EventEmitter<null> = new EventEmitter();
+  @Output() onMouseLeave: EventEmitter<void> = new EventEmitter();
+  @Output() onLoaded: EventEmitter<void> = new EventEmitter();
+  @Output() onViewEdit: EventEmitter<void> = new EventEmitter();
 
   loadingSubscription: Subscription;
   signalrSubscriptions: Subscription[];

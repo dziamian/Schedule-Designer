@@ -50,7 +50,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
     }

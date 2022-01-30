@@ -12,27 +12,27 @@
                 </div>
                 <div class="profile-field">
                     <span>
-                        First Name: <b>{{account.FirstName}}</b>
+                        First Name: <b>{{account.User.FirstName}}</b>
                         <br>
                     </span>
                     <span>
-                        Last Name: <b>{{account.LastName}}</b>
+                        Last Name: <b>{{account.User.LastName}}</b>
                         <br>
                     </span>
-                    <span *ngIf="account.Titles != null && 
-                        ((account.Titles.TitleBefore != null && account.Titles.TitleBefore != '') 
-                            || (account.Titles.TitleAfter != null && account.Titles.TitleAfter != ''))">
-                        Academic Titles: <b>{{account.Titles?.TitleBefore}}, {{account.Titles?.TitleAfter}}</b>
+                    <span *ngIf="account.Coordinator != null && account.Coordinator.Titles != null && 
+                        ((account.Coordinator.Titles.TitleBefore != null && account.Coordinator.Titles.TitleBefore != '') 
+                            || (account.Coordinator.Titles.TitleAfter != null && account.Coordinator.Titles.TitleAfter != ''))">
+                        Academic Titles: <b>{{account.Coordinator.Titles?.TitleBefore}} {{account.Coordinator.Titles?.TitleAfter}}</b>
                         <br>
                     </span>
-                    <span *ngIf="account.StudentNumber != null && account.StudentNumber != ''">
-                        Student Number: <b>{{account.StudentNumber}}</b>
+                    <span *ngIf="account.Student != null && account.Student.StudentNumber != null && account.Student.StudentNumber != ''">
+                        Student Number: <b>{{account.Student.StudentNumber}}</b>
                     </span>
                 </div>
                 <div class="profile-roles">
                     <mat-chip-list>
-                        <mat-chip *ngIf="account.Admin" style="background-color: #b90000; color: white;" selected>Administrator</mat-chip>
-                        <mat-chip *ngIf="account.RepresentativeGroups.length > 0" style="background-color: #0074b8; color: white;" selected>Representative</mat-chip>
+                        <mat-chip *ngIf="account.Staff?.IsAdmin" style="background-color: #b90000; color: white;" selected>Administrator</mat-chip>
+                        <mat-chip *ngIf="account.Student != null && account.Student.RepresentativeGroups.length > 0" style="background-color: #0074b8; color: white;" selected>Representative</mat-chip>
                         <mat-chip *ngIf="account.Coordinator" style="background-color: #047200; color: white;" selected>Coordinator</mat-chip>
                         <mat-chip *ngIf="account.Student" style="background-color: #a16e00; color: white;" selected>Student</mat-chip>
                         <mat-chip *ngIf="account.Staff" style="background-color: #ffffff; color: black;" selected>Staff</mat-chip>

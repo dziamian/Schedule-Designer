@@ -17,7 +17,7 @@ export class AuthGuardService implements CanActivate {
     private router:Router
   ) {
     this.store.select('account').subscribe((account) => {
-      if (account.UserId == 0) {
+      if (account.User.UserId == 0) {
         return;
       }
       this.account = account;
@@ -34,7 +34,7 @@ export class AuthGuardService implements CanActivate {
         return true;
       }
       for (var i = 0; i < roles.length; ++i) {
-        if (roles[i] === 'Admin' && this.account?.Admin) {
+        if (roles[i] === 'Admin' && this.account?.Staff?.IsAdmin) {
           return true;
         }
         if (roles[i] === 'Coordinator' && this.account?.Coordinator) {

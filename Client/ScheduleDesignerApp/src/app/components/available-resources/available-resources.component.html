@@ -7,20 +7,25 @@
                 <input
                     type="search"
                     matInput
+                    [(ngModel)]="filterValue"
+                    name="filterValue"
                     (input)="FilterChanged($event)"
                 >
                 <mat-icon matPrefix class="mat-search-icon">search</mat-icon>
+                <button *ngIf="filterValue" matSuffix mat-icon-button (click)="ClearFilter()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
         </form>
         <mat-tree #matTree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">
             <mat-tree-node *matTreeNodeDef="let node; when: " matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">
                 <button mat-icon-button disabled class="padding-button"></button>
                 {{node.item.name}} 
-                <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
+                <mat-icon *ngIf="node.item.icon != null && node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
                 <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)" title="Show schedule">
-                    <mat-icon>remove_red_eye</mat-icon>
+                    <mat-icon>visibility</mat-icon>
                 </button>
                 <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary" title="You represent this group">
                     stars
@@ -38,11 +43,11 @@
                     </mat-icon>
                 </button>
                 <b>{{node.item.name}}</b> 
-                <mat-icon *ngIf="node.item.icon != ''" class="node-icon">
+                <mat-icon *ngIf="node.item.icon != null && node.item.icon != ''" class="node-icon">
                     {{node.item.icon}}
                 </mat-icon>
                 <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)" title="Show schedule">
-                    <mat-icon>remove_red_eye</mat-icon>
+                    <mat-icon>visibility</mat-icon>
                 </button>
                 <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary" title="You represent this group">
                     stars

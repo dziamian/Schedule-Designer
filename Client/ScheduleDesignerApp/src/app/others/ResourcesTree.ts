@@ -1,9 +1,12 @@
 import { Filter } from "./Filter";
 
 export class ResourceItem {
+    id: string | null;
     name: string; 
     filter: Filter | null; 
     icon: string;
+    type: string | null;
+    addActionType: string | null;
 }
 
 export class ResourceNode {

@@ -32,7 +32,7 @@ export class CourseComponent implements OnInit {
     private store:Store<{account:Account}>
   ) {
     this.store.select('account').subscribe((account) => {
-      if (account.UserId == 0) {
+      if (account.User.UserId == 0) {
         return;
       }
       this.account = account;
@@ -60,7 +60,7 @@ export class CourseComponent implements OnInit {
   }
 
   CheckIfItsMe(id:number):boolean {
-    return this.account.UserId == id;
+    return this.account.User.UserId == id;
   }
 
   CheckIfNotMatching():boolean {

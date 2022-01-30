@@ -3,16 +3,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
-import { Account, Coordinator, Titles } from 'src/app/others/Accounts';
+import { Account, Coordinator, Staff, Student, Titles, User } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType, RoomType } from 'src/app/others/Types';
 import { Group } from 'src/app/others/Group';
 import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
-import { CourseEditionInfo } from 'src/app/others/CourseEditionInfo';
+import { CourseEditionInfo, CourseInfo } from 'src/app/others/CourseInfo';
 import { ScheduledMove, ScheduledMoveDetails, ScheduledMoveInfo } from 'src/app/others/ScheduledMove';
 import { Filter } from 'src/app/others/Filter';
+import { Course } from 'src/app/others/Course';
 
 @Injectable({
   providedIn: 'root'
@@ -42,18 +43,30 @@ export class ScheduleDesignerApiService {
       {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
-    ).pipe(map((response : any) => new Account(
-      response.UserId,
-      response.FirstName,
-      response.LastName,
-      response.Student != null,
-      response.Student?.StudentNumber,
-      response.Student?.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? [],
-      response.Coordinator != null,
-      (response.Coordinator != null) ? new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter) : null,
-      response.Staff != null,
-      response.Staff?.IsAdmin ?? false
-    )));
+    ).pipe(map((response : any) => {
+      const user = new User(
+        response.UserId,
+        response.FirstName,
+        response.LastName
+      );
+
+      return new Account(
+      user,
+      response.Student != null ? new Student(
+        user, 
+        response.Student.StudentNumber, 
+        response.Student.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? []
+      ) : null,
+      response.Coordinator != null ? new Coordinator(
+        user, 
+        new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter)
+      ) : null,
+
+      response.Staff != null ? new Staff(
+        user,
+        response.Staff.IsAdmin
+      ) : null);
+    }));
   }
 
   public CreateMyAccount():Observable<any> {
@@ -113,6 +126,43 @@ export class ScheduleDesignerApiService {
         
         return map;
       })
+    );
+  }
+
+  public GetCourseType(id: number): Observable<CourseType> {
+    const request = {
+      url: this.baseUrl + `/courseTypes(${id})`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => new CourseType(response.CourseTypeId, response.Name, response.Color))
+    );
+  }
+
+  public GetCourse(id: number): Observable<Course> {
+    const request = {
+      url: this.baseUrl + `/courses(${id})?$expand=CourseType`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => new Course(response.CourseId, new CourseType(
+        response.CourseType.CourseTypeId, 
+        response.CourseType.Name,
+        response.CourseType.Color), response.Name, response.UnitsMinutes))
     );
   }
 
@@ -194,9 +244,11 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => response.value.map((value : any) => 
         new Coordinator(
-          value.UserId,
-          value.User.FirstName,
-          value.User.LastName,
+          new User(
+            value.UserId,
+            value.User.FirstName,
+            value.User.LastName,
+          ),
           new Titles(
             value.TitleBefore,
             value.TitleAfter
@@ -221,9 +273,11 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => response.value.map((value : any) => 
         new Coordinator(
-          value.UserId,
-          value.FirstName,
-          value.LastName,
+          new User(
+            value.UserId,
+            value.FirstName,
+            value.LastName
+          ),
           new Titles(
             value.Coordinator.TitleBefore,
             value.Coordinator.TitleAfter
@@ -235,11 +289,11 @@ export class ScheduleDesignerApiService {
 
   public GetCourseEditionInfo(
     courseId:number, 
-    courseEdition:number, 
+    courseEditionId:number, 
     settings:Settings
   ):Observable<CourseEditionInfo> {
     const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEdition})?`
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?`
       + `$expand=Course,LockUser($expand=Staff),SchedulePositions($count=true;$top=0)`,
       method: 'GET'
     };
@@ -253,7 +307,7 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => {
         const courseEditionInfo = new CourseEditionInfo(
-          courseId, response.Course.CourseTypeId, response.Course.Name
+          courseId, courseEditionId, response.Course.CourseTypeId, response.Course.Name, response.Name
         );
         courseEditionInfo.UnitsMinutes = response.Course.UnitsMinutes;
         courseEditionInfo.ScheduleAmount = response['SchedulePositions@odata.count'];
@@ -262,6 +316,50 @@ export class ScheduleDesignerApiService {
         courseEditionInfo.IsLockedByAdmin = response.LockUser?.Staff?.IsAdmin;
         return courseEditionInfo;
       })
+    );
+  }
+
+  public GetCoursesInfo():Observable<CourseInfo[]> {
+    const request = {
+      url: this.baseUrl + `/courses`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => {
+        const courseInfo = new CourseInfo(
+          element.CourseId, element.CourseTypeId, element.Name
+        );
+        return courseInfo;
+      }))
+    );
+  }
+
+  public GetCourseEditionsInfo(settings:Settings):Observable<CourseEditionInfo[]> {
+    const request = {
+      url: this.baseUrl + `/courseEditions`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => {
+        const courseEditionInfo = new CourseEditionInfo(
+          element.CourseId, element.CourseEditionId, -1, '', element.Name
+        );
+        return courseEditionInfo;
+      }))
     );
   }
 
@@ -300,9 +398,11 @@ export class ScheduleDesignerApiService {
         let coordinators = new Array<Coordinator>();
         response.Coordinators.forEach((element : any) => {
           coordinators.push(new Coordinator(
-            element.Coordinator.UserId,
-            element.Coordinator.User.FirstName,
-            element.Coordinator.User.LastName,
+            new User(
+              element.Coordinator.UserId,
+              element.Coordinator.User.FirstName,
+              element.Coordinator.User.LastName
+            ),
             new Titles(
               element.Coordinator.TitleBefore,
               element.Coordinator.TitleAfter
@@ -526,9 +626,11 @@ export class ScheduleDesignerApiService {
           var k = j;
           while (response.value[k]?.CourseEditionId == courseEditions[i].CourseEditionId) {
             courseEditions[i].Coordinators.push(new Coordinator(
-              response.value[k].Coordinator.UserId,
-              response.value[k].Coordinator.User.FirstName,
-              response.value[k].Coordinator.User.LastName,
+              new User(
+                response.value[k].Coordinator.UserId,
+                response.value[k].Coordinator.User.FirstName,
+                response.value[k].Coordinator.User.LastName
+              ),
               new Titles(
                 response.value[k].Coordinator.TitleBefore,
                 response.value[k].Coordinator.TitleAfter
@@ -670,8 +772,6 @@ export class ScheduleDesignerApiService {
   }
 
   public GetRooms(roomsTypes:Map<number,RoomType> = new Map<number, RoomType>()):Observable<Room[]> {
-    const roomTypesSize = roomsTypes.size;
-    
     const request = {
       url: this.baseUrl + `/rooms`,
       method: 'GET'
@@ -689,9 +789,7 @@ export class ScheduleDesignerApiService {
           const room = new Room(element.RoomId);
           room.Name = element.Name;
           room.Capacity = element.Capacity;
-          if (roomTypesSize > 0) {
-            room.RoomType = roomsTypes.get(element.RoomTypeId) ?? new RoomType(0, "");
-          }
+          room.RoomType = roomsTypes.get(element.RoomTypeId) ?? new RoomType(element.RoomTypeId, "");
           return room;
         })
       )
@@ -717,7 +815,7 @@ export class ScheduleDesignerApiService {
 
   public GetCourseRooms(courseId:number, roomsTypes:Map<number,RoomType>):Observable<Room[]> {
     const request = {
-      url: this.baseUrl + `/courseRooms?$expand=Room&$filter=CourseId eq ${courseId}`,
+      url: this.baseUrl + `/courseRooms?$expand=Room,User&$filter=CourseId eq ${courseId}`,
       method: 'GET'
     };
 
@@ -733,7 +831,10 @@ export class ScheduleDesignerApiService {
           const room = new Room(element.RoomId);
           room.Name = element.Room.Name;
           room.Capacity = element.Room.Capacity;
-          room.RoomType = roomsTypes.get(element.Room.RoomTypeId) ?? new RoomType(0, "");
+          room.RoomType = roomsTypes.get(element.Room.RoomTypeId) ?? new RoomType(element.Room.RoomTypeId, "");
+          if (element.User != null) {
+            room.User = new User(element.User.UserId, element.User.FirstName, element.User.LastName);
+          }
           return room;
         })
       )
@@ -807,9 +908,9 @@ export class ScheduleDesignerApiService {
     );
   }
 
-  public GetStudentGroups(userId: number): Observable<Group[]> {
+  public GetMyGroups(): Observable<Group[]> {
     const request = {
-      url: this.baseUrl + `/studentGroups?$expand=Group&$filter=StudentId eq ${userId}`,
+      url: this.baseUrl + `/studentGroups/Service.GetMyGroups()`,
       method: 'GET'
     };
 
@@ -822,8 +923,8 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => response.value.map((element : any) => {
         const group = new Group(element.GroupId);
-        group.ParentGroupId = element.Group.ParentGroupId;
-        group.FullName = element.Group.Name;
+        group.ParentGroupId = element.ParentGroupId;
+        group.FullName = element.Name;
         return group;
       }))
     );
@@ -939,35 +1040,4 @@ export class ScheduleDesignerApiService {
       ))
     );
   }
-
-  //TESTING
-  /*public AddSchedulePositions(
-    courseId:number,
-    courseEditionId:number,
-    roomId:number,
-    periodIndex:number,
-    day:number,
-    weeks:number[]
-  ):Observable<any> {
-    const request = {
-      url: this.baseUrl + `/schedulePositions/Service.AddSchedulePositions()`,
-      method: 'POST'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: {
-          'CourseId': courseId,
-          'CourseEditionId': courseEditionId,
-          'RoomId': roomId,
-          'PeriodIndex': periodIndex,
-          'Day': day,
-          'Weeks': weeks
-        },
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }*/
 }

@@ -279,6 +279,86 @@ export class SignalrService implements OnDestroy {
     }));
   }
 
+  public LockAllCourseEditionsForCourse(courseId: number) {
+    return from(this.connection.invoke<MessageObject>('LockAllCourseEditionsForCourse', 
+    courseId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public UnlockAllCourseEditionsForCourse(courseId: number) {
+    return from(this.connection.invoke<MessageObject>('UnlockAllCourseEditionsForCourse', 
+    courseId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public LockAllCoordinatorCourses(coordinatorId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke<MessageObject>('LockAllCoordinatorCourses', 
+    coordinatorId, courseId, courseEditionId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public UnlockAllCoordinatorCourses(coordinatorId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke<MessageObject>('UnlockAllCoordinatorCourses', 
+    coordinatorId, courseId, courseEditionId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public LockAllGroupCourses(groupId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke<MessageObject>('LockAllGroupCourses', 
+    groupId, courseId, courseEditionId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public UnlockAllGroupCourses(groupId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke<MessageObject>('UnlockAllGroupCourses', 
+    groupId, courseId, courseEditionId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public LockAllCoursesForGroupChange(originGroupId: number, destinationGroupId: number) {
+    return from(this.connection.invoke<MessageObject>('LockAllCoursesForGroupChange', 
+    originGroupId, destinationGroupId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
+  public UnlockAllCoursesForGroupChange(originGroupId: number, destinationGroupId: number) {
+    return from(this.connection.invoke<MessageObject>('UnlockAllCoursesForGroupChange', 
+    originGroupId, destinationGroupId))
+      .pipe(map((result : any) => {
+        const message = new MessageObject(result.statusCode);
+        message.Message = result.message;
+        return message;
+      }));
+  }
+
   public Disconnect() {
     if (this.connection?.state == "Connected") {
       this.connectionIntentionallyStopped = true;

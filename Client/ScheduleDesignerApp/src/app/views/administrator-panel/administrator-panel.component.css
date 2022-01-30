@@ -1,0 +1,56 @@
+.content {
+    text-align: center;
+    display: block;
+}
+
+.menu {
+    margin-top: 1.5vh;
+    margin-left: 30%;
+    margin-right: 30%;
+    padding-bottom: 1vh;
+    margin-bottom: 1vh;
+    width: 40%;
+    height: 6vh;
+    float: left;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: #008b13;
+    overflow-y: auto;
+}
+
+.menu > * {
+    margin-top: 1vh;
+    margin-right: 1vw;
+}
+
+.inner-content {
+    clear: both;
+}
+
+.operating-field {
+    width: 40%;
+    height: 75vh;
+    float: left;
+    margin-top: 0.5%;
+    margin-left: 2%;
+    box-sizing: border-box;
+    border: 2px solid black;
+}
+
+.no-operating-field-selected {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    width: 20%;
+    transform: translateY(-100%);
+    font-weight: bold;
+}
+
+.spinner {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}

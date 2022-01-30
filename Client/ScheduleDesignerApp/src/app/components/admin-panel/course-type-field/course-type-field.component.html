@@ -1,0 +1,96 @@
+<div *ngIf="loading == false; else spinner">
+    <div [ngSwitch]="data?.actionType">
+        <div *ngSwitchCase="'add'" class="content">
+            <div class="content-header">
+                <b>New Course Type</b>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Create()" [formGroup]="courseTypeForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Course Type Name</mat-label>
+                            <input matInput name="name" formControlName="name" maxlength="10">
+                            <mat-error *ngIf="courseTypeForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+                        
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Course Type Color</mat-label>
+                            <input type="color" matInput name="color" formControlName="color">
+                        </mat-form-field>
+                        
+                        <button type="submit" mat-raised-button color="primary" class="form-submit">
+                            Create
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset"
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'view'" class="content">
+            <div class="content-header">
+                <b>Course Type (ID: {{originalCourseType?.CourseTypeId}})</b>
+                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Save()" [formGroup]="courseTypeForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Course Type Name</mat-label>
+                            <input matInput name="name" formControlName="name" maxlength="100">
+                            <mat-error *ngIf="courseTypeForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+                        
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Course Type Color</mat-label>
+                            <input type="color" matInput name="color" formControlName="color">
+                        </mat-form-field>
+                        
+                        <button type="submit" mat-raised-button color="primary" class="form-submit" 
+                            [disabled]="!isModifying || IsDifferentThanOriginal()">
+                            Save
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                        
+                        <button type="button" mat-raised-button class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Cancel()">
+                            Cancel Modification
+                        </button>
+                    </form>
+                    <br><br>
+                    <button mat-raised-button color="warn" class="form-submit" 
+                        [disabled]="!isModifying"
+                        (click)="Remove()">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchDefault></div>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner *ngIf="loading != null"
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

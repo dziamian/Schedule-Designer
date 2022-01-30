@@ -32,7 +32,7 @@ export class MyCoursesComponent implements OnInit {
   @Output() onDropped: EventEmitter<CdkDragDrop<CourseEdition[]>> = new EventEmitter<CdkDragDrop<CourseEdition[]>>();
   @Output() onStart: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() onRelease: EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
-  @Output() onLoaded: EventEmitter<null> = new EventEmitter();
+  @Output() onLoaded: EventEmitter<void> = new EventEmitter();
 
   loadingSubscription: Subscription;
   signalrSubscriptions: Subscription[];

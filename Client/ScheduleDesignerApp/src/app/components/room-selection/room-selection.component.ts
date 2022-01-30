@@ -75,7 +75,7 @@ export class RoomSelectionComponent implements OnInit {
 
       const item = this.data.CourseEdition;
       if (item != undefined 
-        && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
+        && (item.Coordinators.map(c => c.User.UserId).some(c => coordinatorsIds.includes(c))
         || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
           
           const filter = new Filter(coordinatorsIds, groupsIds, []);
@@ -116,7 +116,7 @@ export class RoomSelectionComponent implements OnInit {
           
           const item = this.data.CourseEdition;
           if (item != undefined 
-            && (item.Coordinators.map(c => c.UserId).some(c => coordinatorsIds.includes(c))
+            && (item.Coordinators.map(c => c.User.UserId).some(c => coordinatorsIds.includes(c))
             || item.Groups.map(g => g.GroupId).some(g => groupsIds.includes(g)))) {
               
               const filter = new Filter(coordinatorsIds, groupsIds, []);

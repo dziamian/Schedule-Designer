@@ -239,7 +239,7 @@ export class ScheduleInteractionService {
         return;
       }
 
-      if (item.Coordinators.map(c => c.UserId).some(c => addedSchedulePositions.CoordinatorsIds.includes(c))
+      if (item.Coordinators.map(c => c.User.UserId).some(c => addedSchedulePositions.CoordinatorsIds.includes(c))
         || item.Groups.map(g => g.GroupId).some(g => addedSchedulePositions.GroupsIds.includes(g))) {
           if (data.currentDragEvent != null || data.currentSelectedCourseEdition?.IsMoving) {
             data.scheduleSlotsValidity[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] = false;
@@ -347,7 +347,7 @@ export class ScheduleInteractionService {
       return;
     }
 
-    if (item.Coordinators.map(c => c.UserId).some(c => modifiedSchedulePositions.CoordinatorsIds.includes(c))
+    if (item.Coordinators.map(c => c.User.UserId).some(c => modifiedSchedulePositions.CoordinatorsIds.includes(c))
       || item.Groups.map(g => g.GroupId).some(g => modifiedSchedulePositions.GroupsIds.includes(g))) {
       if (data.currentDragEvent != null || data.currentSelectedCourseEdition?.IsMoving) {
         data.scheduleSlotsValidity[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1] = false;
@@ -427,7 +427,7 @@ export class ScheduleInteractionService {
       return;
     }
 
-    if (item.Coordinators.map(c => c.UserId).some(c => removedSchedulePositions.CoordinatorsIds.includes(c))
+    if (item.Coordinators.map(c => c.User.UserId).some(c => removedSchedulePositions.CoordinatorsIds.includes(c))
       || item.Groups.map(g => g.GroupId).some(g => removedSchedulePositions.GroupsIds.includes(g))) {
 
       this.scheduleDesignerApiService.IsPeriodBusy(

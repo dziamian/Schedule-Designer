@@ -1,3 +1,4 @@
+import { User } from "./Accounts";
 import { RoomType } from "./Types";
 
 export class Room {
@@ -5,6 +6,7 @@ export class Room {
     RoomType:RoomType;
     Capacity:number;
     IsBusy:boolean = false;
+    User:User|null;
 
     constructor(
         public RoomId:number

@@ -2,11 +2,14 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { forkJoin } from 'rxjs';
-import { Coordinator } from 'src/app/others/Accounts';
+import { Coordinator, Staff, Student } from 'src/app/others/Accounts';
+import { CourseEditionInfo, CourseInfo } from 'src/app/others/CourseInfo';
 import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
 import { ResourceFlatNode, ResourceItem, ResourceNode } from 'src/app/others/ResourcesTree';
 import { Room } from 'src/app/others/Room';
+import { CourseType, RoomType } from 'src/app/others/Types';
+import { AdministratorApiService } from '../AdministratorApiService/administrator-api.service';
 import { ScheduleDesignerApiService } from '../ScheduleDesignerApiService/schedule-designer-api.service';
 
 @Injectable({
@@ -23,36 +26,42 @@ export class ResourceTreeService {
 
   TREE_DATA: ResourceNode[] = [];
 
-  private buildTree(obj: {[key: string]: any}, level: number): ResourceNode[] {
-    return Object.keys(obj).reduce<ResourceNode[]>((accumulator, key) => {
-      const value = obj[key];
-      const node = new ResourceNode();
-      node.item = {name: value.item.name, filter: value.item.filter, icon: value.item.icon ?? ''};
-
-      if (value.children != null && typeof value.children === 'object' && value.children.length > 0) {
-        node.children = this.buildTree(value.children, level + 1);
-      }
-
-      return accumulator.concat(node);
-    }, []);
+  constructor(
+    private scheduleDesignerApiService: ScheduleDesignerApiService,
+    private administratorApiService: AdministratorApiService
+  ) {
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren
+    );
+    this.treeControl = new FlatTreeControl<ResourceFlatNode>(this.getLevel, this.isExpandable);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
 
-  private setCoordinators(coordinators: Coordinator[]) {
+  private setCourseTypes(courseTypes: CourseType[], root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
-    parentNode.item.name = 'Coordinators';
+    parentNode.item.name = 'Course Types';
     parentNode.item.filter = null;
-    parentNode.item.icon = 'school';
+    parentNode.item.type = "course-type";
+    parentNode.item.addActionType = "course-type";
     parentNode.children = [];
-    this.TREE_DATA.push(parentNode);
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
 
-    coordinators.forEach(
-      coordinator => {
+    courseTypes.forEach(
+      courseType => {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
-        resourceNode.item.name 
-          = `${coordinator.Titles.TitleBefore ?? ''} ${coordinator.LastName.toUpperCase()} ${coordinator.FirstName} ${coordinator.Titles.TitleAfter ?? ''}`;
-        resourceNode.item.filter = new Filter([coordinator.UserId],[],[]);
+        resourceNode.item.id = courseType.CourseTypeId.toString();
+        resourceNode.item.name = courseType.Name;
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "course-type";
         resourceNode.children = [];
         
         parentNode.children.push(resourceNode);
@@ -60,22 +69,207 @@ export class ResourceTreeService {
     );
   }
 
-  private setGroups(groups: Group[]) {
+  private setCourses(courseEditions: CourseEditionInfo[], courses: CourseInfo[], courseTypes: Map<number, CourseType>, root: ResourceNode | null = null) {
+    const grandParentNode = new ResourceNode();
+    grandParentNode.item = new ResourceItem();
+    grandParentNode.item.name = 'Courses';
+    grandParentNode.item.filter = null;
+    grandParentNode.item.type = "course";
+    grandParentNode.item.addActionType = "course";
+    grandParentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(grandParentNode);
+    } else {
+      root.children.push(grandParentNode);
+    }
+
+    courses.forEach(
+      course => {
+        const parentNode = new ResourceNode();
+        parentNode.item = new ResourceItem();
+        parentNode.item.id = course.CourseId.toString();
+        parentNode.item.name = `${course.Name} (${courseTypes.get(course.CourseTypeId)?.Name})`;
+        parentNode.item.filter = null;
+        parentNode.item.type = "course";
+        parentNode.item.addActionType = "course-edition";
+        parentNode.children = [];
+
+        grandParentNode.children.push(parentNode);
+      }
+    );
+
+    courseEditions.forEach(
+      courseEdition => {
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = courseEdition.CourseEditionId.toString();
+        resourceNode.item.name = courseEdition.CourseEditionName;
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "course-edition";
+        resourceNode.children = [];
+        
+        var index = grandParentNode.children.findIndex(node => node.item.id === courseEdition.CourseId.toString());
+        if (index != -1) {
+          grandParentNode.children[index].children.push(resourceNode);
+        }
+      }
+    );
+  }
+
+  private setCoordinators(coordinators: Coordinator[], idVisible: boolean = false, root: ResourceNode | null = null) {
+    const parentNode = new ResourceNode();
+    parentNode.item = new ResourceItem();
+    parentNode.item.name = 'Coordinators';
+    parentNode.item.filter = null;
+    parentNode.item.icon = 'school';
+    parentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
+
+    coordinators.forEach(
+      coordinator => {
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = coordinator.User.UserId.toString();
+        resourceNode.item.name 
+          = `${coordinator.Titles.TitleBefore ?? ''} ${coordinator.User.LastName.toUpperCase()} ${coordinator.User.FirstName} ${coordinator.Titles.TitleAfter ?? ''}`;
+        if (idVisible) {
+          resourceNode.item.name += ` (${coordinator.User.UserId})`;
+        }
+        resourceNode.item.filter = new Filter([coordinator.User.UserId],[],[]);
+        resourceNode.item.type = "user";
+        resourceNode.children = [];
+        
+        parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setAdministrators(staffs: Staff[], idVisible: boolean = false, root: ResourceNode | null = null) {
+    const parentNode = new ResourceNode();
+    parentNode.item = new ResourceItem();
+    parentNode.item.name = 'Administrators';
+    parentNode.item.filter = null;
+    parentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
+
+    staffs.forEach(
+      staff => {
+        if (!staff.IsAdmin) {
+          return;
+        }
+        
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = staff.User.UserId.toString();
+        resourceNode.item.name = `${staff.User.LastName.toUpperCase()} ${staff.User.FirstName}`;
+        if (idVisible) {
+          resourceNode.item.name += ` (${staff.User.UserId})`;
+        }
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "user";
+        resourceNode.children = [];
+        
+        parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setOtherStaffs(staffs: Staff[], excludedUserIds: number[], idVisible: boolean = false, root: ResourceNode | null = null) {
+    const parentNode = new ResourceNode();
+    parentNode.item = new ResourceItem();
+    parentNode.item.name = 'Other Staffs';
+    parentNode.item.filter = null;
+    parentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
+
+    staffs.forEach(
+      staff => {
+        if (staff.IsAdmin || excludedUserIds.includes(staff.User.UserId)) {
+          return;
+        }
+        
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = staff.User.UserId.toString();
+        resourceNode.item.name = `${staff.User.LastName.toUpperCase()} ${staff.User.FirstName}`;
+        if (idVisible) {
+          resourceNode.item.name += ` (${staff.User.UserId})`;
+        }
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "user";
+        resourceNode.children = [];
+        
+        parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setStudents(students: Student[], idVisible: boolean = false, root: ResourceNode | null = null) {
+    const parentNode = new ResourceNode();
+    parentNode.item = new ResourceItem();
+    parentNode.item.name = 'Students';
+    parentNode.item.filter = null;
+    parentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
+
+    students.forEach(
+      student => {
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = student.User.UserId.toString();
+        resourceNode.item.name = `${student.User.LastName.toUpperCase()} ${student.User.FirstName}`;
+        if (idVisible) {
+          resourceNode.item.name += ` (${student.User.UserId})`;
+        }
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "user";
+        resourceNode.children = [];
+        
+        parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setGroups(groups: Group[], root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
     parentNode.item.name = 'Groups';
     parentNode.item.filter = null;
     parentNode.item.icon = 'group';
+    parentNode.item.addActionType = "group";
     parentNode.children = [];
-    this.TREE_DATA.push(parentNode);
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
 
     for (var i = 0; i < groups.length; ++i) {
       const group = groups[i];
       
       const resourceNode = new ResourceNode();
       resourceNode.item = new ResourceItem();
+      resourceNode.item.id = group.GroupId.toString();
       resourceNode.item.name = group.FullName;
       resourceNode.item.filter = new Filter([],[group.GroupId],[]);
+      resourceNode.item.type = "group";
+      resourceNode.item.addActionType = "group";
       resourceNode.children = [];
       
       if (group.ParentGroupId == null) {
@@ -93,24 +287,78 @@ export class ResourceTreeService {
     }
   }
 
-  private setRooms(rooms: Room[]) {
+  private setRoomTypes(roomTypes: RoomType[], label: string = 'Room Types', root: ResourceNode | null = null) {
+    const parentNode = new ResourceNode();
+    parentNode.item = new ResourceItem();
+    parentNode.item.name = label;
+    parentNode.item.filter = null;
+    parentNode.item.addActionType = "room-type";
+    parentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
+
+    roomTypes.forEach(
+      roomType => {
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = roomType.RoomTypeId.toString();
+        resourceNode.item.name = roomType.Name;
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "room-type";
+        resourceNode.children = [];
+        
+        parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setRooms(rooms: Room[], root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
     parentNode.item.name = 'Rooms';
     parentNode.item.filter = null;
     parentNode.item.icon = 'meeting_room';
+    parentNode.item.addActionType = "room";
     parentNode.children = [];
-    this.TREE_DATA.push(parentNode);
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
 
     rooms.forEach(
       room => {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
+        resourceNode.item.id = room.RoomId.toString();
         resourceNode.item.name = room.Name;
         resourceNode.item.filter = new Filter([],[],[room.RoomId]);
+        resourceNode.item.type = "room";
         resourceNode.children = [];
         
         parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setRoomsOnTypes(rooms: Room[], root: ResourceNode) {
+    rooms.forEach(
+      room => {
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = room.RoomId.toString();
+        resourceNode.item.name = room.Name;
+        resourceNode.item.filter = new Filter([],[],[room.RoomId]);
+        resourceNode.item.type = "room";
+        resourceNode.children = [];
+        
+        var index = root.children.findIndex(node => node.item.id === room.RoomType.RoomTypeId.toString());
+        if (index != -1) {
+          root.children[index].children.push(resourceNode);
+        }
       }
     );
   }
@@ -122,11 +370,11 @@ export class ResourceTreeService {
       return null;
     }
 
-    for (var i = 0; i < nodeChildren.length; ++i) {
-      if (nodeChildren[i].item.filter?.GroupsIds.includes(group.ParentGroupId!)) {
-        return nodeChildren[i];
+    for (var child in nodeChildren) {
+      if (nodeChildren[child].item.filter?.GroupsIds.includes(group.ParentGroupId!)) {
+        return nodeChildren[child];
       } else {
-        const result = this.searchNodeForGroup(nodeChildren[i], group);
+        const result = this.searchNodeForGroup(nodeChildren[child], group);
         if (result != null) {
           return result;
         }
@@ -135,17 +383,126 @@ export class ResourceTreeService {
     return null;
   }
 
-  constructor(
-    private scheduleDesignerApiService: ScheduleDesignerApiService,
-  ) {
-    this.treeFlattener = new MatTreeFlattener(
-      this.transformer,
-      this.getLevel,
-      this.isExpandable,
-      this.getChildren
-    );
-    this.treeControl = new FlatTreeControl<ResourceFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  public setSchedule(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetCoordinators(),
+      this.scheduleDesignerApiService.GetGroups(),
+      this.scheduleDesignerApiService.GetRooms()
+    ]).subscribe(([coordinators, groups, rooms]) => {
+      this.setCoordinators(coordinators);
+      this.setGroups(groups);
+      this.setRooms(rooms);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setMyGroups(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetMyGroups()
+    ]).subscribe(([groups]) => {
+      this.setGroups(groups);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllCourseTypes(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetCourseTypes()
+    ]).subscribe(([courseTypes]) => {
+      this.setCourseTypes(Array.from(courseTypes, ([key, value]) => (value)));
+      
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllCourses(callback: () => void) {
+    this.scheduleDesignerApiService.GetSettings().subscribe(settings => {
+      forkJoin([
+        this.scheduleDesignerApiService.GetCourseTypes(),
+        this.scheduleDesignerApiService.GetCoursesInfo(),
+        this.scheduleDesignerApiService.GetCourseEditionsInfo(settings)
+      ]).subscribe(([courseTypes, coursesInfo, courseEditionsInfo]) => {
+        this.setCourseTypes(Array.from(courseTypes, ([key, value]) => (value)));
+        this.setCourses(courseEditionsInfo, coursesInfo, courseTypes);
+        
+        this.setCurrentData();
+        callback();
+      });
+    });
+  }
+
+  public setAllGroups(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetGroups()
+    ]).subscribe(([groups]) => {
+      this.setGroups(groups);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllRooms(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetRoomTypes(),
+      this.scheduleDesignerApiService.GetRooms()
+    ]).subscribe(([roomTypes, rooms]) => {
+      this.setRoomTypes(Array.from(roomTypes, ([key, value]) => (value)));
+      this.setRooms(rooms);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllRoomsOnTypes(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetRoomTypes(),
+      this.scheduleDesignerApiService.GetRooms()
+    ]).subscribe(([roomTypes, rooms]) => {
+      this.setRoomTypes(Array.from(roomTypes, ([key, value]) => (value)), 'Rooms');
+      this.setRoomsOnTypes(rooms, this.TREE_DATA[0]);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllUsers(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetCoordinators(),
+      this.administratorApiService.GetStaffs(),
+      this.administratorApiService.GetStudents()
+    ]).subscribe(([coordinators, staffs, students]) => {
+      const usersNode = new ResourceNode();
+      usersNode.item = new ResourceItem();
+      usersNode.item.name = "Users";
+      usersNode.item.addActionType = "user";
+      usersNode.children = [];
+
+      this.TREE_DATA.push(usersNode);
+      this.setCoordinators(coordinators, true, usersNode);
+      this.setAdministrators(staffs, true, usersNode);
+      this.setOtherStaffs(staffs, coordinators.map(c => c.User.UserId), true, usersNode);
+
+      this.setStudents(students, true, usersNode);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setCurrentData() {
+    this.dataSource.data = this.TREE_DATA;
+  }
+
+  public clearData() {
+    this.TREE_DATA = [];
   }
 
   private markParents(flatNode: ResourceFlatNode) {
@@ -163,34 +520,6 @@ export class ResourceTreeService {
       }
       --i;
     } while (previousNode.level != 0);
-  }
-
-  public setAllResources() {
-    forkJoin([
-      this.scheduleDesignerApiService.GetCoordinators(),
-      this.scheduleDesignerApiService.GetGroups(),
-      this.scheduleDesignerApiService.GetRooms()
-    ]).subscribe(([coordinators, groups, rooms]) => {
-      this.setCoordinators(coordinators);
-      this.setGroups(groups);
-      this.setRooms(rooms);
-
-      this.dataSource.data = this.buildTree(this.TREE_DATA, 0);
-    });
-  }
-
-  public setMyGroups(userId: number) {
-    forkJoin([
-      this.scheduleDesignerApiService.GetStudentGroups(userId)
-    ]).subscribe(([groups]) => {
-      this.setGroups(groups);
-
-      this.dataSource.data = this.buildTree(this.TREE_DATA, 0);
-    });
-  }
-
-  public clearData() {
-    this.TREE_DATA = [];
   }
 
   public filterByName(term: string) {

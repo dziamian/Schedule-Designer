@@ -45,6 +45,18 @@ import { FullScheduleComponent } from './views/full-schedule/full-schedule.compo
 import { PersonalScheduleComponent } from './views/personal-schedule/personal-schedule.component';
 import { StudentScheduleComponent } from './views/student-schedule/student-schedule.component';
 import { AdministratorPanelComponent } from './views/administrator-panel/administrator-panel.component';
+import { AdminResourcesComponent } from './components/admin-panel/admin-resources/admin-resources.component';
+import { CourseFieldComponent } from './components/admin-panel/course-field/course-field.component';
+import { CourseEditionFieldComponent } from './components/admin-panel/course-edition-field/course-edition-field.component';
+import { CourseTypeFieldComponent } from './components/admin-panel/course-type-field/course-type-field.component';
+import { GroupFieldComponent } from './components/admin-panel/group-field/group-field.component';
+import { RoomFieldComponent } from './components/admin-panel/room-field/room-field.component';
+import { RoomTypeFieldComponent } from './components/admin-panel/room-type-field/room-type-field.component';
+import { SettingsFieldComponent } from './components/admin-panel/settings-field/settings-field.component';
+import { UserFieldComponent } from './components/admin-panel/user-field/user-field.component';
+import { ImportFieldComponent } from './components/admin-panel/import-field/import-field.component';
+import { ExportFieldComponent } from './components/admin-panel/export-field/export-field.component';
+import { ClearFieldComponent } from './components/admin-panel/clear-field/clear-field.component';
 
 @NgModule({
   declarations: [
@@ -62,10 +74,23 @@ import { AdministratorPanelComponent } from './views/administrator-panel/adminis
     ScheduleComponent,
     SelectViewComponent,
     AvailableResourcesComponent,
+    AdminResourcesComponent,
+    CourseFieldComponent,
+    CourseEditionFieldComponent,
+    CourseTypeFieldComponent,
+    GroupFieldComponent,
+    RoomFieldComponent,
+    RoomTypeFieldComponent,
+    SettingsFieldComponent,
+    UserFieldComponent,
+    ImportFieldComponent,
+    ExportFieldComponent,
+    ClearFieldComponent,
     FullScheduleComponent,
     PersonalScheduleComponent,
     StudentScheduleComponent,
-    AdministratorPanelComponent
+    AdministratorPanelComponent,
+    AdminResourcesComponent
   ],
   imports: [
     BrowserModule,

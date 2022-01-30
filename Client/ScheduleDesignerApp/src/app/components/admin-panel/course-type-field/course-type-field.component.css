@@ -1,0 +1,56 @@
+.content {
+    height: 75vh;
+    font-size: 12pt;
+    text-align: left;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.content-header {
+    height: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 1.17em;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.edit-icon-button {
+    transform: scale(0.75);
+    top: -3px;
+}
+
+.content-inner {
+    height: 92%;
+    overflow-y: auto;
+}
+
+.content-form {
+    padding-top: 3%;
+    padding-bottom: 7%;
+    padding-left: 3%;
+    padding-right: 3%;
+    border-bottom: 2px solid black;
+}
+
+.form-input {
+    width: 100%;
+}
+
+.form-reset {
+    float: right;
+    min-width: 15%;
+    margin-right: 3%;
+}
+
+.form-submit {
+    float: right;
+    min-width: 15%;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}

@@ -48,11 +48,11 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
@@ -61,7 +61,7 @@ namespace ScheduleDesigner.Controllers
             return Ok(_unitOfWork.StudentGroups.GetAll());
         }
         
-        [Authorize]
+        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
@@ -79,7 +79,29 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetMyGroups()
+        {
+            try
+            {
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+
+                var _myGroups = _unitOfWork.StudentGroups
+                    .Get(e => e.StudentId == userId)
+                    .Include(e => e.Group)
+                    .Select(e => e.Group)
+                    .ToList();
+
+                return Ok(_myGroups);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
@@ -109,7 +131,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
         
@@ -132,7 +154,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
@@ -148,7 +170,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
     }

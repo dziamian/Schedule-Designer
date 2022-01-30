@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit {
     private snackBar:MatSnackBar
   ) { 
     this.store.select('account').subscribe((account) => {
-      if (account.UserId == 0) {
+      if (account.User.UserId == 0) {
         return;
       }
       this.account = account;

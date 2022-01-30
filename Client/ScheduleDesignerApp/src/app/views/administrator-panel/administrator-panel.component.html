@@ -1,4 +1,4 @@
-<div>
+<!--<div>
     <button mat-raised-button color="primary" (click)="DownloadSchedule()">
         DOWNLOAD
     </button>
@@ -7,4 +7,106 @@
     <mat-label>Selected file: <b>{{selectedFile?.name ?? 'None'}}</b></mat-label>
     <button mat-raised-button color="primary" (click)="csvInput.click()">SELECT FILE</button>
     <button mat-raised-button color="primary" (click)="UploadSchedule()">UPLOAD</button>
+</div>-->
+
+<div *ngIf="!loading && connectionStatus; else spinner" class="content">
+    <div class="menu">
+        <button mat-raised-button color="accent" (click)="SetInitialContent('courses', 'All Courses', true)">
+            <mat-icon>book</mat-icon>
+            Courses
+        </button>
+        <button mat-raised-button color="accent" (click)="SetInitialContent('groups', 'All Groups', true)">
+            <mat-icon>group</mat-icon>
+            Groups
+        </button>
+        <button mat-raised-button color="accent" (click)="SetInitialContent('rooms', 'All Rooms', true)">
+            <mat-icon>meeting_room</mat-icon>
+            Rooms
+        </button>
+        <button mat-raised-button color="accent" (click)="SetInitialContent('users', 'All Users', true)">
+            <mat-icon>person_outline</mat-icon>
+            Users
+        </button>
+        <button mat-raised-button color="accent" (click)="SetInitialContent('settings', '', false)">
+            <mat-icon>settings</mat-icon>
+            Settings
+        </button>
+    </div>
+    <div class="inner-content">
+        <app-admin-resources
+            [header]="treeDetails[0].header"
+            [type]="treeDetails[0].type"
+            actionType="add"
+            [visible]="treeDetails[0].visible"
+            [excludeTypes]="treeDetails[0].excludeTypes"
+            [excludeIds]="treeDetails[0].excludeIds"
+            
+            (clicked)="ShowOperatingField($event)">
+        </app-admin-resources>
+        <div class="operating-field" [ngSwitch]="operatingFieldData?.type">
+            <app-course-field *ngSwitchCase="'course'"
+                [selectedResult]="selectedResult"
+                [settings]="settings"
+                [data]="operatingFieldData"
+                
+                (onListAdd)="OnListAdd($event)"
+                (onListRemove)="OnListRemove($event)"
+                (onSelect)="SetAdditionalContent($event)"
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-course-field>
+            <app-course-edition-field *ngSwitchCase="'course-edition'"></app-course-edition-field>
+            <app-course-type-field *ngSwitchCase="'course-type'" 
+                [data]="operatingFieldData"
+                
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-course-type-field>
+            <app-group-field *ngSwitchCase="'group'"></app-group-field>
+            <app-room-field *ngSwitchCase="'room'"></app-room-field>
+            <app-room-type-field *ngSwitchCase="'room-type'"></app-room-type-field>
+            <app-settings-field *ngSwitchCase="'settings'"></app-settings-field>
+            <app-user-field *ngSwitchCase="'user'"></app-user-field>
+            <app-import-field *ngSwitchCase="'import'"></app-import-field>
+            <app-export-field *ngSwitchCase="'export'"></app-export-field>
+            <app-clear-field *ngSwitchCase="'clear'"></app-clear-field>
+            <div *ngSwitchDefault class="no-operating-field-selected">
+                Please choose some operation to do.
+            </div>
+        </div>
+        <app-admin-resources
+            [header]="treeDetails[1].header"
+            [type]="treeDetails[1].type"
+            actionType="select"
+            [visible]="treeDetails[1].visible"
+            [excludeTypes]="treeDetails[1].excludeTypes"
+            [excludeIds]="treeDetails[1].excludeIds"
+
+            (clicked)="SendResult($event)">
+        </app-admin-resources>
+    </div>
+    <div class="menu">
+        <button mat-raised-button color="accent" (click)="SetInitialContent('import', '', false)">
+            <mat-icon>arrow_upward</mat-icon>
+            Import
+        </button>
+        <button mat-raised-button color="accent" (click)="SetInitialContent('export', '', false)">
+            <mat-icon>arrow_downward</mat-icon>
+            Export
+        </button>
+        <button mat-raised-button color="accent" (click)="SetInitialContent('clear', '', false)">
+            <mat-icon>clear</mat-icon>
+            Clear
+        </button>
+    </div>
 </div>
+
+<ng-template #spinner>
+    <mat-progress-spinner
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

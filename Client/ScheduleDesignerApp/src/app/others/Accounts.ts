@@ -1,15 +1,9 @@
 export class Account {
     constructor(
-        public UserId:number,
-        public FirstName:string,
-        public LastName:string,
-        public Student:boolean,
-        public StudentNumber:string,
-        public RepresentativeGroups:number[],
-        public Coordinator:boolean,
-        public Titles:Titles|null,
-        public Staff:boolean,
-        public Admin:boolean
+        public User:User,
+        public Student:Student|null,
+        public Coordinator:Coordinator|null,
+        public Staff:Staff|null
     ) {}
 }
 
@@ -22,9 +16,30 @@ export class Titles {
 
 export class Coordinator {
     constructor(
+        public User:User,
+        public Titles:Titles
+    ) { }
+}
+
+export class Student {
+    constructor(
+        public User:User,
+        public StudentNumber:string,
+        public RepresentativeGroups:number[],
+    ) { }
+}
+
+export class Staff {
+    constructor(
+        public User:User,
+        public IsAdmin:boolean
+    ) { }
+}
+
+export class User {
+    constructor(
         public UserId:number,
         public FirstName:string,
-        public LastName:string,
-        public Titles:Titles
+        public LastName:string
     ) { }
 }

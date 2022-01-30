@@ -12,7 +12,7 @@
             <ng-template matTabContent>
                 <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
-                        <app-my-courses *ngIf="isModifying && account?.Admin"
+                        <app-my-courses *ngIf="isModifying && account?.Staff?.IsAdmin"
                             [isModifying]="isModifying"
                             [account]="account"
                             [settings]="settings"
@@ -25,7 +25,7 @@
                             (onStart)="OnMyCoursesStart($event)"
                             (onRelease)="OnRelease($event)"
                         ></app-my-courses>
-                        <app-available-resources *ngIf="!(isModifying && account?.Admin)"
+                        <app-available-resources *ngIf="!(isModifying && account?.Staff?.IsAdmin)"
                             (showSchedule)="ShowSchedule($event)"
                         ></app-available-resources>
                         
@@ -131,10 +131,10 @@
                                     <mat-icon>print</mat-icon>
                             </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!account?.Admin && !canMakePropositions()) || !currentResourceName"
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!account?.Staff?.IsAdmin && !canMakePropositions()) || !currentResourceName"
                                 (click)="ModifySchedule()"
                                 >
-                                    <mat-icon>{{isModifying ? 'remove_red_eye' : 'edit'}}</mat-icon>
+                                    <mat-icon>{{isModifying ? 'visibility' : 'edit'}}</mat-icon>
                                     {{isModifying ? 'View-Only Mode' : 'Modification Mode'}}
                             </button>
                         </div>

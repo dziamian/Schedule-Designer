@@ -56,7 +56,7 @@ namespace ScheduleDesigner.Controllers
 
                     if (!Methods.AreUnitsMinutesValid(courseDto.UnitsMinutes, _unitOfWork.Settings.GetFirst(e => true).Result))
                     {
-                        ModelState.AddModelError("CourseUnitsMinutes", "Couldn't calculate the valid amount of courses in term.");
+                        ModelState.AddModelError("CourseUnitsMinutes", "Could not calculate the valid amount of courses in term.");
                         return BadRequest(ModelState);
                     }
 
@@ -76,7 +76,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
@@ -107,7 +107,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
@@ -227,7 +227,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
@@ -238,6 +238,8 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
+
+
                 var result = await _unitOfWork.Courses.Delete(e => e.CourseId == key1);
                 if (result < 0)
                 {
@@ -249,7 +251,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
 
@@ -266,7 +268,7 @@ namespace ScheduleDesigner.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Unexpected error. Please try again later.");
             }
         }
     }
