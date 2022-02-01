@@ -103,6 +103,19 @@ namespace ScheduleDesigner.Services
             return await SendUserRequestAsync(request);
         }
 
+        public async Task<UserSearch> GetUserSearch(OAuthRequest oauth, string query, int perPage, int start)
+        {
+            var requestUrl = $"{ApplicationInfo.BaseUsosUrl}/services/users/search2" +
+                $"?lang=pl&fields=items[user[id|first_name|last_name|student_status|student_number|staff_status|titles]]|next_page";
+            if (query != null) requestUrl += $"&query={query}";
+            requestUrl += $"&among=all&num={perPage}&start={start}&format=json";
+            oauth.RequestUrl = requestUrl;
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+
+            request.Headers.Add("Authorization", oauth.GetAuthorizationHeader());
+            return await SendSearchRequestAsync(request);
+        }
+
         public User GetUserFromDb(int userId)
         {
             var _user = _unitOfWork.Users
@@ -228,6 +241,33 @@ namespace ScheduleDesigner.Services
             var userInfo = JsonSerializer.Deserialize<UserInfo>(json);
             return userInfo;
         }
+
+        private async Task<UserSearch> SendSearchRequestAsync(HttpRequestMessage request)
+        {
+            var response = await _client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var userSearch = JsonSerializer.Deserialize<UserSearch>(json);
+            return userSearch;
+        }
+    }
+
+    [Serializable]
+    public class UserSearch
+    {
+        [JsonPropertyName("items")]
+        public List<SearchItem> Items { get; set; }
+
+        [JsonPropertyName("next_page")]
+        public bool NextPage { get; set; }
+    }
+
+    [Serializable]
+    public class SearchItem
+    {
+        [JsonPropertyName("user")]
+        public UserInfo User { get; set; }
     }
 
     [Serializable]

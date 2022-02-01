@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
-import { Account, Coordinator, Staff, Student, Titles, User } from 'src/app/others/Accounts';
+import { Account, Coordinator, CoordinatorBasic, Staff, Student, Titles, User } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType, RoomType } from 'src/app/others/Types';
-import { Group } from 'src/app/others/Group';
+import { Group, GroupInfo } from 'src/app/others/Group';
 import { Room } from 'src/app/others/Room';
 import { ScheduleSlot } from 'src/app/others/ScheduleSlot';
 import { Settings } from 'src/app/others/Settings';
@@ -319,6 +319,31 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetCourseEditionBasicInfo(
+    courseId: number,
+    courseEditionId: number
+  ):Observable<CourseEditionInfo> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?$expand=Course`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        const courseEditionInfo = new CourseEditionInfo(
+          response.CourseId, response.CourseEditionId, response.Course.CourseTypeId, response.Course.Name, response.Name
+        );
+        return courseEditionInfo;
+      })
+    );
+  }
+
   public GetCoursesInfo():Observable<CourseInfo[]> {
     const request = {
       url: this.baseUrl + `/courses`,
@@ -598,6 +623,26 @@ export class ScheduleDesignerApiService {
     );
   }
 
+  public GetCourseEditionCoordinatorsBasic(courseEditionId: number):Observable<CoordinatorBasic[]> {
+    const request = {
+      url: this.baseUrl + `/coordinatorCourseEditions?$expand=Coordinator($expand=User)&$filter=CourseEditionId eq ${courseEditionId}`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => new CoordinatorBasic(
+        element.Coordinator.UserId,
+        `${element.Coordinator.TitleBefore ?? ''} ${element.Coordinator.User.LastName.toUpperCase()} ${element.Coordinator.User.FirstName} ${element.Coordinator.TitleAfter ?? ''} (${element.Coordinator.UserId})`
+      )))
+    );
+  }
+
   public GetCoordinatorsForCourses(
     courseEditions: CourseEdition[] //sorted by courseEditionId
   ):Observable<CourseEdition[]> {
@@ -643,6 +688,25 @@ export class ScheduleDesignerApiService {
 
         return courseEditions;
       })
+    );
+  }
+
+  public GetCourseEditionGroupsBasic(courseEditionId: number):Observable<Group[]> {
+    const request = {
+      url: this.baseUrl + `/groupCourseEditions?$filter=CourseEditionId eq ${courseEditionId}`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => new Group(
+        element.GroupId
+      )))
     );
   }
 
@@ -927,6 +991,44 @@ export class ScheduleDesignerApiService {
         group.FullName = element.Name;
         return group;
       }))
+    );
+  }
+
+  public GetGroupInfo(groupId: number): Observable<GroupInfo> {
+    const request = {
+      url: this.baseUrl + `/groups(${groupId})/Service.GetGroupFullInfo()`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => new GroupInfo(
+        response.GroupId, response.BasicName, response.FullName, response.ParentIds, response.ChildIds
+      ))
+    );
+  }
+
+  public GetGroupsInfo(groupsIds: number[]): Observable<GroupInfo[]> {
+    const request = {
+      url: this.baseUrl + `/groups/Service.GetGroupsFullInfo(GroupsIds=[${groupsIds.toString()}])`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => new GroupInfo(
+        element.GroupId, element.BasicName, element.FullName, element.ParentIds, element.ChildIds
+      )))
     );
   }
 

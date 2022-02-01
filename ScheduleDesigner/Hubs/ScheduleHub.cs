@@ -179,7 +179,7 @@ namespace ScheduleDesigner.Hubs
 
         public static void AddCourseEditionsLocks(
             List<CourseEditionKey> courseEditionKeys,
-            ref SortedList<CourseEditionKey, ConcurrentQueue<object>> courseEditionQueues)
+            SortedList<CourseEditionKey, ConcurrentQueue<object>> courseEditionQueues)
         {
             foreach (var key in courseEditionKeys)
             {
@@ -191,8 +191,8 @@ namespace ScheduleDesigner.Hubs
 
         public static void AddSchedulePositionsLocksL1(
             List<int> _timestamps, int roomId,
-            ref List<SchedulePositionKey> schedulePositionKeys,
-            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+            List<SchedulePositionKey> schedulePositionKeys,
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
             foreach (var timestampId in _timestamps)
             {
@@ -206,7 +206,7 @@ namespace ScheduleDesigner.Hubs
 
         public static void AddSchedulePositionsLocksL1(
             List<int> _timestamps, int roomId,
-            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
             foreach (var timestampId in _timestamps)
             {
@@ -219,7 +219,7 @@ namespace ScheduleDesigner.Hubs
 
         public static void AddSchedulePositionsLocksL1(
             List<SchedulePositionKey> schedulePositionKeys,
-            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
             foreach (var key in schedulePositionKeys)
             {
@@ -231,7 +231,7 @@ namespace ScheduleDesigner.Hubs
 
         public static void AddSchedulePositionsLocksL2(
             List<SchedulePositionKey> schedulePositionKeys,
-            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
             foreach (var key in schedulePositionKeys)
             {
@@ -243,7 +243,7 @@ namespace ScheduleDesigner.Hubs
 
         private void AddCoordinatorPositionsLocks(
             int[] coordinatorsIds, int timestampId,
-            ref SortedList<CoordinatorPositionKey, ConcurrentQueue<object>> coordinatorPositionQueues)
+            SortedList<CoordinatorPositionKey, ConcurrentQueue<object>> coordinatorPositionQueues)
         {
             foreach (var coordinatorId in coordinatorsIds)
             {
@@ -256,7 +256,7 @@ namespace ScheduleDesigner.Hubs
 
         private void AddGroupPositionsLocks(
             int[] groupsIds, int timestampId,
-            ref SortedList<GroupPositionKey, ConcurrentQueue<object>> groupPositionQueues)
+            SortedList<GroupPositionKey, ConcurrentQueue<object>> groupPositionQueues)
         {
             foreach (var groupId in groupsIds)
             {
@@ -343,7 +343,7 @@ namespace ScheduleDesigner.Hubs
         }
 
         private void MakeScheduledMoves(List<SchedulePositionKey> sourceSchedulePositionKeys,
-            ref SortedList<SchedulePositionKey, ConcurrentQueue<object>> L1schedulePositionAllQueues, ref List<SchedulePositionKey> L1KeysToRemove)
+            SortedList<SchedulePositionKey, ConcurrentQueue<object>> L1schedulePositionAllQueues, List<SchedulePositionKey> L1KeysToRemove)
         {
             var coordinatorPositionQueues = new SortedList<CoordinatorPositionKey, ConcurrentQueue<object>>();
             var groupPositionQueues = new SortedList<GroupPositionKey, ConcurrentQueue<object>>();
@@ -388,9 +388,9 @@ namespace ScheduleDesigner.Hubs
                         lock (SchedulePositionLocksL1)
                             lock (SchedulePositionLocksL2)
                             {
-                                AddSchedulePositionsLocksL1(possibleMove.Item1, ref L1scheduledMovesAllQueues);
-                                AddSchedulePositionsLocksL2(possibleMove.Item1, ref L2scheduledMovesAllQueues);
-                                AddSchedulePositionsLocksL2(possibleMove.Item2, ref L2scheduledMovesAllQueues);
+                                AddSchedulePositionsLocksL1(possibleMove.Item1, L1scheduledMovesAllQueues);
+                                AddSchedulePositionsLocksL2(possibleMove.Item1, L2scheduledMovesAllQueues);
+                                AddSchedulePositionsLocksL2(possibleMove.Item2, L2scheduledMovesAllQueues);
 
                                 foreach (var key in possibleMove.Item2)
                                 {
@@ -484,8 +484,8 @@ namespace ScheduleDesigner.Hubs
                                 {
                                     foreach (var timestampId in candidateDestTimestamps)
                                     {
-                                        AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
-                                        AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
+                                        AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, coordinatorPositionQueues);
+                                        AddGroupPositionsLocks(groupsIds, timestampId, groupPositionQueues);
                                     }
                                 }
 
@@ -754,7 +754,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -848,7 +848,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -943,7 +943,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -1010,8 +1010,8 @@ namespace ScheduleDesigner.Hubs
                     lock (SchedulePositionLocksL1)
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL1.Values);
@@ -1137,11 +1137,15 @@ namespace ScheduleDesigner.Hubs
                         CourseEditionId = e.CourseEditionId
                     }).ToList();
 
-                courseEditionKeys.Add(new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId });
+                var key = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
+                if (!courseEditionKeys.Contains(key))
+                {
+                    courseEditionKeys.Add(key);
+                }
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -1214,8 +1218,8 @@ namespace ScheduleDesigner.Hubs
                     lock (SchedulePositionLocksL1)
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL1.Values);
@@ -1315,7 +1319,7 @@ namespace ScheduleDesigner.Hubs
         }
 
         [Authorize(Policy = "AdministratorOnly")]
-        public MessageObject LockAllCoursesForGroupChange(int originGroupId, int destinationGroupId)
+        public MessageObject LockAllCoursesForGroupChange(int originGroupId, int? destinationGroupId)
         {
             var courseEditionQueues = new SortedList<CourseEditionKey, ConcurrentQueue<object>>();
             var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
@@ -1332,38 +1336,52 @@ namespace ScheduleDesigner.Hubs
                     return new MessageObject { StatusCode = 400, Message = "Could not find origin group." };
                 }
 
-                var destinationGroup = _unitOfWork.Groups.Get(e => e.GroupId == destinationGroupId).FirstOrDefault();
-                if (destinationGroup == null)
+                if (originGroup.ParentGroupId == destinationGroupId)
                 {
-                    return new MessageObject { StatusCode = 400, Message = "Could not find destination group." };
+                    return new MessageObject { StatusCode = 400, Message = "Destination group cannot be the direct parent of origin group." };
+                }
+
+                Group destinationGroup = null;
+                if (destinationGroupId != null)
+                {
+                    destinationGroup = _unitOfWork.Groups.Get(e => e.GroupId == destinationGroupId).FirstOrDefault();
+                    if (destinationGroup == null)
+                    {
+                        return new MessageObject { StatusCode = 400, Message = "Could not find destination group." };
+                    }
                 }
 
                 var childGroupsIds = Methods.GetChildGroups(new List<Group>() { originGroup }, _unitOfWork.Groups);
-                var parentGroupsIds = Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups);
+                var parentGroupsIds = destinationGroup != null ? Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups) : new List<int>();
 
-                if (childGroupsIds.Contains(destinationGroupId))
+                if (destinationGroupId != null)
                 {
-                    return new MessageObject { StatusCode = 400, Message = "Destination group cannot be the child of origin group." };
+                    if (childGroupsIds.Contains((int)destinationGroupId))
+                    {
+                        return new MessageObject { StatusCode = 400, Message = "Destination group cannot be the child of origin group." };
+                    }
                 }
 
                 var groupsIds = childGroupsIds.Union(parentGroupsIds).ToList();
                 var courseEditionKeys = _unitOfWork.GroupCourseEditions
-                    .Get(e => groupsIds.Contains(e.GroupId)).Select(e => new CourseEditionKey
+                    .Get(e => groupsIds.Contains(e.GroupId))
+                    .GroupBy(e => new {e.CourseId, e.CourseEditionId})
+                    .Select(e => new CourseEditionKey
                     {
-                        CourseId = e.CourseId,
-                        CourseEditionId = e.CourseEditionId
+                        CourseId = e.Key.CourseId,
+                        CourseEditionId = e.Key.CourseEditionId
                     }).ToList();
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
                 try
                 {
                     var currentGroupsIds = Methods.GetChildGroups(new List<Group>() { originGroup }, _unitOfWork.Groups)
-                        .Union(Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups))
+                        .Union(destinationGroup != null ? Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups) : new List<int>())
                         .ToList();
                     
                     if (currentGroupsIds.Except(groupsIds).Count() > 0 || currentGroupsIds.Count != groupsIds.Count)
@@ -1379,7 +1397,7 @@ namespace ScheduleDesigner.Hubs
                     var currentCourseEditions = new SortedList<CourseEditionKey, CourseEdition>();
                     courseEditions.ForEach(e =>
                     {
-                        currentCourseEditions.Add(new CourseEditionKey
+                        currentCourseEditions.TryAdd(new CourseEditionKey
                         {
                             CourseId = e.CourseId,
                             CourseEditionId = e.CourseEditionId
@@ -1418,8 +1436,8 @@ namespace ScheduleDesigner.Hubs
                     lock (SchedulePositionLocksL1)
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL1.Values);
@@ -1543,7 +1561,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionQueuesL1);
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, schedulePositionQueuesL1);
                 }
 
                 EnterQueues(schedulePositionQueuesL1.Values);
@@ -1551,7 +1569,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL2.Values);
@@ -1719,7 +1737,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionQueuesL1);
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, schedulePositionQueuesL1);
                 }
 
                 EnterQueues(schedulePositionQueuesL1.Values);
@@ -1727,7 +1745,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL2.Values);
@@ -1825,7 +1843,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -1911,7 +1929,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -1993,7 +2011,11 @@ namespace ScheduleDesigner.Hubs
                         CourseEditionId = e.CourseEditionId
                     }).ToList();
 
-                courseEditionKeys.Add(new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId });
+                var key = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
+                if (!courseEditionKeys.Contains(key))
+                {
+                    courseEditionKeys.Add(key);
+                }
 
                 if (!courseEditionKeys.Any())
                 {
@@ -2002,7 +2024,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -2063,8 +2085,8 @@ namespace ScheduleDesigner.Hubs
                     lock (SchedulePositionLocksL1)
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL1.Values);
@@ -2180,11 +2202,15 @@ namespace ScheduleDesigner.Hubs
                         CourseEditionId = e.CourseEditionId
                     }).ToList();
 
-                courseEditionKeys.Add(new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId });
+                var key = new CourseEditionKey { CourseId = courseId, CourseEditionId = courseEditionId };
+                if (!courseEditionKeys.Contains(key))
+                {
+                    courseEditionKeys.Add(key);
+                }
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
@@ -2253,8 +2279,8 @@ namespace ScheduleDesigner.Hubs
                     lock (SchedulePositionLocksL1)
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL1.Values);
@@ -2344,7 +2370,7 @@ namespace ScheduleDesigner.Hubs
         }
 
         [Authorize(Policy = "AdministratorOnly")]
-        public MessageObject UnlockAllCoursesForGroupChange(int originGroupId, int destinationGroupId)
+        public MessageObject UnlockAllCoursesForGroupChange(int originGroupId, int? destinationGroupId)
         {
             var courseEditionQueues = new SortedList<CourseEditionKey, ConcurrentQueue<object>>();
             var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
@@ -2360,39 +2386,48 @@ namespace ScheduleDesigner.Hubs
                 {
                     return new MessageObject { StatusCode = 400, Message = "Could not find origin group." };
                 }
-
-                var destinationGroup = _unitOfWork.Groups.Get(e => e.GroupId == destinationGroupId).FirstOrDefault();
-                if (destinationGroup == null)
+                
+                Group destinationGroup = null;
+                if (destinationGroupId != null)
                 {
-                    return new MessageObject { StatusCode = 400, Message = "Could not find destination group." };
+                    destinationGroup = _unitOfWork.Groups.Get(e => e.GroupId == destinationGroupId).FirstOrDefault();
+                    if (destinationGroup == null)
+                    {
+                        return new MessageObject { StatusCode = 400, Message = "Could not find destination group." };
+                    }
                 }
 
                 var childGroupsIds = Methods.GetChildGroups(new List<Group>() { originGroup }, _unitOfWork.Groups);
-                var parentGroupsIds = Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups);
+                var parentGroupsIds = destinationGroupId != null ? Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups) : new List<int>();
 
-                if (childGroupsIds.Contains(destinationGroupId))
+                if (destinationGroupId != null)
                 {
-                    return new MessageObject { StatusCode = 400, Message = "Destination group cannot be the child of origin group." };
+                    if (childGroupsIds.Contains((int)destinationGroupId))
+                    {
+                        return new MessageObject { StatusCode = 400, Message = "Destination group cannot be the child of origin group." };
+                    }
                 }
 
                 var groupsIds = childGroupsIds.Union(parentGroupsIds).ToList();
                 var courseEditionKeys = _unitOfWork.GroupCourseEditions
-                    .Get(e => groupsIds.Contains(e.GroupId)).Select(e => new CourseEditionKey
+                    .Get(e => groupsIds.Contains(e.GroupId))
+                    .GroupBy(e => new { e.CourseId, e.CourseEditionId })
+                    .Select(e => new CourseEditionKey
                     {
-                        CourseId = e.CourseId,
-                        CourseEditionId = e.CourseEditionId
+                        CourseId = e.Key.CourseId,
+                        CourseEditionId = e.Key.CourseEditionId
                     }).ToList();
 
                 lock (CourseEditionLocks)
                 {
-                    AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                    AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                 }
 
                 EnterQueues(courseEditionQueues.Values);
                 try
                 {
                     var currentGroupsIds = Methods.GetChildGroups(new List<Group>() { originGroup }, _unitOfWork.Groups)
-                        .Union(Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups))
+                        .Union(destinationGroupId != null ? Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups) : new List<int>())
                         .Intersect(groupsIds);
 
                     if (!currentGroupsIds.Any())
@@ -2446,8 +2481,8 @@ namespace ScheduleDesigner.Hubs
                     lock (SchedulePositionLocksL1)
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                     }
 
                     EnterQueues(schedulePositionQueuesL1.Values);
@@ -2570,7 +2605,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionQueuesL1);
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, schedulePositionQueuesL1);
                 }
 
                 Monitor.Enter(courseEditionQueue);
@@ -2632,11 +2667,11 @@ namespace ScheduleDesigner.Hubs
                     lock (CoordinatorPositionLocks)
                     lock (GroupPositionLocks)
                     {
-                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), ref schedulePositionQueuesL2);
+                        AddSchedulePositionsLocksL2(schedulePositionQueuesL1.Keys.ToList(), schedulePositionQueuesL2);
                         foreach (var timestampId in _timestamps)
                         {
-                            AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
-                            AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
+                            AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, coordinatorPositionQueues);
+                            AddGroupPositionsLocks(groupsIds, timestampId, groupPositionQueues);
                         }
                     }
 
@@ -2765,8 +2800,8 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref schedulePositionKeys1, ref L1schedulePositionAllQueues);
-                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref schedulePositionKeys2, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, schedulePositionKeys1, L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, schedulePositionKeys2, L1schedulePositionAllQueues);
                 }
                 var L1KeysToRemove = new List<SchedulePositionKey>();
 
@@ -2775,8 +2810,8 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(schedulePositionKeys1, ref L2schedulePositionAllQueues);
-                        AddSchedulePositionsLocksL2(schedulePositionKeys2, ref L2schedulePositionAllQueues);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys1, L2schedulePositionAllQueues);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys2, L2schedulePositionAllQueues);
                     }
 
                     EnterQueues(L2schedulePositionAllQueues.Values);
@@ -2840,8 +2875,8 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
-                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, groupPositionQueues);
                             }
                         }
 
@@ -2936,7 +2971,7 @@ namespace ScheduleDesigner.Hubs
                         }
                     }
 
-                    MakeScheduledMoves(schedulePositionKeys1, ref L1schedulePositionAllQueues, ref L1KeysToRemove);
+                    MakeScheduledMoves(schedulePositionKeys1, L1schedulePositionAllQueues, L1KeysToRemove);
                     return;
                 }
                 finally
@@ -2985,7 +3020,7 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_timestamps, roomId, ref schedulePositionKeys, ref L1schedulePositionQueues);
+                    AddSchedulePositionsLocksL1(_timestamps, roomId, schedulePositionKeys, L1schedulePositionQueues);
                 }
                 var L1KeysToRemove = new List<SchedulePositionKey>();
 
@@ -2994,7 +3029,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(schedulePositionKeys, ref L2schedulePositionQueues);
+                        AddSchedulePositionsLocksL2(schedulePositionKeys, L2schedulePositionQueues);
                     }
 
                     EnterQueues(L2schedulePositionQueues.Values);
@@ -3074,7 +3109,7 @@ namespace ScheduleDesigner.Hubs
                         ExitQueues(L2schedulePositionQueues.Values);
                     }
 
-                    MakeScheduledMoves(schedulePositionKeys, ref L1schedulePositionQueues, ref L1KeysToRemove);
+                    MakeScheduledMoves(schedulePositionKeys, L1schedulePositionQueues, L1KeysToRemove);
                     return;
                 }
                 finally
@@ -3156,8 +3191,8 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref L1schedulePositionAllQueues);
-                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, L1schedulePositionAllQueues);
                 }
 
                 EnterQueues(L1schedulePositionAllQueues.Values);
@@ -3165,7 +3200,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), ref L2schedulePositionAllQueues);
+                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), L2schedulePositionAllQueues);
                     }
 
                     EnterQueues(L2schedulePositionAllQueues.Values);
@@ -3220,8 +3255,8 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
-                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, groupPositionQueues);
                             }
                         }
 
@@ -3392,8 +3427,8 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref L1schedulePositionAllQueues);
-                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, L1schedulePositionAllQueues);
                 }
 
                 EnterQueues(L1schedulePositionAllQueues.Values);
@@ -3401,7 +3436,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), ref L2schedulePositionAllQueues);
+                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), L2schedulePositionAllQueues);
                     }
 
                     EnterQueues(L2schedulePositionAllQueues.Values);
@@ -3470,8 +3505,8 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
-                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, groupPositionQueues);
                             }
                         }
 
@@ -3608,8 +3643,8 @@ namespace ScheduleDesigner.Hubs
 
                 lock (SchedulePositionLocksL1)
                 {
-                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, ref L1schedulePositionAllQueues);
-                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, ref L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_sourceTimestamps, roomId, L1schedulePositionAllQueues);
+                    AddSchedulePositionsLocksL1(_destTimestamps, destRoomId, L1schedulePositionAllQueues);
                 }
 
                 EnterQueues(L1schedulePositionAllQueues.Values);
@@ -3617,7 +3652,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     lock (SchedulePositionLocksL2)
                     {
-                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), ref L2schedulePositionAllQueues);
+                        AddSchedulePositionsLocksL2(L1schedulePositionAllQueues.Keys.ToList(), L2schedulePositionAllQueues);
                     }
 
                     EnterQueues(L2schedulePositionAllQueues.Values);
@@ -3677,8 +3712,8 @@ namespace ScheduleDesigner.Hubs
                         {
                             foreach (var timestampId in _destTimestamps)
                             {
-                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, ref coordinatorPositionQueues);
-                                AddGroupPositionsLocks(groupsIds, timestampId, ref groupPositionQueues);
+                                AddCoordinatorPositionsLocks(coordinatorsIds, timestampId, coordinatorPositionQueues);
+                                AddGroupPositionsLocks(groupsIds, timestampId, groupPositionQueues);
                             }
                         }
 

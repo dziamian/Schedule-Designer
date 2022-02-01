@@ -105,7 +105,7 @@ namespace ScheduleDesigner.Controllers
 
                     lock (ScheduleHub.CourseEditionLocks)
                     {
-                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                     }
 
                     ScheduleHub.EnterQueues(courseEditionQueues.Values);
@@ -147,8 +147,8 @@ namespace ScheduleDesigner.Controllers
                         lock (ScheduleHub.SchedulePositionLocksL1)
                         lock (ScheduleHub.SchedulePositionLocksL2)
                         {
-                            ScheduleHub.AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                            ScheduleHub.AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                            ScheduleHub.AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                            ScheduleHub.AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                         }
 
                         ScheduleHub.EnterQueues(schedulePositionQueuesL1.Values);

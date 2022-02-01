@@ -339,7 +339,7 @@ export class SignalrService implements OnDestroy {
       }));
   }
 
-  public LockAllCoursesForGroupChange(originGroupId: number, destinationGroupId: number) {
+  public LockAllCoursesForGroupChange(originGroupId: number, destinationGroupId?: number) {
     return from(this.connection.invoke<MessageObject>('LockAllCoursesForGroupChange', 
     originGroupId, destinationGroupId))
       .pipe(map((result : any) => {
@@ -349,7 +349,7 @@ export class SignalrService implements OnDestroy {
       }));
   }
 
-  public UnlockAllCoursesForGroupChange(originGroupId: number, destinationGroupId: number) {
+  public UnlockAllCoursesForGroupChange(originGroupId: number, destinationGroupId?: number) {
     return from(this.connection.invoke<MessageObject>('UnlockAllCoursesForGroupChange', 
     originGroupId, destinationGroupId))
       .pipe(map((result : any) => {

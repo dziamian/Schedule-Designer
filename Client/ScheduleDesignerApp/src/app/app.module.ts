@@ -17,6 +17,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -114,6 +115,7 @@ import { ClearFieldComponent } from './components/admin-panel/clear-field/clear-
     MatInputModule,
     TextFieldModule,
     MatChipsModule,
+    MatExpansionModule,
     HttpClientModule,
     StoreModule.forRoot({ account: accountReducer})
   ],

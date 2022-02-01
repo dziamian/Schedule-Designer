@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { Group } from 'src/app/others/Group';
 import { map } from 'rxjs/operators';
-import { Staff, Student, User } from 'src/app/others/Accounts';
-import { ICourse, ICourseType } from 'src/app/others/Interfaces';
+import { Account, Coordinator, SearchUser, Staff, Student, StudentBasic, Titles, User } from 'src/app/others/Accounts';
+import { ICourse, ICourseEdition, ICourseType, IGroup } from 'src/app/others/Interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -203,6 +203,316 @@ export class AdministratorApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     );
+  }
+
+  public CreateCourseEdition(courseEdition: ICourseEdition): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/courseEditions`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: courseEdition,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateCourseEdition(courseEdition: ICourseEdition): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseEdition.CourseId},${courseEdition.CourseEditionId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: courseEdition,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveCourseEdition(courseId: number, courseEditionId: number): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public AddCoordinatorCourseEdition(
+    courseId: number,
+    courseEditionId: number,
+    coordinatorId: number,
+    connectionId: string
+  ): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/coordinatorCourseEditions?connectionId=${connectionId}`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          CourseId: courseId,
+          CourseEditionId: courseEditionId,
+          CoordinatorId: coordinatorId
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveCoordinatorCourseEdition(
+    courseId: number,
+    courseEditionId: number,
+    coordinatorId: number,
+  ): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/coordinatorCourseEditions(${courseId},${courseEditionId},${coordinatorId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public AddGroupCourseEdition(
+    courseId: number,
+    courseEditionId: number,
+    groupId: number,
+    connectionId: string
+  ): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/groupCourseEditions?connectionId=${connectionId}`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          CourseId: courseId,
+          CourseEditionId: courseEditionId,
+          GroupId: groupId
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveGroupCourseEdition(
+    courseId: number,
+    courseEditionId: number,
+    groupId: number,
+  ): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/groupCourseEditions(${courseId},${courseEditionId},${groupId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public GetGroupsStudents(groupIds: number[]): Observable<StudentBasic[]> {
+    const request = {
+      url: this.baseUrl + `/studentGroups/Service.GetGroupsStudents(GroupsIds=[${groupIds.toString()}])`
+      + `?$expand=User`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(map((response : any) => response.value.map((element : any) => new StudentBasic(
+      element.User.UserId, `${element.User.FirstName} ${element.User.LastName}`
+    ))));
+  }
+
+  public GiveOrRemoveRepresentativeRole(groupId: number, userId: number, role: boolean): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/studentGroups/Service.GiveOrRemoveRepresentativeRole`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          UserId: userId,
+          GroupId: groupId,
+          Role: role
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public GetGroupRepresentativeRoles(groupId: number): Observable<number[]> {
+    const request = {
+      url: this.baseUrl + `/studentGroups?$filter=GroupId eq ${groupId} and IsRepresentative eq true&$select=StudentId`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(map((response : any) => response.value.map((element : any) => element.StudentId)));
+  }
+
+  public CreateGroup(group: IGroup): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/groups`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: group,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateGroup(group: IGroup, connectionId: string): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/groups(${group.GroupId})?connectionId=${connectionId}`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: group,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveGroup(groupId: number): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/groups(${groupId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public AddStudentToGroup(groupId: number, userId: number) {
+    const request = {
+      url: this.baseUrl + `/studentGroups`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          GroupId: groupId,
+          StudentId: userId,
+          IsRepresentative: false
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveStudentFromGroup(groupId: number, userId: number) {
+    const request = {
+      url: this.baseUrl + `/studentGroups(${groupId},${userId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public SearchForUserFromUsos(query: string, perPage: number, start: number): Observable<SearchUser> {
+    const request = {
+      url: this.baseUrl + `/users/Service.SearchForUserFromUsos(Query='${query}',PerPage=${perPage},Start=${start})`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(map((response : any) => new SearchUser(
+      response.Items.map((element : any) => {
+        const user = new User(element.User.Id, 
+          element.User.FirstName, 
+          element.User.LastName
+        );
+
+        return new Account(
+          user,
+          element.User.StudentStatus != null && element.User.StudentStatus != 0 
+            ? new Student(user, element.User.StudentNumber, []) : null,
+          element.User.StaffStatus == 2 
+            ? new Coordinator(
+              user, new Titles(
+                element.User.Titles.Before, 
+                element.User.Titles.After
+              ) 
+            ) : null,
+          element.User.StaffStatus == 1 || element.User.StaffStatus == 2
+            ? new Staff(
+              user, false
+            ) : null
+        );
+      }),
+      response.NextPage
+    )));
   }
 
   public UploadSchedule(file: File, connectionId: string):Observable<any> {

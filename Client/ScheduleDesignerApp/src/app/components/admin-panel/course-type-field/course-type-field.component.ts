@@ -85,10 +85,12 @@ export class CourseTypeFieldComponent implements OnInit {
       this.buildForm(this.originalCourseType);
 
       this.loading = false;
+    } else {
+      this.loading = false;
     }
   }
 
-  IsDifferentThanOriginal(): boolean {
+  IsSameAsOriginal(): boolean {
     return this.originalCourseType.Name === this.courseTypeForm.controls['name'].value 
       && this.originalCourseType.Color === this.courseTypeForm.controls['color'].value;
   }

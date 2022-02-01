@@ -1,1 +1,43 @@
-<p>user-field works!</p>
+<div *ngIf="loading == false; else spinner">
+    <div [ngSwitch]="data?.actionType">
+        <div *ngSwitchCase="'add'" class="content">
+            <div class="content-header">
+                <b>Add user from USOS</b>
+            </div>
+            <div class="content-form">
+                <form (ngSubmit)="Search()" [formGroup]="searchForm">
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>Search for user...</mat-label>
+                        <mat-icon matPrefix class="mat-search-icon">search</mat-icon>
+                        <input matInput name="search" formControlName="search" maxlength="100">
+                        <button matSuffix type="submit" class="search-button" mat-raised-button color="primary">
+                            Search
+                        </button>
+                    </mat-form-field>
+                </form>
+            </div>
+            <div class="content-inner">
+                <!--MATLIST-->
+
+                <button mat-icon-button [disabled]="searchStart < PAGE_SIZE" (click)="SearchPreviousPage()">
+                    <mat-icon>arrow_back_ios</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="!currentQuery || (searchResults != null && !searchResults.NextPage)" (click)="SearchNextPage()">
+                    <mat-icon>arrow_forward_ios</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div *ngSwitchCase="'view'" class="content">
+
+        </div>
+        <div *ngSwitchDefault></div>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner *ngIf="loading != null"
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

@@ -21,11 +21,27 @@ export class Coordinator {
     ) { }
 }
 
+export class CoordinatorBasic {
+    constructor (
+        public UserId: number,
+        public FullName: string
+    ) {}
+}
+
 export class Student {
     constructor(
         public User:User,
         public StudentNumber:string,
         public RepresentativeGroups:number[],
+    ) { }
+}
+
+export class StudentBasic {
+    IsRepresentative: boolean = false;
+
+    constructor(
+        public UserId: number,
+        public FullName: string
     ) { }
 }
 
@@ -41,5 +57,12 @@ export class User {
         public UserId:number,
         public FirstName:string,
         public LastName:string
+    ) { }
+}
+
+export class SearchUser {
+    constructor(
+        public Users: Account[],
+        public NextPage: boolean
     ) { }
 }

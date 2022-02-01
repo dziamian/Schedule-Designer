@@ -33,6 +33,10 @@
     top: -3px;
 }
 
+.item-text-line {
+    font-size: 12px;
+}
+
 .content-inner {
     height: 92%;
     overflow-y: auto;
@@ -46,7 +50,7 @@
     border-bottom: 2px solid black;
 }
 
-.content-rooms {
+.content-list {
     padding-left: 3%;
     padding-right: 3%;
 }

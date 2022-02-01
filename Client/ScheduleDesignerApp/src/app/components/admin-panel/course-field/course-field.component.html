@@ -106,7 +106,7 @@
                         <br><br>
 
                         <button type="submit" mat-raised-button color="primary" class="form-submit" 
-                            [disabled]="!isModifying || IsDifferentThanOriginal()">
+                            [disabled]="!isModifying || IsSameAsOriginal()">
                             Save
                         </button>
                         
@@ -131,31 +131,46 @@
                 </div>
                 <div>
                     <div class="content-subheader">
-                        <b>Available rooms for this course:</b>
-                        <button mat-icon-button class="add-icon-button" [disabled]="!isModifying" (click)="ChooseRoom()">
+                        <b>Assign new room: </b>
+                        <button mat-icon-button class="add-icon-button" [disabled]="!isModifying" (click)="SelectRoom()">
                             <mat-icon>add_circle</mat-icon>
                         </button>
                     </div>
-                    <div class="content-rooms">
-                        <mat-list role="list">
-                            <mat-list-item role="listitem" *ngFor="let courseRoom of courseRooms">
-                                <div class="item-text" matLine>
-                                    <b>Room:</b> {{courseRoom.Name}}
-                                </div>
-                                <div class="item-text" matLine *ngIf="courseRoom.User != null">
-                                    <b>Added by:</b> {{courseRoom.User.FirstName}} {{courseRoom.User.LastName}} ({{courseRoom.User.UserId}})
-                                </div>
-                                <div>
-                                    <button mat-raised-button color="warn" style="margin-right: 1vw;"
-                                        [disabled]="!isModifying"
-                                        (click)="RemoveRoom(courseRoom.RoomId)">
-                                        Remove
-                                    </button>
-                                </div>
-                                <mat-divider></mat-divider>
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Manage rooms available for this course:
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="content-list">
+                                <mat-list role="list">
+                                    <mat-divider></mat-divider>
+                                    <mat-list-item role="listitem" *ngFor="let courseRoom of courseRooms">
+                                        <div class="item-text" matLine>
+                                            <span class="item-text-line">
+                                                {{courseRoom.Name}}
+                                            </span>
+                                        </div>
+                                        <div class="item-text" matLine *ngIf="courseRoom.User != null">
+                                            <span class="item-text-line">
+                                                <b>Added by:</b> 
+                                                {{courseRoom.User.FirstName}} {{courseRoom.User.LastName}} ({{courseRoom.User.UserId}})
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <button mat-raised-button color="warn" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="RemoveRoom(courseRoom.RoomId)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
             </div>
         </div>

@@ -1,1 +1,187 @@
-<p>group-field works!</p>
+<div *ngIf="loading == false; else spinner">
+    <div [ngSwitch]="data?.actionType">
+        <div *ngSwitchCase="'add'" class="content">
+            <div class="content-header">
+                <b>New Group</b>
+            </div>
+            <div class="content-form">
+                <form (ngSubmit)="Create()" [formGroup]="groupForm">
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>Parent Group</mat-label>
+                        <input matInput name="parent" formControlName="parent" maxlength="100" readonly>
+                        <button matSuffix type="button" mat-icon-button [disabled]="true" (click)="SelectParentGroup()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>Group Name</mat-label>
+                        <span matPrefix>{{GetParentName()}} &nbsp;</span>
+                        <input matInput name="name" formControlName="name" maxlength="100">
+                        <mat-error *ngIf="groupForm.controls['name'].hasError('required')">
+                            Name is <strong>required</strong>.
+                        </mat-error>
+                    </mat-form-field>
+                    <br><br>
+
+                    <button type="submit" mat-raised-button color="primary" class="form-submit">
+                        Create
+                    </button>
+                    
+                    <button type="button" mat-raised-button color="accent" class="form-reset"
+                        (click)="Reset()">
+                        Reset
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div *ngSwitchCase="'view'" class="content">
+            <div class="content-header">
+                <b>Group (ID: {{originalGroup.GroupId}})</b>
+                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify(true)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Save()" [formGroup]="groupForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Parent Group</mat-label>
+                            <input matInput name="parent" formControlName="parent" maxlength="100" readonly>
+                            <button matSuffix type="button" [disabled]="!isModifying" mat-icon-button (click)="SelectParentGroup()">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </mat-form-field>
+    
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Group Name</mat-label>
+                            <span matPrefix>{{GetParentName()}} &nbsp;</span>
+                            <input matInput name="name" formControlName="name" maxlength="100">
+                            <mat-error *ngIf="groupForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+    
+                        <button type="submit" mat-raised-button color="primary" class="form-submit" 
+                            [disabled]="!isModifying || IsSameAsOriginal()">
+                            Save
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                        
+                        <button type="button" mat-raised-button class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Cancel()">
+                            Cancel Modification
+                        </button>
+                    </form>
+                    <br><br>
+                    <button mat-raised-button color="warn" class="form-submit" 
+                        [disabled]="!isModifying"
+                        (click)="Remove()">
+                        Remove
+                    </button>
+                </div>
+                <div>
+                    <div class="content-subheader">
+                        <b>Assign new student: </b>
+                        <button mat-icon-button class="add-icon-button" [disabled]="!isModifying" (click)="SelectStudent()">
+                            <mat-icon>add_circle</mat-icon>
+                        </button>
+                    </div>
+                    <mat-accordion multi>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Manage students assigned for this group:
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="content-list">
+                                <mat-list role="list">
+                                    <mat-divider></mat-divider>
+                                    <mat-list-item role="listitem" *ngFor="let student of groupStudents">
+                                        <div class="item-text" matLine>
+                                            <span class="item-text-line">
+                                                {{student.FullName}} ({{student.UserId}})
+                                            </span>
+                                            <mat-icon *ngIf="student.IsRepresentative" class="star-icon" color="primary" title="Student represents this group">
+                                                stars
+                                            </mat-icon>
+                                        </div>
+                                        <div>
+                                            <button *ngIf="!student.IsRepresentative" mat-raised-button color="primary" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="GiveRepresentativeRole(student.UserId)">
+                                                + Representative
+                                            </button>
+                                            <button *ngIf="student.IsRepresentative" mat-raised-button color="warn" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="TakeAwayRepresentativeRole(student.UserId)">
+                                                – Representative
+                                            </button>
+                                            <button mat-raised-button color="warn" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="RemoveStudent(student.UserId)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Manage students assigned for child groups:
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="content-list">
+                                <mat-list role="list">
+                                    <mat-divider></mat-divider>
+                                    <mat-list-item role="listitem" *ngFor="let student of childGroupsStudents">
+                                        <div class="item-text" matLine>
+                                            <span class="item-text-line">
+                                                {{student.FullName}} ({{student.UserId}})
+                                            </span>
+                                            <mat-icon *ngIf="student.IsRepresentative" class="star-icon" color="primary" title="Student represents this group">
+                                                stars
+                                            </mat-icon>
+                                        </div>
+                                        <div>
+                                            <button *ngIf="!student.IsRepresentative" mat-raised-button color="primary" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="GiveRepresentativeRole(student.UserId)">
+                                                + Representative
+                                            </button>
+                                            <button *ngIf="student.IsRepresentative" mat-raised-button color="warn" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="TakeAwayRepresentativeRole(student.UserId)">
+                                                – Representative
+                                            </button>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchDefault></div>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner *ngIf="loading != null"
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

@@ -164,14 +164,24 @@ export class AdministratorPanelComponent implements OnInit {
     this.adminTrees.toArray()[0].LoadResources();
   }
 
-  OnListAdd(id: string) {
-    this.treeDetails[1].excludeIds.push(id);
+  OnListAdd(event: {ids: string[], type: string}) {
+    if (this.treeDetails[1].type !== event.type) {
+      return;
+    }
+
+    this.treeDetails[1].excludeIds.push(...event.ids);
   }
 
-  OnListRemove(id: string) {
-    const index = this.treeDetails[1].excludeIds.findIndex(e => e == id);
-    if (index != -1) {
-      this.treeDetails[1].excludeIds.splice(index, 1);
+  OnListRemove(event: {ids: string[], type: string}) {
+    if (this.treeDetails[1].type !== event.type) {
+      return;
+    }
+    
+    for (var id in event.ids) {
+      const index = this.treeDetails[1].excludeIds.findIndex(e => e == event.ids[id]);
+      if (index != -1) {
+        this.treeDetails[1].excludeIds.splice(index, 1);
+      }
     }
   }
 

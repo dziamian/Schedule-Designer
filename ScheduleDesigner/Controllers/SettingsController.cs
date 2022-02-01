@@ -153,7 +153,7 @@ namespace ScheduleDesigner.Controllers
 
                     lock (ScheduleHub.CourseEditionLocks)
                     {
-                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                     }
 
                     ScheduleHub.EnterQueues(courseEditionQueues.Values);

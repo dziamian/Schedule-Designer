@@ -128,31 +128,45 @@ namespace ScheduleDesigner.Controllers
                 }
 
                 var group = await _group.FirstAsync();
-                var fullGroupName = group.Name;
-                var groupIds = new List<int>() { group.GroupId };
-                var levels = 0;
+                var basicGroupName = group.Name;
+                var result = Methods.GetParentGroupsWithFullNameAndLevels(_group, group);
 
-                while (group.ParentGroupId != null)
-                {
-                    ++levels;
-                    _group = _group.ThenInclude(e => e.ParentGroup);
-                    group = await _group.FirstAsync();
-                    for (var i = 0; i < levels; ++i)
-                    {
-                        group = group.ParentGroup;
-                    }
-                    fullGroupName = group.Name + fullGroupName;
-                    groupIds.Add(group.GroupId);
-                }
-
-                return Ok(new GroupFullName { FullName = fullGroupName, GroupsIds = groupIds, Levels = levels });
+                return Ok(new GroupFullName { BasicName = basicGroupName, FullName = result.Item2, GroupsIds = result.Item1, Levels = result.Item3 });
             }
             catch (Exception e)
             {
                 return BadRequest("Unexpected error. Please try again later.");
             }
         }
-        
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetGroupFullInfo([FromODataUri] int key)
+        {
+            try
+            {
+                var _group = _unitOfWork.Groups
+                    .Get(e => e.GroupId == key)
+                    .Include(e => e.ParentGroup);
+
+                if (!_group.Any())
+                {
+                    return NotFound();
+                }
+
+                var group = await _group.FirstAsync();
+                var basicGroupName = group.Name;
+                var result1 = Methods.GetParentGroupsWithFullNameAndLevels(_group, group);
+                var result2 = Methods.GetChildGroups(new List<Group> { group }, _unitOfWork.Groups);
+
+                return Ok(new GroupFullInfo { GroupId = group.GroupId, BasicName = basicGroupName, FullName = result1.Item2, ParentIds = result1.Item1, ChildIds = result2 });
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unexpected error. Please try again later.");
+            }
+        }
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetGroupsFullNames([FromODataUri] IEnumerable<int> GroupsIds)
@@ -180,29 +194,59 @@ namespace ScheduleDesigner.Controllers
                     }
 
                     var group = await _group.FirstAsync();
-                    var fullGroupName = group.Name;
-                    var groupIds = new List<int>() { group.GroupId };
-                    var levels = 0;
+                    var basicGroupName = group.Name;
+                    var result = Methods.GetParentGroupsWithFullNameAndLevels(_group, group);
 
-                    while (group.ParentGroupId != null)
-                    {
-                        ++levels;
-                        _group = _group.ThenInclude(e => e.ParentGroup);
-                        group = await _group.FirstAsync();
-                        for (var i = 0; i < levels; ++i)
-                        {
-                            group = group.ParentGroup;
-                        }
-                        fullGroupName = group.Name + fullGroupName;
-                        groupIds.Add(group.GroupId);
-                    }
-
-                    groupFullName = new GroupFullName {FullName = fullGroupName, GroupsIds = groupIds, Levels = levels};
-                    groupsFullNamesDictionary.Add(groupIds[0], groupFullName);
+                    groupFullName = new GroupFullName { BasicName = basicGroupName, FullName = result.Item2, GroupsIds = result.Item1, Levels = result.Item3 };
+                    groupsFullNamesDictionary.Add(result.Item1[0], groupFullName);
                     groupsFullNamesList.Add(groupFullName);
                 }
 
                 return Ok(groupsFullNamesList);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unexpected error. Please try again later.");
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetGroupsFullInfo([FromODataUri] IEnumerable<int> GroupsIds)
+        {
+            try
+            {
+                var groupsFullInfoList = new List<GroupFullInfo>();
+                var groupsFullInfoDictionary = new Dictionary<int, GroupFullInfo>();
+
+                foreach (var _groupId in GroupsIds)
+                {
+                    if (groupsFullInfoDictionary.TryGetValue(_groupId, out var groupFullInfo))
+                    {
+                        groupsFullInfoList.Add(groupFullInfo);
+                        continue;
+                    }
+
+                    var _group = _unitOfWork.Groups
+                    .Get(e => e.GroupId == _groupId)
+                    .Include(e => e.ParentGroup);
+
+                    if (!_group.Any())
+                    {
+                        return NotFound();
+                    }
+
+                    var group = await _group.FirstAsync();
+                    var basicGroupName = group.Name;
+                    var result1 = Methods.GetParentGroupsWithFullNameAndLevels(_group, group);
+                    var result2 = Methods.GetChildGroups(new List<Group> { group }, _unitOfWork.Groups);
+
+                    groupFullInfo = new GroupFullInfo { GroupId = group.GroupId, BasicName = basicGroupName, FullName = result1.Item2, ParentIds = result1.Item1, ChildIds = result2 };
+                    groupsFullInfoDictionary.Add(result1.Item1[0], groupFullInfo);
+                    groupsFullInfoList.Add(groupFullInfo);
+                }
+
+                return Ok(groupsFullInfoList);
             }
             catch (Exception e)
             {
@@ -251,20 +295,32 @@ namespace ScheduleDesigner.Controllers
                     }
 
                     delta.TryGetPropertyValue("ParentGroupId", out var destinationGroupIdObject);
-                    var destinationGroupId = (int) destinationGroupIdObject;
+                    var destinationGroupId = (int?) destinationGroupIdObject;
 
-                    var destinationGroup = _unitOfWork.Groups.Get(e => e.GroupId == destinationGroupId).FirstOrDefault();
-                    if (destinationGroup == null)
+                    if (originGroup.ParentGroupId == destinationGroupId)
                     {
-                        return BadRequest("Could not find destination group.");
+                        return BadRequest("Destination group cannot be the direct parent of origin group.");
+                    }
+
+                    Group destinationGroup = null;
+                    if (destinationGroupId != null)
+                    {
+                        destinationGroup = _unitOfWork.Groups.Get(e => e.GroupId == destinationGroupId).FirstOrDefault();
+                        if (destinationGroup == null)
+                        {
+                            return BadRequest("Could not find destination group.");
+                        }
                     }
 
                     var childGroupsIds = Methods.GetChildGroups(new List<Group>() { originGroup }, _unitOfWork.Groups);
-                    var parentGroupsIds = Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups);
+                    var parentGroupsIds = destinationGroup != null ? Methods.GetParentGroups(new List<Group>() { destinationGroup }, _unitOfWork.Groups) : new List<int>();
 
-                    if (childGroupsIds.Contains(destinationGroupId))
+                    if (destinationGroupId != null)
                     {
-                        return BadRequest("Destination group cannot be the child of origin group.");
+                        if (childGroupsIds.Contains((int)destinationGroupId))
+                        {
+                            return BadRequest("Destination group cannot be the child of origin group.");
+                        }
                     }
 
                     var groupsIds = childGroupsIds.Union(parentGroupsIds).ToList();
@@ -294,7 +350,7 @@ namespace ScheduleDesigner.Controllers
 
                     lock (ScheduleHub.CourseEditionLocks)
                     {
-                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, ref courseEditionQueues);
+                        ScheduleHub.AddCourseEditionsLocks(courseEditionKeys, courseEditionQueues);
                     }
 
                     ScheduleHub.EnterQueues(courseEditionQueues.Values);
@@ -326,8 +382,8 @@ namespace ScheduleDesigner.Controllers
                         lock (ScheduleHub.SchedulePositionLocksL1)
                         lock (ScheduleHub.SchedulePositionLocksL2)
                         {
-                            ScheduleHub.AddSchedulePositionsLocksL1(schedulePositionKeys, ref schedulePositionQueuesL1);
-                            ScheduleHub.AddSchedulePositionsLocksL2(schedulePositionKeys, ref schedulePositionQueuesL2);
+                            ScheduleHub.AddSchedulePositionsLocksL1(schedulePositionKeys, schedulePositionQueuesL1);
+                            ScheduleHub.AddSchedulePositionsLocksL2(schedulePositionKeys, schedulePositionQueuesL2);
                         }
 
                         ScheduleHub.EnterQueues(schedulePositionQueuesL1.Values);

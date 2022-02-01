@@ -22,3 +22,7 @@ body {
 .mat-form-field-appearance-fill.mat-form-field-disabled .mat-form-field-flex {
     background-color: #0000000f !important;
 }
+
+.mat-expansion-panel {
+    background-color: #ffffff00 !important;
+}

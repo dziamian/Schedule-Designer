@@ -10,3 +10,15 @@ export interface ICourse {
     Name?: string;
     UnitsMinutes?: number;
 }
+
+export interface ICourseEdition {
+    CourseId?: number;
+    CourseEditionId?: number;
+    Name?: string;
+}
+
+export interface IGroup {
+    GroupId?: number;
+    Name?: string;
+    ParentGroupId?: number | null;
+}

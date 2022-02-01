@@ -34,6 +34,7 @@ export class CourseFieldComponent implements OnInit {
 
   @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
     this._data = value;
+    this.treeVisible = {type: '', value: false};
     this.loadView();
   } get data(): {id: string|undefined, type: string, actionType: string} {
     return this._data;
@@ -74,8 +75,8 @@ export class CourseFieldComponent implements OnInit {
     excludeIds: string[]
   }> = new EventEmitter();
   
-  @Output() onListAdd: EventEmitter<string> = new EventEmitter();
-  @Output() onListRemove: EventEmitter<string> = new EventEmitter();
+  @Output() onListAdd: EventEmitter<{ids: string[], type: string}> = new EventEmitter();
+  @Output() onListRemove: EventEmitter<{ids: string[], type: string}> = new EventEmitter();
 
   @Output() onChange: EventEmitter<void> = new EventEmitter();
   @Output() onCreate: EventEmitter<string> = new EventEmitter();
@@ -163,10 +164,12 @@ export class CourseFieldComponent implements OnInit {
       this.buildForm(this.originalCourse);
 
       this.loading = false;
+    } else {
+      this.loading = false;
     }
   }
 
-  IsDifferentThanOriginal(): boolean {
+  IsSameAsOriginal(): boolean {
     return this.originalCourse.CourseType.Name === this.courseForm.controls['type'].value 
       && this.originalCourse.Name === this.courseForm.controls['name'].value
       && this.originalCourse.UnitsMinutes === this.courseForm.controls['hours'].value * 60 
@@ -194,7 +197,7 @@ export class CourseFieldComponent implements OnInit {
     });
   }
 
-  ChooseRoom() {
+  SelectRoom() {
     if (this.treeVisible.type === 'room') {
       this.treeVisible.value = !this.treeVisible.value;
     } else {
@@ -217,7 +220,7 @@ export class CourseFieldComponent implements OnInit {
       this.courseRooms.push(room);
       this.courseRooms.sort((a,b) => a.RoomId - b.RoomId);
 
-      this.onListAdd.emit(roomId.toString());
+      this.onListAdd.emit({ids: [roomId.toString()], type: 'rooms-on-types'});
       
       this.snackBar.open("Successfully added room for the course.", "OK");
     }, response => {
@@ -237,9 +240,9 @@ export class CourseFieldComponent implements OnInit {
         this.courseRooms.splice(index, 1);
       }
 
-      this.onListRemove.emit(roomId.toString());
+      this.onListRemove.emit({ids: [roomId.toString()], type: 'rooms-on-types'});
       
-      this.snackBar.open("Successfully removed room for the course.", "OK");
+      this.snackBar.open("Successfully removed room from the course.", "OK");
     }, response => {
       if (response.error.error.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");

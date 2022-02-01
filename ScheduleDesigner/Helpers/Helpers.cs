@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -182,6 +183,29 @@ namespace ScheduleDesigner.Helpers
             return groupsIds;
         }
 
+        public static Tuple<List<int>, string, int> GetParentGroupsWithFullNameAndLevels(
+            IIncludableQueryable<Group, Group> _group, Group group)
+        {
+            var fullGroupName = group.Name;
+            var groupIds = new List<int>() { group.GroupId };
+            var levels = 0;
+
+            while (group.ParentGroupId != null)
+            {
+                ++levels;
+                _group = _group.ThenInclude(e => e.ParentGroup);
+                group = _group.First();
+                for (var i = 0; i < levels; ++i)
+                {
+                    group = group.ParentGroup;
+                }
+                fullGroupName = group.Name + fullGroupName;
+                groupIds.Add(group.GroupId);
+            }
+
+            return new Tuple<List<int>, string, int>(groupIds, fullGroupName, levels);
+        }
+
         public static List<int> GetChildGroups(List<Group> groups, IGroupRepo _groupRepo)
         {
             var groupsIds = groups.Select(e => e.GroupId).ToList();
@@ -214,8 +238,8 @@ namespace ScheduleDesigner.Helpers
 
         public static List<int> GetNestedGroupsIds(List<Group> groups, IGroupRepo _groupRepo)
         {
-            var parentGroups = GetParentGroups(groups, _groupRepo);
-            var childGroups = GetChildGroups(groups, _groupRepo);
+            var parentGroups = GetParentGroups(new List<Group>(groups), _groupRepo);
+            var childGroups = GetChildGroups(new List<Group>(groups), _groupRepo);
 
             return parentGroups.Union(childGroups).ToList();
         }

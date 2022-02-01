@@ -250,6 +250,8 @@ namespace ScheduleDesigner
                 .HasKey(e => new { e.UserId });
             
             builder.Namespace = "Service";
+
+            builder.ComplexType<UserInfo>();
             builder.EntityType<Settings>().Collection
                 .Function("GetPeriods")
                 .Returns<string[]>();
@@ -267,18 +269,47 @@ namespace ScheduleDesigner
                 .ReturnsFromEntitySet<User>("Users")
                 .Parameter<int>("UserId");
 
+            var searchForUsosUser = builder.EntityType<User>().Collection
+                .Function("SearchForUserFromUsos")
+                .Returns<UserSearch>();
+
+            searchForUsosUser.Parameter<string>("Query");
+            searchForUsosUser.Parameter<int>("PerPage");
+            searchForUsosUser.Parameter<int>("Start");
+
             builder.EntityType<Group>()
                 .Function("GetGroupFullName")
                 .Returns<GroupFullName>();
+
+            builder.EntityType<Group>()
+                .Function("GetGroupFullInfo")
+                .Returns<GroupFullInfo>();
 
             builder.EntityType<Group>().Collection
                 .Function("GetGroupsFullNames")
                 .ReturnsCollection<GroupFullName>()
                 .CollectionParameter<int>("GroupsIds");
 
+            builder.EntityType<Group>().Collection
+                .Function("GetGroupsFullInfo")
+                .Returns<GroupFullInfo>()
+                .CollectionParameter<int>("GroupsIds");
+
             builder.EntityType<StudentGroup>().Collection
                 .Function("GetMyGroups")
                 .ReturnsCollection<Group>();
+
+            builder.EntityType<StudentGroup>().Collection
+                .Function("GetGroupsStudents")
+                .ReturnsCollectionFromEntitySet<Student>("Students")
+                .CollectionParameter<int>("GroupsIds");
+
+            var giveRepresentativeRoleAction = builder.EntityType<StudentGroup>().Collection
+                .Action("GiveOrRemoveRepresentativeRole");
+
+            giveRepresentativeRoleAction.Parameter<int>("UserId");
+            giveRepresentativeRoleAction.Parameter<int>("GroupId");
+            giveRepresentativeRoleAction.Parameter<bool>("Role");
 
             builder.EntityType<Room>().Collection
                 .Function("GetRoomsNames")

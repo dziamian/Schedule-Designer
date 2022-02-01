@@ -56,7 +56,17 @@
                 (onCreate)="ForwardAndRefresh($event)"
                 (onRemove)="CloseAndRefresh()">
             </app-course-field>
-            <app-course-edition-field *ngSwitchCase="'course-edition'"></app-course-edition-field>
+            <app-course-edition-field *ngSwitchCase="'course-edition'"
+                [selectedResult]="selectedResult"
+                [data]="operatingFieldData"
+                
+                (onListAdd)="OnListAdd($event)"
+                (onListRemove)="OnListRemove($event)"
+                (onSelect)="SetAdditionalContent($event)"
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-course-edition-field>
             <app-course-type-field *ngSwitchCase="'course-type'" 
                 [data]="operatingFieldData"
                 
@@ -64,11 +74,27 @@
                 (onCreate)="ForwardAndRefresh($event)"
                 (onRemove)="CloseAndRefresh()">
             </app-course-type-field>
-            <app-group-field *ngSwitchCase="'group'"></app-group-field>
+            <app-group-field *ngSwitchCase="'group'"
+                [selectedResult]="selectedResult"
+                [data]="operatingFieldData"
+                
+                (onListAdd)="OnListAdd($event)"
+                (onListRemove)="OnListRemove($event)"
+                (onSelect)="SetAdditionalContent($event)"
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-group-field>
             <app-room-field *ngSwitchCase="'room'"></app-room-field>
             <app-room-type-field *ngSwitchCase="'room-type'"></app-room-type-field>
             <app-settings-field *ngSwitchCase="'settings'"></app-settings-field>
-            <app-user-field *ngSwitchCase="'user'"></app-user-field>
+            <app-user-field *ngSwitchCase="'user'"
+                [data]="operatingFieldData"
+                
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-user-field>
             <app-import-field *ngSwitchCase="'import'"></app-import-field>
             <app-export-field *ngSwitchCase="'export'"></app-export-field>
             <app-clear-field *ngSwitchCase="'clear'"></app-clear-field>

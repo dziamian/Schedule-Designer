@@ -78,29 +78,6 @@ namespace ScheduleDesigner.Repositories
                 .Property(e => e.UserId)
                 .ValueGeneratedNever();
 
-            //TEST ONLY
-            modelBuilder.Entity<User>()
-                .HasData(new User
-                    {
-                        UserId = 34527,
-                        FirstName = "Damian",
-                        LastName = "Ślusarczyk"
-                    }
-                );
-            modelBuilder.Entity<Student>()
-                .HasData(new Student
-                    {
-                        UserId = 34527
-                    }
-                );
-            modelBuilder.Entity<Staff>()
-                .HasData(new Staff
-                    {
-                        UserId = 34527,
-                        IsAdmin = true
-                    }
-                );
-
             //Group
             modelBuilder.Entity<Group>()
                 .HasOne(e => e.ParentGroup)
@@ -124,9 +101,19 @@ namespace ScheduleDesigner.Repositories
             modelBuilder.Entity<CoordinatorCourseEdition>()
                 .HasKey(e => new { e.CourseId, e.CourseEditionId, e.CoordinatorId });
 
+            modelBuilder.Entity<CoordinatorCourseEdition>()
+                .HasOne(e => e.Coordinator)
+                .WithMany(e => e.CourseEditions)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //GroupCourseEdition
             modelBuilder.Entity<GroupCourseEdition>()
                 .HasKey(e => new { e.CourseId, e.CourseEditionId, e.GroupId });
+
+            modelBuilder.Entity<GroupCourseEdition>()
+                .HasOne(e => e.Group)
+                .WithMany(e => e.CourseEditions)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //CourseRoom
             modelBuilder.Entity<CourseRoom>()

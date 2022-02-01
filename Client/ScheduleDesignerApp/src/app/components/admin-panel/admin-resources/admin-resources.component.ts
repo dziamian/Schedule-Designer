@@ -71,52 +71,56 @@ export class AdminResourcesComponent implements OnInit {
 
   public LoadResources() {
     this.loading = true;
+    
+    this.filterValue = '';
+    this.treeService.clearData();
     switch (this._type.toLowerCase()) {
+      case 'change-group': {
+        this.treeService.setAllGroupsForChange(() => {
+          this.loading = false;
+        });
+      } break;
+      case 'coordinators': {
+        this.treeService.setAllCoordinators(() => {
+          this.loading = false;
+        });
+      } break;
       case 'courses': {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setAllCourses(() => {
           this.loading = false;
         });
       } break;
       case 'course-types': {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setAllCourseTypes(() => {
           this.loading = false;
         });
       } break;
       case 'groups': {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setAllGroups(() => {
           this.loading = false;
         });
       } break;
       case 'rooms': {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setAllRooms(() => {
           this.loading = false;
         });
       } break;
       case 'rooms-on-types': {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setAllRoomsOnTypes(() => {
           this.loading = false;
         });
       } break;
+      case 'students': {
+        this.treeService.setAllStudents(() => {
+          this.loading = false;
+        });
+      } break;
       case 'users': {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setAllUsers(() => {
           this.loading = false;
         });
       } break;
       default: {
-        this.filterValue = '';
-        this.treeService.clearData();
         this.treeService.setCurrentData();
         this.loading = false;
       } break;

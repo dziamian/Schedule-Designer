@@ -102,7 +102,7 @@ export class ResourceTreeService {
       courseEdition => {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
-        resourceNode.item.id = courseEdition.CourseEditionId.toString();
+        resourceNode.item.id = `${courseEdition.CourseId.toString()},${courseEdition.CourseEditionId.toString()}`;
         resourceNode.item.name = courseEdition.CourseEditionName;
         resourceNode.item.filter = null;
         resourceNode.item.type = "course-edition";
@@ -246,9 +246,63 @@ export class ResourceTreeService {
     );
   }
 
-  private setGroups(groups: Group[], root: ResourceNode | null = null) {
+  private groupNodeExist(node: ResourceNode, groupId: string): boolean {
+    for (var child in node.children) {
+      if (node.children[child].item.id === groupId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private createGroupNode(group: Group, parentNode: ResourceNode, groupsMap: Map<number, Group>) {
+    const resourceNode = new ResourceNode();
+    resourceNode.item = new ResourceItem();
+    resourceNode.item.id = group.GroupId.toString();
+    resourceNode.item.name = group.FullName;
+    resourceNode.item.filter = new Filter([],[group.GroupId],[]);
+    resourceNode.item.type = "group";
+    resourceNode.item.addActionType = "group";
+    resourceNode.children = [];
+    
+    if (group.ParentGroupId == null) {
+      if (!this.groupNodeExist(parentNode, resourceNode.item.id)) {
+        parentNode.children.push(resourceNode);
+      }
+    } else {
+      const foundResourceNode = this.searchNodeForGroup(parentNode, group);
+      if (foundResourceNode == null) {
+        const notFoundGroup = groupsMap.get(group.ParentGroupId);
+        if (!notFoundGroup) {
+          return;
+        }
+        
+        this.createGroupNode(notFoundGroup, parentNode, groupsMap);
+        const createdResourceNode = this.searchNodeForGroup(parentNode, group);
+        if (createdResourceNode != null) {
+          if (!this.groupNodeExist(createdResourceNode, resourceNode.item.id)) {
+            resourceNode.item.name = createdResourceNode.item.name + resourceNode.item.name;
+            resourceNode.item.filter.GroupsIds.push(...createdResourceNode.item.filter?.GroupsIds!);
+            createdResourceNode.children.push(resourceNode);
+          }
+        } 
+      } else {
+        if (!this.groupNodeExist(foundResourceNode, resourceNode.item.id)) {
+          resourceNode.item.name = foundResourceNode.item.name + resourceNode.item.name;
+          resourceNode.item.filter.GroupsIds.push(...foundResourceNode.item.filter?.GroupsIds!);
+          foundResourceNode.children.push(resourceNode);
+        }
+      }
+    }
+  }
+
+  private setGroups(groups: Group[], parentMark: string | null = null,  root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
+    if (parentMark) {
+      parentNode.item.id = parentMark;
+      parentNode.item.type = "group";
+    }
     parentNode.item.name = 'Groups';
     parentNode.item.filter = null;
     parentNode.item.icon = 'group';
@@ -260,30 +314,14 @@ export class ResourceTreeService {
       root.children.push(parentNode);
     }
 
+    const groupsMap = new Map<number, Group>();
+
+    groups.forEach(group => groupsMap.set(group.GroupId, group));
+
     for (var i = 0; i < groups.length; ++i) {
       const group = groups[i];
       
-      const resourceNode = new ResourceNode();
-      resourceNode.item = new ResourceItem();
-      resourceNode.item.id = group.GroupId.toString();
-      resourceNode.item.name = group.FullName;
-      resourceNode.item.filter = new Filter([],[group.GroupId],[]);
-      resourceNode.item.type = "group";
-      resourceNode.item.addActionType = "group";
-      resourceNode.children = [];
-      
-      if (group.ParentGroupId == null) {
-        parentNode.children.push(resourceNode);
-      } else {
-        const foundResourceNode = this.searchNodeForGroup(parentNode, group);
-        if (foundResourceNode == null) {
-          parentNode.children.push(resourceNode);
-        } else {
-          resourceNode.item.name = foundResourceNode.item.name + resourceNode.item.name;
-          resourceNode.item.filter.GroupsIds.push(...foundResourceNode.item.filter?.GroupsIds!);
-          foundResourceNode.children.push(resourceNode);
-        }
-      }
+      this.createGroupNode(group, parentNode, groupsMap);
     }
   }
 
@@ -447,6 +485,17 @@ export class ResourceTreeService {
     });
   }
 
+  public setAllGroupsForChange(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetGroups()
+    ]).subscribe(([groups]) => {
+      this.setGroups(groups, 'root');
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
   public setAllRooms(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetRoomTypes(),
@@ -467,6 +516,24 @@ export class ResourceTreeService {
     ]).subscribe(([roomTypes, rooms]) => {
       this.setRoomTypes(Array.from(roomTypes, ([key, value]) => (value)), 'Rooms');
       this.setRoomsOnTypes(rooms, this.TREE_DATA[0]);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllCoordinators(callback: () => void) {
+    this.scheduleDesignerApiService.GetCoordinators().subscribe(coordinators => {
+      this.setCoordinators(coordinators, true);
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
+  public setAllStudents(callback: () => void) {
+    this.administratorApiService.GetStudents().subscribe(students => {
+      this.setStudents(students, true);
 
       this.setCurrentData();
       callback();

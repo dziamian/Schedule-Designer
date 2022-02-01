@@ -1,1 +1,164 @@
-<p>course-edition-field works!</p>
+<div *ngIf="loading == false; else spinner">
+    <div [ngSwitch]="data?.actionType">
+        <div *ngSwitchCase="'add'" class="content">
+            <div class="content-header">
+                <b>New Course Edition</b>
+            </div>
+            <div class="content-form">
+                <form (ngSubmit)="Create()" [formGroup]="courseEditionForm">
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>Course</mat-label>
+                        <input matInput name="course" formControlName="course" maxlength="100" readonly>
+                    </mat-form-field>
+                    
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>Course Edition Name</mat-label>
+                        <input matInput name="name" formControlName="name" maxlength="50">
+                        <mat-error *ngIf="courseEditionForm.controls['name'].hasError('required')">
+                            Name is <strong>required</strong>.
+                        </mat-error>
+                    </mat-form-field>
+                    <br><br>
+
+                    <button type="submit" mat-raised-button color="primary" class="form-submit">
+                        Create
+                    </button>
+                    
+                    <button type="button" mat-raised-button color="accent" class="form-reset"
+                        (click)="Reset()">
+                        Reset
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div *ngSwitchCase="'view'" class="content">
+            <div class="content-header">
+                <b>Course Edition (ID: {{originalCourseEdition.CourseId}},{{originalCourseEdition.CourseEditionId}})</b>
+                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Save()" [formGroup]="courseEditionForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Course</mat-label>
+                            <input matInput name="course" formControlName="course" maxlength="100" readonly>
+                        </mat-form-field>
+                        
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Course Edition Name</mat-label>
+                            <input matInput name="name" formControlName="name" maxlength="100">
+                            <mat-error *ngIf="courseEditionForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+
+                        <button type="submit" mat-raised-button color="primary" class="form-submit" 
+                            [disabled]="!isModifying || IsSameAsOriginal()">
+                            Save
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                        
+                        <button type="button" mat-raised-button class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Cancel()">
+                            Cancel Modification
+                        </button>
+                    </form>
+                    <br><br>
+                    <button mat-raised-button color="warn" class="form-submit" 
+                        [disabled]="!isModifying"
+                        (click)="Remove()">
+                        Remove
+                    </button>
+                </div>
+                <div>
+                    <div class="content-subheader">
+                        <b>Assign new coordinator: </b>
+                        <button mat-icon-button class="add-icon-button" [disabled]="!isModifying" (click)="SelectCoordinator()">
+                            <mat-icon>add_circle</mat-icon>
+                        </button>
+                    </div>
+                    <div class="content-subheader">
+                        <b>Assign new group: </b>
+                        <button mat-icon-button class="add-icon-button" [disabled]="!isModifying" (click)="SelectGroup()">
+                            <mat-icon>add_circle</mat-icon>
+                        </button>
+                    </div>
+                    <mat-accordion multi>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Manage coordinators assigned for this course edition:
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="content-list">
+                                <mat-list role="list">
+                                    <mat-divider></mat-divider>
+                                    <mat-list-item role="listitem" *ngFor="let coordinator of coordinators">
+                                        <div class="item-text" matLine>
+                                            <span class="item-text-line">
+                                                {{coordinator.FullName}}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <button mat-raised-button color="warn" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="RemoveCoordinator(coordinator.UserId)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Manage groups assigned for this course edition:
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="content-list">
+                                <mat-list role="list">
+                                    <mat-divider></mat-divider>
+                                    <mat-list-item role="listitem" *ngFor="let group of groups">
+                                        <div class="item-text" matLine>
+                                            <span class="item-text-line">
+                                                {{group.FullName}}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <button mat-raised-button color="warn" style="margin-right: 1vw;"
+                                                [disabled]="!isModifying"
+                                                (click)="RemoveGroup(group.GroupId)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchDefault></div>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner *ngIf="loading != null"
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

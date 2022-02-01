@@ -110,6 +110,40 @@ namespace ScheduleDesigner.Controllers
 
         [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
+        public async Task<IActionResult> SearchForUserFromUsos(
+            [FromODataUri] string Query, 
+            [FromODataUri] int PerPage, 
+            [FromODataUri] int Start)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id").Value);
+
+                var accessToken = HttpContext.Request.Headers["AccessToken"];
+                var accessTokenSecret = HttpContext.Request.Headers["AccessTokenSecret"];
+
+                var userSearch = await _usosService.GetUserSearch(
+                    _usosService.GetOAuthRequest(accessToken, accessTokenSecret),
+                    Query,
+                    PerPage,
+                    Start
+                );
+
+                return Ok(userSearch);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unexpected error. Please try again later.");
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
         public IActionResult GetUsers()

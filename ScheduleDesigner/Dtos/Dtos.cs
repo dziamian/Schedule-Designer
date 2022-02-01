@@ -284,9 +284,19 @@ namespace ScheduleDesigner.Dtos
 
     public class GroupFullName
     {
+        public string BasicName { get; set; }
         public string FullName { get; set; }
         public ICollection<int> GroupsIds { get; set; }
         public int Levels { get; set; }
+    }
+
+    public class GroupFullInfo
+    {
+        public int GroupId { get; set; }
+        public string BasicName { get; set; }
+        public string FullName { get; set; }
+        public ICollection<int> ParentIds { get; set; }
+        public ICollection<int> ChildIds { get; set; }
     }
 
     public class RoomName
