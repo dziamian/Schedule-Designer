@@ -4,31 +4,167 @@
             <div class="content-header">
                 <b>Add user from USOS</b>
             </div>
-            <div class="content-form">
-                <form (ngSubmit)="Search()" [formGroup]="searchForm">
-                    <mat-form-field class="form-input" appearance="fill">
-                        <mat-label>Search for user...</mat-label>
-                        <mat-icon matPrefix class="mat-search-icon">search</mat-icon>
-                        <input matInput name="search" formControlName="search" maxlength="100">
-                        <button matSuffix type="submit" class="search-button" mat-raised-button color="primary">
-                            Search
-                        </button>
-                    </mat-form-field>
-                </form>
-            </div>
             <div class="content-inner">
-                <!--MATLIST-->
-
-                <button mat-icon-button [disabled]="searchStart < PAGE_SIZE" (click)="SearchPreviousPage()">
-                    <mat-icon>arrow_back_ios</mat-icon>
-                </button>
-                <button mat-icon-button [disabled]="!currentQuery || (searchResults != null && !searchResults.NextPage)" (click)="SearchNextPage()">
-                    <mat-icon>arrow_forward_ios</mat-icon>
-                </button>
+                <div class="content-form">
+                    <form (ngSubmit)="Search()" [formGroup]="searchForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Search for user...</mat-label>
+                            <mat-icon matPrefix class="mat-search-icon">search</mat-icon>
+                            <input matInput name="search" formControlName="search" maxlength="100">
+                            <button matSuffix type="submit" class="search-button" mat-raised-button color="primary">
+                                Search
+                            </button>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div *ngIf="!resultsLoading; else spinner">
+                    <div class="search-buttons">
+                        <span *ngIf="searchResults != null">
+                            Page {{currentPage}} of {{maxPage}}
+                        </span>
+                        <button mat-icon-button [disabled]="searchStart < PAGE_SIZE" (click)="SearchPreviousPage()">
+                            <mat-icon>arrow_back_ios</mat-icon>
+                        </button>
+                        <button mat-icon-button [disabled]="!currentQuery || (searchResults != null && !searchResults.NextPage)" (click)="SearchNextPage()">
+                            <mat-icon>arrow_forward_ios</mat-icon>
+                        </button>
+                    </div>
+                    <mat-list role="list" *ngIf="(searchResults != null && searchResults.Users.length > 0); else noResults">
+                        <mat-divider></mat-divider>
+                        <mat-list-item role="listitem" *ngFor="let user of searchResults.Users">
+                            <div class="item-text" matLine>
+                                <span class="item-text-line">
+                                    {{user.Coordinator?.Titles?.TitleBefore}} {{user.User.FirstName}} {{user.User.LastName}} {{user.Coordinator?.Titles?.TitleAfter}} ({{user.User.UserId}})
+                                </span>
+                            </div>
+                            <div class="item-text" matLine>
+                                <span class="item-text-line">
+                                    <b>Staff</b>: 
+                                    <mat-icon class="status-icon">
+                                        {{user.Staff != null ? 'check' : 'close'}}
+                                    </mat-icon>
+                                </span>
+                            </div>
+                            <div class="item-text" matLine>
+                                <span class="item-text-line">
+                                    <b>Coordinator</b>: 
+                                    <mat-icon class="status-icon">
+                                        {{user.Coordinator != null ? 'check' : 'close'}}
+                                    </mat-icon>
+                                </span>
+                            </div>
+                            <div class="item-text" matLine>
+                                <span class="item-text-line">
+                                    <b>Student</b>: 
+                                    <mat-icon class="status-icon">
+                                        {{user.Student != null ? 'check' : 'close'}}
+                                    </mat-icon>
+                                </span>
+                            </div>
+                            <div>
+                                <button mat-raised-button color="primary" style="margin-right: 1vw;"
+                                    (click)="Create(user.User.UserId)">
+                                    Create Account
+                                </button>
+                            </div>
+                            <mat-divider></mat-divider>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
             </div>
         </div>
         <div *ngSwitchCase="'view'" class="content">
+            <div class="content-header">
+                <b>User (ID: {{originalAccount.User.UserId}})</b>
+                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Save()" [formGroup]="accountForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>First Name</mat-label>
+                            <input matInput name="firstName" formControlName="firstName" maxlength="100">
+                            <mat-error *ngIf="accountForm.controls['firstName'].hasError('required')">
+                                First name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
 
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Last Name</mat-label>
+                            <input matInput name="lastName" formControlName="lastName" maxlength="100">
+                            <mat-error *ngIf="accountForm.controls['lastName'].hasError('required')">
+                                Last name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+
+                        <mat-checkbox color="primary" name="staff" formControlName="staff">
+                            <b>Staff</b>
+                        </mat-checkbox>
+
+                        <div *ngIf="accountForm.value['staff']">
+                            <mat-checkbox color="primary" name="admin" formControlName="admin">
+                                <b>Administrator</b>
+                            </mat-checkbox>
+                            <br>
+
+                            <mat-checkbox color="primary" name="coordinator" formControlName="coordinator">
+                                <b>Coordinator</b>
+                            </mat-checkbox>
+
+                            <div *ngIf="accountForm.value['coordinator']">
+                                <mat-form-field class="form-input" appearance="fill">
+                                    <mat-label>Title Before Name</mat-label>
+                                    <input matInput name="titleBefore" formControlName="titleBefore" maxlength="100">
+                                </mat-form-field>
+    
+                                <mat-form-field class="form-input" appearance="fill">
+                                    <mat-label>Title After Name</mat-label>
+                                    <input matInput name="titleAfter" formControlName="titleAfter" maxlength="100">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <br>
+
+                        <mat-checkbox color="primary" name="student" formControlName="student">
+                            <b>Student</b>
+                        </mat-checkbox>
+
+                        <div *ngIf="accountForm.value['student']">
+                            <mat-form-field class="form-input" appearance="fill">
+                                <mat-label>Student Number</mat-label>
+                                <input matInput name="studentNumber" formControlName="studentNumber" maxlength="20">
+                            </mat-form-field>
+                        </div>
+
+                        <button type="submit" mat-raised-button color="primary" class="form-submit" 
+                            [disabled]="!isModifying || IsSameAsOriginal()">
+                            Save
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                        
+                        <button type="button" mat-raised-button class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Cancel()">
+                            Cancel Modification
+                        </button>
+                    </form>
+                    <br><br>
+                    <button mat-raised-button color="warn" class="form-submit" 
+                        [disabled]="!isModifying"
+                        (click)="Remove()">
+                        Remove
+                    </button>
+                </div>
+            </div>
         </div>
         <div *ngSwitchDefault></div>
     </div>
@@ -40,4 +176,10 @@
         mode="indeterminate"
         diameter="40"
     ></mat-progress-spinner>
+</ng-template>
+
+<ng-template #noResults>
+    <div class="no-results">
+        No results found.
+    </div>
 </ng-template>

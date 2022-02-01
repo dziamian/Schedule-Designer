@@ -2,7 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { forkJoin } from 'rxjs';
-import { Coordinator, Staff, Student } from 'src/app/others/Accounts';
+import { Coordinator, Staff, Student, User } from 'src/app/others/Accounts';
 import { CourseEditionInfo, CourseInfo } from 'src/app/others/CourseInfo';
 import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
@@ -206,6 +206,37 @@ export class ResourceTreeService {
         resourceNode.item.name = `${staff.User.LastName.toUpperCase()} ${staff.User.FirstName}`;
         if (idVisible) {
           resourceNode.item.name += ` (${staff.User.UserId})`;
+        }
+        resourceNode.item.filter = null;
+        resourceNode.item.type = "user";
+        resourceNode.children = [];
+        
+        parentNode.children.push(resourceNode);
+      }
+    );
+  }
+
+  private setOtherUsers(users: User[], idVisible: boolean = false, root: ResourceNode | null = null) {
+    const parentNode = new ResourceNode();
+    parentNode.item = new ResourceItem();
+    parentNode.item.name = 'Other Users';
+    parentNode.item.filter = null;
+    parentNode.children = [];
+    if (root == null) {
+      this.TREE_DATA.push(parentNode);
+    } else {
+      root.children.push(parentNode);
+    }
+
+    users.forEach(
+      user => {
+        
+        const resourceNode = new ResourceNode();
+        resourceNode.item = new ResourceItem();
+        resourceNode.item.id = user.UserId.toString();
+        resourceNode.item.name = `${user.LastName.toUpperCase()} ${user.FirstName}`;
+        if (idVisible) {
+          resourceNode.item.name += ` (${user.UserId})`;
         }
         resourceNode.item.filter = null;
         resourceNode.item.type = "user";
@@ -544,8 +575,9 @@ export class ResourceTreeService {
     forkJoin([
       this.scheduleDesignerApiService.GetCoordinators(),
       this.administratorApiService.GetStaffs(),
-      this.administratorApiService.GetStudents()
-    ]).subscribe(([coordinators, staffs, students]) => {
+      this.administratorApiService.GetStudents(),
+      this.administratorApiService.GetOtherUsers()
+    ]).subscribe(([coordinators, staffs, students, otherUsers]) => {
       const usersNode = new ResourceNode();
       usersNode.item = new ResourceItem();
       usersNode.item.name = "Users";
@@ -556,6 +588,7 @@ export class ResourceTreeService {
       this.setCoordinators(coordinators, true, usersNode);
       this.setAdministrators(staffs, true, usersNode);
       this.setOtherStaffs(staffs, coordinators.map(c => c.User.UserId), true, usersNode);
+      this.setOtherUsers(otherUsers, true, usersNode);
 
       this.setStudents(students, true, usersNode);
 

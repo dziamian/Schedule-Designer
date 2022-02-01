@@ -5,7 +5,7 @@ import { AccessToken } from 'src/app/others/AccessToken';
 import { Group } from 'src/app/others/Group';
 import { map } from 'rxjs/operators';
 import { Account, Coordinator, SearchUser, Staff, Student, StudentBasic, Titles, User } from 'src/app/others/Accounts';
-import { ICourse, ICourseEdition, ICourseType, IGroup } from 'src/app/others/Interfaces';
+import { ICoordinator, ICourse, ICourseEdition, ICourseType, IGroup, IStaff, IStudent, IUser } from 'src/app/others/Interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +46,27 @@ export class AdministratorApiService {
           []
         )
       ))
+    );
+  }
+
+  public GetOtherUsers(): Observable<User[]> {
+    const request = {
+      url: this.baseUrl + `/users/Service.GetOtherUsers()`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => response.value.map((element : any) => new User(
+        element.UserId, 
+        element.FirstName, 
+        element.LastName
+      )))
     );
   }
 
@@ -475,6 +496,62 @@ export class AdministratorApiService {
     );
   }
 
+  public CreateAccountFromUsos(userId: number): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/users/Service.CreateAccountFromUsos`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: {
+          UserId: userId
+        },
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public GetUserAccount(userId: number):Observable<Account> {
+    const request = {
+      url: this.baseUrl + `/users(${userId})?$expand=Student($expand=Groups),Coordinator,Staff`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(map((response : any) => {
+      const user = new User(
+        response.UserId,
+        response.FirstName,
+        response.LastName
+      );
+
+      return new Account(
+      user,
+      response.Student != null ? new Student(
+        user, 
+        response.Student.StudentNumber, 
+        response.Student.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? []
+      ) : null,
+      response.Coordinator != null ? new Coordinator(
+        user, 
+        new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter)
+      ) : null,
+
+      response.Staff != null ? new Staff(
+        user,
+        response.Staff.IsAdmin
+      ) : null);
+    }));
+  }
+
   public SearchForUserFromUsos(query: string, perPage: number, start: number): Observable<SearchUser> {
     const request = {
       url: this.baseUrl + `/users/Service.SearchForUserFromUsos(Query='${query}',PerPage=${perPage},Start=${start})`,
@@ -513,6 +590,178 @@ export class AdministratorApiService {
       }),
       response.NextPage
     )));
+  }
+
+  public UpdateUser(user: IUser) {
+    const request = {
+      url: this.baseUrl + `/users(${user.UserId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: user,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveUser(userId: number) {
+    const request = {
+      url: this.baseUrl + `/users(${userId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public CreateStaff(staff: IStaff) {
+    const request = {
+      url: this.baseUrl + `/staffs`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: staff,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateStaff(staff: IStaff) {
+    const request = {
+      url: this.baseUrl + `/staffs(${staff.UserId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: staff,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveStaff(userId: number) {
+    const request = {
+      url: this.baseUrl + `/staffs(${userId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public CreateCoordinator(coordinator: ICoordinator) {
+    const request = {
+      url: this.baseUrl + `/coordinators`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: coordinator,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateCoordinator(coordinator: ICoordinator) {
+    const request = {
+      url: this.baseUrl + `/coordinators(${coordinator.UserId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: coordinator,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveCoordinator(userId: number) {
+    const request = {
+      url: this.baseUrl + `/coordinators(${userId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public CreateStudent(student: IStudent) {
+    const request = {
+      url: this.baseUrl + `/students`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: student,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateStudent(student: IStudent) {
+    const request = {
+      url: this.baseUrl + `/students(${student.UserId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: student,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveStudent(userId: number) {
+    const request = {
+      url: this.baseUrl + `/students(${userId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
   }
 
   public UploadSchedule(file: File, connectionId: string):Observable<any> {

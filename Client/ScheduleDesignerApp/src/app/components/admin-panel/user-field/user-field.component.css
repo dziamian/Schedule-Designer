@@ -23,9 +23,27 @@
     border-bottom: 2px solid black;
 }
 
+.search-buttons {
+    margin-top: 1vh;
+    text-align: center;
+}
+
+.no-results {
+    text-align: center;
+}
+
 .edit-icon-button {
     transform: scale(0.75);
     top: -3px;
+}
+
+.status-icon {
+    position: relative;
+    top: 5px;
+}
+
+.item-text-line {
+    font-size: 12px;
 }
 
 .search-button {
@@ -40,6 +58,7 @@
 
 .content-form {
     padding-top: 3%;
+    padding-bottom: 7%;
     padding-left: 3%;
     padding-right: 3%;
     border-bottom: 2px solid black;

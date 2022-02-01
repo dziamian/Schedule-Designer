@@ -22,3 +22,25 @@ export interface IGroup {
     Name?: string;
     ParentGroupId?: number | null;
 }
+
+export interface IUser {
+    UserId?: number,
+    FirstName?: string,
+    LastName?: string
+}
+
+export interface IStaff {
+    UserId?: number,
+    IsAdmin?: boolean
+}
+
+export interface ICoordinator {
+    UserId?: number,
+    TitleBefore?: string | null,
+    TitleAfter?: string | null
+}
+
+export interface IStudent {
+    UserId?: number,
+    StudentNumber?: string | null
+}

@@ -91,6 +91,7 @@
             <app-user-field *ngSwitchCase="'user'"
                 [data]="operatingFieldData"
                 
+                (onRefresh)="ForceRefreshTree(0)"
                 (onChange)="ForceRefreshTree(0)"
                 (onCreate)="ForwardAndRefresh($event)"
                 (onRemove)="CloseAndRefresh()">

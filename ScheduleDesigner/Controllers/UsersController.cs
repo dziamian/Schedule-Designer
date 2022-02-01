@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Hubs;
 using ScheduleDesigner.Hubs.Interfaces;
@@ -166,6 +167,28 @@ namespace ScheduleDesigner.Controllers
                 }
 
                 return Ok(SingleResult.Create(_user));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Unexpected error. Please try again later.");
+            }
+        }
+
+        [Authorize(Policy = "AdministratorOnly")]
+        [HttpGet]
+        [CustomEnableQuery]
+        public IActionResult GetOtherUsers()
+        {
+            try
+            {
+                var users = _unitOfWork.Users
+                    .Get(e => e.Student == null && e.Coordinator == null && e.Staff == null)
+                    .Include(e => e.Student)
+                    .Include(e => e.Coordinator)
+                    .Include(e => e.Staff)
+                    .ToList();
+
+                return Ok(users);
             }
             catch (Exception e)
             {

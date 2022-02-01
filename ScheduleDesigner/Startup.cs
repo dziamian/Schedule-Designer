@@ -257,6 +257,10 @@ namespace ScheduleDesigner
                 .Returns<string[]>();
 
             builder.EntityType<User>().Collection
+                .Function("GetOtherUsers")
+                .ReturnsCollectionFromEntitySet<User>("Users");
+
+            builder.EntityType<User>().Collection
                 .Function("GetMyAccount")
                 .ReturnsFromEntitySet<User>("Users");
 
