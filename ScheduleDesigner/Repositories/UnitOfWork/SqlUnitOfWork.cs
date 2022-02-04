@@ -53,27 +53,27 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
         {
             Context = context;
 
-            Authorizations = new SqlAuthorizationRepo(context);
-            CoordinatorCourseEditions = new SqlCoordinatorCourseEdition(context);
-            Coordinators = new SqlCoordinatorRepo(context);
-            CourseEditions = new SqlCourseEditionRepo(context);
-            Courses = new SqlCourseRepo(context);
-            CourseRooms = new SqlCourseRoomRepo(context);
-            CourseTypes = new SqlCourseTypeRepo(context);
-            GroupCourseEditions = new SqlGroupCourseEditionRepo(context);
-            Groups = new SqlGroupRepo(context);
-            Rooms = new SqlRoomRepo(context);
-            RoomTypes = new SqlRoomTypeRepo(context);
-            ScheduledMoves = new SqlScheduledMoveRepo(context);
-            Messages = new SqlMessageRepo(context);
-            ScheduledMovePositions = new SqlScheduledMovePositionRepo(context);
-            SchedulePositions = new SqlSchedulePositionRepo(context);
-            Settings = new SqlSettingsRepo(context);
-            Staffs = new SqlStaffRepo(context);
-            StudentGroups = new SqlStudentGroupRepo(context);
-            Students = new SqlStudentRepo(context);
-            Timestamps = new SqlTimestampRepo(context);
-            Users = new SqlUserRepo(context);
+            Authorizations = new AuthorizationRepo(context);
+            CoordinatorCourseEditions = new CoordinatorCourseEdition(context);
+            Coordinators = new CoordinatorRepo(context);
+            CourseEditions = new CourseEditionRepo(context);
+            Courses = new CourseRepo(context);
+            CourseRooms = new CourseRoomRepo(context);
+            CourseTypes = new CourseTypeRepo(context);
+            GroupCourseEditions = new GroupCourseEditionRepo(context);
+            Groups = new GroupRepo(context);
+            Rooms = new RoomRepo(context);
+            RoomTypes = new RoomTypeRepo(context);
+            ScheduledMoves = new ScheduledMoveRepo(context);
+            Messages = new MessageRepo(context);
+            ScheduledMovePositions = new ScheduledMovePositionRepo(context);
+            SchedulePositions = new SchedulePositionRepo(context);
+            Settings = new SettingsRepo(context);
+            Staffs = new StaffRepo(context);
+            StudentGroups = new StudentGroupRepo(context);
+            Students = new StudentRepo(context);
+            Timestamps = new TimestampRepo(context);
+            Users = new UserRepo(context);
         }
 
         public int Complete()

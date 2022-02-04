@@ -200,6 +200,17 @@ namespace ScheduleDesigner.Controllers
         [ODataRoute("({key1},{key2})/GetBusyPeriods(Weeks={Weeks})")]
         public async Task<IActionResult> GetBusyPeriods([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] IEnumerable<int> Weeks)
         {
+            var _settings = await _unitOfWork.Settings.GetFirst(e => true);
+            if (_settings == null)
+            {
+                return BadRequest("Application settings has not been specified.");
+            }
+
+            if (Weeks.Any(week => week > _settings.TermDurationWeeks || week <= 0))
+            {
+                return BadRequest("Weeks are invalid");
+            }
+
             try
             {
                 var _courseEdition = _unitOfWork.CourseEditions

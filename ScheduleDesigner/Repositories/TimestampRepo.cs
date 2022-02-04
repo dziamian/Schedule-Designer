@@ -8,9 +8,9 @@ using ScheduleDesigner.Repositories.Interfaces;
 
 namespace ScheduleDesigner.Repositories
 {
-    public class SqlCoordinatorRepo : RepoBase<Coordinator>, ICoordinatorRepo
+    public class TimestampRepo : RepoBase<Timestamp>, ITimestampRepo
     {
-        public SqlCoordinatorRepo(ScheduleDesignerDbContext context)
+        public TimestampRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
     }

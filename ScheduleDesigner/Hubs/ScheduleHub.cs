@@ -1536,7 +1536,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Proposing")]
         public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
@@ -1715,7 +1715,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Proposing")]
         public MessageObject UnlockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
             var schedulePositionQueuesL1 = new SortedList<SchedulePositionKey, ConcurrentQueue<object>>();
@@ -3131,7 +3131,7 @@ namespace ScheduleDesigner.Hubs
         }
 
 
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Proposing")]
         public MessageObject AddScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks, bool isProposition, string message)
@@ -3378,7 +3378,7 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Proposing")]
         public MessageObject RemoveScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
             int destRoomId, int destPeriodIndex, int destDay, int[] destWeeks)

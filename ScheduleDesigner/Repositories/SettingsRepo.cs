@@ -10,9 +10,9 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories
 {
-    public class SqlSettingsRepo : RepoBase<Settings>, ISettingsRepo
+    public class SettingsRepo : RepoBase<Settings>, ISettingsRepo
     {
-        public SqlSettingsRepo(ScheduleDesignerDbContext context)
+        public SettingsRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
     }

@@ -8,9 +8,9 @@ using ScheduleDesigner.Repositories.Interfaces;
 
 namespace ScheduleDesigner.Repositories
 {
-    public class SqlSchedulePositionRepo : RepoBase<SchedulePosition>, ISchedulePositionRepo
+    public class RoomTypeRepo : RepoBase<RoomType>, IRoomTypeRepo
     {
-        public SqlSchedulePositionRepo(ScheduleDesignerDbContext context)
+        public RoomTypeRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
     }

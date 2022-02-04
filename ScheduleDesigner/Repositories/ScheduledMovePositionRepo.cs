@@ -6,20 +6,20 @@ using System.Linq;
 
 namespace ScheduleDesigner.Repositories
 {
-    public class SqlScheduledMoveRepo : RepoBase<ScheduledMove>, IScheduledMoveRepo
+    public class ScheduledMovePositionRepo : RepoBase<ScheduledMovePosition>, IScheduledMovePositionRepo
     {
-        public SqlScheduledMoveRepo(ScheduleDesignerDbContext context)
+        public ScheduledMovePositionRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
 
-        public int DeleteMany(Func<ScheduledMove, bool> predicate)
+        public int DeleteMany(Func<ScheduledMovePosition, bool> predicate)
         {
             if (_context == null)
             {
                 return -1;
             }
 
-            var results = _context.Set<ScheduledMove>()
+            var results = _context.Set<ScheduledMovePosition>()
                 .Where(predicate);
 
             if (!results.Any())
@@ -27,7 +27,7 @@ namespace ScheduleDesigner.Repositories
                 return -1;
             }
 
-            _context.Set<ScheduledMove>().RemoveRange(results);
+            _context.Set<ScheduledMovePosition>().RemoveRange(results);
             return 1;
         }
     }

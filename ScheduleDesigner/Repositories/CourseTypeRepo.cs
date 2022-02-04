@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Repositories
 {
-    public class SqlCourseRepo : RepoBase<Course>, ICourseRepo
+    public class CourseTypeRepo : RepoBase<CourseType>, ICourseTypeRepo
     {
-        public SqlCourseRepo(ScheduleDesignerDbContext context)
+        public CourseTypeRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
     }

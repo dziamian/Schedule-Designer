@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'; 
 import { AccessToken } from 'src/app/others/AccessToken';
 import * as OAuth from 'oauth-1.0a';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +49,6 @@ export class UsosApiService {
 
   public Authorize(oauth_token:string):Observable<any> {
     const request = {
-      //url: this.baseUrl + '/services/oauth/authorize',
       url: 'http://localhost:5000/api/proxy/authorize',
       method: 'GET'
     };
@@ -94,28 +92,5 @@ export class UsosApiService {
 
   public Deauthorize():void {
     AccessToken.Remove();
-  }
-
-  public GetUser(user_id?:string):Observable<any> {
-    const request = {
-      url: this.baseUrl + '/services/users/user',
-      method: 'POST'
-    };
-
-    const request_data = new FormData();
-    if (user_id != undefined) {
-      request_data.append('user_id', user_id);
-    }
-    request_data.append('fields', 'id');
-    request_data.append('format', 'json');
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: request_data,
-        headers: this.GetAuthorizationHeader(request, AccessToken.Retrieve()?.ToJson())
-      }
-    );
   }
 }

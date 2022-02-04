@@ -115,15 +115,11 @@ namespace ScheduleDesigner
                 
                 options.AddPolicy("Proposing", policy => policy.RequireAssertion(context => 
                     context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
-                        (c.Value == "Administrator" || c.Value == "Representative"))));
+                        (c.Value == "Administrator" || c.Value == "Representative" || c.Value == "Coordinator"))));
                 
                 options.AddPolicy("Designer", policy => policy.RequireAssertion(context =>
                     context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
                         (c.Value == "Administrator" || c.Value == "Coordinator"))));
-                
-                options.AddPolicy("Assistant", policy => policy.RequireAssertion(context =>
-                    context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
-                        (c.Value == "Administrator" || c.Value == "Representative" || c.Value == "Coordinator"))));
                 
                 options.AddPolicy("Recipient", policy => policy.RequireAssertion(context =>
                     context.User.HasClaim(c => c.Type == ClaimTypes.Role && 
@@ -213,7 +209,7 @@ namespace ScheduleDesigner
                 .EntityType
                 .HasKey(e => new { e.CourseId, e.CourseEditionId });
             
-            builder.EntitySet<CoordinatorCourseEdition>("CoordinatorCourseEditions")
+            builder.EntitySet<Models.CoordinatorCourseEdition>("CoordinatorCourseEditions")
                 .EntityType
                 .HasKey(e => new { e.CourseId, e.CourseEditionId, e.CoordinatorId });
 
@@ -381,16 +377,16 @@ namespace ScheduleDesigner
             getScheduleAmountFunction
                 .CollectionParameter<int>("CourseEditionIds");
 
-            var getScheduleForModification = builder.EntityType<SchedulePosition>().Collection
+            var getFilteredSchedule = builder.EntityType<SchedulePosition>().Collection
                 .Function("GetFilteredSchedule")
                 .ReturnsFromEntitySet<SchedulePosition>("SchedulePositions");
-            getScheduleForModification
+            getFilteredSchedule
                 .CollectionParameter<int>("CoordinatorsIds");
-            getScheduleForModification
+            getFilteredSchedule
                 .CollectionParameter<int>("GroupsIds");
-            getScheduleForModification
+            getFilteredSchedule
                 .CollectionParameter<int>("RoomsIds");
-            getScheduleForModification
+            getFilteredSchedule
                 .CollectionParameter<int>("Weeks");
 
             var getRoomsAvailabilityFunction = builder.EntityType<SchedulePosition>().Collection

@@ -12,27 +12,27 @@ namespace ScheduleDesigner.Repositories
 {
     public class ScheduleDesignerDbContext : DbContext
     {
-        public DbSet<Authorization> Authorizations { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Coordinator> Coordinators { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
-        public DbSet<Settings> Settings { get; set; }
-        public DbSet<CourseType> CourseTypes { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<StudentGroup> StudentGroups { get; set; }
-        public DbSet<CourseEdition> CourseEditions { get; set; }
-        public DbSet<CoordinatorCourseEdition> CoordinatorCourseEditions { get; set; }
-        public DbSet<GroupCourseEdition> GroupCourseEditions { get; set; }
-        public DbSet<RoomType> RoomTypes { get; set; }
-        public DbSet<Room> Rooms { get; set; }
-        public DbSet<CourseRoom> CourseRooms { get; set; }
-        public DbSet<Timestamp> Timestamps { get; set; }
-        public DbSet<SchedulePosition> SchedulePositions { get; set; }
-        public DbSet<ScheduledMovePosition> ScheduledMovePositions { get; set; }
-        public DbSet<ScheduledMove> ScheduledMoves { get; set; }
-        public DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Authorization> Authorizations { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<Coordinator> Coordinators { get; set; }
+        public virtual DbSet<Staff> Staffs { get; set; }
+        public virtual DbSet<Settings> Settings { get; set; }
+        public virtual DbSet<CourseType> CourseTypes { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<StudentGroup> StudentGroups { get; set; }
+        public virtual DbSet<CourseEdition> CourseEditions { get; set; }
+        public virtual DbSet<Models.CoordinatorCourseEdition> CoordinatorCourseEditions { get; set; }
+        public virtual DbSet<GroupCourseEdition> GroupCourseEditions { get; set; }
+        public virtual DbSet<RoomType> RoomTypes { get; set; }
+        public virtual DbSet<Room> Rooms { get; set; }
+        public virtual DbSet<CourseRoom> CourseRooms { get; set; }
+        public virtual DbSet<Timestamp> Timestamps { get; set; }
+        public virtual DbSet<SchedulePosition> SchedulePositions { get; set; }
+        public virtual DbSet<ScheduledMovePosition> ScheduledMovePositions { get; set; }
+        public virtual DbSet<ScheduledMove> ScheduledMoves { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
 
         public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
 
@@ -98,10 +98,10 @@ namespace ScheduleDesigner.Repositories
                 .UseIdentityColumn();
 
             //CoordinatorCourseEdition
-            modelBuilder.Entity<CoordinatorCourseEdition>()
-                .HasKey(e => new { e.CourseId, e.CourseEditionId, e.CoordinatorId });
+            modelBuilder.Entity<Models.CoordinatorCourseEdition>()
+                .HasKey(e => (new { e.CourseId, e.CourseEditionId, e.CoordinatorId }));
 
-            modelBuilder.Entity<CoordinatorCourseEdition>()
+            modelBuilder.Entity<Models.CoordinatorCourseEdition>()
                 .HasOne(e => e.Coordinator)
                 .WithMany(e => e.CourseEditions)
                 .OnDelete(DeleteBehavior.Restrict);
