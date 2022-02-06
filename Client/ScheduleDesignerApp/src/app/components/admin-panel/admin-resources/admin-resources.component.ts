@@ -110,6 +110,11 @@ export class AdminResourcesComponent implements OnInit {
           this.loading = false;
         });
       } break;
+      case 'room-types': {
+        this.treeService.setAllRoomTypes(() => {
+          this.loading = false;
+        });
+      } break;
       case 'students': {
         this.treeService.setAllStudents(() => {
           this.loading = false;

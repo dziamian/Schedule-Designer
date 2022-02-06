@@ -1,0 +1,47 @@
+.content {
+    height: 75vh;
+    font-size: 12pt;
+    text-align: left;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.content-header {
+    height: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 1.17em;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.content-inner {
+    height: 92%;
+    overflow-y: auto;
+}
+
+.row {
+    display: inline-block;
+    width: 100%;
+    height: fit-content;
+    padding-bottom: 0.5vh;
+    border-bottom: 2px solid black;
+}
+
+.row:first-child {
+    margin-top: 1vh;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.row-left {
+    float: left;
+    margin-left: 1vw;
+}
+
+.row-right {
+    float: right;
+    margin-right: 1vw;
+}

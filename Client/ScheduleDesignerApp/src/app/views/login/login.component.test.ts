@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         this.usosApiService.RequestToken().subscribe(
             token => {
                 token.SaveRequest();
-                
+
                 this.usosApiService.Authorize(token.key).subscribe(data => {
                     this.document.location.href = data.requestMessage.requestUri;
                 },

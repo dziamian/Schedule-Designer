@@ -222,7 +222,7 @@ namespace ScheduleDesigner.Controllers
 
                         if (BulkImport<SchedulePositionDto>.Execute(connectionString, "dbo.SchedulePositions", records) <= 0)
                         {
-                            return BadRequest("Could not import schedule to database.");
+                            return BadRequest("Could not import schedule to database. Maybe you forgot to import some other data first.");
                         }
 
                         return Ok();
@@ -237,7 +237,15 @@ namespace ScheduleDesigner.Controllers
                 {
                     Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
-            } 
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
+            }
             catch (Exception e)
             {
                 return BadRequest("Unexpected error. Please try again later.");
@@ -347,17 +355,17 @@ namespace ScheduleDesigner.Controllers
 
                     if (BulkImport<CourseEditionDto>.Execute(connectionString, "dbo.CourseEditions", courseEditions) <= 0)
                     {
-                        return BadRequest("Could not import course editions to database.");
+                        return BadRequest("Could not import course editions to database. Maybe you forgot to import some other data first.");
                     }
 
                     if (BulkImport<CoordinatorCourseEditionDto>.Execute(connectionString, "dbo.CoordinatorCourseEditions", coordinatorCourseEditions) <= 0)
                     {
-                        return BadRequest("Could not import coordinators to database.");
+                        return BadRequest("Could not import coordinators to database. Maybe you forgot to import some other data first.");
                     }
 
                     if (BulkImport<GroupCourseEditionDto>.Execute(connectionString, "dbo.GroupCourseEditions", groupCourseEditions) <= 0)
                     {
-                        return BadRequest("Could not import groups to database.");
+                        return BadRequest("Could not import groups to database. Maybe you forgot to import some other data first.");
                     }
 
                     return Ok();
@@ -366,6 +374,14 @@ namespace ScheduleDesigner.Controllers
                 {
                     Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
             }
             catch (Exception e)
             {
@@ -416,7 +432,7 @@ namespace ScheduleDesigner.Controllers
 
                     if (BulkImport<GroupDto>.Execute(connectionString, "dbo.Groups", records) <= 0)
                     {
-                        return BadRequest("Could not import groups to database.");
+                        return BadRequest("Could not import groups to database. Maybe you forgot to import some other data first.");
                     }
 
                     return Ok();
@@ -426,6 +442,14 @@ namespace ScheduleDesigner.Controllers
                     Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
             }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
+            }
             catch (Exception e)
             {
                 return BadRequest("Unexpected error. Please try again later.");
@@ -433,7 +457,7 @@ namespace ScheduleDesigner.Controllers
         }
 
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost("groups"), DisableRequestSizeLimit]
+        [HttpPost("courses"), DisableRequestSizeLimit]
         public IActionResult ImportCourses(
             [FromForm] IFormFile coursesFile,
             [FromForm] IFormFile roomsFile)
@@ -495,12 +519,12 @@ namespace ScheduleDesigner.Controllers
 
                     if (BulkImport<CourseDto>.Execute(connectionString, "dbo.Courses", courseRecords) <= 0)
                     {
-                        return BadRequest("Could not import courses to database.");
+                        return BadRequest("Could not import courses to database. Maybe you forgot to import some other data first.");
                     }
 
                     if (BulkImport<CourseRoomDto>.Execute(connectionString, "dbo.CourseRooms", roomsRecords) <= 0)
                     {
-                        return BadRequest("Could not import course rooms to database.");
+                        return BadRequest("Could not import course rooms to database. Maybe you forgot to import some other data first.");
                     }
 
                     return Ok();
@@ -509,6 +533,14 @@ namespace ScheduleDesigner.Controllers
                 {
                     Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
             }
             catch (Exception e)
             {
@@ -538,10 +570,18 @@ namespace ScheduleDesigner.Controllers
 
                 if (BulkImport<CourseTypeDto>.Execute(connectionString, "dbo.CourseTypes", records) <= 0)
                 {
-                    return BadRequest("Could not import course types to database.");
+                    return BadRequest("Could not import course types to database. Maybe you forgot to import some other data first.");
                 }
 
                 return Ok();
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
             }
             catch (Exception e)
             {
@@ -571,10 +611,18 @@ namespace ScheduleDesigner.Controllers
 
                 if (BulkImport<RoomTypeDto>.Execute(connectionString, "dbo.RoomTypes", records) <= 0)
                 {
-                    return BadRequest("Could not import room types to database.");
+                    return BadRequest("Could not import room types to database. Maybe you forgot to import some other data first.");
                 }
 
                 return Ok();
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
             }
             catch (Exception e)
             {
@@ -604,10 +652,18 @@ namespace ScheduleDesigner.Controllers
 
                 if (BulkImport<RoomDto>.Execute(connectionString, "dbo.Rooms", records) <= 0)
                 {
-                    return BadRequest("Could not import rooms to database.");
+                    return BadRequest("Could not import rooms to database. Maybe you forgot to import some other data first.");
                 }
 
                 return Ok();
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
             }
             catch (Exception e)
             {
@@ -637,10 +693,18 @@ namespace ScheduleDesigner.Controllers
 
                 if (BulkImport<StudentGroupDto>.Execute(connectionString, "dbo.StudentGroups", records) <= 0)
                 {
-                    return BadRequest("Could not import student groups to database.");
+                    return BadRequest("Could not import student groups to database. Maybe you forgot to import some other data first.");
                 }
 
                 return Ok();
+            }
+            catch (SqlException e)
+            {
+                return BadRequest("Violation of primary key. Please check your CSV file.");
+            }
+            catch (AggregateException e)
+            {
+                return BadRequest("Could not find one of the required headers. Please check your CSV file.");
             }
             catch (Exception e)
             {

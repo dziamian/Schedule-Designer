@@ -104,6 +104,8 @@ export class UserFieldComponent implements OnInit {
         this.disableForm();
 
         this.loading = false;
+      }, () => {
+        this.snackBar.open("Could not find user.", "OK");
       });
     } else if (this._data.actionType === 'add') {
       this.searchResults = null;
@@ -119,7 +121,6 @@ export class UserFieldComponent implements OnInit {
   }
   
   IsSameAsOriginal(): boolean {
-    console.log()
     return this.originalAccount.User.FirstName === this.accountForm.controls['firstName'].value
       && this.originalAccount.User.LastName === this.accountForm.controls['lastName'].value
       && !!this.originalAccount.Staff === this.accountForm.controls['staff'].value
@@ -323,7 +324,7 @@ export class UserFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed user.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -337,7 +338,7 @@ export class UserFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully created account for this user.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -368,7 +369,7 @@ export class UserFieldComponent implements OnInit {
       this.currentPage = 1;
       this.maxPage = this.searchResults.NextPage ? this.currentPage + 1 : this.currentPage;
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -392,7 +393,7 @@ export class UserFieldComponent implements OnInit {
         this.maxPage = this.searchResults.NextPage ? this.currentPage + 1 : this.currentPage;
       }
     } catch (response : any) {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -414,7 +415,7 @@ export class UserFieldComponent implements OnInit {
       this.searchStart -= this.PAGE_SIZE;
       --this.currentPage;
     } catch (response : any) {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");

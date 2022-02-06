@@ -127,6 +127,19 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
+                var courseIds = _unitOfWork.Courses
+                    .Get(e => e.CourseTypeId == key)
+                    .Select(e => e.CourseId)
+                    .ToList();
+
+                var schedulePosition = await _unitOfWork.SchedulePositions
+                    .Get(e => courseIds.Contains(e.CourseId)).FirstOrDefaultAsync();
+
+                if (schedulePosition != null)
+                {
+                    return BadRequest("You cannot remove this course type because it contains some positions in schedule.");
+                }
+
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
@@ -142,6 +155,12 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
+                var schedulePositions = _unitOfWork.SchedulePositions.GetAll();
+                if (schedulePositions.Any())
+                {
+                    return BadRequest("You cannot clear course types because there are some positions in schedule assigned to them.");
+                }
+
                 int courseTypesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CourseTypes]");
 
                 return Ok(new { CourseTypesAffected = courseTypesAffected });

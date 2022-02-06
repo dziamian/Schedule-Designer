@@ -1,1 +1,120 @@
-<p>room-field works!</p>
+<div *ngIf="loading == false; else spinner">
+    <div [ngSwitch]="data?.actionType">
+        <div *ngSwitchCase="'add'" class="content">
+            <div class="content-header">
+                <b>New Room</b>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Create()" [formGroup]="roomForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Room Type</mat-label>
+                            <input matInput name="type" formControlName="type" maxlength="100" readonly>
+                            <button matSuffix type="button" mat-icon-button (click)="SelectRoomType()">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <mat-error *ngIf="roomForm.controls['type'].hasError('required')">
+                                Type is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Room Name</mat-label>
+                            <input matInput name="name" formControlName="name" maxlength="100">
+                            <mat-error *ngIf="roomForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+
+                        <mat-form-field class="form-input" appearance="outline">
+                            <mat-label>Room Capacity</mat-label>
+                            <input type="number" matInput name="capacity" formControlName="capacity" min="0">
+                        </mat-form-field>
+
+                        <button type="submit" mat-raised-button color="primary" class="form-submit">
+                            Create
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset"
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'view'" class="content">
+            <div class="content-header">
+                <b>Room (ID: {{originalRoom?.RoomId}})</b>
+                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <div class="content-inner">
+                <div class="content-form">
+                    <form (ngSubmit)="Save()" [formGroup]="roomForm">
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Room Type</mat-label>
+                            <input matInput name="type" formControlName="type" maxlength="100" readonly>
+                            <button matSuffix type="button" mat-icon-button (click)="SelectRoomType()">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <mat-error *ngIf="roomForm.controls['type'].hasError('required')">
+                                Type is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Room Name</mat-label>
+                            <input matInput name="name" formControlName="name" maxlength="100">
+                            <mat-error *ngIf="roomForm.controls['name'].hasError('required')">
+                                Name is <strong>required</strong>.
+                            </mat-error>
+                        </mat-form-field>
+                        <br><br>
+
+                        <mat-form-field class="form-input" appearance="outline">
+                            <mat-label>Room Capacity</mat-label>
+                            <input type="number" matInput name="capacity" formControlName="capacity" min="0">
+                        </mat-form-field>
+
+                        <button type="submit" mat-raised-button color="primary" class="form-submit" 
+                            [disabled]="!isModifying || IsSameAsOriginal()">
+                            Save
+                        </button>
+                        
+                        <button type="button" mat-raised-button color="accent" class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Reset()">
+                            Reset
+                        </button>
+                        
+                        <button type="button" mat-raised-button class="form-reset" 
+                            [disabled]="!isModifying" 
+                            (click)="Cancel()">
+                            Cancel Modification
+                        </button>
+                    </form>
+                    <br><br>
+                    <button mat-raised-button color="warn" class="form-submit" 
+                        [disabled]="!isModifying"
+                        (click)="Remove()">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchDefault></div>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner *ngIf="loading != null"
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

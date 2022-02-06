@@ -254,7 +254,12 @@ namespace ScheduleDesigner.Controllers
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/IsPeriodBusy(PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
-        public async Task<IActionResult> IsPeriodBusy([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
+        public async Task<IActionResult> IsPeriodBusy(
+            [FromODataUri] int key1, 
+            [FromODataUri] int key2, 
+            [FromODataUri] int PeriodIndex, 
+            [FromODataUri] int Day, 
+            [FromODataUri] IEnumerable<int> Weeks)
         {
             try
             {
@@ -434,6 +439,14 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
+                var schedulePosition = await _unitOfWork.SchedulePositions
+                    .Get(e => e.CourseEditionId == key2).FirstOrDefaultAsync();
+
+                if (schedulePosition != null)
+                {
+                    return BadRequest("You cannot remove this course edition because it contains some positions in schedule.");
+                }
+
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
@@ -449,6 +462,12 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
+                var schedulePositions = _unitOfWork.SchedulePositions.GetAll();
+                if (schedulePositions.Any())
+                {
+                    return BadRequest("You cannot clear course editions because there are some positions in schedule assigned to them.");
+                }
+
                 int groupCourseEditionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [GroupCourseEditions]");
                 int coordinatorCourseEditionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CoordinatorCourseEditions]");
                 int courseEditionsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CourseEditions]");

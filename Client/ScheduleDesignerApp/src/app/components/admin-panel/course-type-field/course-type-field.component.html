@@ -9,7 +9,7 @@
                     <form (ngSubmit)="Create()" [formGroup]="courseTypeForm">
                         <mat-form-field class="form-input" appearance="fill">
                             <mat-label>Course Type Name</mat-label>
-                            <input matInput name="name" formControlName="name" maxlength="10">
+                            <input matInput name="name" formControlName="name" maxlength="100">
                             <mat-error *ngIf="courseTypeForm.controls['name'].hasError('required')">
                                 Name is <strong>required</strong>.
                             </mat-error>

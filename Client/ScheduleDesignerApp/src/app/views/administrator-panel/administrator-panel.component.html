@@ -1,14 +1,3 @@
-<!--<div>
-    <button mat-raised-button color="primary" (click)="DownloadSchedule()">
-        DOWNLOAD
-    </button>
-    <br>
-    <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" accept=".csv"/>
-    <mat-label>Selected file: <b>{{selectedFile?.name ?? 'None'}}</b></mat-label>
-    <button mat-raised-button color="primary" (click)="csvInput.click()">SELECT FILE</button>
-    <button mat-raised-button color="primary" (click)="UploadSchedule()">UPLOAD</button>
-</div>-->
-
 <div *ngIf="!loading && connectionStatus; else spinner" class="content">
     <div class="menu">
         <button mat-raised-button color="accent" (click)="SetInitialContent('courses', 'All Courses', true)">
@@ -85,9 +74,27 @@
                 (onCreate)="ForwardAndRefresh($event)"
                 (onRemove)="CloseAndRefresh()">
             </app-group-field>
-            <app-room-field *ngSwitchCase="'room'"></app-room-field>
-            <app-room-type-field *ngSwitchCase="'room-type'"></app-room-type-field>
-            <app-settings-field *ngSwitchCase="'settings'"></app-settings-field>
+            <app-room-field *ngSwitchCase="'room'"
+                [selectedResult]="selectedResult"
+                [data]="operatingFieldData"
+                
+                (onSelect)="SetAdditionalContent($event)"
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-room-field>
+            <app-room-type-field *ngSwitchCase="'room-type'"
+                [data]="operatingFieldData"
+                
+                (onChange)="ForceRefreshTree(0)"
+                (onCreate)="ForwardAndRefresh($event)"
+                (onRemove)="CloseAndRefresh()">
+            </app-room-type-field>
+            <app-settings-field *ngSwitchCase="'settings'"
+                [data]="operatingFieldData"
+                
+                (onChange)="ForceRefreshSettings()">
+            </app-settings-field>
             <app-user-field *ngSwitchCase="'user'"
                 [data]="operatingFieldData"
                 

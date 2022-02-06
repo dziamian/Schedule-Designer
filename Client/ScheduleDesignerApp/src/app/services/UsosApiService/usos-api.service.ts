@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'; 
 import { AccessToken } from 'src/app/others/AccessToken';
 import * as OAuth from 'oauth-1.0a';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,10 @@ import * as OAuth from 'oauth-1.0a';
 
 export class UsosApiService {
 
-  readonly baseUrl:string = 'https://api.usos.tu.kielce.pl';
+  readonly baseUsosUrl:string = environment.baseUsosUrl;
+  readonly baseApiUrl:string = environment.baseApiUrl;
   readonly oauth = new OAuth({
-    consumer: { key: 'Ru3DbQrGDhTTaWChm3ME', secret: 'LSMfqwmpvpvnhdK2GPRXDqzbx8uaPQLqUwWxuXuM' },
+    consumer: { key: environment.consumerKey, secret: environment.consumerSecret },
     signature_method: 'PLAINTEXT'
   });
   
@@ -28,13 +30,13 @@ export class UsosApiService {
 
   public RequestToken():Observable<AccessToken> {
     const request = {
-      url: this.baseUrl + '/services/oauth/request_token',
+      url: this.baseUsosUrl + '/services/oauth/request_token',
       method: 'POST'
     };
     
     const request_data = new FormData();
-    request_data.append('oauth_callback', 'http://localhost:4200/authenticated');
-    request_data.append('scopes', 'studies|offline_access');
+    request_data.append('oauth_callback', `${document.location.origin}/authenticated`);
+    request_data.append('scopes', 'studies|staff_perspective|offline_access');
     
     return this.http.request(
       request.method,
@@ -49,7 +51,7 @@ export class UsosApiService {
 
   public Authorize(oauth_token:string):Observable<any> {
     const request = {
-      url: 'http://localhost:5000/api/proxy/authorize',
+      url: this.baseApiUrl + '/proxy/authorize',
       method: 'GET'
     };
 
@@ -68,7 +70,7 @@ export class UsosApiService {
 
   public AccessToken(oauth_verifier:string):Observable<AccessToken> {
     const request = {
-      url: this.baseUrl + '/services/oauth/access_token',
+      url: this.baseUsosUrl + '/services/oauth/access_token',
       method: 'POST'
     };
 
@@ -87,7 +89,7 @@ export class UsosApiService {
   }
 
   public Logout(document:Document):void {
-    document.location.href = this.baseUrl + '/apps/logout';
+    document.location.href = this.baseUsosUrl + '/apps/logout';
   }
 
   public Deauthorize():void {

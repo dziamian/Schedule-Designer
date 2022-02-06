@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Helpers
 {
-    public static class BulkImport<T>
+    public static class BulkImport<T> where T : class
     {
         public static async Task<List<T>> ReadCsv(IFormFile file, string delimiter = "|")
         {

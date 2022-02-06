@@ -77,6 +77,8 @@ export class CourseTypeFieldComponent implements OnInit {
         this.disableForm();
 
         this.loading = false;
+      }, () => {
+        this.snackBar.open("Could not find course type.", "OK");
       });
     } else if (this._data.actionType === 'add') {
       this.originalCourseType = new CourseType(
@@ -136,7 +138,7 @@ export class CourseTypeFieldComponent implements OnInit {
     }, response => {
       this.enableForm();
       
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -161,7 +163,7 @@ export class CourseTypeFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully created course type.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -175,7 +177,7 @@ export class CourseTypeFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed course type.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");

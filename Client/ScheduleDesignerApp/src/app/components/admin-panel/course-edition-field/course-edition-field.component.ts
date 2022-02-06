@@ -138,7 +138,11 @@ export class CourseEditionFieldComponent implements OnInit {
           this.disableForm();
 
           this.loading = false;
+        }, () => {
+          this.snackBar.open("Could not find course edition.", "OK");
         });
+      }, () => {
+        this.snackBar.open("Could not find course edition.", "OK");
       });
     } else if (this._data.actionType === 'add') {
       const courseId = Number.parseInt(this._data.id!);
@@ -254,7 +258,7 @@ export class CourseEditionFieldComponent implements OnInit {
 
       this.snackBar.open("Successfully added coordinator for the course edition.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -276,7 +280,7 @@ export class CourseEditionFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed coordinator from the course edition.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -338,7 +342,7 @@ export class CourseEditionFieldComponent implements OnInit {
 
       this.snackBar.open("Successfully added group for the course edition.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -366,7 +370,7 @@ export class CourseEditionFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed group from the course edition.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -411,7 +415,7 @@ export class CourseEditionFieldComponent implements OnInit {
     }, response => {
       this.enableForm();
       
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -437,7 +441,7 @@ export class CourseEditionFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully created course edition.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -451,7 +455,7 @@ export class CourseEditionFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed course edition.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");

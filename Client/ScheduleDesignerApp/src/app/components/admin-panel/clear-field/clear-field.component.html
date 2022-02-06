@@ -1,1 +1,18 @@
-<p>clear-field works!</p>
+<div class="content">
+    <div class="content-header">
+        <b>Clear Section</b>
+    </div>
+    <div class="content-inner">
+        <div class="row" *ngFor="let element of list">
+            <div class="row-left">
+                <b>{{element.label}}:</b>
+            </div>
+            <div class="row-right">
+                <button mat-raised-button color="primary" (click)="Clear(element.method, element.responseLabel)">
+                    <mat-icon>clear</mat-icon>
+                    Clear
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

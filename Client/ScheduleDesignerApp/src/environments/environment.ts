@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseSignalrUrl: 'http://localhost:5000/scheduleHub',
+  baseApiUrl: 'http://localhost:5000/api',
+  baseUsosUrl: 'https://api.usos.tu.kielce.pl',
+  consumerKey: 'Ru3DbQrGDhTTaWChm3ME',
+  consumerSecret: 'LSMfqwmpvpvnhdK2GPRXDqzbx8uaPQLqUwWxuXuM'
 };
 
 /*

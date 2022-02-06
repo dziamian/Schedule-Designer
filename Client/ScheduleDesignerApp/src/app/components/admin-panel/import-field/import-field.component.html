@@ -1,1 +1,24 @@
-<p>import-field works!</p>
+<div class="content">
+    <div class="content-header">
+        <b>Import Section</b>
+    </div>
+    <div class="content-inner">
+        <div class="row" *ngFor="let element of list">
+            <div class="row-left">
+                <b>{{element.label}}:</b>
+                <br>
+                <div class="row-list-element" *ngFor="let fileIndex of element.fileIndexes">
+                    <button mat-raised-button color="primary" (click)="csvClick(fileIndex.index)">Select file</button>
+                    <input [id]="'csvInput' + fileIndex.index" hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event, fileIndex.index)" accept=".csv"/>
+                    <mat-label style="margin-left: 1vw;">{{fileIndex.label}} <b>{{selectedFiles[fileIndex.index]?.name ?? 'None'}}</b></mat-label>
+                </div>
+            </div>
+            <div class="row-right">
+                <button mat-raised-button color="primary" (click)="Import(element.fileIndexes, element.resource, element.hubMethods, element.responseLabel)">
+                    <mat-icon>arrow_upward</mat-icon>
+                    Import
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

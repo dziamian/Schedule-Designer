@@ -14,13 +14,14 @@ import { CourseEditionInfo, CourseInfo } from 'src/app/others/CourseInfo';
 import { ScheduledMove, ScheduledMoveDetails, ScheduledMoveInfo } from 'src/app/others/ScheduledMove';
 import { Filter } from 'src/app/others/Filter';
 import { Course } from 'src/app/others/Course';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScheduleDesignerApiService {
 
-  readonly baseUrl:string = 'http://localhost:5000/api';
+  readonly baseUrl:string = environment.baseApiUrl;
 
   constructor(private http:HttpClient) { }
 
@@ -163,6 +164,23 @@ export class ScheduleDesignerApiService {
         response.CourseType.CourseTypeId, 
         response.CourseType.Name,
         response.CourseType.Color), response.Name, response.UnitsMinutes))
+    );
+  }
+
+  public GetRoomType(roomTypeId: number):Observable<RoomType> {
+    const request = {
+      url: this.baseUrl + `/roomTypes(${roomTypeId})`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => new RoomType(response.RoomTypeId, response.Name))
     );
   }
 
@@ -831,6 +849,32 @@ export class ScheduleDesignerApiService {
         });
 
         return {schedule: schedule, courseEditions: courseEditions};
+      })
+    );
+  }
+
+  public GetRoom(id: number): Observable<Room> {
+    const request = {
+      url: this.baseUrl + `/rooms(${id})?$expand=Type`,
+      method: 'GET'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    ).pipe(
+      map((response : any) => {
+        const room = new Room(response.RoomId);
+        room.Name = response.Name;
+        room.RoomType = new RoomType(
+          response.Type.RoomTypeId, 
+          response.Type.Name
+        );
+        room.Capacity = response.Capacity;
+        return room;
       })
     );
   }

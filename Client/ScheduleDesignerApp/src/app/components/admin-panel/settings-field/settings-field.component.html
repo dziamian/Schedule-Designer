@@ -1,1 +1,74 @@
-<p>settings-field works!</p>
+<div *ngIf="loading == false; else spinner">
+    <div [ngSwitch]="data?.actionType">
+        <div *ngSwitchCase="'view'" class="content">
+            <div class="content-header">
+                <b>Application Settings</b>
+                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <div class="content-form">
+                <form (ngSubmit)="Save()" [formGroup]="settingsForm">
+                    <mat-form-field class="form-number-input" appearance="outline">
+                        <mat-label>Single Course Duration (Hours)</mat-label>
+                        <input type="number" matInput name="courseDurationHours" formControlName="courseDurationHours" [errorStateMatcher]="courseDurationErrorMatcher" min="0" max="23">
+                        <mat-error *ngIf="settingsForm.errors?.invalidCourseDuration">
+                            Single course duration <strong>must</strong> be longer than 0 minutes.
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="form-number-input" appearance="outline">
+                        <mat-label>Single Course Duration (Minutes)</mat-label>
+                        <input type="number" matInput name="courseDurationMinutes" formControlName="courseDurationMinutes" [errorStateMatcher]="courseDurationErrorMatcher" min="0" max="59">
+                    </mat-form-field>
+                    <br><br>
+
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>Start time of the first class</mat-label>
+                        <input type="time" matInput name="startTime" formControlName="startTime" [errorStateMatcher]="periodsErrorMatcher">
+                    </mat-form-field>
+
+                    <mat-form-field class="form-input" appearance="fill">
+                        <mat-label>End time of the last class</mat-label>
+                        <input type="time" matInput name="endTime" formControlName="endTime" [errorStateMatcher]="periodsErrorMatcher">
+                        <mat-error *ngIf="settingsForm.errors?.invalidPeriods">
+                            Couldn't calculate the valid amount of max courses per day.
+                        </mat-error>
+                    </mat-form-field>
+                    <br><br>
+
+                    <mat-form-field class="form-input" appearance="outline">
+                        <mat-label>Number of weeks in semester</mat-label>
+                        <input type="number" matInput name="termDuration" formControlName="termDuration" min="1">
+                    </mat-form-field>
+
+                    <button type="submit" mat-raised-button color="primary" class="form-submit" 
+                        [disabled]="!isModifying || IsSameAsOriginal()">
+                        Save
+                    </button>
+                    
+                    <button type="button" mat-raised-button color="accent" class="form-reset" 
+                        [disabled]="!isModifying" 
+                        (click)="Reset()">
+                        Reset
+                    </button>
+                    
+                    <button type="button" mat-raised-button class="form-reset" 
+                        [disabled]="!isModifying" 
+                        (click)="Cancel()">
+                        Cancel Modification
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div *ngSwitchDefault></div>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <mat-progress-spinner *ngIf="loading != null"
+        class="spinner"
+        mode="indeterminate"
+        diameter="40"
+    ></mat-progress-spinner>
+</ng-template>

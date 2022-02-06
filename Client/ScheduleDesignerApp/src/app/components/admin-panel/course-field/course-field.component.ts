@@ -119,8 +119,8 @@ export class CourseFieldComponent implements OnInit {
     this.courseForm = new FormGroup({
       type: new FormControl(course.CourseType.Name, [Validators.required]),
       name: new FormControl(course.Name, [Validators.required]),
-      hours: new FormControl(Math.floor(this.originalCourse.UnitsMinutes / 60), [Validators.required]),
-      minutes: new FormControl(this.originalCourse.UnitsMinutes % 60, [Validators.required]),
+      hours: new FormControl(Math.floor(course.UnitsMinutes / 60), [Validators.required]),
+      minutes: new FormControl(course.UnitsMinutes % 60, [Validators.required]),
     }, [validUnitsMinutes(this.settings)]);
     this.originalValues = this.courseForm.value;
   }
@@ -155,6 +155,8 @@ export class CourseFieldComponent implements OnInit {
         this.disableForm();
 
         this.loading = false;
+      }, () => {
+        this.snackBar.open("Could not find course.", "OK");
       });
     } else if (this._data.actionType === 'add') {
       this.originalCourse = new Course(
@@ -224,7 +226,7 @@ export class CourseFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully added room for the course.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -244,7 +246,7 @@ export class CourseFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed room from the course.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -333,7 +335,7 @@ export class CourseFieldComponent implements OnInit {
     }, response => {
       this.enableForm();
       
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -363,7 +365,7 @@ export class CourseFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully created course.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -377,7 +379,7 @@ export class CourseFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed course.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");

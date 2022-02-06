@@ -23,6 +23,18 @@ export interface IGroup {
     ParentGroupId?: number | null;
 }
 
+export interface IRoomType {
+    RoomTypeId?: number,
+    Name?: string
+}
+
+export interface IRoom {
+    RoomId?: number,
+    RoomTypeId?: number,
+    Name?: string,
+    Capacity?: number
+}
+
 export interface IUser {
     UserId?: number,
     FirstName?: string,
@@ -43,4 +55,11 @@ export interface ICoordinator {
 export interface IStudent {
     UserId?: number,
     StudentNumber?: string | null
+}
+
+export interface ISettings {
+    CourseDurationMinutes?: number,
+    StartTime?: string,
+    EndTime?: string,
+    TermDurationWeeks?: number
 }

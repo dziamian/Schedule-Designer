@@ -31,9 +31,9 @@ namespace Testing
         public void Test1()
         {
             var grandParentGroup = new Group() { GroupId = 1, Name = "A", ParentGroupId = null };
-            var parentGroup = new Group() { GroupId = 2, Name = "B", ParentGroupId = 1, ParentGroup = grandParentGroup };
-            var childGroup1 = new Group() { GroupId = 3, Name = "C", ParentGroupId = 2, ParentGroup = parentGroup };
-            var childGroup2 = new Group() { GroupId = 4, Name = "D", ParentGroupId = 2, ParentGroup = parentGroup };
+            var parentGroup = new Group() { GroupId = 2, Name = "B", ParentGroupId = 1 };
+            var childGroup1 = new Group() { GroupId = 3, Name = "C", ParentGroupId = 2 };
+            var childGroup2 = new Group() { GroupId = 4, Name = "D", ParentGroupId = 2 };
             
             var groups = new List<Group>() { grandParentGroup, parentGroup, childGroup1, childGroup2 }.ToList();
 

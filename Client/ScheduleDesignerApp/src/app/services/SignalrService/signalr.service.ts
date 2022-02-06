@@ -5,12 +5,13 @@ import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, RemovedSchedulePositions, SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { ScheduledMove } from 'src/app/others/ScheduledMove';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalrService implements OnDestroy {
-  readonly connectionUrl = 'http://localhost:5000/scheduleHub';
+  readonly connectionUrl = environment.baseSignalrUrl;
   
   connection:signalr.HubConnection;
   connectionIntentionallyStopped:boolean = false;

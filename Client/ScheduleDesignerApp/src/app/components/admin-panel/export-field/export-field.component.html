@@ -1,1 +1,18 @@
-<p>export-field works!</p>
+<div class="content">
+    <div class="content-header">
+        <b>Export Section</b>
+    </div>
+    <div class="content-inner">
+        <div class="row" *ngFor="let element of list">
+            <div class="row-left">
+                <b>{{element.label}}:</b>
+            </div>
+            <div class="row-right">
+                <button mat-raised-button color="primary" (click)="Export(element.method)">
+                    <mat-icon>arrow_downward</mat-icon>
+                    Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

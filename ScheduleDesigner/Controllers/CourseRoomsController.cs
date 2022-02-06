@@ -13,6 +13,7 @@ using System.Security.Claims;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace ScheduleDesigner.Controllers
 {
@@ -142,6 +143,14 @@ namespace ScheduleDesigner.Controllers
                 if (result < 0)
                 {
                     return NotFound();
+                }
+
+                var schedulePosition = await _unitOfWork.SchedulePositions
+                    .Get(e => e.RoomId == key2).FirstOrDefaultAsync();
+
+                if (schedulePosition != null)
+                {
+                    return BadRequest("You cannot remove this room from course because it contains some positions in schedule.");
                 }
 
                 await _unitOfWork.CompleteAsync();

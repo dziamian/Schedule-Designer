@@ -160,7 +160,11 @@ export class GroupFieldComponent implements OnInit {
           this.disableForm();
 
           this.loading = false;
+        }, () => {
+          this.snackBar.open("Could not find group.", "OK");
         });
+      }, () => {
+        this.snackBar.open("Could not find group.", "OK");
       });
       
     } else if (this._data.actionType === 'add') {
@@ -250,7 +254,7 @@ export class GroupFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully added student for this group.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -271,7 +275,7 @@ export class GroupFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed student from this group.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -295,7 +299,7 @@ export class GroupFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully given representative role for this student.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -319,7 +323,7 @@ export class GroupFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully took away representative role from this student.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -367,7 +371,6 @@ export class GroupFieldComponent implements OnInit {
         }
         isLocked = true;
       } catch (error: any) {
-        console.log(error);
         if (error.Message != undefined) {
           this.snackBar.open(error.Message, "OK");
         } else if (error.error != undefined) {
@@ -410,7 +413,7 @@ export class GroupFieldComponent implements OnInit {
     }, response => {
       this.enableForm(true);
       
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -431,14 +434,12 @@ export class GroupFieldComponent implements OnInit {
       ParentGroupId: parentId
     };
 
-    console.log(parentId);
-
     this.administratorApiService.CreateGroup(group).subscribe((response) => {
       this.onCreate.emit(response.GroupId);
       
       this.snackBar.open("Successfully created group.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");
@@ -452,7 +453,7 @@ export class GroupFieldComponent implements OnInit {
       
       this.snackBar.open("Successfully removed group.", "OK");
     }, response => {
-      if (response.error.error.message != undefined) {
+      if (response.error?.error?.message != undefined) {
         this.snackBar.open(response.error.error.message, "OK");
       } else if (typeof response.error !== 'object') {
         this.snackBar.open(response.error, "OK");

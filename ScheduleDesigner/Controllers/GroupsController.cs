@@ -468,6 +468,22 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
+                var subGroups = await _unitOfWork.Groups
+                    .Get(e => e.ParentGroupId == key).FirstOrDefaultAsync();
+
+                if (subGroups != null)
+                {
+                    return BadRequest("You cannot remove this group because it contains some child groups.");
+                }
+
+                var courseEditions = await _unitOfWork.GroupCourseEditions
+                    .Get(e => e.GroupId == key).FirstOrDefaultAsync();
+
+                if (courseEditions != null)
+                {
+                    return BadRequest("You cannot remove this group because there are some course editions assigned to it.");
+                }
+
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
@@ -483,6 +499,12 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
+                var courseEditions = _unitOfWork.GroupCourseEditions.GetAll();
+                if (courseEditions.Any())
+                {
+                    return BadRequest("You cannot clear groups because there are some course editions assigned to them.");
+                }
+
                 int studentGroupsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [StudentGroups]");
                 int groupsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Groups]");
 

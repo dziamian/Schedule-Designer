@@ -5,14 +5,15 @@ import { AccessToken } from 'src/app/others/AccessToken';
 import { Group } from 'src/app/others/Group';
 import { map } from 'rxjs/operators';
 import { Account, Coordinator, SearchUser, Staff, Student, StudentBasic, Titles, User } from 'src/app/others/Accounts';
-import { ICoordinator, ICourse, ICourseEdition, ICourseType, IGroup, IStaff, IStudent, IUser } from 'src/app/others/Interfaces';
+import { ICoordinator, ICourse, ICourseEdition, ICourseType, IGroup, IRoom, IRoomType, ISettings, IStaff, IStudent, IUser } from 'src/app/others/Interfaces';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdministratorApiService {
 
-  readonly baseUrl:string = 'http://localhost:5000/api';
+  readonly baseUrl:string = environment.baseApiUrl;
 
   constructor(private http:HttpClient) { }
 
@@ -496,6 +497,100 @@ export class AdministratorApiService {
     );
   }
 
+  public CreateRoomType(roomType: IRoomType): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/roomTypes`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: roomType,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateRoomType(roomType: IRoomType): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/roomTypes(${roomType.RoomTypeId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: roomType,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveRoomType(roomTypeId: number): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/roomTypes(${roomTypeId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public CreateRoom(room: IRoom): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/rooms`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: room,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public UpdateRoom(room: IRoom): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/rooms(${room.RoomId})`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: room,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public RemoveRoom(roomId: number): Observable<any> {
+    const request = {
+      url: this.baseUrl + `/rooms(${roomId})`,
+      method: 'DELETE'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
   public CreateAccountFromUsos(userId: number): Observable<any> {
     const request = {
       url: this.baseUrl + `/users/Service.CreateAccountFromUsos`,
@@ -764,6 +859,48 @@ export class AdministratorApiService {
     );
   }
 
+  public UpdateSettings(settings: ISettings, connectionId: string):Observable<any> {
+    const request = {
+      url: this.baseUrl + `/settings?connectionId=${connectionId}`,
+      method: 'PATCH'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: settings,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public Import(files: {name: string, file: File}[], resource: string, connectionId?: string | null):Observable<any> {
+    const request = {
+      url: this.baseUrl + `/import/${resource}`,
+      method: 'POST'
+    };
+
+    if (connectionId != null || connectionId != undefined) {
+      request.url += `?connectionId=${connectionId}`;
+    }
+
+    const formData = new FormData();
+
+    for (var file in files) {
+      formData.append(files[file].name, files[file].file);
+    }
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
+        body: formData,
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
   public UploadSchedule(file: File, connectionId: string):Observable<any> {
     const request = {
       url: this.baseUrl + `/import/schedulePositions?connectionId=${connectionId}`,
@@ -784,9 +921,9 @@ export class AdministratorApiService {
     );
   }
 
-  public DownloadSchedule():Observable<any> {
+  public Export(resource: string):Observable<any> {
     const request = {
-      url: this.baseUrl + `/export/schedulePositions`,
+      url: this.baseUrl + `/export/${resource}`,
       method: 'GET'
     };
 
@@ -796,6 +933,21 @@ export class AdministratorApiService {
       {
         responseType: 'blob',
         observe: 'response',
+        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
+      }
+    );
+  }
+
+  public Clear(resource: string, action: string):Observable<any> {
+    const request = {
+      url: this.baseUrl + `/${resource}/${action}`,
+      method: 'POST'
+    };
+
+    return this.http.request(
+      request.method,
+      request.url,
+      {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     );

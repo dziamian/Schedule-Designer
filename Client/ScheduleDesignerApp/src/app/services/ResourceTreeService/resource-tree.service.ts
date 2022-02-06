@@ -553,6 +553,17 @@ export class ResourceTreeService {
     });
   }
 
+  public setAllRoomTypes(callback: () => void) {
+    forkJoin([
+      this.scheduleDesignerApiService.GetRoomTypes(),
+    ]).subscribe(([roomTypes]) => {
+      this.setRoomTypes(Array.from(roomTypes, ([key, value]) => (value)));
+
+      this.setCurrentData();
+      callback();
+    });
+  }
+
   public setAllCoordinators(callback: () => void) {
     this.scheduleDesignerApiService.GetCoordinators().subscribe(coordinators => {
       this.setCoordinators(coordinators, true);

@@ -16,10 +16,10 @@ namespace ScheduleDesigner.Models
         [Range(1, 1440, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public int CourseDurationMinutes { get; set; }
 
-        [Range(typeof(TimeSpan), "00:00", "23:59")]
+        [Range(typeof(TimeSpan), "00:00", "23:59", ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public TimeSpan StartTime { get; set; }
 
-        [Range(typeof(TimeSpan), "00:00", "23:59")]
+        [Range(typeof(TimeSpan), "00:00", "23:59", ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         [GreaterThan("StartTime")]
         public TimeSpan EndTime { get; set; }
 

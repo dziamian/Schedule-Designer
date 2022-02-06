@@ -27,7 +27,7 @@ namespace ScheduleDesigner.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        private static bool IsDataValid(Settings settings)
+        private static bool ArePeriodsValid(Settings settings)
         {
             return (settings.EndTime - settings.StartTime).TotalMinutes % settings.CourseDurationMinutes == 0;
         }
@@ -122,7 +122,7 @@ namespace ScheduleDesigner.Controllers
 
                     delta.Patch(_settings);
 
-                    if (!IsDataValid(_settings))
+                    if (!ArePeriodsValid(_settings))
                     {
                         ModelState.AddModelError("CoursesAmount", "Couldn't calculate the valid amount of max courses per day.");
                         return BadRequest(ModelState);

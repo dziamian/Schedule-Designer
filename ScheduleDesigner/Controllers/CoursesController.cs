@@ -238,12 +238,18 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
-
-
                 var result = await _unitOfWork.Courses.Delete(e => e.CourseId == key1);
                 if (result < 0)
                 {
                     return NotFound();
+                }
+
+                var schedulePosition = await _unitOfWork.SchedulePositions
+                    .Get(e => e.CourseId == key1).FirstOrDefaultAsync();
+
+                if (schedulePosition != null)
+                {
+                    return BadRequest("You cannot remove this course because it contains some positions in schedule.");
                 }
 
                 await _unitOfWork.CompleteAsync();
@@ -261,6 +267,12 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
+                var schedulePositions = _unitOfWork.SchedulePositions.GetAll();
+                if (schedulePositions.Any())
+                {
+                    return BadRequest("You cannot clear courses because there are some positions in schedule assigned to them.");
+                }
+
                 int courseRoomsAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [CourseRooms]");
                 int coursesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Courses]");
 

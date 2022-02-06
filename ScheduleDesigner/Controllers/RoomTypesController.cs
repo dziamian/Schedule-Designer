@@ -128,6 +128,19 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
+                var roomIds = _unitOfWork.Rooms
+                    .Get(e => e.RoomTypeId == key)
+                    .Select(e => e.RoomId)
+                    .ToList();
+
+                var schedulePosition = await _unitOfWork.SchedulePositions
+                    .Get(e => roomIds.Contains(e.RoomId)).FirstOrDefaultAsync();
+
+                if (schedulePosition != null)
+                {
+                    return BadRequest("You cannot remove this room type because it contains some positions in schedule.");
+                }
+
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
             }
@@ -143,6 +156,12 @@ namespace ScheduleDesigner.Controllers
         {
             try
             {
+                var schedulePositions = _unitOfWork.SchedulePositions.GetAll();
+                if (schedulePositions.Any())
+                {
+                    return BadRequest("You cannot clear room types because there are some positions in schedule assigned to them.");
+                }
+
                 int roomTypesAffected = _unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [RoomTypes]");
 
                 return Ok(new { RoomTypesAffected = roomTypesAffected });

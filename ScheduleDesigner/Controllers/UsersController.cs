@@ -272,6 +272,14 @@ namespace ScheduleDesigner.Controllers
                     return NotFound();
                 }
 
+                var courseEditions = await _unitOfWork.CoordinatorCourseEditions
+                    .Get(e => e.CoordinatorId == key).FirstOrDefaultAsync();
+
+                if (courseEditions != null)
+                {
+                    return BadRequest("You cannot remove this user because there are some course editions assigned to him.");
+                }
+
                 await _unitOfWork.CompleteAsync();
 
                 return NoContent();

@@ -21,7 +21,7 @@ namespace ScheduleDesigner.Models
         {
             var response = context.HttpContext.Response;
             context.HttpContext.Response.Headers.Add("Content-Disposition", new[] { "attachment; filename=" + FileDownloadName });
-            using var streamWriter = new StreamWriter(response.Body);
+            using var streamWriter = new StreamWriter(response.Body, System.Text.Encoding.UTF8);
             var header = _data.FirstOrDefault().GetHeader();
             await streamWriter.WriteAsync(header);
             foreach (var p in _data)
