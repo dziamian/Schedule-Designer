@@ -677,39 +677,6 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
-        /*if (response.value.length == 0) {
-          return courseEditions;
-        }
-
-        var j = 0;
-        var nextElement = j + 1;
-
-        const courseEditionsLength = courseEditions.length;
-        for (var i = 0; i < courseEditionsLength; ++i) {
-          if (response.value[j].CourseEditionId != courseEditions[i].CourseEditionId) {
-            j = nextElement;
-          }
-
-          var k = j;
-          while (response.value[k]?.CourseEditionId == courseEditions[i].CourseEditionId) {
-            courseEditions[i].Coordinators.push(new Coordinator(
-              new User(
-                response.value[k].Coordinator.UserId,
-                response.value[k].Coordinator.User.FirstName,
-                response.value[k].Coordinator.User.LastName
-              ),
-              new Titles(
-                response.value[k].Coordinator.TitleBefore,
-                response.value[k].Coordinator.TitleAfter
-              )));
-
-            ++k;
-          }
-          nextElement = k;
-        }
-
-        return courseEditions;*/
-
         const length = response.value.length;
         if (length == 0) {
           return courseEditions;
@@ -772,32 +739,6 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
-
-        /*if (response.value.length == 0) {
-          return courseEditions;
-        }
-        
-        var j = 0;
-        var nextElement = j + 1;
-
-        const courseEditionsLength = courseEditions.length;
-        for (var i = 0; i < courseEditionsLength; ++i) {
-          console.log(response.value[j]);
-          if (response.value[j].CourseEditionId != courseEditions[i].CourseEditionId) {
-            j = nextElement;
-          }
-
-          var k = j;
-          while (response.value[k]?.CourseEditionId == courseEditions[i].CourseEditionId) {
-            courseEditions[i].Groups.push(new Group(response.value[k].GroupId));
-
-            ++k;
-          }
-          nextElement = k;
-        }
-
-        return courseEditions;*/
-
         const length = response.value.length;
         if (length == 0) {
           return courseEditions;
