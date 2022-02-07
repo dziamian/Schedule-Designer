@@ -80,7 +80,7 @@ namespace ScheduleDesigner
                 });
             });
 
-            services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             
             services.AddHostedService<FullBackupService>();
             services.AddHostedService<DifferentialBackupService>();

@@ -677,6 +677,10 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
+        /*if (response.value.length == 0) {
+          return courseEditions;
+        }
+
         var j = 0;
         var nextElement = j + 1;
 
@@ -702,6 +706,30 @@ export class ScheduleDesignerApiService {
             ++k;
           }
           nextElement = k;
+        }
+
+        return courseEditions;*/
+
+        const length = response.value.length;
+        if (length == 0) {
+          return courseEditions;
+        }
+
+        for (var i = 0; i < length; ++i) {
+          for (var key in courseEditions) {
+            if (courseEditions[key].CourseEditionId == response.value[i].CourseEditionId) {
+              courseEditions[key].Coordinators.push(new Coordinator(
+                new User(
+                  response.value[i].Coordinator.UserId,
+                  response.value[i].Coordinator.User.FirstName,
+                  response.value[i].Coordinator.User.LastName
+                ),
+                new Titles(
+                  response.value[i].Coordinator.TitleBefore,
+                  response.value[i].Coordinator.TitleAfter
+                )));
+            }
+          }
         }
 
         return courseEditions;
@@ -744,11 +772,17 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => {
+
+        /*if (response.value.length == 0) {
+          return courseEditions;
+        }
+        
         var j = 0;
         var nextElement = j + 1;
 
         const courseEditionsLength = courseEditions.length;
         for (var i = 0; i < courseEditionsLength; ++i) {
+          console.log(response.value[j]);
           if (response.value[j].CourseEditionId != courseEditions[i].CourseEditionId) {
             j = nextElement;
           }
@@ -760,6 +794,21 @@ export class ScheduleDesignerApiService {
             ++k;
           }
           nextElement = k;
+        }
+
+        return courseEditions;*/
+
+        const length = response.value.length;
+        if (length == 0) {
+          return courseEditions;
+        }
+
+        for (var i = 0; i < length; ++i) {
+          for (var key in courseEditions) {
+            if (courseEditions[key].CourseEditionId == response.value[i].CourseEditionId) {
+              courseEditions[key].Groups.push(new Group(response.value[i].GroupId));
+            }
+          }
         }
 
         return courseEditions;

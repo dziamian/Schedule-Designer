@@ -308,6 +308,18 @@ namespace ScheduleDesigner.Dtos
     {
         public int RoomId { get; set; }
         public bool IsBusy { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is RoomAvailability availability &&
+                   RoomId == availability.RoomId &&
+                   IsBusy == availability.IsBusy;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RoomId, IsBusy);
+        }
     }
 
     public class ScheduledMoveRead : IComparable<ScheduledMoveRead>

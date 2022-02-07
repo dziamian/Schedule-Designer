@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Repositories.UnitOfWork
 {
-    public class SqlUnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         public ScheduleDesignerDbContext Context { get; private set; }
 
@@ -49,12 +49,12 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
         public IUserRepo Users { get; private set; }
 
-        public SqlUnitOfWork(ScheduleDesignerDbContext context)
+        public UnitOfWork(ScheduleDesignerDbContext context)
         {
             Context = context;
 
             Authorizations = new AuthorizationRepo(context);
-            CoordinatorCourseEditions = new CoordinatorCourseEdition(context);
+            CoordinatorCourseEditions = new CoordinatorCourseEditionRepo(context);
             Coordinators = new CoordinatorRepo(context);
             CourseEditions = new CourseEditionRepo(context);
             Courses = new CourseRepo(context);

@@ -2649,7 +2649,7 @@ namespace ScheduleDesigner.Hubs
 
                     var courseDurationMinutes = _settings.CourseDurationMinutes;
                     if (Math.Ceiling(courseEdition.Course.UnitsMinutes / (courseDurationMinutes * 1.0)) -
-                        courseEdition.SchedulePositions.Count < weeks.Length)
+                        (courseEdition.SchedulePositions.Count) < weeks.Length)
                     {
                         Clients.Caller.SendResponse(new MessageObject { StatusCode = 400, Message = "You cannot add this amount of units to the schedule." });
                         return;

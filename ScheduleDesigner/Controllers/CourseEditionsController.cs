@@ -121,7 +121,8 @@ namespace ScheduleDesigner.Controllers
                     .Include(e => e.SchedulePositions)
                     .Include(e => e.Course)
                     .Include(e => e.Coordinators)
-                    .Include(e => e.Groups);
+                    .Include(e => e.Groups)
+                    .ToList();
                 
                 return Ok(_courseEditions);
             }

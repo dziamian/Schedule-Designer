@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, Subscription } from 'rxjs';
-import { skip } from 'rxjs/operators';
+import { finalize, skip } from 'rxjs/operators';
 import { MessageObject } from 'src/app/others/CommunicationObjects';
 import { Room } from 'src/app/others/Room';
 import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from 'src/app/others/dialogs/RoomSelectionDialog';
@@ -208,37 +208,38 @@ export class RoomSelectionComponent implements OnInit {
       }
     }));
 
-    forkJoin([
-      this.scheduleDesignerApiService.GetCourseEditionGroupsSize(this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId),
-      this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes),
-    ]).subscribe(([size, courseRooms]) => {
-      this.groupsSize = size;
-      
-      const filterRoomsIds = this.data.Filter.RoomsIds;
-      this.courseRooms = (filterRoomsIds.length > 0) ? courseRooms.filter(courseRoom => filterRoomsIds.includes(courseRoom.RoomId)) : courseRooms;
+    this.scheduleDesignerApiService.GetCourseEditionGroupsSize(this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId).pipe(finalize(() => {
+      this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes).subscribe(courseRooms => {
+        const filterRoomsIds = this.data.Filter.RoomsIds;
+        this.courseRooms = (filterRoomsIds.length > 0) ? courseRooms.filter(courseRoom => filterRoomsIds.includes(courseRoom.RoomId)) : courseRooms;
 
-      if (this.courseRooms.length == 1) {
-        this.selectedRoom = this.courseRooms[0];
-      }
-
-      this.scheduleDesignerApiService.GetRoomsAvailability(
-        this.courseRooms.map((room) => room.RoomId),
-        this.data.DestIndexes[1] + 1,
-        this.data.DestIndexes[0] + 1,
-        this.data.Weeks
-      ).subscribe((rooms) => {
-        for (let i = 0; i < rooms.length; ++i) {
-          let courseRoom = this.courseRooms[i];
-          let room = rooms[i];
-          if (courseRoom.RoomId == room.RoomId) {
-            this.courseRooms[i].IsBusy = rooms[i].IsBusy;
-          }
+        if (this.courseRooms.length == 1) {
+          this.selectedRoom = this.courseRooms[0];
         }
 
-        this.mappedCourseRooms = this.getMappedCourseRooms();
+        this.scheduleDesignerApiService.GetRoomsAvailability(
+          this.courseRooms.map((room) => room.RoomId),
+          this.data.DestIndexes[1] + 1,
+          this.data.DestIndexes[0] + 1,
+          this.data.Weeks
+        ).subscribe((rooms) => {
+          for (let i = 0; i < rooms.length; ++i) {
+            let courseRoom = this.courseRooms[i];
+            let room = rooms[i];
+            if (courseRoom.RoomId == room.RoomId) {
+              this.courseRooms[i].IsBusy = rooms[i].IsBusy;
+            }
+          }
 
-        this.loading = false;
+          this.mappedCourseRooms = this.getMappedCourseRooms();
+
+          this.loading = false;
+        });
       });
+    })).subscribe(size => {
+      this.groupsSize = size;
+    }, () => {
+      this.groupsSize = 0;
     });
   }
 
@@ -336,8 +337,7 @@ export class RoomSelectionComponent implements OnInit {
       if (result.StatusCode >= 400) {
         throw result;
       }
-
-      status = (isMoveValid && !this.isProposition) ? RoomSelectionDialogStatus.ACCEPTED : RoomSelectionDialogStatus.SCHEDULED;
+      status = (isMoveValid && !selectedRoom?.IsBusy && !this.isProposition) ? RoomSelectionDialogStatus.ACCEPTED : RoomSelectionDialogStatus.SCHEDULED;
     }
     catch (error:any) {
       status = RoomSelectionDialogStatus.FAILED;

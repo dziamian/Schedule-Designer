@@ -97,11 +97,15 @@ namespace ScheduleDesigner.Repositories
                 .ValueGeneratedOnAdd()
                 .UseIdentityColumn();
 
+            modelBuilder.Entity<CourseEdition>().
+                HasIndex(e => e.CourseEditionId)
+                .IsUnique();
+
             //CoordinatorCourseEdition
-            modelBuilder.Entity<Models.CoordinatorCourseEdition>()
+            modelBuilder.Entity<CoordinatorCourseEdition>()
                 .HasKey(e => (new { e.CourseId, e.CourseEditionId, e.CoordinatorId }));
 
-            modelBuilder.Entity<Models.CoordinatorCourseEdition>()
+            modelBuilder.Entity<CoordinatorCourseEdition>()
                 .HasOne(e => e.Coordinator)
                 .WithMany(e => e.CourseEditions)
                 .OnDelete(DeleteBehavior.Restrict);
