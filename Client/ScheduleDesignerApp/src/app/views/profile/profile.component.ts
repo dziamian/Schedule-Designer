@@ -4,7 +4,7 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
 @Component({
@@ -18,18 +18,18 @@ export class ProfileComponent implements OnInit {
   connectionStatus:boolean = false;
   isConnectedSubscription: Subscription;
 
-  account:Account;
+  userInfo:UserInfo;
 
   constructor(
-    private store:Store<{account: Account}>,
+    private store:Store<{userInfo: UserInfo}>,
     private signalrService:SignalrService,
     private snackBar:MatSnackBar
   ) { 
-    this.store.select('account').subscribe((account) => {
-      if (account.User.UserId == 0) {
+    this.store.select('userInfo').subscribe((userInfo) => {
+      if (userInfo.UserId == 0) {
         return;
       }
-      this.account = account;
+      this.userInfo = userInfo;
       this.loading = false;
     });
   }

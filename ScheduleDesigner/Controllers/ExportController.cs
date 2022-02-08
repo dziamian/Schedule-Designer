@@ -56,15 +56,6 @@ namespace ScheduleDesigner.Controllers
         }
 
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet("coordinators"), DisableRequestSizeLimit]
-        public IActionResult ExportCoordinators()
-        {
-            var data = _unitOfWork.Coordinators.GetAll().ToList();
-            var fileDownloadName = "Coordinators.csv";
-            return new CsvExport(data, fileDownloadName);
-        }
-
-        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet("courseRooms"), DisableRequestSizeLimit]
         public IActionResult ExportCourseRooms()
         {
@@ -119,29 +110,11 @@ namespace ScheduleDesigner.Controllers
         }
 
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet("staffs"), DisableRequestSizeLimit]
-        public IActionResult ExportStaffs()
-        {
-            var data = _unitOfWork.Staffs.GetAll().ToList();
-            var fileDownloadName = "Staffs.csv";
-            return new CsvExport(data, fileDownloadName);
-        }
-
-        [Authorize(Policy = "AdministratorOnly")]
         [HttpGet("studentGroups"), DisableRequestSizeLimit]
         public IActionResult ExportStudentGroups()
         {
             var data = _unitOfWork.StudentGroups.GetAll().ToList();
             var fileDownloadName = "StudentGroups.csv";
-            return new CsvExport(data, fileDownloadName);
-        }
-
-        [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet("students"), DisableRequestSizeLimit]
-        public IActionResult ExportStudents()
-        {
-            var data = _unitOfWork.Students.GetAll().ToList();
-            var fileDownloadName = "Students.csv";
             return new CsvExport(data, fileDownloadName);
         }
 

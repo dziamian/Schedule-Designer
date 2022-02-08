@@ -2,7 +2,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { forkJoin } from 'rxjs';
-import { Coordinator, Staff, Student, User } from 'src/app/others/Accounts';
+import { Coordinator, Staff, Student, User, UserBasic } from 'src/app/others/Accounts';
 import { CourseEditionInfo, CourseInfo } from 'src/app/others/CourseInfo';
 import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
@@ -134,8 +134,9 @@ export class ResourceTreeService {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
         resourceNode.item.id = coordinator.User.UserId.toString();
-        resourceNode.item.name 
-          = `${coordinator.Titles.TitleBefore ?? ''} ${coordinator.User.LastName.toUpperCase()} ${coordinator.User.FirstName} ${coordinator.Titles.TitleAfter ?? ''}`;
+        resourceNode.item.name = (coordinator.Titles.TitleBefore != null ? `${coordinator.Titles.TitleBefore} ` : '') + 
+          `${coordinator.User.LastName.toUpperCase()} ${coordinator.User.FirstName}` + 
+          (coordinator.Titles.TitleAfter != null ? ` ${coordinator.Titles.TitleAfter}` : '');
         if (idVisible) {
           resourceNode.item.name += ` (${coordinator.User.UserId})`;
         }
@@ -169,7 +170,9 @@ export class ResourceTreeService {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
         resourceNode.item.id = staff.User.UserId.toString();
-        resourceNode.item.name = `${staff.User.LastName.toUpperCase()} ${staff.User.FirstName}`;
+        resourceNode.item.name = (staff.Titles.TitleBefore != null ? `${staff.Titles.TitleBefore} ` : '') + 
+          `${staff.User.FirstName} ${staff.User.LastName}` + 
+          (staff.Titles.TitleAfter != null ? ` ${staff.Titles.TitleAfter}` : '');
         if (idVisible) {
           resourceNode.item.name += ` (${staff.User.UserId})`;
         }
@@ -203,7 +206,9 @@ export class ResourceTreeService {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
         resourceNode.item.id = staff.User.UserId.toString();
-        resourceNode.item.name = `${staff.User.LastName.toUpperCase()} ${staff.User.FirstName}`;
+        resourceNode.item.name = (staff.Titles.TitleBefore != null ? `${staff.Titles.TitleBefore} ` : '') + 
+          `${staff.User.FirstName} ${staff.User.LastName}` + 
+          (staff.Titles.TitleAfter != null ? ` ${staff.Titles.TitleAfter}` : '');
         if (idVisible) {
           resourceNode.item.name += ` (${staff.User.UserId})`;
         }
@@ -216,7 +221,7 @@ export class ResourceTreeService {
     );
   }
 
-  private setOtherUsers(users: User[], idVisible: boolean = false, root: ResourceNode | null = null) {
+  private setOtherUsers(users: UserBasic[], idVisible: boolean = false, root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
     parentNode.item.name = 'Other Users';
@@ -234,7 +239,7 @@ export class ResourceTreeService {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
         resourceNode.item.id = user.UserId.toString();
-        resourceNode.item.name = `${user.LastName.toUpperCase()} ${user.FirstName}`;
+        resourceNode.item.name = user.FullName;
         if (idVisible) {
           resourceNode.item.name += ` (${user.UserId})`;
         }
@@ -264,7 +269,9 @@ export class ResourceTreeService {
         const resourceNode = new ResourceNode();
         resourceNode.item = new ResourceItem();
         resourceNode.item.id = student.User.UserId.toString();
-        resourceNode.item.name = `${student.User.LastName.toUpperCase()} ${student.User.FirstName}`;
+        resourceNode.item.name = (student.Titles.TitleBefore != null ? `${student.Titles.TitleBefore} ` : '') + 
+          `${student.User.FirstName} ${student.User.LastName}` + 
+          (student.Titles.TitleAfter != null ? ` ${student.Titles.TitleAfter}` : '');
         if (idVisible) {
           resourceNode.item.name += ` (${student.User.UserId})`;
         }

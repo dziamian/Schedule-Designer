@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
-import { Account, SearchUser, User } from 'src/app/others/Accounts';
+import { UserInfo, SearchUser } from 'src/app/others/Accounts';
 import { AdministratorApiService } from 'src/app/services/AdministratorApiService/administrator-api.service';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
@@ -25,12 +25,11 @@ export class UserFieldComponent implements OnInit {
     return this._data;
   }
 
-  @Output() onChange: EventEmitter<void> = new EventEmitter();
   @Output() onCreate: EventEmitter<string> = new EventEmitter();
   @Output() onRemove: EventEmitter<void> = new EventEmitter();
   @Output() onRefresh: EventEmitter<void> = new EventEmitter();
 
-  originalAccount: Account;
+  originalUserInfo: UserInfo;
 
   originalValues: any;
   isModifying: boolean = false;
@@ -52,7 +51,7 @@ export class UserFieldComponent implements OnInit {
   currentQuery: string;
 
   searchForm: FormGroup;
-  accountForm: FormGroup;
+  userInfoForm: FormGroup;
 
   ngOnInit(): void {
   }
@@ -63,31 +62,31 @@ export class UserFieldComponent implements OnInit {
     });
   }
 
-  private buildAccountForm(account: Account) {
-    this.accountForm = new FormGroup({
-      firstName: new FormControl(account.User.FirstName, [Validators.required]),
-      lastName: new FormControl(account.User.LastName, [Validators.required]),
-      staff: new FormControl(account.Staff != null),
-      coordinator: new FormControl(account.Coordinator != null),
-      titleBefore: new FormControl(account.Coordinator?.Titles.TitleBefore ?? ''),
-      titleAfter: new FormControl(account.Coordinator?.Titles.TitleAfter ?? ''),
-      admin: new FormControl(account.Staff?.IsAdmin ?? false),
-      student: new FormControl(account.Student != null),
-      studentNumber: new FormControl(account.Student?.StudentNumber ?? '')
+  private buildAccountForm(userInfo: UserInfo) {
+    this.userInfoForm = new FormGroup({
+      firstName: new FormControl(userInfo.FirstName, [Validators.required]),
+      lastName: new FormControl(userInfo.LastName, [Validators.required]),
+      academicNumber: new FormControl(userInfo.AcademicNumber ?? ''),
+      titleBefore: new FormControl(userInfo.TitleBefore ?? ''),
+      titleAfter: new FormControl(userInfo.TitleAfter ?? ''),
+      staff: new FormControl(userInfo.IsStaff),
+      coordinator: new FormControl(userInfo.IsCoordinator),
+      admin: new FormControl(userInfo.IsAdmin),
+      student: new FormControl(userInfo.IsStudent)
     });
-    this.originalValues = this.accountForm.value;
+    this.originalValues = this.userInfoForm.value;
   }
 
   private disableForm() {
-    for (var controlName in this.accountForm.controls) {
-      this.accountForm.controls[controlName].disable();
+    for (var controlName in this.userInfoForm.controls) {
+      this.userInfoForm.controls[controlName].disable();
     }
     this.isModifying = false;
   }
 
   private enableForm() {
-    for (var controlName in this.accountForm.controls) {
-      this.accountForm.controls[controlName].enable();
+    for (var controlName in this.userInfoForm.controls) {
+      this.userInfoForm.controls[controlName].enable();
     }
     this.isModifying = true;
   }
@@ -96,10 +95,10 @@ export class UserFieldComponent implements OnInit {
     this.loading = true;
 
     if (this._data.actionType === 'view') {
-      this.administratorApiService.GetUserAccount(Number.parseInt(this._data.id!)).subscribe(account => {
-        this.originalAccount = account;
+      this.administratorApiService.GetUserAccount(Number.parseInt(this._data.id!)).subscribe(userInfo => {
+        this.originalUserInfo = userInfo;
 
-        this.buildAccountForm(this.originalAccount);
+        this.buildAccountForm(this.originalUserInfo);
 
         this.disableForm();
 
@@ -121,21 +120,17 @@ export class UserFieldComponent implements OnInit {
   }
   
   IsSameAsOriginal(): boolean {
-    return this.originalAccount.User.FirstName === this.accountForm.controls['firstName'].value
-      && this.originalAccount.User.LastName === this.accountForm.controls['lastName'].value
-      && !!this.originalAccount.Staff === this.accountForm.controls['staff'].value
-      && ((this.accountForm.controls['staff'].value 
-        && this.originalAccount.Staff?.IsAdmin === this.accountForm.controls['admin'].value
-        && !!this.originalAccount.Coordinator === this.accountForm.controls['coordinator'].value
-        && ((this.accountForm.controls['coordinator'].value 
-          && this.originalAccount.Coordinator?.Titles.TitleBefore === this.accountForm.controls['titleBefore'].value
-          && this.originalAccount.Coordinator?.Titles.TitleAfter === this.accountForm.controls['titleAfter'].value) 
-            || !this.accountForm.controls['coordinator'].value)
-        || !this.accountForm.controls['staff'].value))
-      && !!this.originalAccount.Student === this.accountForm.controls['student'].value
-      && ((this.accountForm.controls['student'].value
-        && this.originalAccount.Student?.StudentNumber === this.accountForm.controls['studentNumber'].value)
-        || !this.accountForm.controls['student'].value);
+    return this.originalUserInfo.FirstName === this.userInfoForm.controls['firstName'].value
+      && this.originalUserInfo.LastName === this.userInfoForm.controls['lastName'].value
+      && this.originalUserInfo.AcademicNumber === this.userInfoForm.controls['academicNumber'].value
+      && this.originalUserInfo.TitleBefore === this.userInfoForm.controls['titleBefore'].value
+      && this.originalUserInfo.TitleAfter === this.userInfoForm.controls['titleAfter'].value
+      && this.originalUserInfo.IsStaff === this.userInfoForm.controls['staff'].value
+      && ((this.userInfoForm.controls['staff'].value
+        && this.originalUserInfo.IsAdmin === this.userInfoForm.controls['admin'].value
+        && this.originalUserInfo.IsCoordinator === this.userInfoForm.controls['coordinator'].value)
+        || !this.userInfoForm.controls['staff'].value)
+      && this.originalUserInfo.IsStudent === this.userInfoForm.controls['student'].value;
   }
 
   Modify() {
@@ -144,7 +139,7 @@ export class UserFieldComponent implements OnInit {
   }
 
   Reset() {
-    this.accountForm.reset(this.originalValues);
+    this.userInfoForm.reset(this.originalValues);
   }
 
   Cancel() {
@@ -153,173 +148,53 @@ export class UserFieldComponent implements OnInit {
   }
 
   async Save() {
-    if (!this.accountForm.valid) {
+    if (!this.userInfoForm.valid) {
       return;
     }
 
-    const firstName = this.accountForm.controls['firstName'].value;
-    const lastName = this.accountForm.controls['lastName'].value;
-    const staff = this.accountForm.controls['staff'].value;
-    const coordinator = this.accountForm.controls['coordinator'].value;
-    const titleBefore = coordinator ? this.accountForm.controls['titleBefore'].value : undefined;
-    const titleAfter = coordinator ? this.accountForm.controls['titleAfter'].value : undefined;
-    const admin = staff ? this.accountForm.controls['admin'].value : undefined;
-    const student = this.accountForm.controls['student'].value;
-    const studentNumber = student ? this.accountForm.controls['studentNumber'].value : undefined;
+    const firstName = this.userInfoForm.controls['firstName'].value;
+    const lastName = this.userInfoForm.controls['lastName'].value;
+    const academicNumber = this.userInfoForm.controls['academicNumber'].value;
+    const titleBefore = this.userInfoForm.controls['titleBefore'].value;
+    const titleAfter = this.userInfoForm.controls['titleAfter'].value;
+    const staff = this.userInfoForm.controls['staff'].value;
+    const coordinator = staff ? this.userInfoForm.controls['coordinator'].value : undefined;
+    const admin = staff ? this.userInfoForm.controls['admin'].value : undefined;
+    const student = this.userInfoForm.controls['student'].value;
 
-    const user = {
-      UserId: this.originalAccount.User.UserId,
-      FirstName: this.originalAccount.User.FirstName === firstName ? undefined : firstName,
-      LastName: this.originalAccount.User.LastName === lastName ? undefined : lastName
-    };
-    const staffRole = {
-      UserId: this.originalAccount.User.UserId,
-      IsAdmin: this.originalAccount.Staff?.IsAdmin === admin ? undefined : admin
-    };
-    const coordinatorRole = {
-      UserId: this.originalAccount.User.UserId,
-      TitleBefore: this.originalAccount.Coordinator?.Titles.TitleBefore === titleBefore ? undefined : titleBefore,
-      TitleAfter: this.originalAccount.Coordinator?.Titles.TitleAfter === titleAfter ? undefined : titleAfter,
-    };
-    const studentRole = {
-      UserId: this.originalAccount.User.UserId,
-      StudentNumber: this.originalAccount.Student?.StudentNumber === studentNumber ? undefined : studentNumber
-    };
+    const userInfo = {
+      UserId: this.originalUserInfo.UserId,
+      FirstName: this.originalUserInfo.FirstName === firstName ? undefined : firstName,
+      LastName: this.originalUserInfo.LastName === lastName ? undefined : lastName,
+      AcademicNumber: this.originalUserInfo.AcademicNumber === academicNumber ? undefined : academicNumber,
+      TitleBefore: this.originalUserInfo.TitleBefore === titleBefore ? undefined : titleBefore,
+      TitleAfter: this.originalUserInfo.TitleAfter === titleAfter ? undefined : titleAfter,
+      IsStudent: this.originalUserInfo.IsStudent === student ? undefined : student,
+      IsStaff: this.originalUserInfo.IsStaff === staff ? undefined : staff,
+      IsCoordinator: this.originalUserInfo.IsCoordinator === coordinator ? undefined : coordinator,
+      IsAdmin: this.originalUserInfo.IsAdmin === admin ? undefined : admin,
+    }
 
     this.disableForm();
-    const errorsEntities: string[] = [];
-    var additionalInfo: string = '';
-    if (user.FirstName != undefined || user.LastName != undefined) {
-      try {
-        await this.administratorApiService.UpdateUser(user).toPromise();
-      } catch (response: any) {
-        errorsEntities.push("User");
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
-      }
-    }
+    this.administratorApiService.UpdateUser(userInfo).subscribe(() => {
+      this.onRefresh.emit();
+      
+      this.snackBar.open("Successfully updated user.", "OK");
 
-    if (!!this.originalAccount.Coordinator != coordinator) {
-      try {
-        if (coordinator) {
-          await this.administratorApiService.CreateCoordinator(coordinatorRole).toPromise();
-        } else {
-          await this.administratorApiService.RemoveCoordinator(coordinatorRole.UserId).toPromise();
-        }
-      } catch (response: any) {
-        errorsEntities.push("Coordinator");
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
+      this.loadView();
+    }, response => {
+      this.enableForm();
+      
+      if (response.error?.error?.message != undefined) {
+        this.snackBar.open(response.error.error.message, "OK");
+      } else if (typeof response.error !== 'object') {
+        this.snackBar.open(response.error, "OK");
       }
-    } else if (coordinatorRole?.TitleBefore != undefined || coordinatorRole?.TitleAfter != undefined) {
-      try {
-        await this.administratorApiService.UpdateCoordinator(coordinatorRole).toPromise();
-      } catch (response: any) {
-        errorsEntities.push("Coordinator");
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
-      }
-    }
-    
-    if (!!this.originalAccount.Staff != staff) {
-      var coordinatorError = false;
-      try {
-        if (staff) {
-          await this.administratorApiService.CreateStaff(staffRole).toPromise();
-        } else {
-          await this.administratorApiService.RemoveStaff(staffRole.UserId).toPromise();
-          if (coordinator) {
-            coordinatorError = true;
-            await this.administratorApiService.RemoveCoordinator(coordinatorRole.UserId).toPromise();
-            coordinatorError = false;
-          }
-        }
-      } catch (response: any) {
-        if (coordinatorError) {
-          errorsEntities.push("Coordinator");
-        } else {
-          errorsEntities.push("Staff");
-        }
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
-      }
-    } else if (staffRole?.IsAdmin != undefined) {
-      try {
-        await this.administratorApiService.UpdateStaff(staffRole).toPromise();
-      } catch (response: any) {
-        errorsEntities.push("Staff");
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
-      }
-    }
-    
-    if (!!this.originalAccount.Student != student) {
-      try {
-        if (student) {
-          await this.administratorApiService.CreateStudent(studentRole).toPromise();
-        } else {
-          await this.administratorApiService.RemoveStudent(studentRole.UserId).toPromise();
-        }
-      } catch (response: any) {
-        errorsEntities.push("Student");
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
-      }
-    } else if (studentRole?.StudentNumber != undefined) {
-      try {
-        await this.administratorApiService.UpdateStudent(studentRole).toPromise();
-      } catch (response: any) {
-        errorsEntities.push("Student");
-        if (additionalInfo.length == 0) {
-          if (response.error.error.message != undefined) {
-            additionalInfo = response.error.error.message;
-          } else if (typeof response.error !== 'object') {
-            additionalInfo = response.error;
-          }
-        }
-      }
-    }
-
-    if (errorsEntities.length > 0) {
-      this.snackBar.open(`Some information about ${errorsEntities.toString()} has not been updated. Please check committed changes: ${additionalInfo}`, "OK");
-    }
-
-    this.onRefresh.emit();
-    this.loadView();
+    });
   }
 
   Remove() {
-    this.administratorApiService.RemoveUser(this.originalAccount.User.UserId).subscribe(() => {
+    this.administratorApiService.RemoveUser(this.originalUserInfo.UserId).subscribe(() => {
       this.onRemove.emit();
       
       this.snackBar.open("Successfully removed user.", "OK");

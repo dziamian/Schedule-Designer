@@ -9,7 +9,6 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
         ScheduleDesignerDbContext Context { get; }
         IAuthorizationRepo Authorizations { get; }
         ICoordinatorCourseEditionRepo CoordinatorCourseEditions { get; }
-        ICoordinatorRepo Coordinators { get; }
         ICourseEditionRepo CourseEditions { get; }
         ICourseRepo Courses { get; }
         ICourseRoomRepo CourseRooms { get; }
@@ -23,9 +22,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
         IMessageRepo Messages { get; }
         ISchedulePositionRepo SchedulePositions { get; }
         ISettingsRepo Settings { get; }
-        IStaffRepo Staffs { get; }
         IStudentGroupRepo StudentGroups { get; }
-        IStudentRepo Students { get; }
         ITimestampRepo Timestamps { get; }
         IUserRepo Users { get; }
 

@@ -12,9 +12,9 @@
             <ng-template matTabContent>
                 <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">
                     <div class="board">
-                        <app-my-courses *ngIf="isModifying && account?.Staff?.IsAdmin"
+                        <app-my-courses *ngIf="isModifying && (userInfo.IsStaff && userInfo.IsAdmin)"
                             [isModifying]="isModifying"
-                            [account]="account"
+                            [userInfo]="userInfo"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -25,8 +25,8 @@
                             (onStart)="OnMyCoursesStart($event)"
                             (onRelease)="OnRelease($event)"
                         ></app-my-courses>
-                        <app-available-resources *ngIf="!(isModifying && account?.Staff?.IsAdmin)"
-                            [representativeGroups]="account.Student?.RepresentativeGroups ?? []"
+                        <app-available-resources *ngIf="!(isModifying && (userInfo.IsStaff && userInfo.IsAdmin))"
+                            [representativeGroups]="userInfo.RepresentativeGroups ?? []"
 
                             [disabled]="isModifying"
                             (showSchedule)="ShowSchedule($event)"
@@ -103,8 +103,8 @@
                             labelAfter=""
                             
                             [isModifying]="isModifying"
-                            [account]="account"
-                            [representativeGroupsIds]="!account.Staff?.IsAdmin ? account.Student?.RepresentativeGroups ?? [] : []"
+                            [userInfo]="userInfo"
+                            [representativeGroupsIds]="!(userInfo.IsStaff && userInfo.IsAdmin) ? (userInfo.RepresentativeGroups ?? []) : []"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -135,7 +135,7 @@
                                     <mat-icon>print</mat-icon>
                             </button>
                             <button mat-raised-button color="accent" 
-                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!account?.Staff?.IsAdmin && !canMakePropositions()) || !currentResourceName"
+                                [disabled]="data.currentSelectedCourseEdition?.IsMoving || (!(userInfo.IsStaff && userInfo.IsAdmin) && !canMakePropositions()) || !currentResourceName"
                                 (click)="ModifySchedule()"
                                 >
                                     <mat-icon>{{isModifying ? 'visibility' : 'edit'}}</mat-icon>

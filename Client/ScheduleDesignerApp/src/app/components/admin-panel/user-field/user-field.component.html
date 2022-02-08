@@ -34,14 +34,14 @@
                         <mat-list-item role="listitem" *ngFor="let user of searchResults.Users">
                             <div class="item-text" matLine>
                                 <span class="item-text-line">
-                                    {{user.Coordinator?.Titles?.TitleBefore}} {{user.User.FirstName}} {{user.User.LastName}} {{user.Coordinator?.Titles?.TitleAfter}} ({{user.User.UserId}})
+                                    {{user?.TitleBefore}} {{user.FirstName}} {{user.LastName}} {{user?.TitleAfter}} ({{user.UserId}})
                                 </span>
                             </div>
                             <div class="item-text" matLine>
                                 <span class="item-text-line">
                                     <b>Staff</b>: 
                                     <mat-icon class="status-icon">
-                                        {{user.Staff != null ? 'check' : 'close'}}
+                                        {{user.IsStaff ? 'check' : 'close'}}
                                     </mat-icon>
                                 </span>
                             </div>
@@ -49,7 +49,7 @@
                                 <span class="item-text-line">
                                     <b>Coordinator</b>: 
                                     <mat-icon class="status-icon">
-                                        {{user.Coordinator != null ? 'check' : 'close'}}
+                                        {{user.IsCoordinator ? 'check' : 'close'}}
                                     </mat-icon>
                                 </span>
                             </div>
@@ -57,13 +57,13 @@
                                 <span class="item-text-line">
                                     <b>Student</b>: 
                                     <mat-icon class="status-icon">
-                                        {{user.Student != null ? 'check' : 'close'}}
+                                        {{user.IsStudent ? 'check' : 'close'}}
                                     </mat-icon>
                                 </span>
                             </div>
                             <div>
                                 <button mat-raised-button color="primary" style="margin-right: 1vw;"
-                                    (click)="Create(user.User.UserId)">
+                                    (click)="Create(user.UserId)">
                                     Create Account
                                 </button>
                             </div>
@@ -75,18 +75,18 @@
         </div>
         <div *ngSwitchCase="'view'" class="content">
             <div class="content-header">
-                <b>User (ID: {{originalAccount.User.UserId}})</b>
+                <b>User (ID: {{originalUserInfo.UserId}})</b>
                 <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">
                     <mat-icon>edit</mat-icon>
                 </button>
             </div>
             <div class="content-inner">
                 <div class="content-form">
-                    <form (ngSubmit)="Save()" [formGroup]="accountForm">
+                    <form (ngSubmit)="Save()" [formGroup]="userInfoForm">
                         <mat-form-field class="form-input" appearance="fill">
                             <mat-label>First Name</mat-label>
                             <input matInput name="firstName" formControlName="firstName" maxlength="100">
-                            <mat-error *ngIf="accountForm.controls['firstName'].hasError('required')">
+                            <mat-error *ngIf="userInfoForm.controls['firstName'].hasError('required')">
                                 First name is <strong>required</strong>.
                             </mat-error>
                         </mat-form-field>
@@ -95,17 +95,32 @@
                         <mat-form-field class="form-input" appearance="fill">
                             <mat-label>Last Name</mat-label>
                             <input matInput name="lastName" formControlName="lastName" maxlength="100">
-                            <mat-error *ngIf="accountForm.controls['lastName'].hasError('required')">
+                            <mat-error *ngIf="userInfoForm.controls['lastName'].hasError('required')">
                                 Last name is <strong>required</strong>.
                             </mat-error>
                         </mat-form-field>
                         <br><br>
 
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Academic Number</mat-label>
+                            <input matInput name="academicNumber" formControlName="academicNumber" maxlength="20">
+                        </mat-form-field>
+
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Title Before Name</mat-label>
+                            <input matInput name="titleBefore" formControlName="titleBefore" maxlength="100">
+                        </mat-form-field>
+
+                        <mat-form-field class="form-input" appearance="fill">
+                            <mat-label>Title After Name</mat-label>
+                            <input matInput name="titleAfter" formControlName="titleAfter" maxlength="100">
+                        </mat-form-field>
+
                         <mat-checkbox color="primary" name="staff" formControlName="staff">
                             <b>Staff</b>
                         </mat-checkbox>
 
-                        <div *ngIf="accountForm.value['staff']">
+                        <div *ngIf="userInfoForm.value['staff']">
                             <mat-checkbox color="primary" name="admin" formControlName="admin">
                                 <b>Administrator</b>
                             </mat-checkbox>
@@ -114,31 +129,12 @@
                             <mat-checkbox color="primary" name="coordinator" formControlName="coordinator">
                                 <b>Coordinator</b>
                             </mat-checkbox>
-
-                            <div *ngIf="accountForm.value['coordinator']">
-                                <mat-form-field class="form-input" appearance="fill">
-                                    <mat-label>Title Before Name</mat-label>
-                                    <input matInput name="titleBefore" formControlName="titleBefore" maxlength="100">
-                                </mat-form-field>
-    
-                                <mat-form-field class="form-input" appearance="fill">
-                                    <mat-label>Title After Name</mat-label>
-                                    <input matInput name="titleAfter" formControlName="titleAfter" maxlength="100">
-                                </mat-form-field>
-                            </div>
                         </div>
                         <br>
 
                         <mat-checkbox color="primary" name="student" formControlName="student">
                             <b>Student</b>
                         </mat-checkbox>
-
-                        <div *ngIf="accountForm.value['student']">
-                            <mat-form-field class="form-input" appearance="fill">
-                                <mat-label>Student Number</mat-label>
-                                <input matInput name="studentNumber" formControlName="studentNumber" maxlength="20">
-                            </mat-form-field>
-                        </div>
 
                         <button type="submit" mat-raised-button color="primary" class="form-submit" 
                             [disabled]="!isModifying || IsSameAsOriginal()">

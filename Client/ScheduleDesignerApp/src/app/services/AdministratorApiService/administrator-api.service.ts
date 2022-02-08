@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { Group } from 'src/app/others/Group';
 import { map } from 'rxjs/operators';
-import { Account, Coordinator, SearchUser, Staff, Student, StudentBasic, Titles, User } from 'src/app/others/Accounts';
-import { ICoordinator, ICourse, ICourseEdition, ICourseType, IGroup, IRoom, IRoomType, ISettings, IStaff, IStudent, IUser } from 'src/app/others/Interfaces';
+import { UserInfo, SearchUser, Staff, Student, StudentBasic, User, Titles, UserBasic } from 'src/app/others/Accounts';
+import { ICourse, ICourseEdition, ICourseType, IGroup, IRoom, IRoomType, ISettings, IUserInfo } from 'src/app/others/Interfaces';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class AdministratorApiService {
 
   public GetStudents(): Observable<Student[]> {
     const request = {
-      url: this.baseUrl + `/students?$expand=User`,
+      url: this.baseUrl + `/users?$filter=IsStudent eq true`,
       method: 'GET'
     };
 
@@ -40,17 +40,18 @@ export class AdministratorApiService {
       map((response : any) => response.value.map((element : any) => new Student(
           new User(
             element.UserId, 
-            element.User.FirstName, 
-            element.User.LastName
+            element.FirstName, 
+            element.LastName
           ),
-          element.StudentNumber,
-          []
+          element.AcademicNumber,
+          [],
+          new Titles(element.TitleBefore, element.TitleAfter)
         )
       ))
     );
   }
 
-  public GetOtherUsers(): Observable<User[]> {
+  public GetOtherUsers(): Observable<UserBasic[]> {
     const request = {
       url: this.baseUrl + `/users/Service.GetOtherUsers()`,
       method: 'GET'
@@ -63,10 +64,11 @@ export class AdministratorApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(
-      map((response : any) => response.value.map((element : any) => new User(
+      map((response : any) => response.value.map((element : any) => new UserBasic(
         element.UserId, 
-        element.FirstName, 
-        element.LastName
+        (element.TitleBefore != null ? `${element.TitleBefore} ` : '') + 
+          `${element.FirstName} ${element.LastName}` + 
+          (element.TitleAfter != null ? ` ${element.TitleAfter}` : '')
       )))
     );
   }
@@ -95,7 +97,7 @@ export class AdministratorApiService {
 
   public GetStaffs(): Observable<Staff[]> {
     const request = {
-      url: this.baseUrl + `/staffs?$expand=User`,
+      url: this.baseUrl + `/users?$filter=IsStaff eq true`,
       method: 'GET'
     };
 
@@ -109,10 +111,11 @@ export class AdministratorApiService {
       map((response : any) => response.value.map((element : any) => new Staff(
           new User(
             element.UserId, 
-            element.User.FirstName, 
-            element.User.LastName
+            element.FirstName, 
+            element.LastName
           ),
-          element.IsAdmin
+          element.IsAdmin,
+          new Titles(element.TitleBefore, element.TitleAfter)
         )
       ))
     );
@@ -376,7 +379,10 @@ export class AdministratorApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(map((response : any) => response.value.map((element : any) => new StudentBasic(
-      element.User.UserId, `${element.User.FirstName} ${element.User.LastName}`
+      element.User.UserId, 
+      (element.User.TitleBefore != null ? `${element.User.TitleBefore} ` : '') + 
+        `${element.User.FirstName} ${element.User.LastName}` + 
+        (element.User.TitleAfter != null ? ` ${element.User.TitleAfter}` : '')
     ))));
   }
 
@@ -609,9 +615,9 @@ export class AdministratorApiService {
     );
   }
 
-  public GetUserAccount(userId: number):Observable<Account> {
+  public GetUserAccount(userId: number):Observable<UserInfo> {
     const request = {
-      url: this.baseUrl + `/users(${userId})?$expand=Student($expand=Groups),Coordinator,Staff`,
+      url: this.baseUrl + `/users(${userId})?$expand=Groups`,
       method: 'GET'
     };
 
@@ -621,30 +627,19 @@ export class AdministratorApiService {
       {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
-    ).pipe(map((response : any) => {
-      const user = new User(
-        response.UserId,
-        response.FirstName,
-        response.LastName
-      );
-
-      return new Account(
-      user,
-      response.Student != null ? new Student(
-        user, 
-        response.Student.StudentNumber, 
-        response.Student.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? []
-      ) : null,
-      response.Coordinator != null ? new Coordinator(
-        user, 
-        new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter)
-      ) : null,
-
-      response.Staff != null ? new Staff(
-        user,
-        response.Staff.IsAdmin
-      ) : null);
-    }));
+    ).pipe(map((response : any) => new UserInfo(
+      response.UserId,
+      response.FirstName,
+      response.LastName,
+      response.AcademicNumber,
+      response.TitleBefore,
+      response.TitleAfter,
+      response.IsStudent,
+      response.IsStaff,
+      response.IsCoordinator,
+      response.IsAdmin,
+      response.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? []
+    )));
   }
 
   public SearchForUserFromUsos(query: string, perPage: number, start: number): Observable<SearchUser> {
@@ -661,33 +656,25 @@ export class AdministratorApiService {
       }
     ).pipe(map((response : any) => new SearchUser(
       response.Items.map((element : any) => {
-        const user = new User(element.User.Id, 
-          element.User.FirstName, 
-          element.User.LastName
-        );
-
-        return new Account(
-          user,
-          element.User.StudentStatus != null && element.User.StudentStatus != 0 
-            ? new Student(user, element.User.StudentNumber, []) : null,
-          element.User.StaffStatus == 2 
-            ? new Coordinator(
-              user, new Titles(
-                element.User.Titles.Before, 
-                element.User.Titles.After
-              ) 
-            ) : null,
-          element.User.StaffStatus == 1 || element.User.StaffStatus == 2
-            ? new Staff(
-              user, false
-            ) : null
+        return new UserInfo(
+          element.User.Id,
+          element.User.FirstName,
+          element.User.LastName,
+          element.User.StudentNumber != null ? element.User.StudentNumber : '',
+          element.User.Titles.Before, 
+          element.User.Titles.After,
+          !!(element.User.StudentStatus != null && element.User.StudentStatus != 0),
+          !!(element.User.StaffStatus == 1 || element.User.StaffStatus == 2),
+          !!(element.User.StaffStatus == 2),
+          false,
+          []
         );
       }),
       response.NextPage
     )));
   }
 
-  public UpdateUser(user: IUser) {
+  public UpdateUser(user: IUserInfo) {
     const request = {
       url: this.baseUrl + `/users(${user.UserId})`,
       method: 'PATCH'
@@ -706,147 +693,6 @@ export class AdministratorApiService {
   public RemoveUser(userId: number) {
     const request = {
       url: this.baseUrl + `/users(${userId})`,
-      method: 'DELETE'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public CreateStaff(staff: IStaff) {
-    const request = {
-      url: this.baseUrl + `/staffs`,
-      method: 'POST'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: staff,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public UpdateStaff(staff: IStaff) {
-    const request = {
-      url: this.baseUrl + `/staffs(${staff.UserId})`,
-      method: 'PATCH'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: staff,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public RemoveStaff(userId: number) {
-    const request = {
-      url: this.baseUrl + `/staffs(${userId})`,
-      method: 'DELETE'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public CreateCoordinator(coordinator: ICoordinator) {
-    const request = {
-      url: this.baseUrl + `/coordinators`,
-      method: 'POST'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: coordinator,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public UpdateCoordinator(coordinator: ICoordinator) {
-    const request = {
-      url: this.baseUrl + `/coordinators(${coordinator.UserId})`,
-      method: 'PATCH'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: coordinator,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public RemoveCoordinator(userId: number) {
-    const request = {
-      url: this.baseUrl + `/coordinators(${userId})`,
-      method: 'DELETE'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public CreateStudent(student: IStudent) {
-    const request = {
-      url: this.baseUrl + `/students`,
-      method: 'POST'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: student,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public UpdateStudent(student: IStudent) {
-    const request = {
-      url: this.baseUrl + `/students(${student.UserId})`,
-      method: 'PATCH'
-    };
-
-    return this.http.request(
-      request.method,
-      request.url,
-      {
-        body: student,
-        headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
-      }
-    );
-  }
-
-  public RemoveStudent(userId: number) {
-    const request = {
-      url: this.baseUrl + `/students(${userId})`,
       method: 'DELETE'
     };
 

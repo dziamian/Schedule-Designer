@@ -1,15 +1,14 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { AccessToken } from './others/AccessToken';
-import { Account } from './others/Accounts';
+import { UserInfo } from './others/Accounts';
 import { ScheduleDesignerApiService } from './services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from './services/SignalrService/signalr.service';
 import { UsosApiService } from './services/UsosApiService/usos-api.service';
-import { setAccount } from './store/account.actions';
+import { setUserInfo } from './store/userInfo.actions';
 
 @Component({
   selector: 'app-root',
@@ -19,8 +18,8 @@ import { setAccount } from './store/account.actions';
 export class AppComponent implements OnInit {
   title:string = 'Schedule Designer';
 
-  account:Account;
-  isAccountSet:boolean = false;
+  userInfo:UserInfo;
+  isUserInfoSet:boolean = false;
 
   constructor(
     private router:Router,
@@ -28,20 +27,20 @@ export class AppComponent implements OnInit {
     private usosApiService:UsosApiService, 
     private signalrService:SignalrService,
     private snackBar:MatSnackBar,
-    private store:Store<{account:Account}>
+    private store:Store<{userInfo:UserInfo}>
   ) { 
     this.router.events.subscribe((value) => {
-      if (!this.isAccountSet && value instanceof NavigationEnd) {
+      if (!this.isUserInfoSet && value instanceof NavigationEnd) {
         this.trySetAccount();
         this.tryInitConnection();
       }
     });
-    this.store.select('account').subscribe((account) => {
-      if (account.User.UserId == 0) {
+    this.store.select('userInfo').subscribe((userInfo) => {
+      if (userInfo.UserId == 0) {
         return;
       }
-      this.account = account;
-      this.isAccountSet = true;
+      this.userInfo = userInfo;
+      this.isUserInfoSet = true;
       this.tryInitConnection();
     });
   }
@@ -59,10 +58,10 @@ export class AppComponent implements OnInit {
 
   private trySetAccount() {
     if (this.IsAuthenticated()) {
-      this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
-        this.store.dispatch(setAccount({account}));
-        this.account = account;
-        this.isAccountSet = true;
+      this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {
+        this.store.dispatch(setUserInfo({userInfo}));
+        this.userInfo = userInfo;
+        this.isUserInfoSet = true;
       }, (error) => {
         if (error?.status == 401) {
           this.usosApiService.Deauthorize();

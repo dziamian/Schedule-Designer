@@ -3,12 +3,12 @@
         <a routerLink="/profile" class="toolbar-title">{{title}}</a>
     </div>
     <div class="toolbar-middle">
-        <button *ngIf="IsAuthenticated()" class="toolbar-coordinator-schedule" mat-raised-button color="accent" (click)="PersonalSchedule()" [disabled]="!account?.Coordinator">
+        <button *ngIf="IsAuthenticated()" class="toolbar-coordinator-schedule" mat-raised-button color="accent" (click)="PersonalSchedule()" [disabled]="!userInfo?.IsCoordinator">
             <mat-icon>school</mat-icon>
             Coordinator Schedule
         </button>
         
-        <button *ngIf="IsAuthenticated()" class="toolbar-student-schedule" mat-raised-button color="accent" (click)="MyGroupsSchedule()" [disabled]="!account?.Student">
+        <button *ngIf="IsAuthenticated()" class="toolbar-student-schedule" mat-raised-button color="accent" (click)="MyGroupsSchedule()" [disabled]="!userInfo?.IsStudent">
             <mat-icon>group</mat-icon>
             Student Schedule
         </button>
@@ -18,7 +18,7 @@
             Full Schedule
         </button>
 
-        <button *ngIf="IsAuthenticated()" class="toolbar-admin-panel" mat-raised-button color="accent" (click)="AdminPanel()" [disabled]="!account?.Staff?.IsAdmin">
+        <button *ngIf="IsAuthenticated()" class="toolbar-admin-panel" mat-raised-button color="accent" (click)="AdminPanel()" [disabled]="!userInfo?.IsAdmin">
             <mat-icon>settings_applications</mat-icon>
             Admin Panel
         </button>

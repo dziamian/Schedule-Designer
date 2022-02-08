@@ -13,5 +13,24 @@ namespace ScheduleDesigner.Repositories
         public StudentGroupRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }
+
+        public int DeleteMany(Func<StudentGroup, bool> predicate)
+        {
+            if (_context == null)
+            {
+                return -1;
+            }
+
+            var results = _context.Set<StudentGroup>()
+                .Where(predicate);
+
+            if (!results.Any())
+            {
+                return -1;
+            }
+
+            _context.Set<StudentGroup>().RemoveRange(results);
+            return 1;
+        }
     }
 }

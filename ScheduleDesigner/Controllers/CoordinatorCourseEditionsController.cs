@@ -64,6 +64,12 @@ namespace ScheduleDesigner.Controllers
                 {
                     var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
+                    var user = _unitOfWork.Users.GetFirst(e => e.UserId == coordinatorCourseEdition.CoordinatorId).Result;
+
+                    if (user == null || !user.IsCoordinator)
+                    {
+                        return BadRequest("Could not find user with given ID or user is not a coordinator.");
+                    }
 
                     var currentCourseEdition = _unitOfWork.CourseEditions
                         .Get(e => e.CourseId == coordinatorCourseEdition.CourseId 

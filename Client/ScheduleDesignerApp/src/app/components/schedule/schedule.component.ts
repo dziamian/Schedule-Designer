@@ -2,7 +2,7 @@ import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDr
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { Filter } from 'src/app/others/Filter';
@@ -27,7 +27,7 @@ export class ScheduleComponent implements OnInit {
   @Input() labelAfter: string;
 
   @Input() isModifying: boolean;
-  @Input() account: Account;
+  @Input() userInfo: UserInfo;
   @Input() representativeGroupsIds:number[] = [];
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;

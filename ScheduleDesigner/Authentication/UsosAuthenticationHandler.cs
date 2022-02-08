@@ -72,11 +72,11 @@ namespace ScheduleDesigner.Authentication
                 new Claim("user_id", userId.ToString())
             };
 
-            if (user?.Student != null)
+            if (user.IsStudent)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Student"));
                 bool isRepresentative = false;
-                foreach (var group in user.Student.Groups)
+                foreach (var group in user.Groups)
                 {
                     if (group.IsRepresentative)
                     {
@@ -89,11 +89,11 @@ namespace ScheduleDesigner.Authentication
                     claims.Add(new Claim(ClaimTypes.Role, "Representative"));
                 }
             }
-            if (user?.Coordinator != null) claims.Add(new Claim(ClaimTypes.Role, "Coordinator"));
-            if (user?.Staff != null)
+            if (user.IsCoordinator) claims.Add(new Claim(ClaimTypes.Role, "Coordinator"));
+            if (user.IsStaff)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Staff"));
-                if (user.Staff.IsAdmin)
+                if (user.IsAdmin)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
                 }

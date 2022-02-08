@@ -2,7 +2,7 @@ import { CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, DropListRef } 
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { Filter } from 'src/app/others/Filter';
 import { Group } from 'src/app/others/Group';
@@ -22,7 +22,7 @@ export class MyCoursesComponent implements OnInit {
   @ViewChild('myCoursesDrop') myCoursesSlot : DropListRef<CourseEdition[]>
 
   @Input() isModifying: boolean;
-  @Input() account: Account;
+  @Input() userInfo: UserInfo;
   @Input() settings: Settings;
   @Input() courseTypes: Map<number, CourseType>;
   @Input() modifyingScheduleData: ModifyingScheduleData;

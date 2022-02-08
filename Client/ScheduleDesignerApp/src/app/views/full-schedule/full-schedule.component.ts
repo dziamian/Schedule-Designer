@@ -8,7 +8,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { MyCoursesComponent } from 'src/app/components/my-courses/my-courses.component';
 import { ScheduleComponent } from 'src/app/components/schedule/schedule.component';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { ModifyingScheduleData } from 'src/app/others/ModifyingScheduleData';
@@ -35,7 +35,7 @@ export class FullScheduleComponent implements OnInit {
   @ViewChild(MyCoursesComponent) myCoursesComponent!: MyCoursesComponent;
   @ViewChild(ScheduleComponent) scheduleComponent!: ScheduleComponent;
 
-  account: Account
+  userInfo: UserInfo
   data: ModifyingScheduleData = new ModifyingScheduleData();
   isModifying: boolean = false;
 
@@ -56,7 +56,7 @@ export class FullScheduleComponent implements OnInit {
   isConnectedSubscription: Subscription;
 
   constructor(
-    private store: Store<{account: Account}>,
+    private store: Store<{userInfo: UserInfo}>,
     private signalrService: SignalrService,
     private scheduleDesignerApiService: ScheduleDesignerApiService,
     private usosApiService: UsosApiService,
@@ -66,11 +66,11 @@ export class FullScheduleComponent implements OnInit {
     private dialogService: MatDialog,
     private router: Router
   ) {
-    this.store.select('account').subscribe((account) => {
-      if (account.User.UserId == 0) {
+    this.store.select('userInfo').subscribe((userInfo) => {
+      if (userInfo.UserId == 0) {
         return;
       }
-      this.account = account;
+      this.userInfo = userInfo;
     });
     this.resourceTreeService.clearData();
   }
@@ -79,7 +79,7 @@ export class FullScheduleComponent implements OnInit {
     if (!this.currentResourceName) {
       return false;
     }
-    return this.account.Coordinator != null || (this.account.Student != null && this.account.Student.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId)));
+    return this.userInfo.IsCoordinator || (this.userInfo.IsStudent && this.userInfo.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId)));
   }
 
   private updateBusyPeriods(): void {
@@ -336,13 +336,13 @@ export class FullScheduleComponent implements OnInit {
 
   async OnMyCoursesStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Staff?.IsAdmin ?? false, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
     );
   }
 
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, this.account.Staff?.IsAdmin ?? false, true,
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, this.userInfo.IsStaff && this.userInfo.IsAdmin, true,
       this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
     );
   }
@@ -355,7 +355,7 @@ export class FullScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Staff?.IsAdmin ?? false, this.account.Coordinator != null, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.userInfo.IsCoordinator, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
@@ -374,7 +374,7 @@ export class FullScheduleComponent implements OnInit {
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
-      this.roomTypes, this.account.Staff?.IsAdmin ?? false, true, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
+      this.roomTypes, this.userInfo.IsStaff && this.userInfo.IsAdmin, true, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
     );
   }
 
@@ -386,19 +386,19 @@ export class FullScheduleComponent implements OnInit {
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.account.Staff?.IsAdmin ?? false, this.settings, this.roomTypes, this.account.Staff?.IsAdmin ?? false, true, this.currentFilter.filter, this.dialogService, this.snackBar
+      this.data, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.roomTypes, this.userInfo.IsStaff && this.userInfo.IsAdmin, true, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, !this.account.Staff?.IsAdmin ? this.account.User.UserId : null, this.account.Staff?.IsAdmin ?? false, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, !(this.userInfo.IsStaff && this.userInfo.IsAdmin) ? this.userInfo.UserId : null, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 
   async Move(): Promise<void> {
     this.scheduleInteractionService.move(
-      this.data, this.tabWeeks, this.currentTabIndex, this.account.Staff?.IsAdmin ?? false, this.settings, this.scheduleComponent, this.snackBar
+      this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.scheduleComponent, this.snackBar
     );
   }
 

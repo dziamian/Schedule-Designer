@@ -181,18 +181,6 @@ namespace ScheduleDesigner
                 .EntityType
                 .HasKey(e => e.UserId);
 
-            builder.EntitySet<Staff>("Staffs")
-                .EntityType
-                .HasKey(e => e.UserId);
-
-            builder.EntitySet<Coordinator>("Coordinators")
-                .EntityType
-                .HasKey(e => e.UserId);
-
-            builder.EntitySet<Student>("Students")
-                .EntityType
-                .HasKey(e => e.UserId);
-
             builder.EntitySet<Settings>("Settings");
 
             builder.EntitySet<CourseType>("CourseTypes");
@@ -301,7 +289,7 @@ namespace ScheduleDesigner
 
             builder.EntityType<StudentGroup>().Collection
                 .Function("GetGroupsStudents")
-                .ReturnsCollectionFromEntitySet<Student>("Students")
+                .ReturnsCollectionFromEntitySet<User>("Users")
                 .CollectionParameter<int>("GroupsIds");
 
             var giveRepresentativeRoleAction = builder.EntityType<StudentGroup>().Collection

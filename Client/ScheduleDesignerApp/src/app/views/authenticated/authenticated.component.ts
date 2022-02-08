@@ -2,11 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AccessToken } from 'src/app/others/AccessToken';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
-import { setAccount } from 'src/app/store/account.actions';
+import { setUserInfo } from 'src/app/store/userInfo.actions';
 
 @Component({
   selector: 'app-authenticated',
@@ -20,7 +20,7 @@ export class AuthenticatedComponent implements OnInit {
     private activatedRoute: ActivatedRoute, 
     private usosApiService:UsosApiService,
     private scheduleDesignerApiService:ScheduleDesignerApiService,
-    private store:Store<{account:Account}>
+    private store:Store<{userInfo:UserInfo}>
   ) { }
 
   ngOnInit(): void {
@@ -36,13 +36,13 @@ export class AuthenticatedComponent implements OnInit {
           AccessToken.RemoveRequest();
           token.Save();
 
-          this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
-            this.store.dispatch(setAccount({account}));
+          this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {
+            this.store.dispatch(setUserInfo({userInfo}));
             this.router.navigate(['profile']);
           }, () => {
             this.scheduleDesignerApiService.CreateMyAccount().subscribe(() => {
-              this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
-                this.store.dispatch(setAccount({account}));
+              this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {
+                this.store.dispatch(setUserInfo({userInfo}));
                 this.router.navigate(['profile']);
               });
             }, (error) => {

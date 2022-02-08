@@ -14,16 +14,13 @@ namespace ScheduleDesigner.Repositories
     {
         public virtual DbSet<Authorization> Authorizations { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Student> Students { get; set; }
-        public virtual DbSet<Coordinator> Coordinators { get; set; }
-        public virtual DbSet<Staff> Staffs { get; set; }
         public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<CourseType> CourseTypes { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
         public virtual DbSet<CourseEdition> CourseEditions { get; set; }
-        public virtual DbSet<Models.CoordinatorCourseEdition> CoordinatorCourseEditions { get; set; }
+        public virtual DbSet<CoordinatorCourseEdition> CoordinatorCourseEditions { get; set; }
         public virtual DbSet<GroupCourseEdition> GroupCourseEditions { get; set; }
         public virtual DbSet<RoomType> RoomTypes { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
@@ -51,30 +48,6 @@ namespace ScheduleDesigner.Repositories
                 .HasKey(e => e.UserId);
 
             modelBuilder.Entity<User>()
-                .Property(e => e.UserId)
-                .ValueGeneratedNever();
-
-            //Student
-            modelBuilder.Entity<Student>()
-                .HasKey(e => e.UserId);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.UserId)
-                .ValueGeneratedNever();
-
-            //Coordinator
-            modelBuilder.Entity<Coordinator>()
-                .HasKey(e => e.UserId);
-
-            modelBuilder.Entity<Coordinator>()
-                .Property(e => e.UserId)
-                .ValueGeneratedNever();
-
-            //Staff
-            modelBuilder.Entity<Staff>()
-                .HasKey(e => e.UserId);
-
-            modelBuilder.Entity<Staff>()
                 .Property(e => e.UserId)
                 .ValueGeneratedNever();
 
@@ -106,7 +79,7 @@ namespace ScheduleDesigner.Repositories
                 .HasKey(e => (new { e.CourseId, e.CourseEditionId, e.CoordinatorId }));
 
             modelBuilder.Entity<CoordinatorCourseEdition>()
-                .HasOne(e => e.Coordinator)
+                .HasOne(e => e.User)
                 .WithMany(e => e.CourseEditions)
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDragRelease, CdkDragStart } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, SimpleChanges } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { Settings } from 'src/app/others/Settings';
 
@@ -26,16 +26,16 @@ export class CourseComponent implements OnInit {
   @Output() onStart:EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
   @Output() onRelease:EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
 
-  account:Account;
+  userInfo:UserInfo;
 
   constructor(
-    private store:Store<{account:Account}>
+    private store:Store<{userInfo:UserInfo}>
   ) {
-    this.store.select('account').subscribe((account) => {
-      if (account.User.UserId == 0) {
+    this.store.select('userInfo').subscribe((userInfo) => {
+      if (userInfo.UserId == 0) {
         return;
       }
-      this.account = account;
+      this.userInfo = userInfo;
     });
   }
 
@@ -60,7 +60,7 @@ export class CourseComponent implements OnInit {
   }
 
   CheckIfItsMe(id:number):boolean {
-    return this.account.User.UserId == id;
+    return this.userInfo.UserId == id;
   }
 
   CheckIfNotMatching():boolean {

@@ -1,9 +1,16 @@
-export class Account {
+export class UserInfo {
     constructor(
-        public User:User,
-        public Student:Student|null,
-        public Coordinator:Coordinator|null,
-        public Staff:Staff|null
+        public UserId: number,
+        public FirstName: string,
+        public LastName: string,
+        public AcademicNumber: string,
+        public TitleBefore: string,
+        public TitleAfter: string,
+        public IsStudent: boolean,
+        public IsStaff: boolean,
+        public IsCoordinator: boolean,
+        public IsAdmin: boolean,
+        public RepresentativeGroups: number[],
     ) {}
 }
 
@@ -33,6 +40,7 @@ export class Student {
         public User:User,
         public StudentNumber:string,
         public RepresentativeGroups:number[],
+        public Titles:Titles
     ) { }
 }
 
@@ -48,7 +56,8 @@ export class StudentBasic {
 export class Staff {
     constructor(
         public User:User,
-        public IsAdmin:boolean
+        public IsAdmin:boolean,
+        public Titles:Titles
     ) { }
 }
 
@@ -60,9 +69,16 @@ export class User {
     ) { }
 }
 
+export class UserBasic {
+    constructor(
+        public UserId: number,
+        public FullName: string
+    ) { }
+}
+
 export class SearchUser {
     constructor(
-        public Users: Account[],
+        public Users: UserInfo[],
         public NextPage: boolean
     ) { }
 }

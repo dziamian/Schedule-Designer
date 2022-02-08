@@ -12,6 +12,7 @@ using ScheduleDesigner.Repositories.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
@@ -29,7 +30,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public async Task<IActionResult> CreateStudentGroup([FromBody] StudentGroupDto studentGroupDto)
+        public IActionResult CreateStudentGroup([FromBody] StudentGroupDto studentGroupDto)
         {
             if (!ModelState.IsValid)
             {
@@ -38,14 +39,33 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _student = await _unitOfWork.StudentGroups.Add(studentGroupDto.FromDto());
-
-                if (_student != null)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    await _unitOfWork.CompleteAsync();
-                    return Created(_student);
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
-                return NotFound();
+                try
+                {
+                    var user = _unitOfWork.Users
+                        .GetFirst(e => e.UserId == studentGroupDto.StudentId).Result;
+
+                    if (user == null || !user.IsStudent)
+                    {
+                        return BadRequest("Could not find user with given ID or user is not a student.");
+                    }
+
+                    var _student = _unitOfWork.StudentGroups.Add(studentGroupDto.FromDto());
+
+                    if (_student != null)
+                    {
+                        _unitOfWork.Complete();
+                        return Created(_student);
+                    }
+                    return NotFound();
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {
@@ -115,7 +135,7 @@ namespace ScheduleDesigner.Controllers
             {
                 if (!GroupsIds.Any())
                 {
-                    return Ok(Enumerable.Empty<Student>());
+                    return Ok(Enumerable.Empty<User>());
                 }
 
                 var mainGroupId = GroupsIds.First();
@@ -126,9 +146,8 @@ namespace ScheduleDesigner.Controllers
                     .Select(e => e.Key)
                     .ToList();
 
-                var _students = _unitOfWork.Students
+                var _students = _unitOfWork.Users
                     .Get(e => studentIds.Contains(e.UserId))
-                    .Include(e => e.User)
                     .ToList();
 
                 return Ok(_students);
@@ -140,7 +159,7 @@ namespace ScheduleDesigner.Controllers
         }
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
-        public async Task<IActionResult> GiveOrRemoveRepresentativeRole(ODataActionParameters parameters)
+        public IActionResult GiveOrRemoveRepresentativeRole(ODataActionParameters parameters)
         {
             if (!ModelState.IsValid)
             {
@@ -149,31 +168,54 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                int userId = (int)parameters["UserId"];
-                int groupId = (int)parameters["GroupId"];
-                bool role = (bool)parameters["Role"];
-
-                var studentGroup = _unitOfWork.StudentGroups
-                    .Get(e => e.StudentId == userId && e.GroupId == groupId)
-                    .FirstOrDefault();
-
-                if (studentGroup == null && !role)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    return Ok();
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
-                if (studentGroup == null)
+                try
                 {
-                    var assign = new StudentGroup { GroupId = groupId, StudentId = userId, IsRepresentative = true };
-                    await _unitOfWork.StudentGroups.Add(assign);
-                    await _unitOfWork.CompleteAsync();
-                    return Ok();
-                } 
-                else
+                    int userId = (int)parameters["UserId"];
+                    int groupId = (int)parameters["GroupId"];
+                    bool role = (bool)parameters["Role"];
+
+                    var user = _unitOfWork.Users
+                        .GetFirst(e => e.UserId == userId).Result;
+
+                    if (user == null || !user.IsStudent)
+                    {
+                        return BadRequest("Could not find user with given ID or user is not a student.");
+                    }
+
+                    var studentGroup = _unitOfWork.StudentGroups
+                        .Get(e => e.StudentId == userId && e.GroupId == groupId)
+                        .FirstOrDefault();
+
+                    if (studentGroup == null && !role)
+                    {
+                        return Ok();
+                    }
+                    if (studentGroup == null)
+                    {
+                        var assign = new StudentGroup { GroupId = groupId, StudentId = userId, IsRepresentative = true };
+                        var result = _unitOfWork.StudentGroups.Add(assign).Result;
+                        
+                        _unitOfWork.Complete();
+                        
+                        return Ok();
+                    }
+                    else
+                    {
+                        studentGroup.IsRepresentative = role;
+                        _unitOfWork.StudentGroups.Update(studentGroup);
+                         
+                        _unitOfWork.Complete();
+                        
+                        return Ok();
+                    }
+                }
+                finally
                 {
-                    studentGroup.IsRepresentative = role;
-                    _unitOfWork.StudentGroups.Update(studentGroup);
-                    await _unitOfWork.CompleteAsync();
-                    return Ok();
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
                 }
             }
             catch (Exception e)
@@ -185,7 +227,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key1},{key2})")]
-        public async Task<IActionResult> UpdateStudentGroup([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<StudentGroup> delta)
+        public IActionResult UpdateStudentGroup([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<StudentGroup> delta)
         {
             if (!ModelState.IsValid)
             {
@@ -194,17 +236,36 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _studentGroup = await _unitOfWork.StudentGroups.GetFirst(e => e.GroupId == key1 && e.StudentId == key2);
-                if (_studentGroup == null)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    return NotFound();
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
+                try
+                {
+                    var user = _unitOfWork.Users
+                        .GetFirst(e => e.UserId == key2).Result;
 
-                delta.Patch(_studentGroup);
+                    if (user == null || !user.IsStudent)
+                    {
+                        return BadRequest("Could not find user with given ID or user is not a student.");
+                    }
 
-                await _unitOfWork.CompleteAsync();
+                    var _studentGroup = _unitOfWork.StudentGroups.GetFirst(e => e.GroupId == key1 && e.StudentId == key2).Result;
+                    if (_studentGroup == null)
+                    {
+                        return NotFound();
+                    }
 
-                return Ok(_studentGroup);
+                    delta.Patch(_studentGroup);
+
+                    _unitOfWork.Complete();
+
+                    return Ok(_studentGroup);
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {
@@ -215,7 +276,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpDelete]
         [ODataRoute("({key1},{key2})")]
-        public async Task<IActionResult> DeleteStudent([FromODataUri] int key1, [FromODataUri] int key2)
+        public async Task<IActionResult> DeleteStudentGroup([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
             {

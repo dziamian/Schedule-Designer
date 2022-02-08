@@ -5,9 +5,9 @@ import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
-import { setAccount } from 'src/app/store/account.actions';
+import { setUserInfo } from 'src/app/store/userInfo.actions';
 import { Store } from '@ngrx/store';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
         private scheduleDesignerApiService:ScheduleDesignerApiService,
         private snackBar:MatSnackBar,
         @Inject(DOCUMENT) private document: Document,
-        private store:Store<{account:Account}>,
+        private store:Store<{userInfo:UserInfo}>,
         private router:Router
     ) { }
 
@@ -51,16 +51,16 @@ export class LoginComponent implements OnInit {
     public LogInWithTest():void {
         new AccessToken("qwerty", "qwerty").Save();
 
-        this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
-            this.store.dispatch(setAccount({account}));
+        this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {
+            this.store.dispatch(setUserInfo({userInfo}));
             this.router.navigate(['profile']);
         }, (error) => {
             if (error.status == 0) {
                 AccessToken.Remove();
             } else {
                 this.scheduleDesignerApiService.CreateMyAccount().subscribe(() => {
-                    this.scheduleDesignerApiService.GetMyAccount().subscribe((account) => {
-                        this.store.dispatch(setAccount({account}));
+                    this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {
+                        this.store.dispatch(setUserInfo({userInfo}));
                         this.router.navigate(['profile']);
                     });
                 }, (error) => {

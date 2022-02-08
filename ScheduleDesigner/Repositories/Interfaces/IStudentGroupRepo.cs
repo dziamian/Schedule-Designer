@@ -9,5 +9,6 @@ namespace ScheduleDesigner.Repositories.Interfaces
 {
     public interface IStudentGroupRepo : IRepoBase<StudentGroup>
     {
+        public int DeleteMany(Func<StudentGroup, bool> predicate);
     }
 }

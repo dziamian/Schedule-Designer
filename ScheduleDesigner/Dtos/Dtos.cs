@@ -228,60 +228,6 @@ namespace ScheduleDesigner.Dtos
         }
     }
 
-    public class CoordinatorDto
-    {
-        public int UserId { get; set; }
-
-        [MaxLength(100)]
-        public string TitleBefore { get; set; }
-
-        [MaxLength(100)]
-        public string TitleAfter { get; set; }
-
-        public Coordinator FromDto()
-        {
-            return new Coordinator
-            {
-                UserId = UserId,
-                TitleBefore = TitleBefore,
-                TitleAfter = TitleAfter
-            };
-        }
-    }
-
-    public class StaffDto
-    {
-        public int UserId { get; set; }
-
-        public bool IsAdmin { get; set; }
-
-        public Staff FromDto()
-        {
-            return new Staff
-            {
-                UserId = UserId,
-                IsAdmin = IsAdmin
-            };
-        }
-    }
-
-    public class StudentDto
-    {
-        public int UserId { get; set; }
-
-        [MaxLength(20)]
-        public string StudentNumber { get; set; }
-
-        public Student FromDto()
-        {
-            return new Student
-            {
-                UserId = UserId,
-                StudentNumber = StudentNumber
-            };
-        }
-    }
-
     public class GroupFullName
     {
         public string BasicName { get; set; }

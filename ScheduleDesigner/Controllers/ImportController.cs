@@ -301,6 +301,7 @@ namespace ScheduleDesigner.Controllers
                 }
                 try
                 {
+                    var coordinators = _unitOfWork.Users.Get(e => e.IsCoordinator).ToList();
                     var existingCourseEditions = _unitOfWork.CourseEditions.GetAll().Any();
 
                     if (existingCourseEditions)
@@ -311,6 +312,16 @@ namespace ScheduleDesigner.Controllers
                     var acceptedGroups = new Dictionary<CourseEditionKey, List<int>>();
 
                     var groups = Methods.GetGroups(_unitOfWork.Groups);
+
+                    foreach (var record in coordinatorCourseEditions)
+                    {
+                        //check coordinator
+                        if (!coordinators.Any(e => e.UserId == record.CoordinatorId))
+                        {
+                            return BadRequest($"User ({record.CoordinatorId}) does not exist or is not a coordinator. " +
+                                $"You cannot assign him to course edition ({record.CourseId},{record.CourseEditionId}).");
+                        }
+                    }
 
                     foreach (var record in groupCourseEditions)
                     {
@@ -689,14 +700,35 @@ namespace ScheduleDesigner.Controllers
                     return BadRequest("No records has been read from the file.");
                 }
 
-                var connectionString = _unitOfWork.Context.Database.GetConnectionString();
-
-                if (BulkImport<StudentGroupDto>.Execute(connectionString, "dbo.StudentGroups", records) <= 0)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    return BadRequest("Could not import student groups to database. Maybe you forgot to import some other data first.");
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
+                try
+                {
+                    var students = _unitOfWork.Users.Get(e => e.IsStudent).ToList();
 
-                return Ok();
+                    foreach (var record in records)
+                    {
+                        if (!students.Any(e => e.UserId == record.StudentId))
+                        {
+                            return BadRequest($"User ({record.StudentId}) does not exist or is not a student. You cannot assign him to group ({record.GroupId}).");
+                        }
+                    }
+
+                    var connectionString = _unitOfWork.Context.Database.GetConnectionString();
+
+                    if (BulkImport<StudentGroupDto>.Execute(connectionString, "dbo.StudentGroups", records) <= 0)
+                    {
+                        return BadRequest("Could not import student groups to database. Maybe you forgot to import some other data first.");
+                    }
+
+                    return Ok();
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (SqlException e)
             {

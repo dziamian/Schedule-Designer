@@ -35,26 +35,17 @@ export interface IRoom {
     Capacity?: number
 }
 
-export interface IUser {
-    UserId?: number,
-    FirstName?: string,
-    LastName?: string
-}
-
-export interface IStaff {
-    UserId?: number,
-    IsAdmin?: boolean
-}
-
-export interface ICoordinator {
-    UserId?: number,
-    TitleBefore?: string | null,
-    TitleAfter?: string | null
-}
-
-export interface IStudent {
-    UserId?: number,
-    StudentNumber?: string | null
+export interface IUserInfo {
+    UserId: number,
+    FirstName: string,
+    LastName: string,
+    AcademicNumber: string,
+    TitleBefore: string,
+    TitleAfter: string,
+    IsStudent: boolean,
+    IsStaff: boolean,
+    IsCoordinator: boolean,
+    IsAdmin: boolean
 }
 
 export interface ISettings {

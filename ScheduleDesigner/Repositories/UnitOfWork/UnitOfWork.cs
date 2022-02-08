@@ -11,8 +11,6 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
         public ICoordinatorCourseEditionRepo CoordinatorCourseEditions { get; private set; }
 
-        public ICoordinatorRepo Coordinators { get; private set; }
-
         public ICourseEditionRepo CourseEditions { get; private set; }
 
         public ICourseRepo Courses { get; private set; }
@@ -39,11 +37,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
         public ISettingsRepo Settings { get; private set; }
 
-        public IStaffRepo Staffs { get; private set; }
-
         public IStudentGroupRepo StudentGroups { get; private set; }
-
-        public IStudentRepo Students { get; private set; }
 
         public ITimestampRepo Timestamps { get; private set; }
 
@@ -55,7 +49,6 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
 
             Authorizations = new AuthorizationRepo(context);
             CoordinatorCourseEditions = new CoordinatorCourseEditionRepo(context);
-            Coordinators = new CoordinatorRepo(context);
             CourseEditions = new CourseEditionRepo(context);
             Courses = new CourseRepo(context);
             CourseRooms = new CourseRoomRepo(context);
@@ -69,9 +62,7 @@ namespace ScheduleDesigner.Repositories.UnitOfWork
             ScheduledMovePositions = new ScheduledMovePositionRepo(context);
             SchedulePositions = new SchedulePositionRepo(context);
             Settings = new SettingsRepo(context);
-            Staffs = new StaffRepo(context);
             StudentGroups = new StudentGroupRepo(context);
-            Students = new StudentRepo(context);
             Timestamps = new TimestampRepo(context);
             Users = new UserRepo(context);
         }

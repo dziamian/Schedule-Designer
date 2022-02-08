@@ -3,24 +3,24 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { Store } from '@ngrx/store';
 import { skip } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
 
-  account: Account;
+  userInfo: UserInfo;
 
   constructor(
-    private store: Store<{account: Account}>,
+    private store: Store<{userInfo: UserInfo}>,
     private router:Router
   ) {
-    this.store.select('account').subscribe((account) => {
-      if (account.User.UserId == 0) {
+    this.store.select('userInfo').subscribe((userInfo) => {
+      if (userInfo.UserId == 0) {
         return;
       }
-      this.account = account;
+      this.userInfo = userInfo;
     });
   }
 
@@ -34,13 +34,13 @@ export class AuthGuardService implements CanActivate {
         return true;
       }
       for (var i = 0; i < roles.length; ++i) {
-        if (roles[i] === 'Admin' && this.account?.Staff?.IsAdmin) {
+        if (roles[i] === 'Admin' && (this.userInfo?.IsStaff && this.userInfo?.IsAdmin)) {
           return true;
         }
-        if (roles[i] === 'Coordinator' && this.account?.Coordinator) {
+        if (roles[i] === 'Coordinator' && this.userInfo?.IsCoordinator) {
           return true;
         }
-        if (roles[i] === 'Student' && this.account?.Student) {
+        if (roles[i] === 'Student' && this.userInfo?.IsStudent) {
           return true;
         }
       }

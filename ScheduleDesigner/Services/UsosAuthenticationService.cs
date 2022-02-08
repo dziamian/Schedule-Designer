@@ -120,9 +120,7 @@ namespace ScheduleDesigner.Services
         {
             var _user = _unitOfWork.Users
                 .Get(e => e.UserId == userId)
-                .Include(e => e.Student).ThenInclude(e => e.Groups)
-                .Include(e => e.Coordinator)
-                .Include(e => e.Staff);
+                .Include(e => e.Groups);
 
             return _user.FirstOrDefault();
         }
@@ -131,35 +129,26 @@ namespace ScheduleDesigner.Services
         {
             var userId = int.Parse(userInfo.Id);
 
-            Student student = null;
+            var isStudent = false;
+            var studentNumber = "";
             if (userInfo.StudentStatus != null && userInfo.StudentStatus != 0)
             {
-                student = new Student 
-                {
-                    UserId = userId,
-                    StudentNumber = userInfo.StudentNumber
-                };
+                isStudent = true;
+                studentNumber = userInfo.StudentNumber;
             }
             
-            Coordinator coordinator = null;
+            var isCoordinator = false;
             if (userInfo.StaffStatus == 2)
             {
-                coordinator = new Coordinator 
-                { 
-                    TitleBefore = userInfo.Titles.Before,
-                    TitleAfter = userInfo.Titles.After,
-                    UserId = userId,
-                };
+                isCoordinator = true;
             }
 
-            Staff staff = null;
+            var isStaff = false;
+            var isAdmin = false;
             if (userInfo.StaffStatus == 1 || userInfo.StaffStatus == 2)
             {
-                staff = new Staff
-                {
-                    IsAdmin = userInfo.StaffStatus != 2 && !_unitOfWork.Staffs.GetAll().Any(),
-                    UserId = userId,
-                };
+                isStaff = true;
+                isAdmin = userInfo.StaffStatus != 2 && !_unitOfWork.Users.GetAll().Any(e => e.IsStaff);
             }
 
             User user = new User
@@ -167,9 +156,13 @@ namespace ScheduleDesigner.Services
                 UserId = userId,
                 FirstName = userInfo.FirstName,
                 LastName = userInfo.LastName,
-                Student = student,
-                Coordinator = coordinator,
-                Staff = staff
+                AcademicNumber = isStudent ? studentNumber : null,
+                TitleBefore = userInfo.Titles.Before,
+                TitleAfter = userInfo.Titles.After,
+                IsStudent = isStudent,
+                IsCoordinator = isCoordinator,
+                IsStaff = isStaff,
+                IsAdmin = isAdmin
             };
 
             await _unitOfWork.Users.Add(user);

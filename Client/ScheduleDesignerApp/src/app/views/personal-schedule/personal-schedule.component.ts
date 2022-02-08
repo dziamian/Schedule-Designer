@@ -8,7 +8,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { MyCoursesComponent } from 'src/app/components/my-courses/my-courses.component';
 import { ScheduleComponent } from 'src/app/components/schedule/schedule.component';
-import { Account } from 'src/app/others/Accounts';
+import { UserInfo } from 'src/app/others/Accounts';
 import { SchedulePosition } from 'src/app/others/CommunicationObjects';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { ModifyingScheduleData } from 'src/app/others/ModifyingScheduleData';
@@ -33,7 +33,7 @@ export class PersonalScheduleComponent implements OnInit {
   @ViewChild(MyCoursesComponent) myCoursesComponent!: MyCoursesComponent;
   @ViewChild(ScheduleComponent) scheduleComponent!: ScheduleComponent;
 
-  account: Account
+  userInfo: UserInfo
   data: ModifyingScheduleData = new ModifyingScheduleData();
   isModifying: boolean = false;
 
@@ -54,7 +54,7 @@ export class PersonalScheduleComponent implements OnInit {
   isConnectedSubscription: Subscription;
 
   constructor(
-    private store: Store<{account: Account}>,
+    private store: Store<{userInfo: UserInfo}>,
     private signalrService: SignalrService,
     private scheduleDesignerApiService: ScheduleDesignerApiService,
     private usosApiService: UsosApiService,
@@ -63,12 +63,12 @@ export class PersonalScheduleComponent implements OnInit {
     private dialogService: MatDialog,
     private router: Router
   ) {
-    this.store.select('account').subscribe((account) => {
-      if (account.User.UserId == 0) {
+    this.store.select('userInfo').subscribe((userInfo) => {
+      if (userInfo.UserId == 0) {
         return;
       }
-      this.account = account;
-      this.filter = new Filter([this.account.User.UserId], [], []);
+      this.userInfo = userInfo;
+      this.filter = new Filter([this.userInfo.UserId], [], []);
       if (this.currentFilter) {
         this.currentFilter = {
           weeks: this.currentFilter.weeks,
@@ -324,13 +324,13 @@ export class PersonalScheduleComponent implements OnInit {
 
   async OnMyCoursesStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Staff?.IsAdmin ?? false, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
     );
   }
 
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, true, this.account.Staff?.IsAdmin ?? false,
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, true, this.userInfo.IsStaff && this.userInfo.IsAdmin,
       this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
     );
   }
@@ -343,7 +343,7 @@ export class PersonalScheduleComponent implements OnInit {
 
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
-      event, this.data, this.tabWeeks, this.currentTabIndex, this.account.Staff?.IsAdmin ?? false, false, this.settings, this.scheduleComponent, this.snackBar
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, false, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
@@ -362,7 +362,7 @@ export class PersonalScheduleComponent implements OnInit {
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
-      this.roomTypes, true, this.account.Staff?.IsAdmin ?? false, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
+      this.roomTypes, true, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
     );
   }
 
@@ -374,19 +374,19 @@ export class PersonalScheduleComponent implements OnInit {
 
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
-      this.data, this.account.Staff?.IsAdmin ?? false, this.settings, this.roomTypes, true, this.account.Staff?.IsAdmin ?? false, this.currentFilter.filter, this.dialogService, this.snackBar
+      this.data, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.roomTypes, true, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
-      this.data, this.settings, null, this.account.Staff?.IsAdmin ?? false, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+      this.data, this.settings, null, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 
   async Move(): Promise<void> {
     this.scheduleInteractionService.move(
-      this.data, this.tabWeeks, this.currentTabIndex, this.account.Staff?.IsAdmin ?? false, this.settings, this.scheduleComponent, this.snackBar
+      this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.scheduleComponent, this.snackBar
     );
   }
 

@@ -692,7 +692,7 @@ namespace ScheduleDesigner.Hubs
                     var _courseEdition = _unitOfWork.CourseEditions
                         .Get(finalPredicate)
                         .Include(e => e.Coordinators)
-                        .Include(e => e.LockUser).ThenInclude(e => e.Staff);
+                        .Include(e => e.LockUser);
 
                     if (!_courseEdition.Any())
                     {
@@ -701,8 +701,8 @@ namespace ScheduleDesigner.Hubs
                     }
 
                     var courseEdition = _courseEdition.FirstOrDefault();
-                    var lockUserStaff = courseEdition.LockUser?.Staff;
-                    if ((!isAdmin && !(courseEdition is { LockUserId: null })) || (isAdmin && lockUserStaff != null && lockUserStaff.IsAdmin))
+                    var lockUser = courseEdition.LockUser;
+                    if ((!isAdmin && !(courseEdition is { LockUserId: null })) || (isAdmin && lockUser != null && lockUser.IsAdmin))
                     {
                         RemoveCourseEditionLock(courseEditionQueue, courseEditionKey);
                         return new MessageObject { StatusCode = 400, Message = "Someone has locked this course before you." };
@@ -761,7 +761,7 @@ namespace ScheduleDesigner.Hubs
                 try
                 {
                     var courseEditions = _unitOfWork.CourseEditions.GetAll()
-                        .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.LockUser)
                         .ToList();
 
                     if (!courseEditions.Any())
@@ -786,9 +786,9 @@ namespace ScheduleDesigner.Hubs
 
                     foreach (var currentCourseEdition in currentCourseEditions)
                     {
-                        var lockUserStaff = currentCourseEdition.Value.LockUser?.Staff;
+                        var lockUser = currentCourseEdition.Value.LockUser;
                         if (!courseEditionQueues.TryGetValue(currentCourseEdition.Key, out _)
-                            || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                            || (lockUser != null && lockUser.IsAdmin))
                         {
                             return new MessageObject {
                                 StatusCode = 400,
@@ -855,7 +855,7 @@ namespace ScheduleDesigner.Hubs
                 try
                 {
                     var courseEditions = _unitOfWork.CourseEditions.Get(e => e.CourseId == courseId)
-                        .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.LockUser)
                         .ToList();
 
                     if (!courseEditions.Any())
@@ -880,9 +880,9 @@ namespace ScheduleDesigner.Hubs
 
                     foreach (var currentCourseEdition in currentCourseEditions)
                     {
-                        var lockUserStaff = currentCourseEdition.Value.LockUser?.Staff;
+                        var lockUser = currentCourseEdition.Value.LockUser;
                         if (!courseEditionQueues.TryGetValue(currentCourseEdition.Key, out _)
-                            || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                            || (lockUser != null && lockUser.IsAdmin))
                         {
                             return new MessageObject
                             {
@@ -951,7 +951,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     var currentCourseEdition = _unitOfWork.CourseEditions
                         .Get(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId)
-                        .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.LockUser)
                         .FirstOrDefault();
 
                     if (currentCourseEdition == null)
@@ -961,7 +961,7 @@ namespace ScheduleDesigner.Hubs
 
                     var courseEditions = _unitOfWork.CoordinatorCourseEditions
                         .Get(e => e.CoordinatorId == coordinatorId)
-                        .Include(e => e.CourseEdition).ThenInclude(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.CourseEdition).ThenInclude(e => e.LockUser)
                         .ToList();
 
                     var currentCourseEditions = new SortedList<CourseEditionKey, CourseEdition>();
@@ -985,9 +985,9 @@ namespace ScheduleDesigner.Hubs
 
                     foreach (var courseEdition in currentCourseEditions)
                     {
-                        var lockUserStaff = courseEdition.Value.LockUser?.Staff;
+                        var lockUser = courseEdition.Value.LockUser;
                         if (!courseEditionQueues.TryGetValue(courseEdition.Key, out _)
-                            || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                            || (lockUser != null && lockUser.IsAdmin))
                         {
                             return new MessageObject
                             {
@@ -1020,7 +1020,7 @@ namespace ScheduleDesigner.Hubs
                     {
                         var schedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => courseEditionIds.Contains(e.CourseEditionId))
-                            .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                            .Include(e => e.LockUser)
                             .Include(e => e.Timestamp)
                             .ToList();
 
@@ -1041,9 +1041,9 @@ namespace ScheduleDesigner.Hubs
 
                         foreach (var currentSchedulePosition in currentSchedulePositions)
                         {
-                            var lockUserStaff = currentSchedulePosition.Value.LockUser?.Staff;
+                            var lockUser = currentSchedulePosition.Value.LockUser;
                             if (!schedulePositionQueuesL1.TryGetValue(currentSchedulePosition.Key, out _)
-                                || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                                || (lockUser != null && lockUser.IsAdmin))
                             {
                                 return new MessageObject
                                 {
@@ -1153,7 +1153,7 @@ namespace ScheduleDesigner.Hubs
                 {
                     var currentCourseEdition = _unitOfWork.CourseEditions
                         .Get(e => e.CourseId == courseId && e.CourseEditionId == courseEditionId)
-                        .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.LockUser)
                         .FirstOrDefault();
 
                     if (currentCourseEdition == null)
@@ -1169,7 +1169,7 @@ namespace ScheduleDesigner.Hubs
 
                     var courseEditions = _unitOfWork.GroupCourseEditions
                         .Get(e => currentGroupsIds.Contains(e.GroupId))
-                        .Include(e => e.CourseEdition).ThenInclude(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.CourseEdition).ThenInclude(e => e.LockUser)
                         .ToList();
 
                     var currentCourseEditions = new SortedList<CourseEditionKey, CourseEdition>();
@@ -1193,9 +1193,9 @@ namespace ScheduleDesigner.Hubs
 
                     foreach (var courseEdition in currentCourseEditions)
                     {
-                        var lockUserStaff = courseEdition.Value.LockUser?.Staff;
+                        var lockUser = courseEdition.Value.LockUser;
                         if (!courseEditionQueues.TryGetValue(courseEdition.Key, out _)
-                            || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                            || (lockUser != null && lockUser.IsAdmin))
                         {
                             return new MessageObject
                             {
@@ -1228,7 +1228,7 @@ namespace ScheduleDesigner.Hubs
                     {
                         var schedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => courseEditionIds.Contains(e.CourseEditionId))
-                            .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                            .Include(e => e.LockUser)
                             .Include(e => e.Timestamp)
                             .ToList();
 
@@ -1249,9 +1249,9 @@ namespace ScheduleDesigner.Hubs
 
                         foreach (var currentSchedulePosition in currentSchedulePositions)
                         {
-                            var lockUserStaff = currentSchedulePosition.Value.LockUser?.Staff;
+                            var lockUser = currentSchedulePosition.Value.LockUser;
                             if (!schedulePositionQueuesL1.TryGetValue(currentSchedulePosition.Key, out _)
-                                || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                                || (lockUser != null && lockUser.IsAdmin))
                             {
                                 return new MessageObject
                                 {
@@ -1391,7 +1391,7 @@ namespace ScheduleDesigner.Hubs
 
                     var courseEditions = _unitOfWork.GroupCourseEditions
                         .Get(e => currentGroupsIds.Contains(e.GroupId))
-                        .Include(e => e.CourseEdition).ThenInclude(e => e.LockUser).ThenInclude(e => e.Staff)
+                        .Include(e => e.CourseEdition).ThenInclude(e => e.LockUser)
                         .ToList();
 
                     var currentCourseEditions = new SortedList<CourseEditionKey, CourseEdition>();
@@ -1411,9 +1411,9 @@ namespace ScheduleDesigner.Hubs
 
                     foreach (var courseEdition in currentCourseEditions)
                     {
-                        var lockUserStaff = courseEdition.Value.LockUser?.Staff;
+                        var lockUser = courseEdition.Value.LockUser;
                         if (!courseEditionQueues.TryGetValue(courseEdition.Key, out _)
-                            || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                            || (lockUser != null && lockUser.IsAdmin))
                         {
                             return new MessageObject
                             {
@@ -1446,7 +1446,7 @@ namespace ScheduleDesigner.Hubs
                     {
                         var schedulePositions = _unitOfWork.SchedulePositions
                             .Get(e => courseEditionIds.Contains(e.CourseEditionId))
-                            .Include(e => e.LockUser).ThenInclude(e => e.Staff)
+                            .Include(e => e.LockUser)
                             .Include(e => e.Timestamp)
                             .ToList();
 
@@ -1467,9 +1467,9 @@ namespace ScheduleDesigner.Hubs
 
                         foreach (var currentSchedulePosition in currentSchedulePositions)
                         {
-                            var lockUserStaff = currentSchedulePosition.Value.LockUser?.Staff;
+                            var lockUser = currentSchedulePosition.Value.LockUser;
                             if (!schedulePositionQueuesL1.TryGetValue(currentSchedulePosition.Key, out _)
-                                || (lockUserStaff != null && lockUserStaff.IsAdmin))
+                                || (lockUser != null && lockUser.IsAdmin))
                             {
                                 return new MessageObject
                                 {
@@ -1590,8 +1590,7 @@ namespace ScheduleDesigner.Hubs
                             .Get(finalPredicate)
                             .Include(e => e.CourseEdition)
                                 .ThenInclude(e => e.Groups)
-                            .Include(e => e.LockUser)
-                                .ThenInclude(e => e.Staff);
+                            .Include(e => e.LockUser);
 
                         if (_schedulePositions.Count() != weeks.Length)
                         {
@@ -1601,8 +1600,8 @@ namespace ScheduleDesigner.Hubs
                         if ((!isAdmin && Enumerable.Any(_schedulePositions, schedulePosition => schedulePosition.LockUserId != null))
                             || (isAdmin && Enumerable.Any(_schedulePositions, schedulePosition =>
                             {
-                                var lockUserStaff = schedulePosition.LockUser?.Staff;
-                                return lockUserStaff != null && lockUserStaff.IsAdmin;
+                                var lockUser = schedulePosition.LockUser;
+                                return lockUser != null && lockUser.IsAdmin;
                             })))
                         {
                             return new MessageObject { StatusCode = 400, Message = "Someone has locked these positions in schedule before you." };

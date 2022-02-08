@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
-import { Account, Coordinator, CoordinatorBasic, Staff, Student, Titles, User } from 'src/app/others/Accounts';
+import { UserInfo, Coordinator, CoordinatorBasic, Titles, User } from 'src/app/others/Accounts';
 import { CourseEdition } from 'src/app/others/CourseEdition';
 import { CourseType, RoomType } from 'src/app/others/Types';
 import { Group, GroupInfo } from 'src/app/others/Group';
@@ -32,9 +32,9 @@ export class ScheduleDesignerApiService {
     };
   }
 
-  public GetMyAccount():Observable<Account> {
+  public GetMyAccount():Observable<UserInfo> {
     const request = {
-      url: this.baseUrl + '/users/Service.GetMyAccount()?$expand=Student($expand=Groups),Coordinator,Staff',
+      url: this.baseUrl + '/users/Service.GetMyAccount()?$expand=Groups',
       method: 'GET'
     };
 
@@ -44,30 +44,21 @@ export class ScheduleDesignerApiService {
       {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
-    ).pipe(map((response : any) => {
-      const user = new User(
+    ).pipe(map((response : any) => 
+      new UserInfo(
         response.UserId,
         response.FirstName,
-        response.LastName
-      );
-
-      return new Account(
-      user,
-      response.Student != null ? new Student(
-        user, 
-        response.Student.StudentNumber, 
-        response.Student.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? []
-      ) : null,
-      response.Coordinator != null ? new Coordinator(
-        user, 
-        new Titles(response.Coordinator.TitleBefore, response.Coordinator.TitleAfter)
-      ) : null,
-
-      response.Staff != null ? new Staff(
-        user,
-        response.Staff.IsAdmin
-      ) : null);
-    }));
+        response.LastName,
+        response.AcademicNumber,
+        response.TitleBefore,
+        response.TitleAfter,
+        response.IsStudent,
+        response.IsStaff,
+        response.IsCoordinator,
+        response.IsAdmin,
+        response.Groups.filter((group : any) => group.IsRepresentative).map((group : any) => group.GroupId) ?? []
+      )
+    ));
   }
 
   public CreateMyAccount():Observable<any> {
@@ -228,7 +219,7 @@ export class ScheduleDesignerApiService {
 
   public IsCourseEditionLocked(courseId:number, courseEditionId:number):Observable<{value: boolean, byAdmin: boolean}> {
     const request = {
-      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?$expand=LockUser($select=Staff;$expand=Staff($select=IsAdmin))&$select=LockUserId`,
+      url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?$expand=LockUser`,
       method: 'GET'
     };
 
@@ -241,7 +232,7 @@ export class ScheduleDesignerApiService {
     ).pipe(
       map((response : any) => {
         return {
-          value: response.LockUserId != null, byAdmin: response.LockUser?.Staff?.IsAdmin
+          value: response.LockUserId != null, byAdmin: response.LockUser?.IsAdmin
         };
       })
     );
@@ -249,7 +240,7 @@ export class ScheduleDesignerApiService {
 
   public GetCoordinators(): Observable<Coordinator[]> {
     const request = {
-      url: this.baseUrl + `/coordinators?$expand=User`,
+      url: this.baseUrl + `/users?$filter=IsCoordinator eq true`,
       method: 'GET'
     }
 
@@ -264,8 +255,8 @@ export class ScheduleDesignerApiService {
         new Coordinator(
           new User(
             value.UserId,
-            value.User.FirstName,
-            value.User.LastName,
+            value.FirstName,
+            value.LastName,
           ),
           new Titles(
             value.TitleBefore,
@@ -278,7 +269,7 @@ export class ScheduleDesignerApiService {
 
   public GetCoordinatorsFromUsers(usersIds:number[]):Observable<Coordinator[]> {
     const request = {
-      url: this.baseUrl + `/users?$expand=Coordinator&$filter=UserId in [${usersIds.toString()}]`,
+      url: this.baseUrl + `/users?$filter=UserId in [${usersIds.toString()}]`,
       method: 'GET'
     };
 
@@ -297,8 +288,8 @@ export class ScheduleDesignerApiService {
             value.LastName
           ),
           new Titles(
-            value.Coordinator.TitleBefore,
-            value.Coordinator.TitleAfter
+            value.TitleBefore,
+            value.TitleAfter
           )
         ))
       )
@@ -312,7 +303,7 @@ export class ScheduleDesignerApiService {
   ):Observable<CourseEditionInfo> {
     const request = {
       url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})?`
-      + `$expand=Course,LockUser($expand=Staff),SchedulePositions($count=true;$top=0)`,
+      + `$expand=Course,LockUser,SchedulePositions($count=true;$top=0)`,
       method: 'GET'
     };
 
@@ -331,7 +322,7 @@ export class ScheduleDesignerApiService {
         courseEditionInfo.ScheduleAmount = response['SchedulePositions@odata.count'];
         courseEditionInfo.FullAmount = courseEditionInfo.UnitsMinutes / settings.CourseDurationMinutes;
         courseEditionInfo.IsLocked = response.LockUserId != null;
-        courseEditionInfo.IsLockedByAdmin = response.LockUser?.Staff?.IsAdmin;
+        courseEditionInfo.IsLockedByAdmin = !!response.LockUser?.IsAdmin;
         return courseEditionInfo;
       })
     );
@@ -417,7 +408,7 @@ export class ScheduleDesignerApiService {
     const FREQUENCY = Math.floor(frequency);
     const request = {
       url: this.baseUrl + `/courseEditions(${courseId},${courseEditionId})/Service.GetMyCourseEdition(${filter.toString()},Frequency=${FREQUENCY})?` +
-        '$expand=Course,Groups,Coordinators($expand=Coordinator($expand=User)),LockUser($expand=Staff),' +
+        '$expand=Course,Groups,Coordinators,LockUser,' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
     };
@@ -443,8 +434,8 @@ export class ScheduleDesignerApiService {
           coordinators.push(new Coordinator(
             new User(
               element.Coordinator.UserId,
-              element.Coordinator.User.FirstName,
-              element.Coordinator.User.LastName
+              element.Coordinator.FirstName,
+              element.Coordinator.LastName
             ),
             new Titles(
               element.Coordinator.TitleBefore,
@@ -464,7 +455,7 @@ export class ScheduleDesignerApiService {
             groups, coordinators
           );
           courseEdition.IsLocked = response.LockUserId;
-          courseEdition.IsLockedByAdmin = response.LockUser?.Staff?.IsAdmin;
+          courseEdition.IsLockedByAdmin = !!response.LockUser?.IsAdmin;
           courseEdition.ScheduleAmount = scheduleAmount;
           courseEdition.FullAmount = fullAmount;
           myCourseEditions.push(courseEdition);
@@ -484,7 +475,7 @@ export class ScheduleDesignerApiService {
     const FREQUENCY = Math.floor(frequency);
     const request = {
       url: this.baseUrl + `/courseEditions/Service.GetFilteredCourseEditions(${filter.toString()},Frequency=${FREQUENCY})?` +
-        '$expand=Course,LockUser($expand=Staff),' +
+        '$expand=Course,LockUser,' +
         'SchedulePositions($count=true;$top=0)',
       method: 'GET'
     };
@@ -514,7 +505,7 @@ export class ScheduleDesignerApiService {
               []
             );
             courseEdition.IsLocked = value.LockUserId;
-            courseEdition.IsLockedByAdmin = value.LockUser?.Staff?.IsAdmin;
+            courseEdition.IsLockedByAdmin = !!value.LockUser?.IsAdmin;
             courseEdition.ScheduleAmount = scheduleAmount;
             courseEdition.FullAmount = fullAmount;
             myCourseEditions.push(courseEdition);
@@ -549,7 +540,7 @@ export class ScheduleDesignerApiService {
   ):Observable<{value: boolean, byAdmin: boolean}> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetSchedulePositions(`
-      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])?$expand=LockUser($select=Staff;$expand=Staff($select=IsAdmin))&$select=LockUserId`,
+      + `RoomId=${roomId},PeriodIndex=${periodIndex},Day=${day},Weeks=[${weeks.toString()}])?$expand=LockUser`,
       method: 'GET'
     };
 
@@ -563,7 +554,7 @@ export class ScheduleDesignerApiService {
       map((response : any) => {
         return {
           value: response.value.find((x:any) => x.LockUserId != null) != undefined,
-          byAdmin: response.value.find((x:any) => x.LockUser?.Staff?.IsAdmin) != undefined
+          byAdmin: response.value.find((x:any) => x.LockUser?.IsAdmin) != undefined
         }
       })
     );
@@ -643,7 +634,7 @@ export class ScheduleDesignerApiService {
 
   public GetCourseEditionCoordinatorsBasic(courseEditionId: number):Observable<CoordinatorBasic[]> {
     const request = {
-      url: this.baseUrl + `/coordinatorCourseEditions?$expand=Coordinator($expand=User)&$filter=CourseEditionId eq ${courseEditionId}`,
+      url: this.baseUrl + `/coordinatorCourseEditions?$expand=User&$filter=CourseEditionId eq ${courseEditionId}`,
       method: 'GET'
     };
 
@@ -655,8 +646,8 @@ export class ScheduleDesignerApiService {
       }
     ).pipe(
       map((response : any) => response.value.map((element : any) => new CoordinatorBasic(
-        element.Coordinator.UserId,
-        `${element.Coordinator.TitleBefore ?? ''} ${element.Coordinator.User.LastName.toUpperCase()} ${element.Coordinator.User.FirstName} ${element.Coordinator.TitleAfter ?? ''} (${element.Coordinator.UserId})`
+        element.User.UserId,
+        `${element.User.TitleBefore ?? ''} ${element.User.LastName.toUpperCase()} ${element.User.FirstName} ${element.User.TitleAfter ?? ''} (${element.User.UserId})`
       )))
     );
   }
@@ -665,7 +656,7 @@ export class ScheduleDesignerApiService {
     courseEditions: CourseEdition[] //sorted by courseEditionId
   ):Observable<CourseEdition[]> {
     const request = {
-      url: this.baseUrl + `/coordinatorCourseEditions?$expand=Coordinator($expand=User)&$filter=CourseEditionId in (${[...new Set(courseEditions.map(c => c.CourseEditionId))]})&$orderby=CourseEditionId`,
+      url: this.baseUrl + `/coordinatorCourseEditions?$expand=User&$filter=CourseEditionId in (${[...new Set(courseEditions.map(c => c.CourseEditionId))]})&$orderby=CourseEditionId`,
       method: 'GET'
     };
 
@@ -687,13 +678,13 @@ export class ScheduleDesignerApiService {
             if (courseEditions[key].CourseEditionId == response.value[i].CourseEditionId) {
               courseEditions[key].Coordinators.push(new Coordinator(
                 new User(
-                  response.value[i].Coordinator.UserId,
-                  response.value[i].Coordinator.User.FirstName,
-                  response.value[i].Coordinator.User.LastName
+                  response.value[i].User.UserId,
+                  response.value[i].User.FirstName,
+                  response.value[i].User.LastName
                 ),
                 new Titles(
-                  response.value[i].Coordinator.TitleBefore,
-                  response.value[i].Coordinator.TitleAfter
+                  response.value[i].User.TitleBefore,
+                  response.value[i].User.TitleAfter
                 )));
             }
           }
@@ -764,7 +755,7 @@ export class ScheduleDesignerApiService {
   ):Observable<{schedule: CourseEdition[][][], courseEditions: CourseEdition[]}> {
     const request = {
       url: this.baseUrl + `/schedulePositions/Service.GetFilteredSchedule(${filter.toString()},Weeks=[${weeks.toString()}])?
-        $expand=Timestamp,LockUser($expand=Staff),ScheduledMovePositions($expand=ScheduledMove($select=MoveId,UserId,IsConfirmed))`,
+        $expand=Timestamp,LockUser,ScheduledMovePositions($expand=ScheduledMove($select=MoveId,UserId,IsConfirmed))`,
       method: 'GET'
     };
 
@@ -796,7 +787,7 @@ export class ScheduleDesignerApiService {
           const dayIndex = value.Timestamp.Day - 1;
           const periodIndex = value.Timestamp.PeriodIndex - 1;
           const week = value.Timestamp.Week;
-          const locked = {value: value.LockUserId != null, byAdmin: value.LockUser?.Staff?.IsAdmin};
+          const locked = {value: value.LockUserId != null, byAdmin: !!value.LockUser?.IsAdmin};
           const scheduledMoves = value.ScheduledMovePositions.map((value : any) => new ScheduledMove(value.ScheduledMove.MoveId, value.ScheduledMove.UserId, value.ScheduledMove.IsConfirmed));
 
           let scheduleSlot = schedule[dayIndex][periodIndex];
@@ -1157,7 +1148,7 @@ export class ScheduleDesignerApiService {
 
   public GetScheduledMoveInfo(moveId: number):Observable<ScheduledMoveInfo> {
     const request = {
-      url: this.baseUrl + `/scheduledMoves(${moveId})?$expand=User($expand=Coordinator),Message&$select=User`,
+      url: this.baseUrl + `/scheduledMoves(${moveId})?$expand=User,Message`,
       method: 'GET'
     };
 
@@ -1171,7 +1162,7 @@ export class ScheduleDesignerApiService {
       map((response : any) => new ScheduledMoveInfo(
         response.User.FirstName,
         response.User.LastName,
-        response.User?.Coordinator ? new Titles(response.User.Coordinator.TitleBefore, response.User.Coordinator.TitleAfter) : null,
+        new Titles(response.User.TitleBefore, response.User.TitleAfter),
         response.Message?.Content
       ))
     );

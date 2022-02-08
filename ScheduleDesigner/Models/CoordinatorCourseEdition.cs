@@ -17,7 +17,7 @@ namespace ScheduleDesigner.Models
 
 
         [ForeignKey("CoordinatorId")]
-        public Coordinator Coordinator { get; set; }
+        public User User { get; set; }
 
         [ForeignKey("CourseId,CourseEditionId")]
         public CourseEdition CourseEdition { get; set; }

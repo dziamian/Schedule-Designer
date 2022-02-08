@@ -17,7 +17,7 @@ namespace ScheduleDesigner.Models
 
 
         [ForeignKey("StudentId")]
-        public Student Student { get; set; }
+        public User User { get; set; }
 
         [ForeignKey("GroupId")]
         public Group Group { get; set; }

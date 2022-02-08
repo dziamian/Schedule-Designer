@@ -13,7 +13,9 @@ namespace ScheduleDesigner.Models
     {
         public int UserId { get; set; }
 
-        
+        [MaxLength(50)]
+        public string AcademicNumber { get; set; }
+
         [Required]
         [MaxLength(100)]
         public string FirstName { get; set; }
@@ -22,14 +24,25 @@ namespace ScheduleDesigner.Models
         [MaxLength(100)]
         public string LastName { get; set; }
 
-        
-        public Student Student { get; set; }
+        [MaxLength(100)]
+        public string TitleBefore { get; set; }
 
-        public Coordinator Coordinator { get; set; }
+        [MaxLength(100)]
+        public string TitleAfter { get; set; }
 
-        public Staff Staff { get; set; }
+        public bool IsStudent { get; set; }
+
+        public bool IsStaff { get; set; }
+
+        public bool IsCoordinator { get; set; }
+
+        public bool IsAdmin { get; set; }
 
         public Authorization Authorization { get; set; }
+
+        public virtual ICollection<StudentGroup> Groups { get; set; }
+
+        public virtual ICollection<CoordinatorCourseEdition> CourseEditions { get; set; }
 
         public virtual ICollection<CourseRoom> CourseRoomsPropositions { get; set; }
 
@@ -41,12 +54,16 @@ namespace ScheduleDesigner.Models
 
         public string GetHeader(string delimiter)
         {
-            return $"UserId{delimiter}FirstName{delimiter}LastName\n";
+            return $"UserId{delimiter}AcademicNumber{delimiter}FirstName{delimiter}" +
+                $"LastName{delimiter}TitleBefore{delimiter}TitleAfter{delimiter}" +
+                $"IsStudent{delimiter}IsStaff{delimiter}IsCoordinator{delimiter}IsAdmin\n";
         }
 
         public string GetRow(string delimiter)
         {
-            return $"{UserId}{delimiter}{FirstName}{delimiter}{LastName}\n";
+            return $"{UserId}{delimiter}{AcademicNumber}{delimiter}{FirstName}{delimiter}" +
+                $"{LastName}{delimiter}{TitleBefore}{delimiter}{TitleAfter}{delimiter}" +
+                $"{IsStudent}{delimiter}{IsStaff}{delimiter}{IsCoordinator}{delimiter}{IsAdmin}\n";
         }
     }
 }

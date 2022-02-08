@@ -12,39 +12,32 @@
                 </div>
                 <div class="profile-field">
                     <span>
-                        First Name: <b>{{account.User.FirstName}}</b>
+                        First Name: <b>{{userInfo.FirstName}}</b>
                         <br>
                     </span>
                     <span>
-                        Last Name: <b>{{account.User.LastName}}</b>
+                        Last Name: <b>{{userInfo.LastName}}</b>
                         <br>
                     </span>
-                    <span *ngIf="account.Coordinator != null && account.Coordinator.Titles != null && 
-                        ((account.Coordinator.Titles.TitleBefore != null && account.Coordinator.Titles.TitleBefore != '') 
-                            || (account.Coordinator.Titles.TitleAfter != null && account.Coordinator.Titles.TitleAfter != ''))">
-                        Academic Titles: <b>{{account.Coordinator.Titles?.TitleBefore}} {{account.Coordinator.Titles?.TitleAfter}}</b>
+                    <span *ngIf="userInfo.AcademicNumber != null && userInfo.AcademicNumber != ''">
+                        Academic Number: <b>{{userInfo.AcademicNumber}}</b>
                         <br>
                     </span>
-                    <span *ngIf="account.Student != null && account.Student.StudentNumber != null && account.Student.StudentNumber != ''">
-                        Student Number: <b>{{account.Student.StudentNumber}}</b>
+                    <span *ngIf="(userInfo.TitleBefore != null && userInfo.TitleBefore != '') 
+                            || (userInfo.TitleAfter != null && userInfo.TitleAfter != '')">
+                        Academic Titles: <b *ngIf="userInfo.TitleBefore != null && userInfo.TitleBefore != ''">{{userInfo?.TitleBefore}}</b> <b *ngIf="userInfo.TitleAfter != null && userInfo.TitleAfter != ''">{{userInfo?.TitleAfter}}</b>
+                        <br>
                     </span>
                 </div>
                 <div class="profile-roles">
                     <mat-chip-list>
-                        <mat-chip *ngIf="account.Staff?.IsAdmin" style="background-color: #b90000; color: white;" selected>Administrator</mat-chip>
-                        <mat-chip *ngIf="account.Student != null && account.Student.RepresentativeGroups.length > 0" style="background-color: #0074b8; color: white;" selected>Representative</mat-chip>
-                        <mat-chip *ngIf="account.Coordinator" style="background-color: #047200; color: white;" selected>Coordinator</mat-chip>
-                        <mat-chip *ngIf="account.Student" style="background-color: #a16e00; color: white;" selected>Student</mat-chip>
-                        <mat-chip *ngIf="account.Staff" style="background-color: #ffffff; color: black;" selected>Staff</mat-chip>
+                        <mat-chip *ngIf="userInfo.IsStaff && userInfo.IsAdmin" style="background-color: #b90000; color: white;" selected>Administrator</mat-chip>
+                        <mat-chip *ngIf="userInfo.IsStudent && userInfo.RepresentativeGroups.length > 0" style="background-color: #0074b8; color: white;" selected>Representative</mat-chip>
+                        <mat-chip *ngIf="userInfo.IsCoordinator" style="background-color: #047200; color: white;" selected>Coordinator</mat-chip>
+                        <mat-chip *ngIf="userInfo.IsStudent" style="background-color: #a16e00; color: white;" selected>Student</mat-chip>
+                        <mat-chip *ngIf="userInfo.IsStaff" style="background-color: #ffffff; color: black;" selected>Staff</mat-chip>
                     </mat-chip-list>
                 </div>
-                <!--{{account.UserId}}<br>
-                <b>{{account.Titles?.TitleBefore}} {{account.FirstName}} {{account.LastName}} {{account.Titles?.TitleAfter}}</b><br>
-                Student: {{account.Student}}<br>
-                Representative Groups Ids: {{account.RepresentativeGroups}}<br>
-                Coordinator: {{account.Coordinator}}<br>
-                Staff: {{account.Staff}}<br>
-                Admin: {{account.Admin}}-->
             </td>
         </tr>
     </table>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
@@ -182,10 +183,7 @@ namespace ScheduleDesigner.Controllers
             try
             {
                 var users = _unitOfWork.Users
-                    .Get(e => e.Student == null && e.Coordinator == null && e.Staff == null)
-                    .Include(e => e.Student)
-                    .Include(e => e.Coordinator)
-                    .Include(e => e.Staff)
+                    .Get(e => !e.IsStudent && !e.IsCoordinator && !e.IsStaff)
                     .ToList();
 
                 return Ok(users);
@@ -232,7 +230,7 @@ namespace ScheduleDesigner.Controllers
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("({key})")]
-        public async Task<IActionResult> UpdateUser([FromODataUri] int key, [FromBody] Delta<User> delta)
+        public IActionResult UpdateUser([FromODataUri] int key, [FromBody] Delta<User> delta)
         {
             if (!ModelState.IsValid)
             {
@@ -241,17 +239,49 @@ namespace ScheduleDesigner.Controllers
 
             try
             {
-                var _user = await _unitOfWork.Users.GetFirst(e => e.UserId == key);
-                if (_user == null)
+                if (!Monitor.TryEnter(SchedulePositionsController.ScheduleLock, SchedulePositionsController.LockTimeout))
                 {
-                    return NotFound();
+                    return BadRequest("Schedule is locked right now. Please try again later.");
                 }
+                try
+                {
+                    var _user = _unitOfWork.Users.GetFirst(e => e.UserId == key).Result;
+                    if (_user == null)
+                    {
+                        return NotFound();
+                    }
 
-                delta.Patch(_user);
+                    delta.Patch(_user);
 
-                await _unitOfWork.CompleteAsync();
+                    if (_user.IsCoordinator || _user.IsAdmin)
+                    {
+                        _user.IsStaff = true;
+                    }
 
-                return Ok(_user);
+                    if (!_user.IsCoordinator)
+                    {
+                        var courseEditions = _unitOfWork.CoordinatorCourseEditions
+                            .Get(e => e.CoordinatorId == key).FirstOrDefault();
+
+                        if (courseEditions != null)
+                        {
+                            return BadRequest("You cannot remove this user because there are some course editions assigned to him.");
+                        }
+                    }
+
+                    if (!_user.IsStudent)
+                    {
+                        _unitOfWork.StudentGroups.DeleteMany(e => e.StudentId == key);
+                    }
+
+                    _unitOfWork.Complete();
+
+                    return Ok(_user);
+                }
+                finally
+                {
+                    Monitor.Exit(SchedulePositionsController.ScheduleLock);
+                }
             }
             catch (Exception e)
             {

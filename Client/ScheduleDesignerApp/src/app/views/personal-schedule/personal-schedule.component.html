@@ -12,7 +12,7 @@
                     <div class="board">
                         <app-my-courses
                             [isModifying]="isModifying"
-                            [account]="account"
+                            [userInfo]="userInfo"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -95,7 +95,7 @@
                             labelBefore="Personal"
 
                             [isModifying]="isModifying"
-                            [account]="account"
+                            [userInfo]="userInfo"
                             [settings]="settings"
                             [courseTypes]="courseTypes"
                             [modifyingScheduleData]="data"
@@ -116,7 +116,7 @@
                     </div>
                     <div class="footer">
                         <div class="footer-resource">
-                            <b>Selected resource: {{account?.Coordinator?.Titles?.TitleBefore}} {{account?.User?.FirstName}} {{account?.User?.LastName}} {{account?.Coordinator?.Titles?.TitleAfter}}</b>
+                            <b>Selected resource: {{userInfo?.TitleBefore}} {{userInfo?.FirstName}} {{userInfo?.LastName}} {{userInfo?.TitleAfter}}</b>
                         </div>
                         <div class="footer-schedule-menu">
                             <button mat-mini-fab color="accent" style="margin-right: 1vw;"
