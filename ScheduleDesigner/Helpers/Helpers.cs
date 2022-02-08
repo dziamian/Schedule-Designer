@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using ScheduleDesigner.Dtos;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -19,22 +20,24 @@ namespace ScheduleDesigner.Helpers
 
         public static void AddTimestamps(Settings settings, string connectionString)
         {
-            var timestamps = new List<Timestamp>();
+            var timestamps = new List<TimestampDto>();
 
             var numberOfSlots = (settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
             var numberOfWeeks = settings.TermDurationWeeks;
+
+            var id = 1;
             for (int k = 0; k < numberOfWeeks; ++k)
             {
                 for (int j = 0; j < 5; ++j)
                 {
                     for (int i = 0; i < numberOfSlots; ++i)
                     {
-                        timestamps.Add(new Timestamp { PeriodIndex = i + 1, Day = j + 1, Week = k + 1 });
+                        timestamps.Add(new TimestampDto { TimestampId = id++, PeriodIndex = i + 1, Day = j + 1, Week = k + 1 });
                     }
                 }
             }
 
-            BulkImport<Timestamp>.Execute(connectionString, "dbo.Timestamps", timestamps);
+            BulkImport<TimestampDto>.Execute(connectionString, "dbo.Timestamps", timestamps);
         }
 
         public static void RemoveTimestamps(IUnitOfWork unitOfWork)

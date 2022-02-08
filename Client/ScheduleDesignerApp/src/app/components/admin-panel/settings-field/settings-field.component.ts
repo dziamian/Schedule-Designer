@@ -65,7 +65,7 @@ export class SettingsFieldComponent implements OnInit {
 
   private buildForm(settings: Settings) {
     this.settingsForm = new FormGroup({
-      courseDurationHours: new FormControl(settings.CourseDurationMinutes / 60, [Validators.required]),
+      courseDurationHours: new FormControl(Math.floor(settings.CourseDurationMinutes / 60), [Validators.required]),
       courseDurationMinutes: new FormControl(settings.CourseDurationMinutes % 60, [Validators.required]),
       startTime: new FormControl(settings.StartTime, [Validators.required]),
       endTime: new FormControl(settings.EndTime, [Validators.required]),

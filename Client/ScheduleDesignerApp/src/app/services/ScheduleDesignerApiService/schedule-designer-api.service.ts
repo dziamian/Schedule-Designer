@@ -63,7 +63,7 @@ export class ScheduleDesignerApiService {
 
   public CreateMyAccount():Observable<any> {
     const request = {
-      url: this.baseUrl + '/users/Service.CreateMyAccount()',
+      url: this.baseUrl + '/users/Service.CreateMyAccount',
       method: 'POST'
     };
 

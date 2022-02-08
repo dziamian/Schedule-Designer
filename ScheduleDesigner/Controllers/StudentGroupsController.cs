@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScheduleDesigner.Attributes;
 using ScheduleDesigner.Dtos;
+using ScheduleDesigner.Helpers;
 using ScheduleDesigner.Models;
 using ScheduleDesigner.Repositories.Interfaces;
 using ScheduleDesigner.Repositories.UnitOfWork;
@@ -116,6 +117,12 @@ namespace ScheduleDesigner.Controllers
                     .Get(e => e.StudentId == userId)
                     .Include(e => e.Group)
                     .Select(e => e.Group)
+                    .ToList();
+
+                var parentGroupIds = Methods.GetParentGroups(_myGroups, _unitOfWork.Groups).Distinct();
+
+                var allMyGroups = _unitOfWork.Groups
+                    .Get(e => parentGroupIds.Contains(e.GroupId))
                     .ToList();
 
                 return Ok(_myGroups);
