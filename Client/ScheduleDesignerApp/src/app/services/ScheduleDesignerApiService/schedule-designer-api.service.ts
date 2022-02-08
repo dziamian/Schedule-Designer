@@ -240,7 +240,7 @@ export class ScheduleDesignerApiService {
 
   public GetCoordinators(): Observable<Coordinator[]> {
     const request = {
-      url: this.baseUrl + `/users?$filter=IsCoordinator eq true`,
+      url: this.baseUrl + `/users/Service.GetCoordinators()`,
       method: 'GET'
     }
 

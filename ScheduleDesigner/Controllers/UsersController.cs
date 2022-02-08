@@ -175,6 +175,14 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        [CustomEnableQuery]
+        public IActionResult GetCoordinators()
+        {
+            return Ok(_unitOfWork.Users.Get(e => e.IsCoordinator).ToList());
+        }
+
         [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
@@ -252,6 +260,12 @@ namespace ScheduleDesigner.Controllers
                     }
 
                     delta.Patch(_user);
+
+                    if (!_user.IsStaff)
+                    {
+                        _user.IsAdmin = false;
+                        _user.IsCoordinator = false;
+                    }
 
                     if (_user.IsCoordinator || _user.IsAdmin)
                     {

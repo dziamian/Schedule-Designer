@@ -367,8 +367,7 @@ export class AdministratorApiService {
 
   public GetGroupsStudents(groupIds: number[]): Observable<StudentBasic[]> {
     const request = {
-      url: this.baseUrl + `/studentGroups/Service.GetGroupsStudents(GroupsIds=[${groupIds.toString()}])`
-      + `?$expand=User`,
+      url: this.baseUrl + `/studentGroups/Service.GetGroupsStudents(GroupsIds=[${groupIds.toString()}])`,
       method: 'GET'
     };
 
@@ -379,10 +378,10 @@ export class AdministratorApiService {
         headers: this.GetAuthorizationHeaders(AccessToken.Retrieve()?.ToJson())
       }
     ).pipe(map((response : any) => response.value.map((element : any) => new StudentBasic(
-      element.User.UserId, 
-      (element.User.TitleBefore != null ? `${element.User.TitleBefore} ` : '') + 
-        `${element.User.FirstName} ${element.User.LastName}` + 
-        (element.User.TitleAfter != null ? ` ${element.User.TitleAfter}` : '')
+      element.UserId, 
+      (element.TitleBefore != null ? `${element.TitleBefore} ` : '') + 
+        `${element.FirstName} ${element.LastName}` + 
+        (element.TitleAfter != null ? ` ${element.TitleAfter}` : '')
     ))));
   }
 

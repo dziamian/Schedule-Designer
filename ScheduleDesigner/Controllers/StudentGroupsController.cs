@@ -53,7 +53,7 @@ namespace ScheduleDesigner.Controllers
                         return BadRequest("Could not find user with given ID or user is not a student.");
                     }
 
-                    var _student = _unitOfWork.StudentGroups.Add(studentGroupDto.FromDto());
+                    var _student = _unitOfWork.StudentGroups.Add(studentGroupDto.FromDto()).Result;
 
                     if (_student != null)
                     {
