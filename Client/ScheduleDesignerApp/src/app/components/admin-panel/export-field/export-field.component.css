@@ -32,10 +32,6 @@
     margin-top: 1vh;
 }
 
-.row:last-child {
-    border-bottom: none;
-}
-
 .row-left {
     float: left;
     margin-left: 1vw;

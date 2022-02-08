@@ -4,8 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs/operators';
 import { UserInfo, SearchUser } from 'src/app/others/Accounts';
 import { AdministratorApiService } from 'src/app/services/AdministratorApiService/administrator-api.service';
-import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
-import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
 @Component({
   selector: 'app-user-field',
@@ -38,9 +36,7 @@ export class UserFieldComponent implements OnInit {
   resultsLoading: boolean = false;
 
   constructor(
-    private scheduleDesignerApiService: ScheduleDesignerApiService,
     private administratorApiService: AdministratorApiService,
-    private signalrService: SignalrService,
     private snackBar: MatSnackBar
   ) { }
 
