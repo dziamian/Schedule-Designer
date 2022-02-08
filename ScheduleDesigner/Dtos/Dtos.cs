@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ScheduleDesigner.Dtos
 {
-
     public class TimestampDto
     {
         public int TimestampId { get; set; }
@@ -60,6 +59,7 @@ namespace ScheduleDesigner.Dtos
             return new CourseEdition
             {
                 CourseId = CourseId,
+                CourseEditionId = CourseEditionId,
                 Name = Name,
             };
         }
@@ -117,6 +117,7 @@ namespace ScheduleDesigner.Dtos
         {
             return new Group
             {
+                GroupId = GroupId,
                 Name = Name,
                 ParentGroupId = ParentGroupId
             };
@@ -140,6 +141,7 @@ namespace ScheduleDesigner.Dtos
         {
             return new Course
             {
+                CourseId = CourseId,
                 CourseTypeId = CourseTypeId,
                 Name = Name,
                 UnitsMinutes = UnitsMinutes
@@ -183,6 +185,7 @@ namespace ScheduleDesigner.Dtos
         {
             return new CourseType
             {
+                CourseTypeId = CourseTypeId,
                 Name = Name,
                 Color = Color
             };
@@ -201,6 +204,7 @@ namespace ScheduleDesigner.Dtos
         {
             return new RoomType
             {
+                RoomTypeId = RoomTypeId,
                 Name = Name
             };
         }
@@ -223,6 +227,7 @@ namespace ScheduleDesigner.Dtos
         {
             return new Room
             {
+                RoomId = RoomId,
                 RoomTypeId = RoomTypeId,
                 Name = Name,
                 Capacity = Capacity
