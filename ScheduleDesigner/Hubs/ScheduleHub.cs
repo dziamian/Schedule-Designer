@@ -501,7 +501,7 @@ namespace ScheduleDesigner.Hubs
                                         .ThenInclude(e => e.Coordinators)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Groups)
-                                        .Select(e => new { e.TimestampId, e.RoomId })
+                                        .Select(e => new { e.TimestampId, e.RoomId }).ToList()
                                 :
                                 _unitOfWork.SchedulePositions
                                 .Get(e => candidateDestTimestamps.Contains(e.TimestampId)
@@ -514,7 +514,7 @@ namespace ScheduleDesigner.Hubs
                                     .ThenInclude(e => e.Coordinators)
                                     .Include(e => e.CourseEdition)
                                     .ThenInclude(e => e.Groups)
-                                    .Select(e => new { e.TimestampId, e.RoomId });
+                                    .Select(e => new { e.TimestampId, e.RoomId }).ToList();
 
                                 if (_destSchedulePositions.Any())
                                 {
@@ -2690,7 +2690,7 @@ namespace ScheduleDesigner.Hubs
                             .ThenInclude(e => e.Coordinators)
                             .Include(e => e.CourseEdition)
                             .ThenInclude(e => e.Groups)
-                            .Select(e => new { e.TimestampId, e.RoomId });
+                            .Select(e => new { e.TimestampId, e.RoomId }).ToList();
 
                         if (_schedulePositions.Any())
                         {
@@ -2891,7 +2891,7 @@ namespace ScheduleDesigner.Hubs
                                         .ThenInclude(e => e.Coordinators)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Groups)
-                                        .Select(e => new { e.TimestampId, e.RoomId })
+                                        .Select(e => new { e.TimestampId, e.RoomId }).ToList()
                                 :
                                 _unitOfWork.SchedulePositions
                                 .Get(e => _destTimestamps.Contains(e.TimestampId)
@@ -2904,7 +2904,7 @@ namespace ScheduleDesigner.Hubs
                                 .ThenInclude(e => e.Coordinators)
                                 .Include(e => e.CourseEdition)
                                 .ThenInclude(e => e.Groups)
-                                .Select(e => new { e.TimestampId, e.RoomId });
+                                .Select(e => new { e.TimestampId, e.RoomId }).ToList();
 
                             if (_destSchedulePositions.Any())
                             {
@@ -3764,7 +3764,7 @@ namespace ScheduleDesigner.Hubs
                                         .ThenInclude(e => e.Coordinators)
                                         .Include(e => e.CourseEdition)
                                         .ThenInclude(e => e.Groups)
-                                        .Select(e => new { e.TimestampId, e.RoomId })
+                                        .Select(e => new { e.TimestampId, e.RoomId }).ToList()
                                 :
                                 _unitOfWork.SchedulePositions
                                 .Get(e => _destTimestamps.Contains(e.TimestampId)
@@ -3777,7 +3777,7 @@ namespace ScheduleDesigner.Hubs
                                 .ThenInclude(e => e.Coordinators)
                                 .Include(e => e.CourseEdition)
                                 .ThenInclude(e => e.Groups)
-                                .Select(e => new { e.TimestampId, e.RoomId });
+                                .Select(e => new { e.TimestampId, e.RoomId }).ToList();
 
                             if (_destSchedulePositions.Any())
                             {
