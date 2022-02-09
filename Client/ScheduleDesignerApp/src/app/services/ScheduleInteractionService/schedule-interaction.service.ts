@@ -895,7 +895,7 @@ export class ScheduleInteractionService {
 
           for (let i = 0; i < scheduleComponent.schedule.length; ++i) {
             for (let j = 0; j < scheduleComponent.schedule[i].length; ++j) {
-              for (let k = 0; k < scheduleComponent.schedule[i][j].length; ++j) {
+              for (let k = 0; k < scheduleComponent.schedule[i][j].length; ++k) {
                 const currentCourseEdition = scheduleComponent.schedule[i][j][k];
                 if (currentCourseEdition.CourseId == courseEdition.CourseId
                   && currentCourseEdition.CourseEditionId == courseEdition.CourseEditionId) {
