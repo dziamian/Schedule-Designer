@@ -50,7 +50,7 @@ namespace ScheduleDesigner.Helpers
                     
                     bulkCopy.ColumnMappings.Add(propertyName, propertyName);
                     
-                    dataTable.Columns.Add(new DataColumn(propertyName, property.PropertyType));
+                    dataTable.Columns.Add(new DataColumn(propertyName, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType));
                 }
 
                 foreach (var record in records)
@@ -58,7 +58,7 @@ namespace ScheduleDesigner.Helpers
                     var row = dataTable.NewRow();
                     foreach (var property in properties)
                     {
-                        row[property.Name] = property.GetValue(record, null);
+                        row[property.Name] = property.GetValue(record) ?? DBNull.Value;
                     }
                     dataTable.Rows.Add(row);
                 }
