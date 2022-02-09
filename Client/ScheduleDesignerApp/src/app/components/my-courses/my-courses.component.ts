@@ -38,12 +38,22 @@ export class MyCoursesComponent implements OnInit {
   signalrSubscriptions: Subscription[];
   loading: boolean | null = null;
 
+  readonly TOP: number = 6;
+  skip: number = 0;
   myCourses: CourseEdition[];
 
   constructor(
     private signalrService: SignalrService,
     private scheduleDesignerApiService:ScheduleDesignerApiService
   ) { }
+
+  NextPage() {
+    this.skip += this.TOP;
+  }
+
+  PreviousPage() {
+    this.skip -= this.TOP;
+  }
 
   private updateLockInMyCourses(courseId:number, courseEditionId:number, locked: {value:boolean, byAdmin: boolean}) {
     if (!this.myCourses) {

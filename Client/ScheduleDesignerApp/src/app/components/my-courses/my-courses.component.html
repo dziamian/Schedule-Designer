@@ -9,7 +9,7 @@
         (cdkDropListEntered)="OnDropEnter($event)"
         (cdkDropListDropped)="OnDropped($event)"
     >
-        <div *ngFor="let course of myCourses" 
+        <div *ngFor="let course of myCourses.slice(skip, skip + TOP)" 
             class="course-field"
         >
             <app-course 
@@ -25,6 +25,17 @@
         <div *ngIf="myCourses?.length == 0" class="no-courses">
             There is no unplanned courses for this view.
         </div>
+    </div>
+    <div class="navigator">
+        <span>
+            Page {{skip / TOP + 1}}
+        </span>
+        <button mat-icon-button [disabled]="skip - TOP < 0" (click)="PreviousPage()">
+            <mat-icon>arrow_back_ios</mat-icon>
+        </button>
+        <button mat-icon-button [disabled]="skip + TOP >= (myCourses?.length ?? 0)" (click)="NextPage()">
+            <mat-icon>arrow_forward_ios</mat-icon>
+        </button>
     </div>
 
     <ng-template #spinner>

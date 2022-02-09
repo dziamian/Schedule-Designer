@@ -18,7 +18,7 @@
     padding-top: 1vh;
     padding-bottom: 1vh;
     box-sizing: border-box;
-    height: 97%;
+    height: 90%;
     overflow-y: auto;
 }
 
@@ -41,6 +41,10 @@
     width: 50%;
     transform: translateY(-100%);
     font-weight: bold;
+}
+
+.navigator {
+    height: 7%;
 }
 
 .spinner {
