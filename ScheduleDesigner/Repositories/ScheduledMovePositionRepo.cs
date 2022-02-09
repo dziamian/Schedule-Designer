@@ -20,7 +20,7 @@ namespace ScheduleDesigner.Repositories
             }
 
             var results = _context.Set<ScheduledMovePosition>()
-                .Where(predicate);
+                .Where(predicate).ToList();
 
             if (!results.Any())
             {
