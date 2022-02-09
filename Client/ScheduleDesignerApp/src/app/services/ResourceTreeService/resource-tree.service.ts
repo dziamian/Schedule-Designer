@@ -640,6 +640,20 @@ export class ResourceTreeService {
     } while (previousNode.level != 0);
   }
 
+  private markChilds(flatNode: ResourceFlatNode) {
+    var i = this.treeControl.dataNodes.findIndex(x => x == flatNode);
+    var currentLevel = this.treeControl.dataNodes[i].level;
+
+    while (true) {
+      var nextNode = this.treeControl.dataNodes[i + 1];
+      if (nextNode == undefined || nextNode.level <= currentLevel) {
+        return;
+      }
+      nextNode.visible = true;
+      ++i;
+    }
+  }
+
   public filterByName(term: string) {
     const filteredItems = this.treeControl.dataNodes.filter(
       x => x.item.name.toLowerCase().indexOf(term.toLowerCase()) === -1
@@ -654,6 +668,7 @@ export class ResourceTreeService {
     visibleItems.map(x => {
       x.visible = true;
       this.markParents(x);
+      this.markChilds(x);
     });
 
     const levelZeroItems = this.treeControl.dataNodes.filter(
