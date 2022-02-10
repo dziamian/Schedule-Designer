@@ -61,13 +61,8 @@ namespace Testing
 
             var users = new List<User>
             {
-                new User { UserId = 1, FirstName = "A", LastName = "A" },
-                new User { UserId = 2, FirstName = "B", LastName = "B" }
-            };
-            var coordinators = new List<Coordinator>
-            {
-                new Coordinator { UserId = 1, TitleBefore = "A", TitleAfter = "A" },
-                new Coordinator { UserId = 2, TitleBefore = "B", TitleAfter = "B" }
+                new User { UserId = 1, FirstName = "A", LastName = "A", IsCoordinator = true, TitleBefore = "A", TitleAfter = "A" },
+                new User { UserId = 2, FirstName = "B", LastName = "B", IsCoordinator = true, TitleBefore = "B", TitleAfter = "B" }
             };
             var groups = new List<Group>
             {
@@ -113,7 +108,6 @@ namespace Testing
             mockDbContext.Set<Course>().AddRange(courses);
             mockDbContext.Set<CourseRoom>().AddRange(courseRooms);
             mockDbContext.Set<User>().AddRange(users);
-            mockDbContext.Set<Coordinator>().AddRange(coordinators);
             mockDbContext.Set<Group>().AddRange(groups);
             mockDbContext.Set<CourseEdition>().AddRange(courseEditions);
             mockDbContext.Set<GroupCourseEdition>().AddRange(groupCourseEditions);
