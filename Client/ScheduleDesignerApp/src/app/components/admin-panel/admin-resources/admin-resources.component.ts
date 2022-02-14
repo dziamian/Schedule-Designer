@@ -6,6 +6,11 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ResourceFlatNode, ResourceNode } from 'src/app/others/ResourcesTree';
 import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resource-tree.service';
 
+/**
+ * Komponent odpowiedzialny za wyświetlanie drzewka zasobów 
+ * w panelu administratora.
+ * Posiada lokalnie utworzoną instancję serwisu {@link ResourceTreeService}.
+ */
 @Component({
   selector: 'app-admin-resources',
   templateUrl: './admin-resources.component.html',
@@ -16,14 +21,26 @@ import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resour
 })
 export class AdminResourcesComponent implements OnInit {
 
+  /** Typ załadowanych zasobów do drzewka. */
   private _type: string;
 
+  /** Nagłówek drzewka. */
   @Input() header: string;
+  /** 
+   * Rodzaj akcji, która ma zostać wykonana po 
+   * wciśnięciu przycisku dostępnego z węzłem drzewka. 
+   */
   @Input() actionType: string = 'add';
+  /** Określa czy drzewko jest widoczne na ekranie. */
   @Input() visible: boolean = true;
+  /** Typy zasobów, które mają zostać pominięte w drzewku. */
   @Input() excludeTypes: string[] = [];
+  /** Identyfikatory zasobów, które mają zostać pominięte w drzewku. */
   @Input() excludeIds: string[] = [];
 
+  /**
+   * Metoda ustawiająca typ zasobów, które zostaną załadowane do drzewka.
+   */
   @Input() set type(value: string) {
     this._type = value;
     this.LoadResources();
@@ -31,14 +48,24 @@ export class AdminResourcesComponent implements OnInit {
     return this._type;
   }
 
+  /** 
+   * Emiter zdarzenia wybrania węzła drzewka. 
+   * Posiada ono informacje o identyfikatorze wybranego zasobu, typ zasobu,
+   * akcję jaka ma zostać wykonana ("add"/"view") oraz wybrany węzeł.
+   */
   @Output() clicked: EventEmitter<{
     id: string | undefined, type: string, action: string, node: ResourceNode
   }> = new EventEmitter();
 
+  /** Wartość pola wyszukiwania. */
   filterValue: string = '';
+  /** Strumień, który przechowuje informacje o tym czy 
+   * nastąpiła zmiana wartości pola wyszukiwania. 
+   */
   filterChanged: Subject<string> = new Subject<string>();
   filterChangedSub: Subscription;
 
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
   treeControl: FlatTreeControl<ResourceFlatNode>;
@@ -51,6 +78,11 @@ export class AdminResourcesComponent implements OnInit {
     @Inject('treeResource') private treeService: ResourceTreeService
   ) { }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji o zmianach w polu wyszukiwania.
+   * Inicjalizuje właściwości wyświetlanego drzewka zasobów.
+   */
   async ngOnInit(): Promise<void> {
     this.loading = true;
     this.filterChangedSub = this.filterChanged.pipe(debounceTime(200), distinctUntilChanged()).subscribe(value => {
@@ -69,6 +101,10 @@ export class AdminResourcesComponent implements OnInit {
     this.isVisible = this.treeService.isVisible;
   }
 
+  /**
+   * Metoda ładująca konkretny rodzaj zasobów do drzewka na podstawie ustawionej
+   * wartości typu.
+   */
   public LoadResources() {
     this.loading = true;
     
@@ -132,11 +168,18 @@ export class AdminResourcesComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda wywoływana w momencie wykrycia zmiany w polu wyszukiwania.
+   * @param event Zdarzenie wykrycia zmiany w polu wyszukiwania
+   */
   FilterChanged(event: Event): void {
     const value = (<HTMLInputElement>event.target).value;
     this.filterChanged.next(value);
   }
 
+  /**
+   * Metoda czyszcząca pole wyszukiwania.
+   */
   ClearFilter() {
     this.filterValue = '';
     this.filterChanged.next('');

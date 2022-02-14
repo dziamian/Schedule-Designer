@@ -9,6 +9,9 @@ import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApi
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 import { Filter } from 'src/app/others/Filter';
 
+/**
+ * Komponent okna dialogowego do wybrania pokoju w celu wykonania operacji na planie.
+ */
 @Component({
   selector: 'app-room-selection',
   templateUrl: './room-selection.component.html',
@@ -16,22 +19,33 @@ import { Filter } from 'src/app/others/Filter';
 })
 export class RoomSelectionComponent implements OnInit {
 
-  static readonly CANCELED:RoomSelectionDialogResult = RoomSelectionDialogResult.CANCELED;
-
+  /** Pokój wybrany przez użytkownika. */
   selectedRoom:Room|null;
+  /** Określa czy naciśnięty został przycisk akcji dialogu. */
   actionActivated:boolean = false;
+  /** Określa czy pozycja zajęć na planie uległa zmianie, czy jednak zmieniany jest tylko pokój. */
   isRoomOnlyChanging:boolean;
+  /** Rozmiar grup studenckich wybranych zajęć. */
   groupsSize:number = 0;
 
+  /** Pokoje przypisane wybranemu przedmiotowi. */
   courseRooms:Room[] = [];
+  /** 
+   * Kolekcja pokojów z przypisanym identyfikatorem rodzaju. 
+   * Właściwość używana jest do odpowiedniego wyświetlania listy pokojów.
+  */
   mappedCourseRooms:Map<number,Room[]>;
 
+  /** Informuje czy dane zostały załadowane. */
   loading:boolean = true;
   isConnectedSubscription: Subscription;
 
+  /** Utworzone subskrypcje odbierające powiadomienia z centrum SignalR. */
   signalrSubscriptions: Subscription[];
 
+  /** Czy wykonywany ruch może być jedynie propozycją. */
   isProposition: boolean;
+  /** Treść zamieszczonej wiadomości do propozycji przez użytkownika. */
   message: string;
 
   constructor(
@@ -47,6 +61,11 @@ export class RoomSelectionComponent implements OnInit {
     this.isProposition = !this.data.IsMoveAvailable;
   }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane dotyczące pokojów możliwych do wybrania (oraz ich dostępności).
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR dotyczących wybranych pozycji na planie.
+   */
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
@@ -244,9 +263,13 @@ export class RoomSelectionComponent implements OnInit {
   }
 
   GET_CANCELED_RESULT():RoomSelectionDialogResult {
-    return RoomSelectionComponent.CANCELED;
+    return RoomSelectionDialogResult.CANCELED;
   }
 
+  /**
+   * Metoda mapująca pokoje do ich typów.
+   * @returns Zwraca kolekcję pokojów z przypisanym identyfikatorem rodzaju
+   */
   private getMappedCourseRooms():Map<number,Room[]> {
     const rooms:Map<number,Room[]> = new Map<number,Room[]>();
     
@@ -263,6 +286,11 @@ export class RoomSelectionComponent implements OnInit {
     return rooms;
   }
 
+  /**
+   * Metoda wykonuje odpowiednią operację na planie w zależności od właściwości dialogu.
+   * Może to być dodanie nowych pozycji na planie, wprowadzenie zmian w planie, 
+   * zaplanowanie zmiany lub stworzenie propozycji. 
+   */
   async Action() {
     this.actionActivated = true;
     const selectedRoom = this.selectedRoom;

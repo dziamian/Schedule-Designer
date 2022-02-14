@@ -7,6 +7,9 @@ import { skip } from 'rxjs/operators';
 import { UserInfo } from 'src/app/others/Accounts';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent zawierający widok profilu użytkownika.
+ */
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -14,10 +17,13 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class ProfileComponent implements OnInit {
 
+  /** Informuje czy dane zostały załadowane. */
   loading:boolean = true;
+  /** Informuje o statusie połączenia z centrum. */
   connectionStatus:boolean = false;
   isConnectedSubscription: Subscription;
 
+  /** Informacje o zalogowanym użytkowniku. */
   userInfo:UserInfo;
 
   constructor(
@@ -34,6 +40,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda przygotowująca komponent.
+   */
   ngOnInit(): void {
     this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;

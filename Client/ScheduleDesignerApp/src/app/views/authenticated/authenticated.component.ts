@@ -8,6 +8,9 @@ import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApi
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 import { setUserInfo } from 'src/app/store/userInfo.actions';
 
+/**
+ * Komponent wymagany do odebrania kodu autoryzacyjnego w celu zakończenia procesu logowania do systemu.
+ */
 @Component({
   selector: 'app-authenticated',
   templateUrl: './authenticated.component.html',
@@ -23,6 +26,12 @@ export class AuthenticatedComponent implements OnInit {
     private store:Store<{userInfo:UserInfo}>
   ) { }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Jeśli ścieżka posiada parametr "oauth_verifier" 
+   * to wykonywany jest ostatni etap autoryzacji z systemem USOS. Konsekwencją tego jest pozyskanie
+   * tokenu dostępu.
+   */
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
       let oauth_verifier:string = params['oauth_verifier'];

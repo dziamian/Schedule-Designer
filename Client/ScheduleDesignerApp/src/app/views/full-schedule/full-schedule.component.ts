@@ -35,26 +35,42 @@ import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resour
 })
 export class FullScheduleComponent implements OnInit {
 
+  /** Instancja komponentu wyświetlającego nieułożone zajęcia na planie. */
   @ViewChild(MyCoursesComponent) myCoursesComponent!: MyCoursesComponent;
+  /** Instancja komponentu wyświetlającego bieżący plan zajęć. */
   @ViewChild(ScheduleComponent) scheduleComponent!: ScheduleComponent;
 
+  /** Informacje o zalogowanym użytkowniku. */
   userInfo: UserInfo
+  /** Dane trybu modyfikacji. */
   data: ModifyingScheduleData = new ModifyingScheduleData();
+  /** Określa czy tryb modyfikacji jest włączony. */
   isModifying: boolean = false;
 
+  /** Ustawienia aplikacji. */
   settings: Settings;
+  /** Kolekcja typów przedmiotów. */
   courseTypes: Map<number, CourseType>;
+  /** Kolekcja typów pokojów. */
   roomTypes: Map<number, RoomType>;
 
+  /** Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków. */
   tabWeeks: number[][];
+  /** Tablica przechowująca etykiety poszczególnych widoków. */
   tabLabels: string[];
+  /** Indeks wybranego widoku. */
   currentTabIndex: number = 0;
+  /** Aktualny filtr widoku (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie). */
   currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean, editable: boolean};
+  /** Nazwa aktualnie wybranego zasobu. */
   currentResourceName: string;
   
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean = true;
+  /** Informuje o statusie połączenia z centrum. */
   connectionStatus: boolean = false;
 
+  /** Utworzone subskrypcje odbierające powiadomienia z centrum SignalR. */
   signalrSubscriptions: Subscription[];
   isConnectedSubscription: Subscription;
 
@@ -274,8 +290,8 @@ export class FullScheduleComponent implements OnInit {
 
   /**
    * Metoda wywoływana w trakcie zmiany widoku planu.
-   * 
-   * @param index 
+   * Powoduje zmianę filtra wyświetlanego planu oraz jego przeładowanie.
+   * @param index Indeks zakładki w pasku
    * @param isFirst Określa czy dla załadowanego planu widok zmienia się po raz pierwszy
    */
   async OnTabChange(index: number, isFirst: boolean): Promise<void> {
@@ -328,6 +344,9 @@ export class FullScheduleComponent implements OnInit {
     this.selectCourseIfPossible();
   }
 
+  /**
+   * Metoda uruchamiająca okno dialogowe w celu zmiany utworzonego wcześniej widoku niestandardowego.
+   */
   async OnEditView(): Promise<void> {
     var dialogData = new SelectViewDialogData(
       this.settings
@@ -358,36 +377,58 @@ export class FullScheduleComponent implements OnInit {
     };
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   ModifySchedule() {
     this.isModifying = this.scheduleInteractionService.ModifySchedule(
       this.data, this.isModifying
     );
   }
 
+  /**
+   * Metoda wywołująca otworzenie nowego okna z bieżącym widokiem planu w celu wydrukowania go.
+   */
   PrintSchedule() {
     if (this.scheduleComponent != null) {
       this.scheduleComponent.PrintSchedule();
     }
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie upuszczenia panelu z zajęciami w strefie
+   */
   async OnMyCoursesDrop(event: CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesDrop(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.myCoursesComponent, this.scheduleComponent, this.snackBar
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param drag Zdarzenie najechania panelu z zajęciami na strefę
+   */
   OnMyCoursesEnter(drag: CdkDragEnter<CourseEdition[]>): void {
     this.scheduleInteractionService.onMyCoursesEnter(
       drag, this.data
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie przeciągania panelu z zajęciami ze strefy
+   */
   async OnMyCoursesStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onMyCoursesStart(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie upuszczenia panelu z zajęciami w strefie
+   */
   async OnScheduleDrop(event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleDrop(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, this.userInfo.IsStaff && this.userInfo.IsAdmin, true,
@@ -395,30 +436,50 @@ export class FullScheduleComponent implements OnInit {
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param drag Zdarzenie najechania panelu z zajęciami na strefę
+   */
   OnScheduleEnter(drag: CdkDragEnter<CourseEdition[]>): void {
     this.scheduleInteractionService.onScheduleEnter(
       drag, this.data
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie przeciągania panelu z zajęciami ze strefy
+   */
   async OnScheduleStart(event: CdkDragStart<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onScheduleStart(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.userInfo.IsCoordinator, this.settings, this.scheduleComponent, this.snackBar
     )
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie zakończenia przeciągania panelu z zajęciami
+   */
   async OnRelease(event: CdkDragRelease<CourseEdition>): Promise<void> {
     this.scheduleInteractionService.onRelease(
       event, this.data, this.settings, this.scheduleComponent
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Informacje o wybranych zajęciach, ich stanie (czy są możliwe do modyfikowania w bieżącym widoku) i pozycji na planie
+   */
   OnSelect(event: {courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number}): void {
     this.scheduleInteractionService.onSelect(
       event, this.data, this.isModifying
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Informacje o wybranej przez użytkownika ramy czasowej na planie
+   */
   async OnRoomSelect(event: {day: number, periodIndex: number}): Promise<void> {
     this.scheduleInteractionService.onRoomSelect(
       event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
@@ -426,24 +487,36 @@ export class FullScheduleComponent implements OnInit {
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   async AddRoom(): Promise<void> {
     this.scheduleInteractionService.addRoom(
       this.data, this.roomTypes, this.dialogService, this.snackBar
     )
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   async ChangeRoom(): Promise<void> {
     this.scheduleInteractionService.changeRoom(
       this.data, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.roomTypes, this.userInfo.IsStaff && this.userInfo.IsAdmin, true, this.currentFilter.filter, this.dialogService, this.snackBar
     );
   }
   
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   async ShowScheduledChanges(): Promise<void> {
     this.scheduleInteractionService.showScheduledChanges(
       this.data, this.settings, !(this.userInfo.IsStaff && this.userInfo.IsAdmin) ? this.userInfo.UserId : null, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   async Move(): Promise<void> {
     this.scheduleInteractionService.move(
       this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff && this.userInfo.IsAdmin, this.settings, this.scheduleComponent, this.snackBar

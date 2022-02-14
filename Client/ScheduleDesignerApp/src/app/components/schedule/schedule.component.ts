@@ -14,6 +14,9 @@ import { CourseType } from 'src/app/others/Types';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent odpowiadający za ładowanie i wyświetlanie planu zajęć na ekran.
+ */
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -21,40 +24,65 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class ScheduleComponent implements OnInit {
 
+  /** Strefy do upuszczania paneli z zajęciami w poszczególne miejsca na planie. */
   @ViewChildren('scheduleDrops') scheduleSlots: QueryList<DropListRef<CourseEdition[]>>;
 
+  /** Etykieta umieszczana przed tytułem planu zajęć. */
   @Input() labelBefore: string;
+  /** Etykieta umieszczana po tytule planu zajęć. */
   @Input() labelAfter: string;
 
+  /** Określa czy tryb modyfikacji jest włączony. */
   @Input() isModifying: boolean;
+  /** Informacje o zalogowanym użytkowniku. */
   @Input() userInfo: UserInfo;
+  /** Identyfikatory grup studenckich, których użytkownik jest starostą. */
   @Input() representativeGroupsIds:number[] = [];
+  /** Ustawienia aplikacji. */
   @Input() settings: Settings;
+  /** Kolekcja typów przedmiotów. */
   @Input() courseTypes: Map<number, CourseType>;
+  /** Dane trybu modyfikacji. */
   @Input() modifyingScheduleData: ModifyingScheduleData;
+  /** Aktualny filtr planu zajęć (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie). */
   @Input() currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean, editable: boolean};
 
+  /** Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami. */
   @Output() onStart: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
+  /** Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami. */
   @Output() onRelease: EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
+  /** 
+   * Emiter zdarzenia wybrania panelu z zajęciami (wysyłany w momencie kliknięcia na panel).
+   * Zdarzenie posiada informacje o edycji wybranych zajęć, czy są możliwe do przesuwania w obecnym widoku
+   * oraz ich pozycji w planie (rama czasowa).
+   */
   @Output() onCourseSelect: EventEmitter<{
     courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number
   }> = new EventEmitter();
   @Output() onDropSelect: EventEmitter<{
     day:number, periodIndex:number
   }> = new EventEmitter();
+  /** Emiter zdarzenia interakcji upuszczenia panelu z zajęciami w strefie planu. */
   @Output() onDrop: EventEmitter<CdkDragDrop<CourseEdition[]>> = new EventEmitter<CdkDragDrop<CourseEdition[]>>();
+  /** Emiter zdarzenia najechania panelu z zajęciami na strefę planu. */
   @Output() onDragEnter: EventEmitter<CdkDragEnter> = new EventEmitter<CdkDragEnter>();
+  
   @Output() onMouseEnter: EventEmitter<{
     day:number, periodIndex:number
   }> = new EventEmitter();
   @Output() onMouseLeave: EventEmitter<void> = new EventEmitter();
+  /** Emiter zdarzenia załadowania planu zajęć. */
   @Output() onLoaded: EventEmitter<void> = new EventEmitter();
+  /** Emiter zdarzenia zmiany widoku niestandardowego. */
   @Output() onViewEdit: EventEmitter<void> = new EventEmitter();
+
 
   loadingSubscription: Subscription;
   signalrSubscriptions: Subscription[];
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
+  /** Tablica trójwymiarowa przechowująca plan zajęć. */
   schedule: CourseEdition[][][];
 
   constructor(
@@ -100,6 +128,9 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda rozpoczynająca odbieranie bieżących informacji dotyczących planu z centrum SignalR.
+   */
   private setSignalrSubscriptions(): void {
     this.signalrSubscriptions = [];
 
@@ -460,6 +491,11 @@ export class ScheduleComponent implements OnInit {
     }));
   }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+   * Ładuje plan zajęć po raz pierwszy 
+   */
   ngOnInit(): void {
     this.setSignalrSubscriptions();
     if (this.currentFilter?.weeks.length > 0 && this.currentFilter.filter) {
@@ -467,6 +503,11 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda wywoływana w momencie wystąpienia zmian na wejściu komponentu.
+   * W przypadku zmian dotyczących filtra planu zajęć powoduje to przeładowanie harmonogramu.
+   * @param changes Zachodzące zmiany na wejściu komponentu
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.currentFilter && changes.currentFilter.currentValue && !changes.currentFilter.currentValue.tabSwitched 
       && changes.currentFilter.currentValue.weeks.length > 0 && changes.currentFilter.currentValue.filter) {
@@ -487,6 +528,9 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda ładująca plan zajęć z serwera.
+   */
   private loadMySchedule() {
     this.loadingSubscription?.unsubscribe();
     this.loading = true;
@@ -537,6 +581,9 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wywołująca otworzenie nowego okna z bieżącym widokiem planu w celu wydrukowania go.
+   */
   public PrintSchedule(): void {
     let content = document.getElementById('chosen-schedule')?.innerHTML;
     let popupWindow = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
@@ -607,6 +654,10 @@ export class ScheduleComponent implements OnInit {
     this.onViewEdit.emit();
   }
 
+  /**
+   * Metoda zwracająca opis wybranego widoku planu zajęć.
+   * @returns Opis widoku (które tygodnie są wyświetlone)
+   */
   GetViewDescription(): string {
     if (this.currentFilter?.weeks) {
       const weeks = CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks);

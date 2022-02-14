@@ -7,6 +7,9 @@ import { Room } from 'src/app/others/Room';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent okna dialogowego do przypisywania pokoju przedmiotowi.
+ */
 @Component({
   selector: 'app-add-room-selection',
   templateUrl: './add-room-selection.component.html',
@@ -14,12 +17,20 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class AddRoomSelectionComponent implements OnInit {
 
+  /** Pokój wybrany przez użytkownika. */
   selectedRoom:Room|null;
+  /** Określa czy naciśnięty został przycisk akcji dialogu. */
   actionActivated:boolean = false;
 
+  /** Wszystkie dostępne pokoje. */
   allRooms:RoomSelect[] = [];
+  /** 
+   * Kolekcja pokojów z przypisanym identyfikatorem rodzaju. 
+   * Właściwość używana jest do odpowiedniego wyświetlania listy pokojów.
+  */
   mappedAllRooms:Map<number,RoomSelect[]>;
 
+  /** Informuje czy dane zostały załadowane. */
   loading:boolean = true;
   isConnectedSubscription: Subscription;
 
@@ -30,6 +41,10 @@ export class AddRoomSelectionComponent implements OnInit {
     public dialogRef:MatDialogRef<AddRoomSelectionComponent>,
   ) { }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane dotyczące pokojów możliwych do przypisania.
+   */
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(AddRoomSelectionDialogResult.EMPTY);
@@ -58,10 +73,15 @@ export class AddRoomSelectionComponent implements OnInit {
     });
   }
 
+
   GET_EMPTY_RESULT():AddRoomSelectionDialogResult {
     return AddRoomSelectionDialogResult.EMPTY;
   }
 
+  /**
+   * Metoda mapująca pokoje do ich typów.
+   * @returns Zwraca kolekcję pokojów z przypisanym identyfikatorem rodzaju
+   */
   private getMappedAllRooms():Map<number,RoomSelect[]> {
     const rooms:Map<number,RoomSelect[]> = new Map<number,RoomSelect[]>();
     
@@ -78,6 +98,9 @@ export class AddRoomSelectionComponent implements OnInit {
     return rooms;
   }
 
+  /**
+   * Metoda wykonuje operację przypisania nowego pokoju przedmiotowi.
+   */
   async Action() {
     this.actionActivated = true;
     const selectedRoom = this.selectedRoom;

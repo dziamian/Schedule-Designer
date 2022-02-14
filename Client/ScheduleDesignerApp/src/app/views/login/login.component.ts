@@ -4,6 +4,9 @@ import { DOCUMENT } from '@angular/common';
 import { UsosApiService } from 'src/app/services/UsosApiService/usos-api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+/**
+ * Komponent zawierający widok ekranu logowania (startowego).
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -21,6 +24,10 @@ export class LoginComponent implements OnInit {
 
   }
 
+  /**
+   * Metoda rozpoczynająca proces autoryzacyjny z systemem USOS.
+   * Wywoływana jest po naciśnięciu przycisku na środkowym panelu.
+   */
   public LogIn():void {
     this.usosApiService.RequestToken().subscribe(
       token => {

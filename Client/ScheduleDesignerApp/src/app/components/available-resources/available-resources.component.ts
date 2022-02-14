@@ -7,6 +7,10 @@ import { Filter } from 'src/app/others/Filter';
 import { ResourceFlatNode, ResourceItem, ResourceNode } from 'src/app/others/ResourcesTree';
 import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resource-tree.service';
 
+/**
+ * Komponent odpowiedzialny za wyświetlanie drzewka zasobów 
+ * w opcjach związanych z planem zajęć.
+ */
 @Component({
   selector: 'app-available-resources',
   templateUrl: './available-resources.component.html',
@@ -14,15 +18,23 @@ import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resour
 })
 export class AvailableResourcesComponent implements OnInit {
 
+  /** Identyfikatory grup studenckich, których student jest starostą. */
   @Input() representativeGroups: number[] = [];
+  /** Określa czy przyciski wyświetlane razem z węzłami drzewka są wyłączone. */
   @Input() disabled: boolean;
 
+  /** Emiter zdarzenia wyświetlenia planu zajęć dla wybranego zasobu. */
   @Output() showSchedule: EventEmitter<ResourceItem> = new EventEmitter();
   
+  /** Wartość pola wyszukiwania. */
   filterValue: string = '';
+  /** Strumień, który przechowuje informacje o tym czy 
+   * nastąpiła zmiana wartości pola wyszukiwania. 
+   */
   filterChanged: Subject<string> = new Subject<string>();
   filterChangedSub: Subscription;
 
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
   treeControl: FlatTreeControl<ResourceFlatNode>;
@@ -35,6 +47,11 @@ export class AvailableResourcesComponent implements OnInit {
     private resourceTreeService: ResourceTreeService,
   ) { }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji o zmianach w polu wyszukiwania.
+   * Inicjalizuje właściwości wyświetlanego drzewka zasobów.
+   */
   ngOnInit(): void {
     this.loading = true;
 
@@ -63,11 +80,18 @@ export class AvailableResourcesComponent implements OnInit {
     return this.representativeGroups.some(groupId => filter.GroupsIds.includes(groupId));
   }
 
+  /**
+   * Metoda wywoływana w momencie wykrycia zmiany w polu wyszukiwania.
+   * @param event Zdarzenie wykrycia zmiany w polu wyszukiwania
+   */
   FilterChanged(event: Event): void {
     const value = (<HTMLInputElement>event.target).value;
     this.filterChanged.next(value);
   }
 
+  /**
+   * Metoda czyszcząca pole wyszukiwania.
+   */
   ClearFilter() {
     this.filterValue = '';
     this.filterChanged.next('');

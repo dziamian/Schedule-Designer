@@ -6,6 +6,9 @@ import { skip } from 'rxjs/operators';
 import { SelectViewDialogData, SelectViewDialogResult } from 'src/app/others/dialogs/SelectViewDialogData';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent okna dialogowego do ustawiania niestandardowego widoku planu zajęć.
+ */
 @Component({
   selector: 'app-select-view',
   templateUrl: './select-view.component.html',
@@ -13,7 +16,9 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class SelectViewComponent implements OnInit {
 
+  /** Tygodnie wybrane przez użytkownika. */
   selectedWeeks = new FormControl();
+  /** Wszystkie tygodnie możliwe do wyboru. */
   allWeeks: number[];
 
   isConnectedSubscription: Subscription;
@@ -24,6 +29,10 @@ export class SelectViewComponent implements OnInit {
     private signalrService: SignalrService
   ) { }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Ustawia tygodnie możliwe do wyboru.
+   */
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(SelectViewDialogResult.EMPTY);
@@ -41,18 +50,25 @@ export class SelectViewComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda zwracająca pusty rezultat operacji (użytkownik zamknął okno dialogowe).
+   * @returns Pusty rezultat
+   */
   GET_EMPTY_RESULT(): SelectViewDialogResult {
     return SelectViewDialogResult.EMPTY;
   }
 
+  /** Metoda wybierająca wszystkie możliwe tygodnie. */
   SelectAll(): void {
     this.selectedWeeks.patchValue(this.allWeeks);
   }
 
+  /** Metoda anulująca zaznaczenie tygodni. */
   SelectNone(): void {
     this.selectedWeeks.patchValue(null);
   }
 
+  /** Metoda zamykająca okno dialogowe z rezultatem utworzenia nowego widoku niestandardowego. */
   Action(): void {
     this.dialogRef.close(new SelectViewDialogResult(this.selectedWeeks.value));
   }

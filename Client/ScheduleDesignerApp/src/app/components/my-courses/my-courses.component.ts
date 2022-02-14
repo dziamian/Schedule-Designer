@@ -12,6 +12,9 @@ import { CourseType } from 'src/app/others/Types';
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent odpowiadający za ładowanie i wyświetlanie nieułożonych jeszcze zajęć w planie.
+ */
 @Component({
   selector: 'app-my-courses',
   templateUrl: './my-courses.component.html',
@@ -19,27 +22,43 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class MyCoursesComponent implements OnInit {
 
+  /** Strefa do upuszczania paneli z zajęciami w celu usunięcia ich z planu. */
   @ViewChild('myCoursesDrop') myCoursesSlot : DropListRef<CourseEdition[]>
 
+  /** Określa czy tryb modyfikacji jest włączony. */
   @Input() isModifying: boolean;
+  /** Informacje o zalogowanym użytkowniku. */
   @Input() userInfo: UserInfo;
+  /** Ustawienia aplikacji. */
   @Input() settings: Settings;
+  /** Kolekcja typów przedmiotów. */
   @Input() courseTypes: Map<number, CourseType>;
+  /** Dane trybu modyfikacji. */
   @Input() modifyingScheduleData: ModifyingScheduleData;
+  /** Aktualny filtr widoku (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie). */
   @Input() currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean};
 
+  /** Emiter zdarzenia najechania panelu z zajęciami na strefę upuszczania. */
   @Output() onDropEnter: EventEmitter<CdkDragEnter> = new EventEmitter<CdkDragEnter>();
+  /** Emiter zdarzenia interakcji upuszczenia panelu z zajęciami w strefie. */
   @Output() onDropped: EventEmitter<CdkDragDrop<CourseEdition[]>> = new EventEmitter<CdkDragDrop<CourseEdition[]>>();
+  /** Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami. */
   @Output() onStart: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
+  /** Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami. */
   @Output() onRelease: EventEmitter<CdkDragRelease> = new EventEmitter<CdkDragRelease>();
+  /** Emiter zdarzenia załadowania nieułożonych zajęć w planie. */
   @Output() onLoaded: EventEmitter<void> = new EventEmitter();
 
   loadingSubscription: Subscription;
   signalrSubscriptions: Subscription[];
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
+  /** Liczba wyświetlanych paneli na stronę. */
   readonly TOP: number = 6;
+  /** Liczba paneli do pominięcia. */
   skip: number = 0;
+  /** Tablica nieułożonych edycji zajęć. */
   myCourses: CourseEdition[];
 
   constructor(
@@ -47,10 +66,16 @@ export class MyCoursesComponent implements OnInit {
     private scheduleDesignerApiService:ScheduleDesignerApiService
   ) { }
 
+  /**
+   * Metoda aktualizująca widok, wyświetlając kolejną stronę nieułożonych edycji zajęć.
+   */
   NextPage() {
     this.skip += this.TOP;
   }
 
+  /**
+   * Metoda aktualizująca widok, wyświetlając poprzednią stronę nieułożonych edycji zajęć.
+   */
   PreviousPage() {
     this.skip -= this.TOP;
   }
@@ -68,6 +93,9 @@ export class MyCoursesComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda rozpoczynająca odbieranie bieżących informacji dotyczących planu z centrum SignalR.
+   */
   private setSignalrSubscriptions(): void {
     this.signalrSubscriptions = [];
 
@@ -192,6 +220,11 @@ export class MyCoursesComponent implements OnInit {
     }));
   }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+   * Ładuje edycje zajęć po raz pierwszy.
+   */
   ngOnInit(): void {
     this.setSignalrSubscriptions();
     if (this.currentFilter.weeks.length > 0 && this.currentFilter.filter) {
@@ -199,6 +232,11 @@ export class MyCoursesComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda wywoływana w momencie wystąpienia zmian na wejściu komponentu.
+   * W przypadku zmian dotyczących filtra edycji zajęć powoduje to przeładowanie ich danych.
+   * @param changes Zachodzące zmiany na wejściu komponentu
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.currentFilter && changes.currentFilter.currentValue && !changes.currentFilter.currentValue.tabSwitched 
       && changes.currentFilter.currentValue.weeks.length > 0 && changes.currentFilter.currentValue.filter) {
@@ -219,6 +257,9 @@ export class MyCoursesComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda ładująca nieułożone edycje zajęć z serwera.
+   */
   private loadMyCourses(): void {
     this.loadingSubscription?.unsubscribe();
     this.loading = true;
