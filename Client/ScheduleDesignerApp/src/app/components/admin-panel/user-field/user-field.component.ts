@@ -5,6 +5,10 @@ import { finalize } from 'rxjs/operators';
 import { UserInfo, SearchUser } from 'src/app/others/Accounts';
 import { AdministratorApiService } from 'src/app/services/AdministratorApiService/administrator-api.service';
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji wprowadzania i modyfikowania danych na temat użytkowników.
+ */
 @Component({
   selector: 'app-user-field',
   templateUrl: './user-field.component.html',
@@ -12,10 +16,19 @@ import { AdministratorApiService } from 'src/app/services/AdministratorApiServic
 })
 export class UserFieldComponent implements OnInit {
 
+  /** Liczba odnalezionych użytkowników wyświetlanych na pojedynczej stronie. */
   readonly PAGE_SIZE: number = 5;
 
+  /** 
+   * Dane wymagane do załadowania widoku obszaru roboczego.
+   * Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).
+   */
   private _data: {id: string|undefined, type: string, actionType: string};
 
+  /**
+   * Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+   * Po ustawieniu danych następuje załadowanie widoku.
+   */
   @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
     this._data = value;
     this.loadView();
@@ -23,16 +36,30 @@ export class UserFieldComponent implements OnInit {
     return this._data;
   }
 
+  /** 
+   * Emiter zdarzenia dodania nowego zasobu do systemu.
+   * Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.
+  */
   @Output() onCreate: EventEmitter<string> = new EventEmitter();
+  /** Emiter zdarzenia usunięcia zasobu z systemu. */
   @Output() onRemove: EventEmitter<void> = new EventEmitter();
+  /** Emiter zdarzenia zapisu stanu modyfikacji zasobu. */
   @Output() onRefresh: EventEmitter<void> = new EventEmitter();
 
+  /** Informacje o pobranym zasobie użytkownika z systemu 
+   * (posiada odpowiednie informacje w przypadku trybu podglądu). 
+   */
   originalUserInfo: UserInfo;
 
+  /** Wartości początkowe formularza modyfikacji zasobu w celu 
+   * możliwości późniejszego ich zresetowania. */
   originalValues: any;
+  /** Określa czy włączony został tryb modyfikacji zasobu. */
   isModifying: boolean = false;
 
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
+  /** Informuje czy rezultaty wyszukiwania zostały załadowane. */
   resultsLoading: boolean = false;
 
   constructor(
@@ -40,24 +67,38 @@ export class UserFieldComponent implements OnInit {
     private snackBar: MatSnackBar
   ) { }
 
+  /** Wynik wyszukiwania użytkowników w systemie USOS. */
   searchResults: SearchUser | null;
+  /** Określa ilu użytkowników należy pominąć, aby uzyskać odpowiednią stronę rezultatów. */
   searchStart: number = 0;
+  /** Aktualnie wyświetlona strona. */
   currentPage: number = 0;
+  /** Maksymalna liczba istniejących stron rezultatów, o których wiadomo w danym momencie. */
   maxPage: number = 0;
+  /** Kryteria wyszukiwania użytkowników. */
   currentQuery: string;
 
+  /** Formularz wyszukiwania użytkowników w systemie USOS. */
   searchForm: FormGroup;
+  /** Formularz modyfikacji zasobu. */
   userInfoForm: FormGroup;
 
   ngOnInit(): void {
   }
 
+  /**
+   * Metoda budująca formularz wyszukiwania użytkowników.
+   */
   private buildSearchForm() {
     this.searchForm = new FormGroup({
       search: new FormControl('', [Validators.required])
     });
   }
 
+  /**
+   * Metoda budująca formularz z danymi początkowymi podanymi w parametrze.
+   * @param userInfo Dane początkowe zbudowanego formularza
+   */
   private buildAccountForm(userInfo: UserInfo) {
     this.userInfoForm = new FormGroup({
       firstName: new FormControl(userInfo.FirstName, [Validators.required]),
@@ -73,6 +114,7 @@ export class UserFieldComponent implements OnInit {
     this.originalValues = this.userInfoForm.value;
   }
 
+  /** Metoda wyłączająca możliwość modyfikacji formularzy. */
   private disableForm() {
     for (var controlName in this.userInfoForm.controls) {
       this.userInfoForm.controls[controlName].disable();
@@ -80,6 +122,7 @@ export class UserFieldComponent implements OnInit {
     this.isModifying = false;
   }
 
+  /** Metoda włączająca możliwość modyfikacji formularzy. */
   private enableForm() {
     for (var controlName in this.userInfoForm.controls) {
       this.userInfoForm.controls[controlName].enable();
@@ -87,6 +130,10 @@ export class UserFieldComponent implements OnInit {
     this.isModifying = true;
   }
 
+  /**
+   * Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+   * Różnią się one w zależności od trybu widoku - dodawania lub podglądu.
+   */
   private loadView() {
     this.loading = true;
 
@@ -115,6 +162,11 @@ export class UserFieldComponent implements OnInit {
     }
   }
   
+  /**
+   * Metoda porównująca aktualny stan pól formularzy z oryginalnymi 
+   * wartościami zasobu pobranymi z serwera.
+   * @returns Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu
+   */
   IsSameAsOriginal(): boolean {
     return this.originalUserInfo.FirstName === this.userInfoForm.controls['firstName'].value
       && this.originalUserInfo.LastName === this.userInfoForm.controls['lastName'].value
@@ -129,6 +181,9 @@ export class UserFieldComponent implements OnInit {
       && this.originalUserInfo.IsStudent === this.userInfoForm.controls['student'].value;
   }
 
+  /**
+   * Metoda uruchamiająca tryb modyfikacji zasobu.
+   */
   Modify() {
     this.Reset();
     this.enableForm();
@@ -143,6 +198,9 @@ export class UserFieldComponent implements OnInit {
     this.disableForm();
   }
 
+  /**
+   * Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
   async Save() {
     if (!this.userInfoForm.valid) {
       return;
@@ -189,6 +247,9 @@ export class UserFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie usunięcia zasobu na serwer.
+   */
   Remove() {
     this.administratorApiService.RemoveUser(this.originalUserInfo.UserId).subscribe(() => {
       this.onRemove.emit();
@@ -203,6 +264,10 @@ export class UserFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie utworzenia nowego konta użytkownika na podstawie identyfikatora w systemie USOS.
+   * @param userId Identyfikator użytkownika w systemie USOS
+   */
   Create(userId: number) {
     this.administratorApiService.CreateAccountFromUsos(userId).subscribe(response => {
       this.onCreate.emit(`${userId}`);
@@ -217,6 +282,11 @@ export class UserFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie wyszukania użytkowników spełniających 
+   * kryteria podanych w polu formularza na serwer. Wyświetlona zostanie pierwsza strona
+   * rezultatów.
+   */
   Search() {
     if (!this.searchForm.valid) {
       return;
@@ -248,6 +318,11 @@ export class UserFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie wyszukania użytkowników spełniających 
+   * kryteria podanych w polu formularza na serwer. Wyświetlona zostanie kolejna strona
+   * rezultatów.
+   */
   async SearchNextPage() {
     this.resultsLoading = true;
     this.searchResults = null;
@@ -273,6 +348,11 @@ export class UserFieldComponent implements OnInit {
     this.resultsLoading = false;
   }
 
+  /**
+   * Metoda wysyłająca żądanie wyszukania użytkowników spełniających 
+   * kryteria podanych w polu formularza na serwer. Wyświetlona zostanie poprzednia strona
+   * rezultatów.
+   */
   async SearchPreviousPage() {
     this.resultsLoading = true;
     this.searchResults = null;

@@ -3,6 +3,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { AdministratorApiService } from 'src/app/services/AdministratorApiService/administrator-api.service';
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji eksportowania danych.
+ */
 @Component({
   selector: 'app-export-field',
   templateUrl: './export-field.component.html',
@@ -10,6 +14,11 @@ import { AdministratorApiService } from 'src/app/services/AdministratorApiServic
 })
 export class ExportFieldComponent implements OnInit {
 
+  /** 
+   * Lista dostępnych opcji do wyboru.
+   * Posiada informacje o wyświetlanej etykiecie oraz 
+   * wywoływanej metodzie po wciśnięciu przycisku akcji.
+   */
   list: {
     label: string,
     method: (() => Observable<any>)
@@ -38,6 +47,11 @@ export class ExportFieldComponent implements OnInit {
     
   }
 
+
+  /**
+   * Metoda wyświetlająca okno zapisania pobranego pliku CSV
+   * @param response Odpowiedź serwera posiadająca treść pliku CSV
+   */
   private exportReaction(response: any) {
     const blob = new Blob([response.body], { type: "text/csv" });
     const fileName = response.headers.get('Content-Disposition').split(';')[1].trim().split('=')[1];
@@ -54,6 +68,10 @@ export class ExportFieldComponent implements OnInit {
     URL.revokeObjectURL(objectUrl);
   }
 
+  /**
+   * Wywołuje właściwą metodę po wciśnięciu przycisku akcji.
+   * @param method Właściwa metoda, która ma zostać wywołana
+   */
   public Export(method: () => Observable<any>) {
     method().subscribe((response) => {
       this.exportReaction(response);

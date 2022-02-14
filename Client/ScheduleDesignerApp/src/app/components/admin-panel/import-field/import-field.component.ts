@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { AdministratorApiService } from 'src/app/services/AdministratorApiService/administrator-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji importowania danych.
+ */
 @Component({
   selector: 'app-import-field',
   templateUrl: './import-field.component.html',
@@ -11,8 +15,17 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class ImportFieldComponent implements OnInit {
 
+  /** Tablica plików wybranych w obrębie całej sekcji. */
   selectedFiles: File[] = [];
 
+  /**
+   * Lista dostępnych opcji do wyboru.
+   * Posiada informacje o wyświetlanej etykiecie, indeksach wybranych plików 
+   * (znajdują się one w tablicy {@link selectedFiles}), wywoływanych metodach
+   * centrum SignalR (które są konieczne do zakończenia operacji powodzeniem),
+   * nazwy importowanych zasobów oraz 
+   * wywoływanej metodzie po wciśnięciu przycisku akcji.
+   */
   list: {
     label: string,
     fileIndexes: {label: string, index: number, name: string}[],
@@ -98,6 +111,13 @@ export class ImportFieldComponent implements OnInit {
     this.selectedFiles[index] = fileInputEvent.target.files[0];
   }
 
+  /**
+   * Wywołuje właściwe metody po wciśnięciu przycisku akcji.
+   * @param fileIndexes Indeksy plików wymaganych do akcji importowania
+   * @param resource Nazwa importowanych zasobów
+   * @param hubMethods Wywoływane metody centrum SignalR przed i po procesie importowania (blokujące i odblokowujące zasoby)
+   * @param responseLabel Treść wiadomości w przypadku powodzenia operacji
+   */
   public async Import(
     fileIndexes: {index: number, name: string}[],
     resource: string,

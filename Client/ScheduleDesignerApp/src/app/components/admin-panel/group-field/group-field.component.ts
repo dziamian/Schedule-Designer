@@ -10,6 +10,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji wprowadzania i modyfikowania danych na temat grupy studenckiej.
+ */
 @Component({
   selector: 'app-group-field',
   templateUrl: './group-field.component.html',
@@ -17,9 +21,21 @@ import { forkJoin } from 'rxjs';
 })
 export class GroupFieldComponent implements OnInit {
 
+  /** 
+   * Rezultat wyboru pochodzący z drugiego drzewka zasobów.
+   * Zawiera informacje na temat identyfikatora zasobu oraz wybranego węzła drzewka.
+   */
   private _selectedResult: {type: string, node: ResourceNode} | null;
+  /** 
+   * Dane wymagane do załadowania widoku obszaru roboczego.
+   * Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).
+   */
   private _data: {id: string|undefined, type: string, actionType: string};
 
+  /**
+   * Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+   * Po ustawieniu danych następuje załadowanie widoku.
+   */
   @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
     this._data = value;
     this.treeVisible = {type: '', value: false};
@@ -28,6 +44,11 @@ export class GroupFieldComponent implements OnInit {
     return this._data;
   }
 
+  /**
+   * Metoda ustawiająca rezultat wyboru pochodzący z drugiego drzewka zasobów.
+   * Po ustawieniu rezultatu wywoływana jest odpowiednia metoda 
+   * - przypisania studenta do grupy lub wyboru grupy nadrzędnej.
+   */
   @Input() set selectedResult(value: {type: string, node: ResourceNode} | null) {
     if (value == null || value == undefined) {
       return;
@@ -55,6 +76,12 @@ export class GroupFieldComponent implements OnInit {
     return this._selectedResult;
   }
 
+  /**
+   * Emiter zdarzenia wyświetlenia (bądź ukrycia) i załadowania drugiego drzewka zasobów.
+   * Zdarzenie posiada informacje o typie ładowanych zasobów, nagłówku drzewka,
+   * czy powinno zostać wyświetlone na ekranie, które typy zasobów powinny zostać pominięte (wykluczone) w drzewku
+   * oraz identyfikatory węzłów, które powinny zostać pominięte (wykluczone).
+   */
   @Output() onSelect: EventEmitter<{
     type: string, 
     header: string,
@@ -63,23 +90,51 @@ export class GroupFieldComponent implements OnInit {
     excludeIds: string[]
   }> = new EventEmitter();
 
+  /** 
+   * Emiter zdarzenia dodania do listy rezultatu wybranego z drugiego drzewka zasobów.
+   * Zdarzenie posiada informacje o identyfikatorach dodanych zasobów oraz ich typ.
+   */
   @Output() onListAdd: EventEmitter<{ids: string[], type: string}> = new EventEmitter();
+  /**
+   * Emiter zdarzenia usunięcia z listy rezultatu, który może być 
+   * teraz dostępny do wyboru w drugim drzewku zasobów.
+   * Zdarzenie posiada informacje o identyfikatorach usuniętych zasobów oraz ich typ.
+   */
   @Output() onListRemove: EventEmitter<{ids: string[], type: string}> = new EventEmitter();
 
+  /** Emiter zdarzenia zapisu stanu modyfikacji zasobu. */
   @Output() onChange: EventEmitter<void> = new EventEmitter();
+  /** 
+   * Emiter zdarzenia dodania nowego zasobu do systemu.
+   * Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.
+  */
   @Output() onCreate: EventEmitter<string> = new EventEmitter();
+  /** Emiter zdarzenia usunięcia zasobu z systemu. */
   @Output() onRemove: EventEmitter<void> = new EventEmitter();
 
+  /** Informacje o pobranym zasobie grupy studenckiej z systemu 
+   * (posiada odpowiednie informacje w przypadku trybu podglądu). 
+   */
   originalGroup: GroupInfo;
+  /** Identyfikator wybranej grupy nadrzędnej. */
   modifiableParentGroupId?: number;
+  /** Informacje o studentach przypisanych do grupy. */
   groupStudents: StudentBasic[];
+  /** Informacje o studentach przypisanych do grup podrzędnych. */
   childGroupsStudents: StudentBasic[];
 
+  /** Wartości początkowe formularza modyfikacji zasobu w celu 
+   * możliwości późniejszego ich zresetowania. */
   originalValues: any;
+  /** Określa czy włączony został tryb modyfikacji zasobu. */
   isModifying: boolean = false;
 
+  /** Określa aktualny stan widoczności drugiego drzewka zasobów 
+   * (oraz aktualnie wyświetlany typ zasobów). 
+   */
   treeVisible: {type: string, value: boolean} = {type: '', value: false};
 
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
   constructor(
@@ -89,6 +144,7 @@ export class GroupFieldComponent implements OnInit {
     private snackBar: MatSnackBar
   ) { }
 
+  /** Formularz modyfikacji oraz dodawania zasobu. */
   groupForm: FormGroup;
 
   ngOnInit(): void {
@@ -99,6 +155,10 @@ export class GroupFieldComponent implements OnInit {
     return this.groupForm.controls['parent'].value;
   }
 
+  /**
+   * Metoda budująca formularz z danymi początkowymi podanymi w parametrze.
+   * @param group Dane początkowe zbudowanego formularza
+   */
   private buildForm(group: GroupInfo, isView: boolean) {
     this.groupForm = new FormGroup({
       parent: new FormControl(group.FullName.replace(group.BasicName, '')),
@@ -110,6 +170,7 @@ export class GroupFieldComponent implements OnInit {
     }
   }
 
+  /** Metoda wyłączająca możliwość modyfikacji formularza. */
   private disableForm() {
     for (var controlName in this.groupForm.controls) {
       this.groupForm.controls[controlName].disable();
@@ -117,6 +178,7 @@ export class GroupFieldComponent implements OnInit {
     this.isModifying = false;
   }
 
+  /** Metoda włączająca możliwość modyfikacji formularza. */
   private enableForm(isView: boolean) {
     for (var controlName in this.groupForm.controls) {
       this.groupForm.controls[controlName].enable();
@@ -127,6 +189,10 @@ export class GroupFieldComponent implements OnInit {
     this.isModifying = true;
   }
 
+  /**
+   * Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+   * Różnią się one w zależności od trybu widoku - dodawania lub podglądu.
+   */
   private loadView() {
     this.loading = true;
 
@@ -199,16 +265,29 @@ export class GroupFieldComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda porównująca aktualny stan pól formularzy z oryginalnymi 
+   * wartościami zasobu pobranymi z serwera.
+   * @returns Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu
+   */
   IsSameAsOriginal(): boolean {
     return this.originalGroup.BasicName === this.groupForm.controls['name'].value
       && this.originalGroup.FullName.replace(this.originalGroup.BasicName, '') === this.groupForm.controls['parent'].value;
   }
 
+  /**
+   * Metoda uruchamiająca tryb modyfikacji zasobu.
+   */
   Modify(isView: boolean) {
     this.Reset();
     this.enableForm(isView);
   }
 
+  /**
+   * Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie) 
+   * i załadowanie drugiego drzewka zasobów informacjami o grupach,
+   * które mogą zostać wybrane jako nadrzędne.
+   */
   SelectParentGroup() {
     if (this.treeVisible.type === 'group') {
       this.treeVisible.value = !this.treeVisible.value;
@@ -225,6 +304,11 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie) 
+   * i załadowanie drugiego drzewka zasobów informacjami o studentach,
+   * których można przypisać do grupy.
+   */
   SelectStudent() {
     if (this.treeVisible.type === 'student') {
       this.treeVisible.value = !this.treeVisible.value;
@@ -242,6 +326,11 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie przypisania studenta do grupy na serwer.
+   * @param userId Identyfikator studenta do przypisania
+   * @param userName Pełna nazwa studenta do przypisania
+   */
   AddStudent(userId: number, userFullName: string) {
     this.administratorApiService.AddStudentToGroup(
       this.originalGroup.GroupId, userId
@@ -262,6 +351,10 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie usunięcia przypisania studenta do grupy na serwer.
+   * @param userId Identyfikator przypisanego studenta
+   */
   RemoveStudent(userId: number) {
     this.administratorApiService.RemoveStudentFromGroup(
       this.originalGroup.GroupId, userId
@@ -283,6 +376,10 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie nadania studentowi roli starosty grupy na serwer.
+   * @param userId Identyfikator studenta
+   */
   GiveRepresentativeRole(userId: number) {
     this.administratorApiService.GiveOrRemoveRepresentativeRole(
       this.originalGroup.GroupId, userId, true
@@ -307,6 +404,10 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie odebrania studentowi roli starosty grupy na serwer.
+   * @param userId Identyfikator studenta
+   */
   TakeAwayRepresentativeRole(userId: number) {
     this.administratorApiService.GiveOrRemoveRepresentativeRole(
       this.originalGroup.GroupId, userId, false
@@ -340,6 +441,9 @@ export class GroupFieldComponent implements OnInit {
     this.disableForm();
   }
 
+  /**
+   * Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
   async Save() {
     if (!this.groupForm.valid) {
       return;
@@ -421,6 +525,9 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie utworzenia nowego zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
   Create() {
     if (!this.groupForm.valid) {
       return;
@@ -447,6 +554,9 @@ export class GroupFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie usunięcia zasobu na serwer.
+   */
   Remove() {
     this.administratorApiService.RemoveGroup(this.originalGroup.GroupId).subscribe(() => {
       this.onRemove.emit();

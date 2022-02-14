@@ -14,6 +14,10 @@ import { AdministratorApiService } from 'src/app/services/AdministratorApiServic
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Klasa odpowiadająca za wyświetlanie błędu o źle dobranych wartościach
+ * liczby minut, które są wymagane do odbycia w ciągu semestru.
+ */
 export class UnitsMinutesErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
@@ -22,6 +26,10 @@ export class UnitsMinutesErrorMatcher implements ErrorStateMatcher {
   }
 }
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji wprowadzania i modyfikowania danych na temat przedmiotu.
+ */
 @Component({
   selector: 'app-course-field',
   templateUrl: './course-field.component.html',
@@ -29,9 +37,21 @@ export class UnitsMinutesErrorMatcher implements ErrorStateMatcher {
 })
 export class CourseFieldComponent implements OnInit {
 
+  /**
+   * Rezultat wyboru pochodzący z drugiego drzewka zasobów.
+   * Zawiera informacje na temat identyfikatora zasobu oraz wybranego węzła drzewka.
+   */
   private _selectedResult: {type: string, node: ResourceNode} | null;
+  /** 
+   * Dane wymagane do załadowania widoku obszaru roboczego.
+   * Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).
+   */
   private _data: {id: string|undefined, type: string, actionType: string};
 
+  /**
+   * Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+   * Po ustawieniu danych następuje załadowanie widoku.
+   */
   @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
     this._data = value;
     this.treeVisible = {type: '', value: false};
@@ -39,7 +59,13 @@ export class CourseFieldComponent implements OnInit {
   } get data(): {id: string|undefined, type: string, actionType: string} {
     return this._data;
   }
+  /** Ustawienia aplikacji */
   @Input() settings: Settings;
+  /**
+   * Metoda ustawiająca rezultat wyboru pochodzący z drugiego drzewka zasobów.
+   * Po ustawieniu rezultatu wywoływana jest odpowiednia metoda 
+   * - przypisania pokoju do przedmiotu lub wyboru typu przedmiotu.
+   */
   @Input() set selectedResult(value: {type: string, node: ResourceNode} | null) {
     if (value == null || value == undefined) {
       return;
@@ -67,6 +93,12 @@ export class CourseFieldComponent implements OnInit {
     return this._selectedResult;
   }
 
+  /**
+   * Emiter zdarzenia wyświetlenia (bądź ukrycia) i załadowania drugiego drzewka zasobów.
+   * Zdarzenie posiada informacje o typie ładowanych zasobów, nagłówku drzewka,
+   * czy powinno zostać wyświetlone na ekranie, które typy zasobów powinny zostać pominięte (wykluczone) w drzewku
+   * oraz identyfikatory węzłów, które powinny zostać pominięte (wykluczone).
+   */
   @Output() onSelect: EventEmitter<{
     type: string, 
     header: string,
@@ -75,22 +107,49 @@ export class CourseFieldComponent implements OnInit {
     excludeIds: string[]
   }> = new EventEmitter();
   
+  /** 
+   * Emiter zdarzenia dodania do listy rezultatu wybranego z drugiego drzewka zasobów.
+   * Zdarzenie posiada informacje o identyfikatorach dodanych zasobów oraz ich typ.
+   */
   @Output() onListAdd: EventEmitter<{ids: string[], type: string}> = new EventEmitter();
+  /**
+   * Emiter zdarzenia usunięcia z listy rezultatu, który może być 
+   * teraz dostępny do wyboru w drugim drzewku zasobów.
+   * Zdarzenie posiada informacje o identyfikatorach usuniętych zasobów oraz ich typ.
+   */
   @Output() onListRemove: EventEmitter<{ids: string[], type: string}> = new EventEmitter();
 
+  /** Emiter zdarzenia zapisu stanu modyfikacji zasobu. */
   @Output() onChange: EventEmitter<void> = new EventEmitter();
+  /** 
+   * Emiter zdarzenia dodania nowego zasobu do systemu.
+   * Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.
+  */
   @Output() onCreate: EventEmitter<string> = new EventEmitter();
+  /** Emiter zdarzenia usunięcia zasobu z systemu. */
   @Output() onRemove: EventEmitter<void> = new EventEmitter();
 
+  /** Informacje o pobranym zasobie przedmiotu z systemu 
+   * (posiada odpowiednie informacje w przypadku trybu podglądu). 
+   */
   originalCourse: Course;
+  /** Informacje o przypisanych pokojach do wyświetlonego zasobu przedmiotu. */
   courseRooms: Room[];
 
+  /** Wartości początkowe formularza modyfikacji zasobu w celu 
+   * możliwości późniejszego ich zresetowania. */
   originalValues: any;
+  /** Identyfikator wybranego typu przedmiotu. */
   modifiableCourseTypeId: number;
+  /** Określa czy włączony został tryb modyfikacji zasobu. */
   isModifying: boolean = false;
 
+  /** Określa aktualny stan widoczności drugiego drzewka zasobów 
+   * (oraz aktualnie wyświetlany typ zasobów). 
+   */
   treeVisible: {type: string, value: boolean} = {type: '', value: false};
 
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
   constructor(
@@ -100,6 +159,7 @@ export class CourseFieldComponent implements OnInit {
     private snackBar: MatSnackBar
   ) { }
 
+  /** Formularz modyfikacji oraz dodawania zasobu. */
   courseForm: FormGroup;
   errorMatcher: UnitsMinutesErrorMatcher = new UnitsMinutesErrorMatcher();
 
@@ -115,6 +175,10 @@ export class CourseFieldComponent implements OnInit {
 
   }
 
+  /**
+   * Metoda budująca formularz z danymi początkowymi podanymi w parametrze.
+   * @param course Dane początkowe zbudowanego formularza
+   */
   private buildForm(course: Course) {
     this.courseForm = new FormGroup({
       type: new FormControl(course.CourseType.Name, [Validators.required]),
@@ -125,6 +189,7 @@ export class CourseFieldComponent implements OnInit {
     this.originalValues = this.courseForm.value;
   }
 
+  /** Metoda wyłączająca możliwość modyfikacji formularza. */
   private disableForm() {
     for (var controlName in this.courseForm.controls) {
       this.courseForm.controls[controlName].disable();
@@ -132,6 +197,7 @@ export class CourseFieldComponent implements OnInit {
     this.isModifying = false;
   }
 
+  /** Metoda włączająca możliwość modyfikacji formularza. */
   private enableForm() {
     for (var controlName in this.courseForm.controls) {
       this.courseForm.controls[controlName].enable();
@@ -139,6 +205,10 @@ export class CourseFieldComponent implements OnInit {
     this.isModifying = true;
   }
 
+  /**
+   * Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+   * Różnią się one w zależności od trybu widoku - dodawania lub podglądu.
+   */
   private loadView() {
     this.loading = true;
 
@@ -171,6 +241,11 @@ export class CourseFieldComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda porównująca aktualny stan pól formularzy z oryginalnymi 
+   * wartościami zasobu pobranymi z serwera.
+   * @returns Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu
+   */
   IsSameAsOriginal(): boolean {
     return this.originalCourse.CourseType.Name === this.courseForm.controls['type'].value 
       && this.originalCourse.Name === this.courseForm.controls['name'].value
@@ -178,11 +253,19 @@ export class CourseFieldComponent implements OnInit {
         + this.courseForm.controls['minutes'].value;
   }
 
+  /**
+   * Metoda uruchamiająca tryb modyfikacji zasobu.
+   */
   Modify() {
     this.Reset();
     this.enableForm();
   }
 
+  /**
+   * Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie) 
+   * i załadowanie drugiego drzewka zasobów informacjami o typach przedmiotów,
+   * które można wybrać.
+   */
   SelectCourseType() {
     if (this.treeVisible.type === 'course-type') {
       this.treeVisible.value = !this.treeVisible.value;
@@ -199,6 +282,11 @@ export class CourseFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie) 
+   * i załadowanie drugiego drzewka zasobów informacjami o pokojach,
+   * które można przypisać do przedmiotu.
+   */
   SelectRoom() {
     if (this.treeVisible.type === 'room') {
       this.treeVisible.value = !this.treeVisible.value;
@@ -215,6 +303,11 @@ export class CourseFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie przypisania pokoju do przedmiotu na serwer.
+   * @param roomId Identyfikator pokoju do przypisania
+   * @param roomName Pełna nazwa pokoju do przypisania
+   */
   AddRoom(roomId: number, roomName: string) {
     this.scheduleDesignerApiService.AddCourseRoom(this.originalCourse.CourseId, roomId).subscribe(response => {
       const room = new Room(roomId);
@@ -234,6 +327,10 @@ export class CourseFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie usunięcia przypisania pokoju do przedmiotu na serwer.
+   * @param roomId Identyfikator przypisanego pokoju
+   */
   RemoveRoom(roomId: number) {
     this.administratorApiService.RemoveCourseRoom(this.originalCourse.CourseId, roomId).subscribe(response => {
       
@@ -263,6 +360,9 @@ export class CourseFieldComponent implements OnInit {
     this.disableForm();
   }
 
+  /**
+   * Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
   async Save() {
     if (!this.courseForm.valid) {
       return;
@@ -343,6 +443,9 @@ export class CourseFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie utworzenia nowego zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
   Create() {
     if (!this.courseForm.valid) {
       return;
@@ -373,6 +476,9 @@ export class CourseFieldComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie usunięcia zasobu na serwer.
+   */
   Remove() {
     this.administratorApiService.RemoveCourse(this.originalCourse.CourseId).subscribe(() => {
       this.onRemove.emit();

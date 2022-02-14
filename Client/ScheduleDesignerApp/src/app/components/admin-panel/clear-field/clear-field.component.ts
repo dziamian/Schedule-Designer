@@ -3,6 +3,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { AdministratorApiService } from 'src/app/services/AdministratorApiService/administrator-api.service';
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji czyszczenia danych.
+ */
 @Component({
   selector: 'app-clear-field',
   templateUrl: './clear-field.component.html',
@@ -10,6 +14,12 @@ import { AdministratorApiService } from 'src/app/services/AdministratorApiServic
 })
 export class ClearFieldComponent implements OnInit {
 
+  /** 
+   * Lista dostępnych opcji do wyboru.
+   * Posiada informacje o wyświetlanej etykiecie, 
+   * wywoływanej metodzie po wciśnięciu przycisku akcji oraz treść wiadomości
+   * w przypadku powodzenia operacji czyszczenia danych.
+   */
   list: {
     label: string,
     method: (() => Observable<any>),
@@ -65,6 +75,11 @@ export class ClearFieldComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * Wywołuje właściwą metodę po wciśnięciu przycisku akcji.
+   * @param method Właściwa metoda, która ma zostać wywołana
+   * @param responseLabel Treść wiadomości w przypadku powodzenia operacji
+   */
   public Clear(method: () => Observable<any>, responseLabel: string) {
     method().subscribe((response) => {
       this.snackBar.open(responseLabel, "OK");

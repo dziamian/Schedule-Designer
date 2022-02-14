@@ -9,6 +9,10 @@ import { AdministratorApiService } from 'src/app/services/AdministratorApiServic
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Klasa odpowiadająca za wyświetlanie błędu o źle dobranych wartościach
+ * liczby minut pojedynczej jednostki zajęciowej względem czasu rozpoczęcia i zakończenia.
+ */
 export class CourseDurationErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
@@ -17,6 +21,10 @@ export class CourseDurationErrorMatcher implements ErrorStateMatcher {
   }
 }
 
+/**
+ * Klasa odpowiadająca za wyświetlanie błędu o źle dobranych wartościach
+ * czasu rozpoczęcia i zakończenia względem liczby minut pojedynczej jednostki zajęciowej.
+ */
 export class PeriodsErrorMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
@@ -25,6 +33,10 @@ export class PeriodsErrorMatcher implements ErrorStateMatcher {
   }
 }
 
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji modyfikowania danych na temat ustawień aplikacji.
+ */
 @Component({
   selector: 'app-settings-field',
   templateUrl: './settings-field.component.html',
@@ -32,7 +44,16 @@ export class PeriodsErrorMatcher implements ErrorStateMatcher {
 })
 export class SettingsFieldComponent implements OnInit {
 
+  /** 
+   * Dane wymagane do załadowania widoku obszaru roboczego.
+   * Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).
+   */
   private _data: {id: string|undefined, type: string, actionType: string};
+  
+  /**
+   * Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+   * Po ustawieniu danych następuje załadowanie widoku.
+   */
   @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
     this._data = value;
     this.loadView();
@@ -40,13 +61,21 @@ export class SettingsFieldComponent implements OnInit {
     return this._data;
   }
 
+  /** Emiter zdarzenia zapisu stanu modyfikacji zasobu. */
   @Output() onChange: EventEmitter<void> = new EventEmitter();
 
+  /** Informacje o pobranych ustawieniach aplikacji z systemu 
+   * (posiada odpowiednie informacje w przypadku trybu podglądu). 
+   */
   originalSettings: Settings;
 
+  /** Wartości początkowe formularza modyfikacji zasobu w celu 
+   * możliwości późniejszego ich zresetowania. */
   originalValues: any;
+  /** Określa czy włączony został tryb modyfikacji zasobu. */
   isModifying: boolean = false;
 
+  /** Informuje czy dane zostały załadowane. */
   loading: boolean | null = null;
 
   constructor(
@@ -56,6 +85,7 @@ export class SettingsFieldComponent implements OnInit {
     private snackBar: MatSnackBar
   ) { }
 
+  /** Formularz modyfikacji oraz dodawania zasobu. */
   settingsForm: FormGroup;
   courseDurationErrorMatcher: CourseDurationErrorMatcher = new CourseDurationErrorMatcher();
   periodsErrorMatcher: PeriodsErrorMatcher = new PeriodsErrorMatcher();
@@ -63,6 +93,10 @@ export class SettingsFieldComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * Metoda budująca formularz z danymi początkowymi podanymi w parametrze.
+   * @param settings Dane początkowe zbudowanego formularza
+   */
   private buildForm(settings: Settings) {
     this.settingsForm = new FormGroup({
       courseDurationHours: new FormControl(Math.floor(settings.CourseDurationMinutes / 60), [Validators.required]),
@@ -74,6 +108,7 @@ export class SettingsFieldComponent implements OnInit {
     this.originalValues = this.settingsForm.value;
   }
 
+  /** Metoda wyłączająca możliwość modyfikacji formularza. */
   private disableForm() {
     for (var controlName in this.settingsForm.controls) {
       this.settingsForm.controls[controlName].disable();
@@ -81,6 +116,7 @@ export class SettingsFieldComponent implements OnInit {
     this.isModifying = false;
   }
 
+  /** Metoda włączająca możliwość modyfikacji formularza. */
   private enableForm() {
     for (var controlName in this.settingsForm.controls) {
       this.settingsForm.controls[controlName].enable();
@@ -88,6 +124,10 @@ export class SettingsFieldComponent implements OnInit {
     this.isModifying = true;
   }
 
+  /**
+   * Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+   * Różnią się one w zależności od trybu widoku - dodawania lub podglądu.
+   */
   private loadView() {
     this.loading = true;
 
@@ -107,6 +147,11 @@ export class SettingsFieldComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda porównująca aktualny stan pól formularzy z oryginalnymi 
+   * wartościami zasobu pobranymi z serwera.
+   * @returns Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu
+   */
   IsSameAsOriginal(): boolean {
     return this.originalSettings.CourseDurationMinutes === this.settingsForm.controls['courseDurationHours'].value * 60 
         + this.settingsForm.controls['courseDurationMinutes'].value
@@ -115,6 +160,9 @@ export class SettingsFieldComponent implements OnInit {
       && this.originalSettings.TermDurationWeeks === this.settingsForm.controls['termDuration'].value;
   }
 
+  /**
+   * Metoda uruchamiająca tryb modyfikacji zasobu.
+   */
   Modify() {
     this.Reset();
     this.enableForm();
@@ -129,6 +177,9 @@ export class SettingsFieldComponent implements OnInit {
     this.disableForm();
   }
 
+  /**
+   * Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
   async Save() {
     if (!this.settingsForm.valid) {
       return;
