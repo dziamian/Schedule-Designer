@@ -17,16 +17,50 @@ using System.Text;
 
 namespace Testing
 {
+    /// <summary>
+    /// Klasa zawierająca testy jednostkowe dotyczące metod centrum SignalR.
+    /// </summary>
     public class ScheduleTests
     {
+        /// <summary>
+        /// Fałszywy identyfikator połączenia.
+        /// </summary>
         private const string mockConnectionId = "123";
+
+        /// <summary>
+        /// Fałszywy kontekst połączenia z bazą danych.
+        /// </summary>
         private ScheduleDesignerDbContext mockDbContext;
+
+        /// <summary>
+        /// Fałszywy kontekst połączenia użytkownika.
+        /// </summary>
         private Mock<HubCallerContext> mockClientContext;
+
+        /// <summary>
+        /// Fałszywa implementacja interfejsu do komunikacji z połączonymi użytkownikami. 
+        /// </summary>
         private Mock<IScheduleClient> mockClientProxy;
+
+        /// <summary>
+        /// Fałszywa implementacja abstrakcji pozwalającej na dostęp do połączonych użytkowników.
+        /// </summary>
         private Mock<IHubCallerClients<IScheduleClient>> mockClients;
+
+        /// <summary>
+        /// Fałszywa implementacja wzorca UoW.
+        /// </summary>
         private Mock<UnitOfWork> mockUnitOfWork;
+
+        /// <summary>
+        /// Fałszywa tożsamość użytkownika.
+        /// </summary>
         private GenericPrincipal mockUser;
 
+        /// <summary>
+        /// Metoda przygotowująca dane niezbędne do wykonania testów jednostkowych.
+        /// Tworzy fałszywy kontekst połączenia z bazą danych i zasila go.
+        /// </summary>
         private void PrepareData()
         {
             var timestamps = new List<Timestamp>
@@ -131,7 +165,10 @@ namespace Testing
 
             mockDbContext.SaveChanges();
         }
-
+        
+        /// <summary>
+        /// Metoda tworząca fałszywą tożsamość użytkownika.
+        /// </summary>
         private void PrepareUser()
         {
             var claims = new List<Claim>
@@ -145,6 +182,9 @@ namespace Testing
 
         }
 
+        /// <summary>
+        /// Metoda przygotowująca fałszywe właściwości centrum SignalR w celu testowania jego metod.
+        /// </summary>
         private void PrepareHub()
         {
             mockClients = new Mock<IHubCallerClients<IScheduleClient>>();
@@ -159,6 +199,10 @@ namespace Testing
             mockClientContext.Setup(c => c.User).Returns(mockUser);
         }
 
+        /// <summary>
+        /// Metoda wywoływana przed każdym testem jednostkowym przygotowująca dane, 
+        /// fałszywą tożsamość użytkownika, fałszywe właściwości centrum SignalR i fałszywą implementację wzorca UoW.
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -169,6 +213,10 @@ namespace Testing
             mockUnitOfWork = new Mock<UnitOfWork>(mockDbContext);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że użytkownik nie zablokował wymaganych zasobów.
+        /// </summary>
         [Test]
         public void AddSchedulePositions_ShouldBeLockedByOtherUser()
         {
@@ -187,6 +235,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że nie można dodać takiej liczby jednostek zajęciowych do planu.
+        /// </summary>
         [Test]
         public void AddSchedulePositions_TooManyUnitsMinutes()
         {
@@ -205,6 +257,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o wykrytych konfliktach.
+        /// </summary>
         [Test]
         public void AddSchedulePositions_ShouldNotBeDone()
         {
@@ -223,6 +279,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o poprawnie wykonanej operacji.
+        /// </summary>
         [Test]
         public void AddSchedulePositions_ShouldBeDone()
         {
@@ -240,6 +300,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.ModifySchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że użytkownik nie zablokował wymaganych zasobów.
+        /// </summary>
         [Test]
         public void ModifySchedulePositions_ShouldBeLockedByOtherUser()
         {
@@ -258,6 +322,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.ModifySchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o wykrytych konfliktach.
+        /// </summary>
         [Test]
         public void ModifySchedulePositions_ShouldNotBeDone()
         {
@@ -276,6 +344,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.ModifySchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o poprawnie wykonanej operacji.
+        /// </summary>
         [Test]
         public void ModifySchedulePositions_ShouldBeDone()
         {
@@ -293,6 +365,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.RemoveSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że użytkownik nie zablokował wymaganych zasobów.
+        /// </summary>
         [Test]
         public void RemoveSchedulePositions_ShouldBeLockedByOtherUser()
         {
@@ -311,6 +387,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.RemoveSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że użytkownik podał niepoprawne ramy czasowe.
+        /// </summary>
         [Test]
         public void RemoveSchedulePositions_ShouldNotBeDone()
         {
@@ -329,6 +409,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.RemoveSchedulePositions"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o poprawnie wykonanej operacji.
+        /// </summary>
         [Test]
         public void RemoveSchedulePositions_ShouldBeDone()
         {
@@ -346,6 +430,10 @@ namespace Testing
             }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddScheduledMove"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że użytkownik nie zablokował wymaganych zasobów.
+        /// </summary>
         [Test]
         public void AddScheduledMove_ShouldBeLockedByOtherUser()
         {
@@ -364,6 +452,10 @@ namespace Testing
             }, response);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddScheduledMove"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o tym, że ruch jest możliwy do wykonania, więc nie powinien być planowany.
+        /// </summary>
         [Test]
         public void AddScheduledMove_ShouldNotBeDone()
         {
@@ -382,6 +474,10 @@ namespace Testing
             }, response);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddScheduledMove"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o poprawnie wykonanej operacji dodania zaplanowanej zmiany.
+        /// </summary>
         [Test]
         public void AddScheduledMove_ShouldBeDone()
         {
@@ -399,6 +495,10 @@ namespace Testing
             }, response);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddScheduledMove"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o poprawnie wykonanej operacji dodania propozycji zmiany.
+        /// </summary>
         [Test]
         public void AddScheduledMove_ShouldBeDoneProposition()
         {
@@ -418,6 +518,10 @@ namespace Testing
             mockClientProxy.Verify(x => x.AddedScheduledMove(1, 1, false, 1, 2, 2, 1, 1, new int[] { 3 }), Times.AtLeastOnce);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="ScheduleHub.AddScheduledMove"/>
+        /// zwraca poprawne rezultaty - odpowiedź powinna poinformować o błędnie wybranym pokoju docelowym.
+        /// </summary>
         [Test]
         public void AddScheduledMove_ShouldNotBeDoneChosenRoom()
         {

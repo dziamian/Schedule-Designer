@@ -8,8 +8,15 @@ using ScheduleDesigner.Repositories.Interfaces;
 
 namespace ScheduleDesigner.Repositories
 {
+    /// <summary>
+    /// Implementacja rozszerzonego repozytorium dla modelu <see cref="GroupCourseEdition"/>.
+    /// </summary>
     public class GroupCourseEditionRepo : RepoBase<GroupCourseEdition>, IGroupCourseEditionRepo
     {
+        /// <summary>
+        /// Konstruktor rozszerzonego repozytorium.
+        /// </summary>
+        /// <param name="context">Instancja kontekstu połączenia z bazą danych</param>
         public GroupCourseEditionRepo(ScheduleDesignerDbContext context)
             : base(context)
         { }

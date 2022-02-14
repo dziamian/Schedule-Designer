@@ -17,30 +17,62 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="Settings"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("Settings")]
     public class SettingsController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public SettingsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Funkcja sprawdzająca poprawność danych w ustawieniach aplikacji (czy istnieje pełna liczba ram czasowych w ciągu pojedynczego dnia).
+        /// </summary>
+        /// <param name="settings">Instancja ustawień aplikacji</param>
+        /// <returns>Prawdę jeśli dane są poprawne, w przeciwnym wypadku fałsz</returns>
         private static bool ArePeriodsValid(Settings settings)
         {
             return (settings.EndTime - settings.StartTime).TotalMinutes % settings.CourseDurationMinutes == 0;
         }
 
+        /// <summary>
+        /// Funkcja zwracająca liczbę ram czasowych w ciągu dnia na podstawie ustawień aplikacji.
+        /// </summary>
+        /// <param name="settings">Instancja ustawień aplikacji</param>
+        /// <returns>Liczbę ram czasowych w ciągu pojedynczego dnia</returns>
         private static int GetNumberOfPeriods(Settings settings)
         {
             return (int)(settings.EndTime - settings.StartTime).TotalMinutes / settings.CourseDurationMinutes;
         }
-        
+
+        /// <summary>
+        /// Zwraca ustawienia aplikacji (<see cref="Settings"/>).
+        /// </summary>
+        /// <returns>Ustawienia aplikacji w postaci obiektu klasy <see cref="Settings"/></returns>
+        /// <response code="200">Zwrócono ustawienia</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono ustawień</response>
         [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetSettings()
         {
             try
@@ -58,9 +90,19 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest("Unexpected error. Please try again later.");
             }
         }
-        
+
+        /// <summary>
+        /// Zwraca tablicę z etykietami wszystkich ram czasowych występujących w ciągu dnia.
+        /// </summary>
+        /// <returns>Tablicę z etykietami ram czasowych w ciągu dnia</returns>
+        /// <response code="200">Zwrócono etykiety ram czasowych</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono ustawień</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetPeriods()")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetPeriods()
         {
             try
@@ -91,9 +133,29 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Nadpisuje ustawienia aplikacji (<see cref="Settings"/>).
+        /// </summary>
+        /// <param name="delta">Obiekt śledzący zmiany dla wysłanych ustawień</param>
+        /// <param name="connectionId">ID połączenia z centrum SignalR</param>
+        /// <returns>Nadpisane ustawienia aplikacji</returns>
+        /// <response code="200">Nadpisane ustawienia</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie ustawień;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nie zostało podane ID połączenia;
+        /// tabela z przedmiotami nie jest pusta;
+        /// plan zajęć nie jest pusty;
+        /// nie zostały zablokowane wymagane edycje zajęć w bazie (wszystkie istniejące);
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono ustawień</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPatch]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult UpdateSettings([FromBody] Delta<Settings> delta, [FromQuery] string connectionId)
         {
             if (!ModelState.IsValid)

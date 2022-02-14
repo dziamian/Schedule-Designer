@@ -23,19 +23,46 @@ using System.Threading;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="CourseEdition"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("CourseEditions")]
     public class CourseEditionsController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public CourseEditionsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Tworzy nowe wystąpienie <see cref="CourseEdition"/>.
+        /// </summary>
+        /// <param name="courseEditionDto">Obiekt transferu danych</param>
+        /// <returns>Nowo utworzone wystąpienie <see cref="CourseEdition"/></returns>
+        /// <response code="201">Zwrócono nowo utworzone wystąpienie</response>
+        /// <response code="400">
+        /// Błędne dane w obiekcie transferu; 
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie udało się dodać nowo utworzonego wystąpienia do bazy danych</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult CreateCourseEdition([FromBody] CourseEditionDto courseEditionDto)
         {
             if (!ModelState.IsValid)
@@ -71,9 +98,25 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wystąpienia <see cref="CourseEdition"/> spełniające kryteria podane w parametrach.
+        /// </summary>
+        /// <param name="CoordinatorsIds">ID prowadzących dla których zwrócone mają być edycje zajęć</param>
+        /// <param name="GroupsIds">ID grup dla których zwrócone mają być edycje zajęć</param>
+        /// <param name="RoomsIds">ID pokojów dla których zwrócone mają być edycje zajęć</param>
+        /// <param name="Frequency">Maksymalna liczba jednostek zajęciowych możliwych do ustawienia na planie (możliwa częstotliwość)</param>
+        /// <returns>Listę wystąpień spełniających kryteria</returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
+        /// <response code="400">
+        /// Ustawienia aplikacji nie zostały odnalezione;
+        /// nieprawidłowa częstotliwość;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize]
         [CustomEnableQuery(MaxExpansionDepth = 3)]
-        [HttpGet]
+        [HttpGet("Service.GetFilteredCourseEditions({CoordinatorsIds},{GroupsIds},{RoomsIds},{Frequency})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetFilteredCourseEditions(
             [FromODataUri] IEnumerable<int> CoordinatorsIds,
             [FromODataUri] IEnumerable<int> GroupsIds,
@@ -132,10 +175,28 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca pojedyncze wystąpienie <see cref="CourseEdition"/> spełniające kryteria podane w parametrach.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <param name="CoordinatorsIds">ID prowadzących dla których zwrócona ma być edycja zajęć</param>
+        /// <param name="GroupsIds">ID grup dla których zwrócona ma być edycja zajęć</param>
+        /// <param name="RoomsIds">ID pokojów dla których zwrócona ma być edycja zajęć</param>
+        /// <param name="Frequency">Maksymalna liczba jednostek zajęciowych możliwych do ustawienia na planie (możliwa częstotliwość)</param>
+        /// <returns>Wystąpienie spełniające kryteria</returns>
+        /// <response code="200">Zwrócono odnalezione wystąpienie</response>
+        /// <response code="400">
+        /// Ustawienia aplikacji nie zostały odnalezione;
+        /// nieprawidłowa częstotliwość;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize]
         [CustomEnableQuery(MaxExpansionDepth = 3)]
-        [HttpGet]
+        [HttpGet("{key1},{key2}/Service.GetFilteredCourseEdition({CoordinatorsIds},{GroupsIds},{RoomsIds},{Frequency})")]
         [ODataRoute("({key1},{key2})/GetFilteredCourseEdition(CoordinatorsIds={CoordinatorsIds},GroupsIds={GroupsIds},RoomsIds={RoomsIds},Frequency={Frequency})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetFilteredCourseEdition(
             [FromODataUri] int key1, [FromODataUri] int key2,
             [FromODataUri] IEnumerable<int> CoordinatorsIds,
@@ -195,10 +256,27 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca kolekcję zajętych ram czasowych w planie powodujących konflikty dla konkretnej edycji zajęć.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <param name="Weeks">Tygodnie, dla których należy znaleźć zajęte ramy czasowe</param>
+        /// <returns>Kolekcję zajętych ram czasowych dla edycji zajęć</returns>
+        /// <response code="200">Zwrócono kolekcję zajętych ram czasowych</response>
+        /// <response code="400">
+        /// Ustawienia aplikacji nie zostały odnalezione;
+        /// podano nieprawidłowe tygodnie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanej edycji zajęć w bazie danych</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("{key1},{key2}/Service.GetBusyPeriods({Weeks})")]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/GetBusyPeriods(Weeks={Weeks})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetBusyPeriods([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] IEnumerable<int> Weeks)
         {
             var _settings = await _unitOfWork.Settings.GetFirst(e => true);
@@ -251,10 +329,27 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca informację czy dana rama czasowa jest zajęta dla konkretnej edycji zajęć.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <param name="PeriodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="Day">Indeks dnia tygodnia</param>
+        /// <param name="Weeks">Tygodnie, które należy wziąć pod uwagę</param>
+        /// <returns>Prawdę jeśli ustawienie zajęć w podanej ramie czasowej spowoduje konflikty, w przeciwnym razie fałsz</returns>
+        /// <response code="200">Zwrócono informację czy rama czasowa jest zajęta</response>
+        /// <response code="400">
+        /// Nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanej edycji zajęć w bazie danych</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("{key1},{key2}/Service.IsPeriodBusy({PeriodIndex},{Day},{Weeks})")]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})/IsPeriodBusy(PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> IsPeriodBusy(
             [FromODataUri] int key1, 
             [FromODataUri] int key2, 
@@ -304,9 +399,23 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca łączny rozmiar grup studenckich dla danej edycji zajęć.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <returns>Łączny rozmiar grup studenckich dla edycji zajęć</returns>
+        /// <response code="200">Zwrócono rozmiar grup</response>
+        /// <response code="400">
+        /// Nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanej edycji zajęć lub przypisanej do niej grupy studenckiej w bazie danych</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("{key1},{key2}/Service.GetCourseEditionGroupsSize()")]
         [ODataRoute("({key1},{key2})/GetCourseEditionGroupsSize()")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetCourseEditionGroupsSize([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
@@ -363,19 +472,37 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="CourseEdition"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="CourseEdition"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetCourseEditions()
         {
             return Ok(_unitOfWork.CourseEditions.GetAll());
         }
 
+        /// <summary>
+        /// Zwraca pojedyncze wystąpienie <see cref="CourseEdition"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <returns>Znalezione pojedyncze wystąpienie <see cref="CourseEdition"/></returns>
+        /// <response code="200">Zwrócono żądane wystąpienie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("{key1},{key2}")]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetCourseEdition([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
@@ -394,10 +521,26 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest("Unexpected error. Please try again later.");
             }
         }
-        
+
+        /// <summary>
+        /// Nadpisuje pojedyncze wystąpienie <see cref="CourseEdition"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <param name="delta">Obiekt śledzący zmiany dla wysłanego wystąpienia</param>
+        /// <returns>Nadpisane zażądane wystąpienie <see cref="CourseEdition"/></returns>
+        /// <response code="200">Nadpisane zażądane wystąpienie</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie edycji zajęć;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPatch]
+        [HttpPatch("{key1},{key2}")]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<CourseEdition> delta)
         {
             if (!ModelState.IsValid)
@@ -426,9 +569,24 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa pojedyncze wystąpienie <see cref="CourseEdition"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <returns>Informację o powodzeniu procesu usunięcia</returns>
+        /// <response code="204">Usunięcie powiodło się</response>
+        /// <response code="400">
+        /// Nie udało się usunąć danych związanych z edycją zajęć ze względu na wystąpienie z nią powiązań w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpDelete]
+        [HttpDelete("{key1},{key2}")]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCourseEdition([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
@@ -457,8 +615,20 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa wszystkie wystąpienia <see cref="CourseEdition"/> i powiązane z nimi dane 
+        /// - wystąpienia <see cref="GroupCourseEdition"/> i <see cref="CoordinatorCourseEdition"/>.
+        /// </summary>
+        /// <returns>Informację o tym ile rekordów w bazie zostało usuniętych</returns>
+        /// <response code="200">Usunięcie powiodło się</response>
+        /// <response code="400">
+        /// Nie udało się usunąć danych związanych z edycjami zajęć ze względu na wystąpienie z nimi powiązań w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
+        [HttpPost("Service.ClearCourseEditions")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult ClearCourseEditions()
         {
             try

@@ -11,9 +11,14 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 
+/**
+ * Serwis przeznaczony do komunikowania się z zewnętrznym systemem USOS.
+ */
 export class UsosApiService {
 
+  /** Bazowy adres URL instalacji USOS API. */
   readonly baseUsosUrl:string = environment.baseUsosUrl;
+  /** Bazowy adres URL API serwera. */
   readonly baseApiUrl:string = environment.baseApiUrl;
   readonly oauth = new OAuth({
     consumer: { key: environment.consumerKey, secret: environment.consumerSecret },
@@ -22,12 +27,21 @@ export class UsosApiService {
   
   constructor(private http:HttpClient) { }
 
+  /**
+   * Pobranie nagłówka autoryzującego.
+   * @param token Token dostępu
+   * @returns Nagłówek autoryzujący
+   */
   private GetAuthorizationHeader(request:any,token?:any):HttpHeaders {
     return new HttpHeaders({
       Authorization: this.oauth.toHeader(this.oauth.authorize(request, token)).Authorization
     });
   }
 
+  /**
+   * Metoda wysyłająca żądanie zwrócenia tokenu przeznaczonego do autoryzacji do USOS API.
+   * @returns Strumień emitujący odpowiedź serwera na wysłane żądanie (niezautoryzowany token dostępu)
+   */
   public RequestToken():Observable<AccessToken> {
     const request = {
       url: this.baseUsosUrl + '/services/oauth/request_token',
@@ -49,6 +63,11 @@ export class UsosApiService {
     ).pipe(map(data => AccessToken.ParseToken(data.toString(), ['oauth_token=', 'oauth_token_secret='], '&')));
   }
 
+  /**
+   * Metoda wysyłająca żądanie przekierowania na stronę logowania do USOS API (używając systemowego proxy).
+   * @param oauth_token Niezautoryzowany token dostępu
+   * @returns Strumień emitujący odpowiedź serwera na wysłane żądanie
+   */
   public Authorize(oauth_token:string):Observable<any> {
     const request = {
       url: this.baseApiUrl + '/proxy/authorize',
@@ -68,6 +87,11 @@ export class UsosApiService {
     );
   }
 
+  /**
+   * Metoda wysyłająca żądanie zautoryzowania tokenu dostępu do USOS API.
+   * @param oauth_verifier Kod autoryzacyjny
+   * @returns Strumień emitujący odpowiedź serwera na wysłane żądanie (token dostępu)
+   */
   public AccessToken(oauth_verifier:string):Observable<AccessToken> {
     const request = {
       url: this.baseUsosUrl + '/services/oauth/access_token',

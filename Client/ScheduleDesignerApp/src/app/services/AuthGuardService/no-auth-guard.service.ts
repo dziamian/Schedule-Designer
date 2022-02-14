@@ -3,6 +3,9 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { Observable } from 'rxjs';
 import { AccessToken } from 'src/app/others/AccessToken';
 
+/**
+ * Serwis zapewniający ochronę przed niepoprawną nawigacją do ścieżek aplikacji wymagających bycia niezalogowanym.
+ */
 @Injectable({
   providedIn: 'root'
 })

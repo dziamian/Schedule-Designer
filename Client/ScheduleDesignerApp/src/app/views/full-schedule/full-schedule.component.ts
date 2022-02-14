@@ -25,6 +25,9 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { ResourceItem } from 'src/app/others/ResourcesTree';
 import { ResourceTreeService } from 'src/app/services/ResourceTreeService/resource-tree.service';
 
+/**
+ * Komponent zawierający widok opcji Full Schedule.
+ */
 @Component({
   selector: 'app-full-schedule',
   templateUrl: './full-schedule.component.html',
@@ -75,6 +78,10 @@ export class FullScheduleComponent implements OnInit {
     this.resourceTreeService.clearData();
   }
 
+  /**
+   * Metoda sprawdzająca czy użytkownik posiada uprawnienia do tworzenia propozycji.
+   * @returns Prawdę jeśli użytkownik posiada uprawnienia, w przeciwnym wypadku fałsz
+   */
   canMakePropositions(): boolean {
     if (!this.currentResourceName) {
       return false;
@@ -82,18 +89,27 @@ export class FullScheduleComponent implements OnInit {
     return this.userInfo.IsCoordinator || (this.userInfo.IsStudent && this.userInfo.RepresentativeGroups.some(groupId => this.currentFilter.filter.GroupsIds.includes(groupId)));
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   private updateBusyPeriods(): void {
     this.scheduleInteractionService.updateBusyPeriods(
       this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   private selectCourseIfPossible(): void {
     this.scheduleInteractionService.selectCourseIfPossible(
       this.data, this.tabWeeks, this.currentTabIndex, this.scheduleComponent
     );
   }
 
+  /**
+   * Metoda inicjalizująca pasek wyboru widoków planu.
+   */
   private initializeTabs(): void {
     this.tabLabels = ['Semester', 'Even Weeks', 'Odd Weeks', 'Custom (1)', 'Custom (2)'];
     this.tabWeeks = [[],[],[],[],[]];
@@ -113,6 +129,9 @@ export class FullScheduleComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda inicjalizująca tabelę planu zajęć.
+   */
   private initialize(): void {
     const periods = this.settings.Periods;
     const numberOfSlots = periods.length - 1;
@@ -135,6 +154,9 @@ export class FullScheduleComponent implements OnInit {
     }
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   private updateLockInMyCourses(
     courseId: number,
     courseEditionId: number
@@ -144,12 +166,18 @@ export class FullScheduleComponent implements OnInit {
     );
   }
 
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
   private updateLockInSchedule(position:SchedulePosition) {
     this.scheduleInteractionService.updateLockInSchedule(
       position, this.data, this.isModifying, this.settings, this.scheduleComponent, this.loading, this.snackBar
     );
   }
 
+  /**
+   * Metoda rozpoczynająca odbieranie bieżących informacji z centrum SignalR.
+   */
   private setSignalrSubscriptions(): void {
     this.signalrSubscriptions = [];
 
@@ -184,6 +212,11 @@ export class FullScheduleComponent implements OnInit {
     }));
   }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane niezbędne do wyświetlenia widoku opcji (ustawienia aplikacji, typy przedmiotów, etykiety ram czasowych itp.).
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+   */
   ngOnInit(): void {
     this.isConnectedSubscription = this.signalrService.isConnected.pipe(skip(1)).subscribe((status) => {
       this.connectionStatus = status;
@@ -225,6 +258,10 @@ export class FullScheduleComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda rozpoczynająca ładowanie planu zajęć do podglądu.
+   * @param resource Wybrany zasób dla którego należy załadować plan zajęć
+   */
   ShowSchedule(resource: ResourceItem) {
     this.currentResourceName = resource.name;
     this.currentFilter = {
@@ -235,6 +272,12 @@ export class FullScheduleComponent implements OnInit {
     };
   }
 
+  /**
+   * Metoda wywoływana w trakcie zmiany widoku planu.
+   * 
+   * @param index 
+   * @param isFirst Określa czy dla załadowanego planu widok zmienia się po raz pierwszy
+   */
   async OnTabChange(index: number, isFirst: boolean): Promise<void> {
     var tabSwitched = !isFirst;
     this.currentFilter = {
@@ -275,6 +318,11 @@ export class FullScheduleComponent implements OnInit {
     };
   }
 
+  /**
+   * Metoda wywoływana w momencie załadowania widoku planu zajęć.
+   * Jeśli potrzeba to nadpisuje stan pól w planie powodujących konflikty.
+   * Jeśli to możliwe to próbuje odszukać zaznaczone wcześniej zajęcia przez użytkownika.
+   */
   OnTabLoaded(): void {
     this.updateBusyPeriods();
     this.selectCourseIfPossible();

@@ -20,20 +20,51 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do importowania wielu rodzajów danych do bazy.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ImportController : ControllerBase
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public ImportController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Importuje pozycje w planie (<see cref="SchedulePositionDto"/>) do bazy danych.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV z danymi do zaimportowania znajdująca się w ciele żądania</param>
+        /// <param name="connectionId">ID połączenia z centrum SignalR</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Plik CSV nie został załączony do żądania;
+        /// nie zostało podane ID połączenia;
+        /// plik CSV nie posiadał danych lub zostały błędnie zapisane;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nie odnaleziono ustawień aplikacji;
+        /// nie odnaleziono powiązanych danych w bazie (błędne klucze główne);
+        /// plan zajęć nie jest pusty;
+        /// nie zostały zablokowane wymagane edycje zajęć w bazie (wszystkie istniejące);
+        /// wykryto konflikty w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("schedulePositions"), DisableRequestSizeLimit]
-        public IActionResult ImportSchedulePositions([FromForm] IFormFile file, [FromQuery] string connectionId)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult ImportSchedulePositions(IFormFile file, [FromQuery] string connectionId)
         {
             if (file == null)
             {
@@ -252,12 +283,31 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje edycje zajęć (<see cref="CourseEditionDto"/>) do bazy danych 
+        /// wraz z ich powiązanymi danymi (<see cref="CoordinatorCourseEditionDto"/> oraz <see cref="GroupCourseEditionDto"/>).
+        /// </summary>
+        /// <param name="courseEditionsFile">Reprezentacja pliku CSV z danymi do zaimportowania dotyczącymi edycji zajęć znajdująca się w ciele żądania</param>
+        /// <param name="coordinatorsFile">Reprezentacja pliku CSV z danymi do zaimportowania dotyczącymi przypisań prowadzących do edycji zajęć znajdująca się w ciele żądania</param>
+        /// <param name="groupsFile">Reprezentacja pliku CSV z danymi do zaimportowania dotyczącymi przypisań grup do edycji zajęć znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Pliki CSV nie zostały załączone do żądania;
+        /// pliki CSV nie posiadały danych lub zostały błędnie zapisane;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nie odnaleziono powiązanych danych w bazie (błędne klucze główne);
+        /// tabela z edycjami zajęć w bazie nie jest pusta;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("courseEditions"), DisableRequestSizeLimit]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult ImportCourseEditions(
-            [FromForm] IFormFile courseEditionsFile, 
-            [FromForm] IFormFile coordinatorsFile,
-            [FromForm] IFormFile groupsFile)
+            IFormFile courseEditionsFile, 
+            IFormFile coordinatorsFile,
+            IFormFile groupsFile)
         {
             if (courseEditionsFile == null)
             {
@@ -400,9 +450,24 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje grupy (<see cref="GroupDto"/>) do bazy danych.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV z danymi do zaimportowania znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Plik CSV nie został załączony do żądania;
+        /// plik CSV nie posiadał danych lub zostały błędnie zapisane;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// tabela z grupami w bazie nie jest pusta;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("groups"), DisableRequestSizeLimit]
-        public IActionResult ImportGroups([FromForm] IFormFile file)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult ImportGroups(IFormFile file)
         {
             if (file == null)
             {
@@ -467,11 +532,29 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje przedmioty (<see cref="CourseDto"/>) do bazy danych 
+        /// wraz z ich powiązanymi danymi (<see cref="CourseRoomDto"/>).
+        /// </summary>
+        /// <param name="coursesFile">Reprezentacja pliku CSV z danymi do zaimportowania dotyczącymi przedmiotów znajdująca się w ciele żądania</param>
+        /// <param name="roomsFile">Reprezentacja pliku CSV z danymi do zaimportowania dotyczącymi przypisań pokojów do przedmiotów znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Pliki CSV nie zostały załączone do żądania;
+        /// pliki CSV nie posiadały danych lub zostały błędnie zapisane;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// ustawienia aplikacji nie zostały odnalezione;
+        /// tabela z przedmiotami w bazie nie jest pusta;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("courses"), DisableRequestSizeLimit]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult ImportCourses(
-            [FromForm] IFormFile coursesFile,
-            [FromForm] IFormFile roomsFile)
+            IFormFile coursesFile,
+            IFormFile roomsFile)
         {
             if (coursesFile == null)
             {
@@ -559,9 +642,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje typy przedmiotów (<see cref="CourseTypeDto"/>) do bazy danych.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV z danymi do zaimportowania znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Plik CSV nie został załączony do żądania;
+        /// plik CSV nie posiadał danych lub zostały błędnie zapisane;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("courseTypes"), DisableRequestSizeLimit]
-        public IActionResult ImportCourseTypes([FromForm] IFormFile file)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult ImportCourseTypes(IFormFile file)
         {
             if (file == null)
             {
@@ -600,9 +696,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje typy pokojów (<see cref="RoomTypeDto"/>) do bazy danych.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV z danymi do zaimportowania znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Plik CSV nie został załączony do żądania;
+        /// plik CSV nie posiadał danych lub zostały błędnie zapisane;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("roomTypes"), DisableRequestSizeLimit]
-        public IActionResult ImportRoomTypes([FromForm] IFormFile file)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult ImportRoomTypes(IFormFile file)
         {
             if (file == null)
             {
@@ -641,9 +750,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje pokoje (<see cref="RoomDto"/>) do bazy danych.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV z danymi do zaimportowania znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Plik CSV nie został załączony do żądania;
+        /// plik CSV nie posiadał danych lub zostały błędnie zapisane;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("rooms"), DisableRequestSizeLimit]
-        public IActionResult ImportRooms([FromForm] IFormFile file)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult ImportRooms(IFormFile file)
         {
             if (file == null)
             {
@@ -682,9 +804,23 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Importuje przypisania studentów do grup (<see cref="StudentGroupDto"/>) do bazy danych.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV z danymi do zaimportowania znajdująca się w ciele żądania</param>
+        /// <returns>Informację o powodzeniu operacji importowania</returns>
+        /// <response code="200">Powodzenie operacji importowania</response>
+        /// <response code="400">
+        /// Plik CSV nie został załączony do żądania;
+        /// plik CSV nie posiadał danych lub zostały błędnie zapisane;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost("studentGroups"), DisableRequestSizeLimit]
-        public IActionResult ImportStudentGroups([FromForm] IFormFile file)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult ImportStudentGroups(IFormFile file)
         {
             if (file == null)
             {

@@ -13,11 +13,22 @@ namespace ScheduleDesigner.Helpers
 {
     public static class Methods
     {
+        /// <summary>
+        /// Funkcja sprawdzająca poprawność liczby minut do odbycia w semestrze (czy istnieje pełna liczba jednostek zajęciowych do odbycia).
+        /// </summary>
+        /// <param name="unitsMinutes">Liczba minut do odbycia w semestrze</param>
+        /// <param name="settings">Ustawienia aplikacji</param>
+        /// <returns>Prawdę jeśli liczba minut jest poprawna w stosunku do ustawień aplikacji, w przeciwnym wypadku fałsz</returns>
         public static bool AreUnitsMinutesValid(int unitsMinutes, Settings settings)
         {
             return (unitsMinutes % settings.CourseDurationMinutes == 0) || (unitsMinutes * 2 / settings.CourseDurationMinutes % settings.TermDurationWeeks == 0);
         }
 
+        /// <summary>
+        /// Metoda tworząca ramy czasowe dla podanych ustawień aplikacji i dodająca je do bazy danych.
+        /// </summary>
+        /// <param name="settings">Ustawienia aplikacji</param>
+        /// <param name="connectionString">Wyrażenie wymagane do połączenia się z bazą danych</param>
         public static void AddTimestamps(Settings settings, string connectionString)
         {
             var timestamps = new List<TimestampDto>();
@@ -40,11 +51,20 @@ namespace ScheduleDesigner.Helpers
             BulkImport<TimestampDto>.Execute(connectionString, "dbo.Timestamps", timestamps);
         }
 
+        /// <summary>
+        /// Metoda usuwająca wszystkie ramy czasowe z bazy danych.
+        /// </summary>
+        /// <param name="unitOfWork">Instancja klasy wzorca UoW.</param>
         public static void RemoveTimestamps(IUnitOfWork unitOfWork)
         {
             unitOfWork.Context.Database.ExecuteSqlRaw("DELETE FROM [Timestamps]");
         }
 
+        /// <summary>
+        /// Funkcja zwracająca informacje o powiązaniach grup dostępnych w systemie.
+        /// </summary>
+        /// <param name="_groupRepo">Instancja wzorca repozytorium dla modelu <see cref="Group"/></param>
+        /// <returns>Kolekcję powiązań grup</returns>
         public static Dictionary<int, GroupIds> GetGroups(IGroupRepo _groupRepo)
         {
             var groupsDictionary = new Dictionary<int, GroupIds>();
@@ -99,6 +119,11 @@ namespace ScheduleDesigner.Helpers
             return groupsDictionary;
         }
 
+        /// <summary>
+        /// Funkcja zwracająca informacje o powiązanych grupach z edycjami zajęć.
+        /// </summary>
+        /// <param name="_groupCourseEditionRepo">Instancja wzorca repozytorium dla modelu <see cref="GroupCourseEdition"/></param>
+        /// <returns>Kolekcję powiązań grup z edycjami zajęć</returns>
         public static Dictionary<CourseEditionKey, List<int>> GetGroupCourseEditions(IGroupCourseEditionRepo _groupCourseEditionRepo)
         {
             var groupCourseEditions = new Dictionary<CourseEditionKey, List<int>>();
@@ -125,6 +150,11 @@ namespace ScheduleDesigner.Helpers
             return groupCourseEditions;
         }
 
+        /// <summary>
+        /// Funkcja zwracająca informacje o powiązanych (użytkowników) prowadzących z edycjami zajęć.
+        /// </summary>
+        /// <param name="_coordinatorCourseEditionRepo">Instancja wzorca repozytorium dla modelu <see cref="CoordinatorCourseEdition"/></param>
+        /// <returns>Kolekcję powiązań prowadzących (użytkowników) z edycjami zajęć</returns>
         public static Dictionary<CourseEditionKey, List<int>> GetCoordinatorCourseEditions(ICoordinatorCourseEditionRepo _coordinatorCourseEditionRepo)
         {
             var coordinatorCourseEditions = new Dictionary<CourseEditionKey, List<int>>();
@@ -151,6 +181,12 @@ namespace ScheduleDesigner.Helpers
             return coordinatorCourseEditions;
         }
 
+        /// <summary>
+        /// Funkcja zwracająca powiązania identyfikatorów przedmiotów z ich maksymalną liczbą jednostek zajęciowych możliwych do zrealizowania w ciągu semestru.
+        /// </summary>
+        /// <param name="_courseRepo">Instancja wzorca repozytorium dla modelu <see cref="Course"/></param>
+        /// <param name="courseDurationMinutes">Liczba minut pojedynczej jednostki zajęciowej</param>
+        /// <returns>Kolekcję powiązań identyfikatorów przedmiotów z ich maksymalną liczbą jednostek zajęciowych</returns>
         public static Dictionary<int, int> GetMaxCourseUnits(ICourseRepo _courseRepo, int courseDurationMinutes)
         {
             var maxCourseUnits = new Dictionary<int, int>();
@@ -163,6 +199,12 @@ namespace ScheduleDesigner.Helpers
             return maxCourseUnits;
         }
 
+        /// <summary>
+        /// Zwraca identyfikatory grup nadrzędnych do grup podanych w liście.
+        /// </summary>
+        /// <param name="groups">Lista grup, dla których należy odnaleźć grupy nadrzędne</param>
+        /// <param name="_groupRepo">Instancja wzorca repozytorium dla modelu <see cref="Group"/></param>
+        /// <returns>Listę identyfikatorów grup nadrzędnych wraz z tymi podanymi w parametrze</returns>
         public static List<int> GetParentGroups(List<Group> groups, IGroupRepo _groupRepo)
         {
             var groupsIds = groups.Select(e => e.GroupId).ToList();
@@ -186,6 +228,12 @@ namespace ScheduleDesigner.Helpers
             return groupsIds;
         }
 
+        /// <summary>
+        /// Zwraca potrójną wartość dotyczącą wybranej grupy - listę grup nadrzędnych, pełną nazwę grupy oraz poziom węzła.
+        /// </summary>
+        /// <param name="_group">Kolekcja wspierająca ładowanie danych i posiadająca grupę z załadowaną grupą nadrzędną</param>
+        /// <param name="group">Grupa będąca w kolekcji</param>
+        /// <returns>Potrójną wartość - listę grup nadrzędnych, pełną nazwę grupy oraz poziom węzła</returns>
         public static Tuple<List<int>, string, int> GetParentGroupsWithFullNameAndLevels(
             IIncludableQueryable<Group, Group> _group, Group group)
         {
@@ -209,6 +257,12 @@ namespace ScheduleDesigner.Helpers
             return new Tuple<List<int>, string, int>(groupIds, fullGroupName, levels);
         }
 
+        /// <summary>
+        /// Zwraca identyfikatory grup podrzędnych do grup podanych w liście.
+        /// </summary>
+        /// <param name="groups">Lista grup, dla których należy odnaleźć grupy podrzędne</param>
+        /// <param name="_groupRepo">Instancja wzorca repozytorium dla modelu <see cref="Group"/></param>
+        /// <returns>Listę identyfikatorów grup podrzędnych wraz z tymi podanymi w parametrze</returns>
         public static List<int> GetChildGroups(List<Group> groups, IGroupRepo _groupRepo)
         {
             var groupsIds = groups.Select(e => e.GroupId).ToList();
@@ -234,11 +288,23 @@ namespace ScheduleDesigner.Helpers
             return groupsIds;
         }
 
+        /// <summary>
+        /// Zwraca identyfikatory grup nadrzędnych i podrzędnych dla grup, które są przypisane do wybranej edycji zajęć.
+        /// </summary>
+        /// <param name="courseEdition">Wybrana edycja zajęć</param>
+        /// <param name="_groupRepo">Instancja wzorca repozytorium dla modelu <see cref="Group"/></param>
+        /// <returns>Listę identyfikatorów grup nadrzędnych i podrzędnych</returns>
         public static List<int> GetNestedGroupsIds(CourseEdition courseEdition, IGroupRepo _groupRepo)
         {
             return GetNestedGroupsIds(courseEdition.Groups.Select(e => e.Group).ToList(), _groupRepo);
         }
 
+        /// <summary>
+        /// Zwraca identyfikatory grup nadrzędnych i podrzędnych do grup podanych w liście.
+        /// </summary>
+        /// <param name="groups">Lista grup, dla których należy odnaleźć grupy nadrzędne i podrzędne</param>
+        /// <param name="_groupRepo">Instancja wzorca repozytorium dla modelu <see cref="Group"/></param>
+        /// <returns>Listę identyfikatorów grup nadrzędnych i podrzędnych wraz z tymi podanymi w parametrze</returns>
         public static List<int> GetNestedGroupsIds(List<Group> groups, IGroupRepo _groupRepo)
         {
             var parentGroups = GetParentGroups(new List<Group>(groups), _groupRepo);
@@ -248,41 +314,99 @@ namespace ScheduleDesigner.Helpers
         }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca informację o połączeniu z bazą danych.
+    /// </summary>
     public class DatabaseConnectionOptions
     {
+        /// <summary>
+        /// Wyrażenie wymagane do połączenia się z bazą danych.
+        /// </summary>
         public string SchedulingDatabase { get; set; }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca informacje o opcjach aplikacji.
+    /// </summary>
     public class ApplicationOptions
     {
+        /// <summary>
+        /// Bazowy adres instalacji systemu USOS.
+        /// </summary>
         public string BaseUsosUrl { get; set; }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca informację o kluczu projektu wygenerowanego dla USOS API.
+    /// </summary>
     public class Consumer
     {
+        /// <summary>
+        /// Klucz projektu.
+        /// </summary>
         public string Key { get; set; }
 
+        /// <summary>
+        /// Sekret klucza projektu.
+        /// </summary>
         public string Secret { get; set; }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca informacje dotyczące wykonywania pełnych kopii zapasowych.
+    /// </summary>
     public class FullBackup
     {
+        /// <summary>
+        /// Godzina wykonania pierwszej kopii zapasowej.
+        /// </summary>
         public int StartHour { get; set; }
+        
+        /// <summary>
+        /// Przedział czasowy (liczba godzin) co ile ma się wykonywać kopia zapasowa, zaczynając od godziny startowej.
+        /// </summary>
         public int IntervalHours { get; set; }
+
+        /// <summary>
+        /// Ścieżka zapisu utworzonej kopii zapasowej.
+        /// </summary>
         public string Path { get; set; }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca informacje dotyczące wykonywania różnicowych kopii zapasowych.
+    /// </summary>
     public class DifferentialBackup
     {
+        /// <summary>
+        /// Godzina wykonania pierwszej kopii zapasowej.
+        /// </summary>
         public int StartHour { get; set; }
+
+        /// <summary>
+        /// Przedział czasowy (liczba godzin) co ile ma się wykonywać kopia zapasowa, zaczynając od godziny startowej.
+        /// </summary>
         public int IntervalHours { get; set; }
+
+        /// <summary>
+        /// Ścieżka zapisu utworzonej kopii zapasowej.
+        /// </summary>
         public string Path { get; set; }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca identyfikator zasobu serwera dotyczącego edycji zajęć.
+    /// </summary>
     public class CourseEditionKey : IComparable<CourseEditionKey>
     {
+        /// <summary>
+        /// Identyfikator przedmiotu.
+        /// </summary>
         public int CourseId { get; set; }
 
+        /// <summary>
+        /// Identyfikator edycji zajęć.
+        /// </summary>
         public int CourseEditionId { get; set; }
 
         public int CompareTo(CourseEditionKey other)
@@ -316,10 +440,19 @@ namespace ScheduleDesigner.Helpers
         }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca identyfikator zasobu serwera dotyczącego pozycji w planie.
+    /// </summary>
     public class SchedulePositionKey : IComparable<SchedulePositionKey>
     {
+        /// <summary>
+        /// Identyfikator pokoju.
+        /// </summary>
         public int RoomId { get; set; }
 
+        /// <summary>
+        /// Identyfikator ramy czasowej na planie.
+        /// </summary>
         public int TimestampId { get; set; }
 
         public int CompareTo(SchedulePositionKey other)
@@ -354,10 +487,19 @@ namespace ScheduleDesigner.Helpers
         }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca identyfikator zasobu serwera dotyczącego pozycji w planie (z perspektywy prowadzących).
+    /// </summary>
     public class CoordinatorPositionKey : IComparable<CoordinatorPositionKey>
     {
+        /// <summary>
+        /// Identyfikator prowadzącego (użytkownika).
+        /// </summary>
         public int CoordinatorId { get; set; }
 
+        /// <summary>
+        /// Identyfikator ramy czasowej na planie.
+        /// </summary>
         public int TimestampId { get; set; }
 
         public int CompareTo(CoordinatorPositionKey other)
@@ -392,10 +534,19 @@ namespace ScheduleDesigner.Helpers
         }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca identyfikator zasobu serwera dotyczącego pozycji w planie (z perspektywy grup).
+    /// </summary>
     public class GroupPositionKey : IComparable<GroupPositionKey>
     {
+        /// <summary>
+        /// Identyfikator grupy zajęciowej.
+        /// </summary>
         public int GroupId { get; set; }
 
+        /// <summary>
+        /// Identyfikator ramy czasowej na planie.
+        /// </summary>
         public int TimestampId { get; set; }
 
 
@@ -437,16 +588,39 @@ namespace ScheduleDesigner.Helpers
         public int Count { get; set; }
     }
 
+    /// <summary>
+    /// Klasa reprezentująca powiązania między grupami w systemie.
+    /// </summary>
     public class GroupIds
     {
+        /// <summary>
+        /// Lista identyfikatorów grup nadrzędnych.
+        /// </summary>
         public List<int> Parents { get; set; }
 
+        /// <summary>
+        /// Lista identyfikatorów grup podrzędnych.
+        /// </summary>
         public List<int> Childs { get; set; }
     }
 
+    /// <summary>
+    /// Interfejs pozwalający konwertowanie modelu danych na wiersz w pliku CSV.
+    /// </summary>
     public interface IExportCsv
     {
+        /// <summary>
+        /// Pobranie nagłówków właściwości modelu.
+        /// </summary>
+        /// <param name="delimiter">Ogranicznik między poszczególnymi nagłówkami</param>
+        /// <returns>Pojedynczy wiersz z nagłówkami</returns>
         string GetHeader(string delimiter = "|");
+
+        /// <summary>
+        /// Pobranie danych z modelu.
+        /// </summary>
+        /// <param name="delimiter">Ogranicznik między poszczególnymi danymi</param>
+        /// <returns>Pojedynczy wiersz z danymi</returns>
         string GetRow(string delimiter = "|");
     }
 }

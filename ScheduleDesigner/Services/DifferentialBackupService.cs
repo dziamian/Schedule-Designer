@@ -10,19 +10,42 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Services
 {
+    /// <summary>
+    /// Klasa serwisu uruchamiającego utworzenie różnicowej kopii zapasowej bazy danych.
+    /// </summary>
     public class DifferentialBackupService : IHostedService
     {
+        /// <summary>
+        /// Informacje o wykonaniu różnicowej kopii zapasowej.
+        /// </summary>
         private readonly DifferentialBackup _differentialBackup;
+
+        /// <summary>
+        /// Informacje o połączeniu z bazą danych.
+        /// </summary>
         private readonly DatabaseConnectionOptions _databaseConnectionOptions;
 
+        /// <summary>
+        /// Mechanizm wykorzystany do uruchamiania głównej metody serwisu <see cref="DoBackup(object)"/> 
+        /// w odpowiednich przedziałach czasowych zapisanych w stałej <see cref="_differentialBackup"/>. 
+        /// </summary>
         private Timer _timer = null;
 
+        /// <summary>
+        /// Konstruktor serwisu wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="differentialBackup">Wstrzyknięta instancja konfiguracji tworzenia różnicowej kopii zapasowej</param>
+        /// <param name="databaseConnectionOptions">Wstrzyknięta instancja konfiguracji połączenia z bazą danych</param>
         public DifferentialBackupService(IOptions<DifferentialBackup> differentialBackup, IOptions<DatabaseConnectionOptions> databaseConnectionOptions)
         {
             _differentialBackup = differentialBackup.Value;
             _databaseConnectionOptions = databaseConnectionOptions.Value;
         }
 
+        /// <summary>
+        /// Metoda odpowiadająca za wykonanie różnicowej kopii zapasowej bazy danych.
+        /// </summary>
+        /// <param name="state">Obiekt przechowujący informacje do użycia przez metodę - jego wartość jest zawsze równa null</param>
         private void DoBackup(object state)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(_databaseConnectionOptions.SchedulingDatabase);
@@ -58,6 +81,11 @@ namespace ScheduleDesigner.Services
             sqlBackup.SqlBackupAsync(sqlServer);
         }
 
+        /// <summary>
+        /// Funkcja odpowiadająca za wystartowanie serwisu.
+        /// </summary>
+        /// <param name="cancellationToken">Wskazuje, że rozpoczęty proces został przerwany</param>
+        /// <returns>Asynchroniczną operację</returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             TimeSpan scheduleInterval = TimeSpan.FromHours(_differentialBackup.IntervalHours);
@@ -81,6 +109,11 @@ namespace ScheduleDesigner.Services
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Funkcja odpowiadająca za zatrzymanie serwisu.
+        /// </summary>
+        /// <param name="cancellationToken">Wskazuje, że rozpoczęty proces został przerwany</param>
+        /// <returns>Asynchroniczną operację</returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _timer?.Change(Timeout.Infinite, 0);

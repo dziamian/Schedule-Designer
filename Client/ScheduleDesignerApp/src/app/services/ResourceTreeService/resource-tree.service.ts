@@ -12,20 +12,27 @@ import { CourseType, RoomType } from 'src/app/others/Types';
 import { AdministratorApiService } from '../AdministratorApiService/administrator-api.service';
 import { ScheduleDesignerApiService } from '../ScheduleDesignerApiService/schedule-designer-api.service';
 
+/**
+ * Serwis przeznaczony do generowania danych w postaci drzewa, w celu wyświetlenia go na ekranie.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class ResourceTreeService {
 
+  /** Kolekcja węzłów wyprostowanego drzewa posiadająca odnośnik do normalnego węzła. */
   flatNodeMap: Map<ResourceFlatNode, ResourceNode> = new Map<ResourceFlatNode, ResourceNode>();
+  /** Kolekcja węzłów normalnego drzewa posiadająca odnośnik do węzła drzewa wyprostowanego. */
   nestedNodeMap: Map<ResourceNode, ResourceFlatNode> = new Map<ResourceNode, ResourceFlatNode>();
 
   treeControl: FlatTreeControl<ResourceFlatNode>;
   treeFlattener: MatTreeFlattener<ResourceNode, ResourceFlatNode>;
   dataSource: MatTreeFlatDataSource<ResourceNode, ResourceFlatNode>;
 
+  /** Dane drzewa. */
   TREE_DATA: ResourceNode[] = [];
 
+  /** Konstruktor tworzący podstawowe właściwości drzewa. */
   constructor(
     private scheduleDesignerApiService: ScheduleDesignerApiService,
     private administratorApiService: AdministratorApiService
@@ -40,6 +47,11 @@ export class ResourceTreeService {
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat typów przedmiotów.
+   * @param courseTypes Typy przedmiotów do załadowania
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setCourseTypes(courseTypes: CourseType[], root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -69,6 +81,13 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat przedmiotów i posiadanych przez nich edycji zajęć.
+   * @param courseEditions Edycje zajęć do załadowania
+   * @param courses Przedmioty do załadowania
+   * @param courseTypes Kolekcja typów przedmiotów
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setCourses(courseEditions: CourseEditionInfo[], courses: CourseInfo[], courseTypes: Map<number, CourseType>, root: ResourceNode | null = null) {
     const grandParentNode = new ResourceNode();
     grandParentNode.item = new ResourceItem();
@@ -116,6 +135,12 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat prowadzących.
+   * @param coordinators Dane prowadzących do załadowania
+   * @param idVisible Określa czy identyfikator użytkownika powinien być widoczny
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setCoordinators(coordinators: Coordinator[], idVisible: boolean = false, root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -149,6 +174,12 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat pracowników.
+   * @param staffs Dane pracowników do załadowania
+   * @param idVisible Określa czy identyfikator użytkownika powinien być widoczny
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setAdministrators(staffs: Staff[], idVisible: boolean = false, root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -185,6 +216,13 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat pozostałych pracowników.
+   * @param staffs Dane pracowników do załadowania
+   * @param excludedUserIds Identyfikatory pracowników, których należy pominąć
+   * @param idVisible Określa czy identyfikator użytkownika powinien być widoczny
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setOtherStaffs(staffs: Staff[], excludedUserIds: number[], idVisible: boolean = false, root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -221,6 +259,12 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat pozostałych użytkowników.
+   * @param users Dane użytkowników do załadowania
+   * @param idVisible Określa czy identyfikator użytkownika powinien być widoczny
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setOtherUsers(users: UserBasic[], idVisible: boolean = false, root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -252,6 +296,12 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat studentów.
+   * @param students Dane studentów do załadowania
+   * @param idVisible Określa czy identyfikator użytkownika powinien być widoczny
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setStudents(students: Student[], idVisible: boolean = false, root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -284,6 +334,12 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Wyszukuje w drzewie węzeł, który posiada podany identyfikator grupy.
+   * @param node Węzeł startowy
+   * @param groupId Identyfikator grupy, którą należy odnaleźć.
+   * @returns Prawdę jeśli został odnaleziony, w przeciwnym wypadku fałsz
+   */
   private groupNodeExist(node: ResourceNode, groupId: string): boolean {
     for (var child in node.children) {
       if (node.children[child].item.id === groupId) {
@@ -293,6 +349,12 @@ export class ResourceTreeService {
     return false;
   }
 
+  /**
+   * Metoda tworząca pojedynczy węzeł będący reprezentacją grupy.
+   * @param group Dane grupy, dla której należy stworzyć węzeł
+   * @param parentNode Węzeł, do którego zostanie przyczepiony ten nowo utworzony
+   * @param groupsMap Kolekcja istniejących grup
+   */
   private createGroupNode(group: Group, parentNode: ResourceNode, groupsMap: Map<number, Group>) {
     const resourceNode = new ResourceNode();
     resourceNode.item = new ResourceItem();
@@ -334,6 +396,12 @@ export class ResourceTreeService {
     }
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat grup.
+   * @param groups Dane grup do załadowania
+   * @param parentMark Specjalny identyfikator pierwszego utworzonego węzła
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setGroups(groups: Group[], parentMark: string | null = null,  root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -363,6 +431,12 @@ export class ResourceTreeService {
     }
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat typów pokojów.
+   * @param roomTypes Dane typów pokojów do załadowania
+   * @param label Etykieta pierwszego utworzonego węzła
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setRoomTypes(roomTypes: RoomType[], label: string = 'Room Types', root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -391,6 +465,11 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat pokojów.
+   * @param rooms Dane pokojów do załadowania
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setRooms(rooms: Room[], root: ResourceNode | null = null) {
     const parentNode = new ResourceNode();
     parentNode.item = new ResourceItem();
@@ -420,6 +499,11 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda tworząca węzły drzewa posiadające dane na temat pokojów (bez tworzenia węzła etykietowego), które są przypięte do ich przypisanych typów.
+   * @param rooms Dane pokojów do załadowania
+   * @param root Korzeń, do którego mają zostać przypięte nowo utworzone węzły
+   */
   private setRoomsOnTypes(rooms: Room[], root: ResourceNode) {
     rooms.forEach(
       room => {
@@ -439,6 +523,12 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda wyszukująca i zwracająca węzeł posiadający dane o konkretnej grupie.
+   * @param node Węzeł startowy
+   * @param group Grupa, której dane należy odnaleźć
+   * @returns Odnaleziony węzeł lub null
+   */
   private searchNodeForGroup(node: ResourceNode, group: Group): ResourceNode | null {
     const nodeChildren = node.children;
     const nodeChildrenLength = nodeChildren.length;
@@ -459,6 +549,10 @@ export class ResourceTreeService {
     return null;
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących planu zajęć.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setSchedule(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetCoordinators(),
@@ -474,6 +568,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących grup użytkownika.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setMyGroups(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetMyGroups()
@@ -485,6 +583,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących typów przedmiotów.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllCourseTypes(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetCourseTypes()
@@ -496,6 +598,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących przedmiotów i ich typów.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllCourses(callback: () => void) {
     this.scheduleDesignerApiService.GetSettings().subscribe(settings => {
       forkJoin([
@@ -512,6 +618,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących grup.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllGroups(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetGroups()
@@ -523,6 +633,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących grup w celu zmiany grupy nadrzędnej.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllGroupsForChange(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetGroups()
@@ -534,6 +648,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących pokojów i ich typów.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllRooms(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetRoomTypes(),
@@ -547,6 +665,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących pokojów, które są przypięte do ich przypisanych typów.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllRoomsOnTypes(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetRoomTypes(),
@@ -560,6 +682,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących typów pokojów.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllRoomTypes(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetRoomTypes(),
@@ -571,6 +697,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących prowadzących.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllCoordinators(callback: () => void) {
     this.scheduleDesignerApiService.GetCoordinators().subscribe(coordinators => {
       this.setCoordinators(coordinators, true);
@@ -580,6 +710,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących studentów.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllStudents(callback: () => void) {
     this.administratorApiService.GetStudents().subscribe(students => {
       this.setStudents(students, true);
@@ -589,6 +723,10 @@ export class ResourceTreeService {
     });
   }
 
+  /**
+   * Metoda tworząca pełne drzewo zasobów dotyczących wszystkich typów użytkowników.
+   * @param callback Metoda wywoływana po utworzeniu drzewa
+   */
   public setAllUsers(callback: () => void) {
     forkJoin([
       this.scheduleDesignerApiService.GetCoordinators(),
@@ -623,6 +761,10 @@ export class ResourceTreeService {
     this.TREE_DATA = [];
   }
 
+  /**
+   * Metoda oznaczająca węzły nadrzędne jako widoczne na ekranie.
+   * @param flatNode Węzeł startowy
+   */
   private markParents(flatNode: ResourceFlatNode) {
     var i = this.treeControl.dataNodes.findIndex(x => x == flatNode);
     var previousLevel = this.treeControl.dataNodes[i].level - 1;
@@ -640,6 +782,10 @@ export class ResourceTreeService {
     } while (previousNode.level != 0);
   }
 
+  /**
+   * Metoda oznaczająca węzły podrzędne jako widoczne na ekranie.
+   * @param flatNode Węzeł startowy
+   */
   private markChilds(flatNode: ResourceFlatNode) {
     var i = this.treeControl.dataNodes.findIndex(x => x == flatNode);
     var currentLevel = this.treeControl.dataNodes[i].level;
@@ -654,6 +800,10 @@ export class ResourceTreeService {
     }
   }
 
+  /**
+   * Metoda filtrująca drzewo zasobów pod względem spełnienia kryterium wyszukiwania.
+   * @param term Kryterium wyszukiwania
+   */
   public filterByName(term: string) {
     const filteredItems = this.treeControl.dataNodes.filter(
       x => x.item.name.toLowerCase().indexOf(term.toLowerCase()) === -1
@@ -684,6 +834,9 @@ export class ResourceTreeService {
     );
   }
 
+  /**
+   * Metoda czyszcząca filtr nałożony na drzewo zasobów.
+   */
   public clearFilter() {
     this.treeControl.dataNodes.forEach(x => x.visible = true);
 
@@ -714,6 +867,7 @@ export class ResourceTreeService {
 
   hasNoContent = (_: number, _nodeData: ResourceFlatNode) => _nodeData.item.name === '';
 
+  /** Metoda transformująca drzewo */
   transformer = (node: ResourceNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode = (existingNode && existingNode.item === node.item) ? existingNode : new ResourceFlatNode();

@@ -10,19 +10,42 @@ using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Services
 {
+    /// <summary>
+    /// Klasa serwisu uruchamiającego utworzenie pełnej kopii zapasowej bazy danych.
+    /// </summary>
     public class FullBackupService : IHostedService
     {
+        /// <summary>
+        /// Informacje o wykonaniu pełnej kopii zapasowej.
+        /// </summary>
         private readonly FullBackup _fullBackup;
+        
+        /// <summary>
+        /// Informacje o połączeniu z bazą danych.
+        /// </summary>
         private readonly DatabaseConnectionOptions _databaseConnectionOptions;
 
+        /// <summary>
+        /// Mechanizm wykorzystany do uruchamiania głównej metody serwisu <see cref="DoBackup(object)"/> 
+        /// w odpowiednich przedziałach czasowych zapisanych w stałej <see cref="_fullBackup"/>. 
+        /// </summary>
         private Timer _timer = null;
 
+        /// <summary>
+        /// Konstruktor serwisu wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="fullBackup">Wstrzyknięta instancja konfiguracji tworzenia pełnej kopii zapasowej</param>
+        /// <param name="databaseConnectionOptions">Wstrzyknięta instancja konfiguracji połączenia z bazą danych</param>
         public FullBackupService(IOptions<FullBackup> fullBackup, IOptions<DatabaseConnectionOptions> databaseConnectionOptions)
         {
             _fullBackup = fullBackup.Value;
             _databaseConnectionOptions = databaseConnectionOptions.Value;
         }
 
+        /// <summary>
+        /// Metoda odpowiadająca za wykonanie pełnej kopii zapasowej bazy danych.
+        /// </summary>
+        /// <param name="state">Obiekt przechowujący informacje do użycia przez metodę - jego wartość jest zawsze równa null</param>
         private void DoBackup(object state)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(_databaseConnectionOptions.SchedulingDatabase);
@@ -59,6 +82,11 @@ namespace ScheduleDesigner.Services
             sqlBackup.SqlBackupAsync(sqlServer);
         }
 
+        /// <summary>
+        /// Funkcja odpowiadająca za wystartowanie serwisu.
+        /// </summary>
+        /// <param name="cancellationToken">Wskazuje, że rozpoczęty proces został przerwany</param>
+        /// <returns>Asynchroniczną operację</returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             TimeSpan fullInterval = TimeSpan.FromHours(_fullBackup.IntervalHours);
@@ -82,6 +110,11 @@ namespace ScheduleDesigner.Services
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Funkcja odpowiadająca za zatrzymanie serwisu.
+        /// </summary>
+        /// <param name="cancellationToken">Wskazuje, że rozpoczęty proces został przerwany</param>
+        /// <returns>Asynchroniczną operację</returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _timer?.Change(Timeout.Infinite, 0);

@@ -11,23 +11,40 @@ using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API, który posiada rolę pośrednika pomiędzy klientem 
+    /// a zewnętrznym systemem USOS w celu uniknięcia problemów wynikających z mechanizmu CORS.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ProxyController : ControllerBase
     {
-        private readonly IOptions<Consumer> _usosConsumer;
+        /// <summary>
+        /// Instancja klasy przeznaczonej do wysyłania i odbierania żądań HTTP do/z USOS API.
+        /// </summary>
         private readonly HttpClient _client;
 
-        public ProxyController(IOptions<ApplicationOptions> applicationInfo, IOptions<Consumer> usosConsumer)
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="applicationInfo">Wstrzyknięta instancja konfiguracji aplikacji</param>
+        public ProxyController(IOptions<ApplicationOptions> applicationInfo)
         {
-            _usosConsumer = usosConsumer;
             _client = new HttpClient
             {
                 BaseAddress = new Uri(applicationInfo.Value.BaseUsosUrl)
             };
         }
 
+        /// <summary>
+        /// Wysyła żądanie do USOS API, aby zostać przekierowanym na stronę logowania do systemu USOS w celu zautoryzowania tokenu dostępu.
+        /// </summary>
+        /// <param name="oauth_token">Token dostępu do autoryzacji</param>
+        /// <param name="interactivity">Poziom interaktywności z systemem</param>
+        /// <returns>Odpowiedź systemu USOS na wysłane żądanie (powinno posiadać adres lokalizacji strony do logowania)</returns>
+        /// <response code="200">Zwrócono odpowiedź systemu USOS</response>
         [HttpGet("Authorize")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult> Authorize([FromQuery] string oauth_token, [FromQuery] string interactivity) 
         {
             var queryStrings = new Dictionary<string, string>()

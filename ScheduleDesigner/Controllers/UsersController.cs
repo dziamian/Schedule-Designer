@@ -20,20 +20,49 @@ using ScheduleDesigner.Services;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="User"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("Users")]
     public class UsersController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
+
+        /// <summary>
+        /// Instancja serwisu zapewniającego poprawną komunikację z zewnętrznym systemem USOS
+        /// </summary>
         private readonly UsosAuthenticationService _usosService;
-        
+
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
+        /// <param name="usosService">Wstrzyknięta instancja serwisu do komunikacji z systemem USOS</param>
         public UsersController(IUnitOfWork unitOfWork, UsosAuthenticationService usosService)
         {
             _unitOfWork = unitOfWork;
             _usosService = usosService;
         }
 
+        /// <summary>
+        /// Tworzy nowe konto dla zalogowanego użytkownika, jeżeli jeszcze takiego nie posiada w systemie.
+        /// </summary>
+        /// <returns>Nowo utworzone konto w systemie (obiekt klasy <see cref="User"/>)</returns>
+        /// <response code="201">Zwrócono informacje o nowo utworzonym koncie w systemie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie udało się pomyślnie utworzyć nowego konta w systemie</response>
+        /// <response code="409">Konto użytkownika już istnieje w systemie</response>
         [Authorize]
-        [HttpPost]
+        [HttpPost("Service.CreateMyAccount")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
         public async Task<IActionResult> CreateMyAccount()
         {
             try
@@ -69,8 +98,25 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Tworzy nowe konto dla istniejącego użytkownika w systemie USOS.
+        /// </summary>
+        /// <param name="parameters">Wymagane parametry akcji OData
+        /// - UserId (integer): identyfikator użytkownika w systemie USOS</param>
+        /// <returns>Nowo utworzone konto w systemie (obiekt klasy <see cref="User"/>)</returns>
+        /// <response code="201">Zwrócono informacje o nowo utworzonym koncie w systemie</response>
+        /// <response code="400">
+        /// Błędne dane przekazane jako parametry żądania;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie udało się pomyślnie utworzyć nowego konta w systemie</response>
+        /// <response code="409">Konto użytkownika już istnieje w systemie</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
+        [HttpPost("Service.CreateAccountFromUsos")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
         public async Task<IActionResult> CreateAccountFromUsos(ODataActionParameters parameters)
         {
             if (!ModelState.IsValid)
@@ -110,8 +156,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Wyszukuje użytkowników w systemie USOS na podstawie podanych kryteriów.
+        /// </summary>
+        /// <param name="Query">Kryteria wyszukiwania</param>
+        /// <param name="PerPage">Liczba użytkowników na stronie</param>
+        /// <param name="Start">Liczba użytkowników do pominięcia</param>
+        /// <returns>Informacje o odnalezionych użytkownikach w postaci obiektu klasy <see cref="SearchItem"/></returns>
+        /// <response code="200">Zwrócono informacje o odnalezionych użytkownikach</response>
+        /// <response code="400">
+        /// Błędne dane przekazane w parametrach żądania;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet]
+        [HttpGet("Service.SearchForUserFromUsos({Query},{PerPage},{Start})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> SearchForUserFromUsos(
             [FromODataUri] string Query, 
             [FromODataUri] int PerPage, 
@@ -144,19 +204,36 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="User"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="User"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetUsers()
         {
             return Ok(_unitOfWork.Users.GetAll());
         }
 
+        /// <summary>
+        /// Zwraca pojedyncze wystąpienie <see cref="User"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key">ID użytkownika</param>
+        /// <returns>Znalezione pojedyncze wystąpienie <see cref="User"/></returns>
+        /// <response code="200">Zwrócono żądane wystąpienie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet]
+        [HttpGet("{key}")]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetUser([FromODataUri] int key)
         {
             try
@@ -175,17 +252,31 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="User"/> będących prowadzącymi.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="User"/> będacych prowadzącymi</returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetCoordinators()")]
         [CustomEnableQuery]
+        [ProducesResponseType(200)]
         public IActionResult GetCoordinators()
         {
             return Ok(_unitOfWork.Users.Get(e => e.IsCoordinator).ToList());
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="User"/> nieposiadających żadnej roli.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="User"/> nieposiadających żadnej roli</returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet]
+        [HttpGet("Service.GetOtherUsers()")]
         [CustomEnableQuery]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetOtherUsers()
         {
             try
@@ -202,9 +293,19 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca informacje o zalogowanym użytkowniku.
+        /// </summary>
+        /// <returns>Informacje o zalogowanym użytkowniku</returns>
+        /// <response code="200">Zwrócono informacje o koncie użytkownika</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono konta użytkownika</response>
         [Authorize]
         [CustomEnableQuery]
-        [HttpGet]
+        [HttpGet("Service.GetMyAccount()")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetMyAccount()
         {
             try
@@ -235,9 +336,25 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Nadpisuje pojedyncze wystąpienie <see cref="User"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key">ID użytkownika</param>
+        /// <param name="delta">Obiekt śledzący zmiany dla wysłanego wystąpienia</param>
+        /// <returns>Nadpisane zażądane wystąpienie <see cref="User"/></returns>
+        /// <response code="200">Nadpisane zażądane wystąpienie</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie użytkownika;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nie udało się usunąć roli prowadzącego ze względu na wystąpienie powiązań z edycjami zajęć;
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPatch]
+        [HttpPatch("{key}")]
         [ODataRoute("({key})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult UpdateUser([FromODataUri] int key, [FromBody] Delta<User> delta)
         {
             if (!ModelState.IsValid)
@@ -303,9 +420,23 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa pojedyncze wystąpienie <see cref="User"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key">ID użytkownika</param>
+        /// <returns>Informację o powodzeniu procesu usunięcia</returns>
+        /// <response code="204">Usunięcie powiodło się</response>
+        /// <response code="400">
+        /// Nie udało się usunąć użytkownika ze względu na wystąpienie jego powiązań z edycjami zajęć;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpDelete]
+        [HttpDelete("{key}")]
         [ODataRoute("({key})")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteUser([FromODataUri] int key)
         {
             try

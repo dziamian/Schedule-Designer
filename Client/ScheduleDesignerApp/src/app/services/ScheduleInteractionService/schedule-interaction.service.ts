@@ -21,6 +21,9 @@ import { RoomType } from 'src/app/others/Types';
 import { ScheduleDesignerApiService } from '../ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from '../SignalrService/signalr.service';
 
+/**
+ * Serwis posiadający metody odpowiedzialne za interakcję przeciągania i upuszczania na wyświetlonym planie zajęć.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -31,6 +34,11 @@ export class ScheduleInteractionService {
     private signalrService: SignalrService,
   ) { }
 
+  /**
+   * Metoda zwracająca indeksy stref do upuszczania na podstawie ich identyfikatora
+   * @param id Identyfikator strefy
+   * @returns Indeksy strefy
+   */
   private getIndexes(id: string): number[] {
     const indexes = id.split(',');
     const parsedFirst = Number.parseInt(indexes[0]);
@@ -41,6 +49,14 @@ export class ScheduleInteractionService {
     ];
   }
 
+  /**
+   * Metoda nadpisująca tablicę przechowującą stan pól które powodują konflikty.
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param settings Ustawienia aplikacji
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   */
   public updateBusyPeriods(
     data: ModifyingScheduleData, 
     tabWeeks: number[][], 
@@ -78,6 +94,13 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda wyszukująca aktualnie wybrane pozycje na planie i próbująca je zaznaczyć (wywoływana w momencie zmiany widoku planu).
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   */
   public selectCourseIfPossible(
     data: ModifyingScheduleData, 
     tabWeeks: number[][], 
@@ -217,6 +240,14 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda, która jest reakcją na odebranie powiadomienia o nowo utworzonych zajęciach w planie.
+   * @param addedSchedulePositions Informacje o dodanych zajęciach
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param loading Określa czy widok jest aktualnie ładowany
+   */
   public lastAddedSchedulePositionsReaction(
     addedSchedulePositions: AddedSchedulePositions,
     data: ModifyingScheduleData,
@@ -265,6 +296,17 @@ export class ScheduleInteractionService {
       }
   }
 
+  /**
+   * Metoda, która jest reakcją na odebranie powiadomienia o zmianach w planie.
+   * @param modifiedSchedulePositions Informacje o zmianie
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param settings Ustawienia aplikacji
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param loading Określa czy widok jest aktualnie ładowany
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public lastModifiedSchedulePositionsReaction(
     modifiedSchedulePositions: ModifiedSchedulePositions,
     data: ModifyingScheduleData,
@@ -406,6 +448,14 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda, która jest reakcją na odebranie powiadomienia o usunięciu zajęć z planu.
+   * @param removedSchedulePositions Informacje o usuniętych zajęciach
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param loading Określa czy widok jest aktualnie ładowany
+   */
   public lastRemovedSchedulePositionsReaction(
     removedSchedulePositions: RemovedSchedulePositions,
     data: ModifyingScheduleData,
@@ -465,6 +515,12 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda przełączająca tryb modyfikacji planu.
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param isModifying Aktualny stan trybu (podgląd lub modyfikacja)
+   * @returns Nowy stan trybu
+   */
   public ModifySchedule(
     data: ModifyingScheduleData,
     isModifying: boolean,
@@ -480,6 +536,17 @@ export class ScheduleInteractionService {
     return isModifying;
   }
 
+  /**
+   * Metoda wywoływana w momencie upuszczenia zajęć w strefie poza planem (nieułożonych edycji zajęć).
+   * Zostają w niej wywoływane metody odpowiadające za interakcję z serwerem.
+   * @param event Zdarzenie upuszczenia panelu z zajęciami w strefie
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param myCoursesComponent Instancja komponentu wyświetlającego nieułożone zajęcia na planie
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async onMyCoursesDrop(
     event: CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>,
     data: ModifyingScheduleData,
@@ -638,6 +705,12 @@ export class ScheduleInteractionService {
     event.item.data.IsCurrentlyActive = false;
   }
 
+  /**
+   * Metoda wywoływana w momencie najechania na strefę poza planem (nieułożonych edycji zajęć) w trakcie interakcji przeciągania.
+   * Nadpisuje stan trybu modyfikacji planu.
+   * @param drag Zdarzenie najechania panelu z zajęciami na strefę
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   */
   public onMyCoursesEnter(
     drag: CdkDragEnter<CourseEdition[]>,
     data: ModifyingScheduleData,
@@ -646,6 +719,19 @@ export class ScheduleInteractionService {
     data.currentDropContainerIndexes = [-1, -1];
   }
 
+  /**
+   * Metoda wywoływana w momencie rozpoczęcia interakcji przeciągania ze strefy poza planem (nieułożonych edycji zajęć).
+   * Zostają w niej wywoływane metody odpowiadające za interakcję z serwerem.
+   * @param event Zdarzenie przeciągania panelu z zajęciami ze strefy
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param isAdmin Określa czy użytkownik posiada rolę administratora
+   * @param settings Ustawienia aplikacji
+   * @param myCoursesComponent Instancja komponentu wyświetlającego nieułożone zajęcia na planie
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async onMyCoursesStart(
     event: CdkDragStart<CourseEdition>,
     data: ModifyingScheduleData,
@@ -791,6 +877,23 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda wywoływana w momencie upuszczenia zajęć w strefie planu zajęć.
+   * Zostają w niej wywoływane metody odpowiadające za interakcję z serwerem. Uruchamia okno dialogowe.
+   * @param event Zdarzenie upuszczenia panelu z zajęciami w strefie
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param settings Ustawienia aplikacji
+   * @param roomTypes Kolekcja typów pokojów
+   * @param isMoveAvailable Określa czy użytkownik posiada uprawnienia do wykonania normalnego ruchu na planie
+   * @param isPropositionAvailable Określa czy użytkownik posiada uprawnienia do stworzenia propozycji
+   * @param filter Filtr określający jakie dane okno dialogowe powinno brać pod uwagę podczas odbierania ich z serwera
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param myCoursesComponent Instancja komponentu wyświetlającego nieułożone zajęcia na planie
+   * @param dialogService Instancja serwisu wyświetlającego okna dialogowe na ekranie
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async onScheduleDrop(
     event:CdkDragDrop<CourseEdition[], CourseEdition[], CourseEdition>,
     data: ModifyingScheduleData,
@@ -980,6 +1083,12 @@ export class ScheduleInteractionService {
     event.item.data.IsCurrentlyActive = false;
   }
 
+  /**
+   * Metoda wywoływana w momencie najechania na strefę na planie w trakcie interakcji przeciągania.
+   * Nadpisuje stan trybu modyfikacji planu.
+   * @param drag Zdarzenie najechania panelu z zajęciami na strefę
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   */
   public onScheduleEnter(
     drag: CdkDragEnter<CourseEdition[]>,
     data: ModifyingScheduleData
@@ -989,6 +1098,19 @@ export class ScheduleInteractionService {
     data.currentDropContainerIndexes = this.getIndexes(drag.container.id);
   }
 
+  /**
+   * Metoda wywoływana w momencie rozpoczęcia interakcji przeciągania ze strefy na planie.
+   * Zostają w niej wywoływane metody odpowiadające za interakcję z serwerem.
+   * @param event Zdarzenie przeciągania panelu z zajęciami ze strefy
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param isAdmin Określa czy użytkownik posiada rolę administratora
+   * @param isPropositionOnly Określa czy dla wykonywanego ruchu dostępna jest tylko opcja stworzenia propozycji
+   * @param settings Ustawienia aplikacji
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async onScheduleStart(
     event: CdkDragStart<CourseEdition>,
     data: ModifyingScheduleData,
@@ -1110,6 +1232,13 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda wywoływana w momencie zakończenia interakcji przeciągania.
+   * @param event Zdarzenie zakończenia przeciągania panelu z zajęciami
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param settings Ustawienia aplikacji
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   */
   public async onRelease(
     event: CdkDragRelease<CourseEdition>,
     data: ModifyingScheduleData,
@@ -1127,6 +1256,13 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda wywoływana w momencie wybrania przez użytkownika zajęć w planie (zaznaczenia ich poprzez kliknięcie).
+   * Nadpisuje stan trybu modyfikacji planu.
+   * @param event Informacje o wybranych zajęciach, ich stanie (czy są możliwe do modyfikowania w bieżącym widoku) i pozycji na planie
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param isModifying Aktualny stan trybu (podgląd lub modyfikacja)
+   */
   public onSelect(
     event: {courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number},
     data: ModifyingScheduleData, isModifying: boolean
@@ -1148,6 +1284,22 @@ export class ScheduleInteractionService {
     event.courseEdition.IsCurrentlyActive = true;
   }
 
+  /**
+   * Metoda wywoływana w momencie wybrania przez użytkownika pola na planie, do którego chce wykonać ruch (poprzez kliknięcie, a nie interakcję przeciągania i upuszczania).
+   * Zostają w niej wywoływane metody odpowiadające za interakcję z serwerem. Uruchamia okno dialogowe.
+   * @param event Informacje o wybranej przez użytkownika ramy czasowej na planie
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param settings Ustawienia aplikacji
+   * @param roomTypes Kolekcja typów pokojów
+   * @param isMoveAvailable Określa czy użytkownik posiada uprawnienia do wykonania normalnego ruchu na planie
+   * @param isPropositionAvailable Określa czy użytkownik posiada uprawnienia do stworzenia propozycji
+   * @param filter Filtr określający jakie dane okno dialogowe powinno brać pod uwagę podczas odbierania ich z serwera
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param dialogService Instancja serwisu wyświetlającego okna dialogowe na ekranie
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async onRoomSelect(
     event: {day: number, periodIndex: number},
     data: ModifyingScheduleData,
@@ -1272,6 +1424,13 @@ export class ScheduleInteractionService {
     data.areSlotsValiditySet = false;
   }
 
+  /**
+   * Metoda uruchamiająca okno dialogowe umożliwiające przypisanie nowego pokoju do wybranego przedmiotu.
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param roomTypes Kolekcja typów pokojów
+   * @param dialogService Instancja serwisu wyświetlającego okna dialogowe na ekranie
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async addRoom(
     data: ModifyingScheduleData,
     roomTypes: Map<number, RoomType>,
@@ -1300,6 +1459,18 @@ export class ScheduleInteractionService {
     }
   }
 
+  /**
+   * Metoda uruchamiająca okno dialogowe umożliwiające zmianę pokoju bez zmiany ramy czasowej na planie.
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param isAdmin Określa czy użytkownik posiada rolę administratora
+   * @param settings Ustawienia aplikacji
+   * @param roomTypes Kolekcja typów pokojów
+   * @param isMoveAvailable Określa czy użytkownik posiada uprawnienia do wykonania normalnego ruchu na planie
+   * @param isPropositionAvailable Określa czy użytkownik posiada uprawnienia do stworzenia propozycji
+   * @param filter Filtr określający jakie dane okno dialogowe powinno brać pod uwagę podczas odbierania ich z serwera
+   * @param dialogService Instancja serwisu wyświetlającego okna dialogowe na ekranie
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async changeRoom(
     data: ModifyingScheduleData,
     isAdmin: boolean,
@@ -1399,6 +1570,17 @@ export class ScheduleInteractionService {
     }
   }
   
+  /**
+   * Metoda uruchamiająca okno dialogowe umożliwiające przeglądanie i zarządzanie zaplanowanymi zmianami i propozycjami w planie (w zależności od trybu i uprawnień).
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param settings Ustawienia aplikacji
+   * @param propositionUserId Identyfikator zalogowanego użytkownika (wykorzystywany w celu blokowania dostępu do usuwania i akceptowania ruchów nie należących do niego)
+   * @param ignoreLocks Czy należy ignorować blokady nałożone przez użytkowników na powiązane z ruchami pozycje w planie
+   * @param isModifying Aktualny stan trybu (podgląd lub modyfikacja)
+   * @param roomTypes Kolekcja typów pokojów
+   * @param dialogService Instancja serwisu wyświetlającego okna dialogowe na ekranie
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async showScheduledChanges(
     data: ModifyingScheduleData,
     settings: Settings,
@@ -1490,6 +1672,16 @@ export class ScheduleInteractionService {
     return true;
   }
 
+  /**
+   * Metoda rozpoczynająca operację wykonywania zmiany w planie bez wykorzystywania interakcji przeciągania i upuszczania.
+   * @param data Dane przechowujące stan trybu modyfikacji planu
+   * @param tabWeeks Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków
+   * @param currentTabIndex Indeks wybranego widoku
+   * @param isAdmin Określa czy użytkownik posiada rolę administratora
+   * @param settings Ustawienia aplikacji
+   * @param scheduleComponent Instancja komponentu wyświetlającego bieżący plan zajęć
+   * @param snackBar Instancja serwisu wyświetlającego powiadomienia na ekran
+   */
   public async move(
     data: ModifyingScheduleData,
     tabWeeks: number[][],

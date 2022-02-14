@@ -1,11 +1,22 @@
+/**
+ * Klasa reprezentująca filtr wykorzystywany do wyświetlania planu zajęć dla wybranego zasobu.
+ */
 export class Filter {
     
     constructor(
+        /** Identyfikatory prowadzących. */
         public CoordinatorsIds: number[],
+        /** Identyfikatory grup. */
         public GroupsIds: number[],
+        /** Identyfikatory pokojów. */
         public RoomsIds: number[]
     ) {}
 
+    /**
+     * Sprawdza czy dwa filtry posiadają wspólne wartości.
+     * @param filter Filtr do porównania
+     * @returns Prawdę, jeśli co najmniej jedna wartość jest wspólna dla obu filtrów, w przeciwnym wypadku fałsz
+     */
     public challengeAll(filter: Filter): boolean {
         const coordinatorsLength = this.CoordinatorsIds.length;
         const groupsLength = this.GroupsIds.length;
@@ -27,6 +38,11 @@ export class Filter {
         return false;
     }
 
+    /**
+     * Sprwadza czy filtr posiada identyfikator pokoju.
+     * @param roomId Identyfikator pokoju
+     * @returns Prawdę, jeśli posiada identyfikator pokoju, w przeciwnym wypadku fałsz.
+     */
     public challengeRoom(roomId: number): boolean {
         const roomsLength = this.RoomsIds.length;
 
@@ -40,6 +56,11 @@ export class Filter {
         return false;
     }
 
+    /**
+     * Dokładnie porównuje wartości dwóch filtrów.
+     * @param filter Filtr do porównania
+     * @returns Prawdę, jeśli filtry posiadają dokładnie takie same wartości, w przeciwnym wypadku fałsz
+     */
     public compare(filter: Filter): boolean {
         
         return filter != null 

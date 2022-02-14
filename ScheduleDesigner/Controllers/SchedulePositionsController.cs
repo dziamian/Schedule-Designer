@@ -20,32 +20,69 @@ using ScheduleDesigner.Helpers;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="SchedulePosition"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("SchedulePositions")]
     public class SchedulePositionsController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Obiekt przeznaczony do blokowania, w przypadku wykonywania krytycznych sekcji operacji na danych powiązanych z planem zajęć.
+        /// </summary>
         public static readonly object ScheduleLock = new object();
+        
+        /// <summary>
+        /// Limit czasu oczekiwania na zablokowanie dostępu do obiektu <see cref="ScheduleLock"/>.
+        /// </summary>
         public static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(5);
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public SchedulePositionsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="SchedulePosition"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="SchedulePosition"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetSchedulePositions()
         {
             return Ok(_unitOfWork.SchedulePositions.GetAll());
         }
-        
+
+        /// <summary>
+        /// Zwraca kolekcję wystąpień <see cref="SchedulePosition"/> dla podanego pokoju i ram czasowych.
+        /// </summary>
+        /// <param name="RoomId">ID pokoju</param>
+        /// <param name="PeriodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="Day">Indeks dnia tygodnia</param>
+        /// <param name="Weeks">Tygodnie, które należy wziąć pod uwagę</param>
+        /// <returns>Kolekcję wystąpień pozycji w planie dla podanych parametrów</returns>
+        /// <response code="200">Zwrócono kolekcję wystąpień</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetSchedulePositions({RoomId},{PeriodIndex},{Day},{Weeks})")]
         [CustomEnableQuery]
         [ODataRoute("Service.GetSchedulePositions(RoomId={RoomId},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetSchedulePositions([FromODataUri] int RoomId, [FromODataUri] int PeriodIndex, [FromODataUri] int Day, [FromODataUri] IEnumerable<int> Weeks)
         {
             try
@@ -64,10 +101,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca liczby wystąpień <see cref="SchedulePosition"/> dla edycji zajęć w postaci listy obiektów klasy <see cref="ScheduleAmount"/>.
+        /// </summary>
+        /// <param name="CourseEditionIds">ID edycji zajęć</param>
+        /// <returns>Liczby wystąpień <see cref="SchedulePosition"/> w postaci listy obiektów klasy <see cref="ScheduleAmount"/></returns>
+        /// <response code="200">Zwrócono liczby wystąpień</response>
+        /// <response code="400">
+        /// Podano nieprawidłowe dane w parametrach;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetScheduleAmount({CourseEditionIds})")]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetScheduleAmount([FromODataUri] IEnumerable<int> CourseEditionIds)
         {
             try
@@ -91,9 +140,21 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wystąpienia <see cref="SchedulePosition"/> spełniające kryteria podane w parametrach.
+        /// </summary>
+        /// <param name="CoordinatorsIds">ID prowadzących dla których zwrócone mają być pozycje w planie</param>
+        /// <param name="GroupsIds">ID grup dla których zwrócone mają być pozycje w planie</param>
+        /// <param name="RoomsIds">ID pokojów dla których zwrócone mają być pozycje w planie</param>
+        /// <param name="Weeks">Tygodnie, które mają zostać wzięte pod uwagę</param>
+        /// <returns>Listę wystąpień spełniających kryteria</returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetFilteredSchedule({CoordinatorsIds},{GroupsIds},{RoomsIds},{Weeks})")]
         [CustomEnableQuery(MaxExpansionDepth = 3)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetFilteredSchedule(
             [FromODataUri] IEnumerable<int> CoordinatorsIds, 
             [FromODataUri] IEnumerable<int> GroupsIds, 
@@ -150,10 +211,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca informacje na temat dostępności pokojów w określonych ramach czasowych w postaci kolekcji obiektów klasy <see cref="RoomAvailability"/>.
+        /// </summary>
+        /// <param name="RoomsIds">ID pokojów</param>
+        /// <param name="PeriodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="Day">Indeks dnia tygodnia</param>
+        /// <param name="Weeks">Tygodnie, które należy wziąć pod uwagę</param>
+        /// <returns>Kolekcję obiektów klasy <see cref="RoomAvailability"/> informujących o dostępności pokojów</returns>
+        /// <response code="200">Zwrócono kolekcję oczekiwanych obiektów</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetRoomsAvailability({RoomsIds},{PeriodIndex},{Day},{Weeks})")]
         [CustomEnableQuery]
         [ODataRoute("Service.GetRoomsAvailability(RoomsIds={RoomsIds},PeriodIndex={PeriodIndex},Day={Day},Weeks={Weeks})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetRoomsAvailibility(
             [FromODataUri] IEnumerable<int> RoomsIds, 
             [FromODataUri] int PeriodIndex, 
@@ -194,8 +267,17 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa wszystkie wystąpienia <see cref="SchedulePosition"/> i powiązane z nimi dane
+        /// - wystąpienia <see cref="Message"/>, <see cref="ScheduledMovePosition"/> i <see cref="ScheduledMove"/>.
+        /// </summary>
+        /// <returns>Informację o tym ile rekordów w bazie zostało usuniętych</returns>
+        /// <response code="200">Usunięcie powiodło się</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
+        [HttpPost("Service.ClearSchedule")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult ClearSchedule()
         {
             try

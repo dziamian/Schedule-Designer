@@ -19,30 +19,68 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
 {
-
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="CoordinatorCourseEdition"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("CoordinatorCourseEditions")]
     public class CoordinatorCourseEditionsController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public CoordinatorCourseEditionsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="CoordinatorCourseEdition"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="CoordinatorCourseEdition"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetCoordinatorCourseEditions()
         {
             return Ok(_unitOfWork.CoordinatorCourseEditions.GetAll());
         }
 
+        /// <summary>
+        /// Tworzy nowe wystąpienie <see cref="CoordinatorCourseEdition"/>.
+        /// </summary>
+        /// <param name="coordinatorCourseEditionDto">Obiekt transferu danych</param>
+        /// <param name="connectionId">ID połączenia z centrum SignalR</param>
+        /// <returns>Nowo utworzone wystąpienie <see cref="CoordinatorCourseEdition"/></returns>
+        /// <response code="201">Zwrócono nowo utworzone wystąpienie</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie transferu; 
+        /// nie zostało podane ID połączenia; 
+        /// plan zajęć jest aktualnie zablokowany;
+        /// nie zostały odnalezione wymagane dane z bazy;
+        /// nie zostały zablokowane wymagane edycje zajęć w bazie (dotyczące wybranego prowadzącego i przypisywanej edycji zajęć);
+        /// nie zostały zablokowane wymagane pozycje harmonogramu w bazie (dotyczące zablokowanych edycji zajęć);
+        /// wykryty został konflikt w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie udało się dodać nowo utworzonego wystąpienia do bazy danych</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
-        public IActionResult CreateCoordinatorCourseEdition([FromBody] CoordinatorCourseEditionDto coordinatorCourseEdition, [FromQuery] string connectionId)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult CreateCoordinatorCourseEdition([FromBody] CoordinatorCourseEditionDto coordinatorCourseEditionDto, [FromQuery] string connectionId)
         {
             if (!ModelState.IsValid)
             {
@@ -64,7 +102,7 @@ namespace ScheduleDesigner.Controllers
                 {
                     var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
 
-                    var user = _unitOfWork.Users.GetFirst(e => e.UserId == coordinatorCourseEdition.CoordinatorId).Result;
+                    var user = _unitOfWork.Users.GetFirst(e => e.UserId == coordinatorCourseEditionDto.CoordinatorId).Result;
 
                     if (user == null || !user.IsCoordinator)
                     {
@@ -72,8 +110,8 @@ namespace ScheduleDesigner.Controllers
                     }
 
                     var currentCourseEdition = _unitOfWork.CourseEditions
-                        .Get(e => e.CourseId == coordinatorCourseEdition.CourseId 
-                        && e.CourseEditionId == coordinatorCourseEdition.CourseEditionId)
+                        .Get(e => e.CourseId == coordinatorCourseEditionDto.CourseId 
+                        && e.CourseEditionId == coordinatorCourseEditionDto.CourseEditionId)
                         .Include(e => e.Coordinators)
                         .FirstOrDefault();
 
@@ -82,13 +120,13 @@ namespace ScheduleDesigner.Controllers
                         return BadRequest("Course edition not found.");
                     }
 
-                    if (currentCourseEdition.Coordinators.Any(e => e.CoordinatorId == coordinatorCourseEdition.CoordinatorId))
+                    if (currentCourseEdition.Coordinators.Any(e => e.CoordinatorId == coordinatorCourseEditionDto.CoordinatorId))
                     {
                         return BadRequest("This coordinator is already assigned.");
                     }
 
                     var coordinatorCourseEditions = _unitOfWork.CoordinatorCourseEditions
-                        .Get(e => e.CoordinatorId == coordinatorCourseEdition.CoordinatorId)
+                        .Get(e => e.CoordinatorId == coordinatorCourseEditionDto.CoordinatorId)
                         .Include(e => e.CourseEdition)
                         .Select(e => e.CourseEdition)
                         .ToList();
@@ -113,7 +151,7 @@ namespace ScheduleDesigner.Controllers
                     try
                     {
                         var notLockedCurrentCourseEdition = _unitOfWork.CourseEditions
-                            .Get(e => e.CourseId == coordinatorCourseEdition.CourseId && e.CourseEditionId == coordinatorCourseEdition.CourseEditionId
+                            .Get(e => e.CourseId == coordinatorCourseEditionDto.CourseId && e.CourseEditionId == coordinatorCourseEditionDto.CourseEditionId
                                 && (e.LockUserId != userId || e.LockUserConnectionId != connectionId))
                             .ToList();
 
@@ -123,7 +161,7 @@ namespace ScheduleDesigner.Controllers
                         }
 
                         var notLockedCourseEditions = _unitOfWork.CoordinatorCourseEditions
-                            .Get(e => e.CoordinatorId == coordinatorCourseEdition.CoordinatorId 
+                            .Get(e => e.CoordinatorId == coordinatorCourseEditionDto.CoordinatorId 
                                 && (e.CourseEdition.LockUserId != userId || e.CourseEdition.LockUserConnectionId != connectionId))
                             .Include(e => e.CourseEdition)
                             .ToList();
@@ -188,7 +226,7 @@ namespace ScheduleDesigner.Controllers
                             }
 
                             //add
-                            var _coordinatorCourseEdition = _unitOfWork.CoordinatorCourseEditions.Add(coordinatorCourseEdition.FromDto()).Result;
+                            var _coordinatorCourseEdition = _unitOfWork.CoordinatorCourseEditions.Add(coordinatorCourseEditionDto.FromDto()).Result;
 
                             if (_coordinatorCourseEdition != null)
                             {
@@ -222,9 +260,22 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa pojedyncze istniejące wystąpienie <see cref="CoordinatorCourseEdition"/>.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID edycji zajęć</param>
+        /// <param name="key3">ID prowadzącego</param>
+        /// <returns>Informację o powodzeniu procesu usunięcia</returns>
+        /// <response code="204">Usunięto wystąpienie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono wystąpienia, które miało zostać usunięte</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpDelete]
+        [HttpDelete("{key1},{key2},{key3}")]
         [ODataRoute("({key1},{key2},{key3})")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCoordinatorCourseEdition([FromODataUri] int key1, [FromODataUri] int key2, [FromODataUri] int key3)
         {
             try

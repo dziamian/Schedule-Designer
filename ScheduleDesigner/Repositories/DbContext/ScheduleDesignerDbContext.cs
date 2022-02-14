@@ -10,27 +10,88 @@ using Microsoft.Data.SqlClient;
 
 namespace ScheduleDesigner.Repositories
 {
+    /// <summary>
+    /// Klasa kontekstu połączenia z bazą danych.
+    /// </summary>
     public class ScheduleDesignerDbContext : DbContext
     {
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Authorization"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Authorization> Authorizations { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="User"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<User> Users { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Settings"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Settings> Settings { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="CourseType"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<CourseType> CourseTypes { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Course"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Course> Courses { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Group"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Group> Groups { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="StudentGroup"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="CourseEdition"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<CourseEdition> CourseEditions { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="CoordinatorCourseEdition"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<CoordinatorCourseEdition> CoordinatorCourseEditions { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="GroupCourseEdition"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<GroupCourseEdition> GroupCourseEditions { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="RoomType"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<RoomType> RoomTypes { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Room"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Room> Rooms { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="CourseRoom"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<CourseRoom> CourseRooms { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Timestamp"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Timestamp> Timestamps { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="SchedulePosition"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<SchedulePosition> SchedulePositions { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="ScheduledMovePosition"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<ScheduledMovePosition> ScheduledMovePositions { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="ScheduledMove"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<ScheduledMove> ScheduledMoves { get; set; }
+        /// <summary>
+        /// Reprezentacja kolekcji instancji <see cref="Message"/> w bazie danych.
+        /// </summary>
         public virtual DbSet<Message> Messages { get; set; }
 
+        /// <summary>
+        /// Konstruktor kontekstu połączenia z bazą danych.
+        /// </summary>
+        /// <param name="options">Opcje konfigurujące kontekst</param>
         public ScheduleDesignerDbContext(DbContextOptions<ScheduleDesignerDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

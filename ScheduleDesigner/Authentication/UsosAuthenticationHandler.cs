@@ -11,12 +11,29 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Authentication
 {
+    /// <summary>
+    /// Opcje użyte do konfiguracji obsługi procesu uwierzytelniania.
+    /// </summary>
     public class UsosAuthenticationOptions : AuthenticationSchemeOptions { }
     
+    /// <summary>
+    /// Klasa obsługi procesu uwierzytelniania w systemie.
+    /// </summary>
     public class UsosAuthenticationHandler : AuthenticationHandler<UsosAuthenticationOptions>
     {
+        /// <summary>
+        /// Instancja serwisu zapewniającego poprawną komunikację z zewnętrznym systemem USOS
+        /// </summary>
         private readonly UsosAuthenticationService _usosService;
 
+        /// <summary>
+        /// Konstruktor obsługi uwierzytelniania wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="options">Wstrzyknięte opcje użyte do konfiguracji obsługi procesu uwierzytelniania</param>
+        /// <param name="logger">Wstrzyknięty loger zdarzeń</param>
+        /// <param name="encoder">Wstrzyknięty koder adresów URL</param>
+        /// <param name="clock">Wstrzyknięty zegar systemowy</param>
+        /// <param name="usosService">Wstrzyknięta instancja serwisu do komunikacji z systemem USOS</param>
         public UsosAuthenticationHandler(
             IOptionsMonitor<UsosAuthenticationOptions> options,
             ILoggerFactory logger,
@@ -29,6 +46,10 @@ namespace ScheduleDesigner.Authentication
             _usosService = usosService;
         }
 
+        /// <summary>
+        /// Funkcja obsługująca proces uwierzytelniania.
+        /// </summary>
+        /// <returns>Asynchroniczna operacja przechowująca rezultat procesu uwierzytelniania</returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             try
@@ -44,7 +65,7 @@ namespace ScheduleDesigner.Authentication
                 var userId = await _usosService.GetUserId(accessToken, accessTokenSecret);
                 if (userId != -1)
                 {
-                    return ValidateToken(userId);
+                    return Validate(userId);
                 }
                 
                 var oauth = _usosService.GetOAuthRequest(
@@ -54,7 +75,7 @@ namespace ScheduleDesigner.Authentication
                 var userInfo = await _usosService.GetUserId(oauth);
                 userId = int.Parse(userInfo.Id);
                 await _usosService.UpdateCredentials(userId, accessToken, accessTokenSecret);
-                return ValidateToken(userId);
+                return Validate(userId);
 
             }
             catch (Exception e)
@@ -63,7 +84,12 @@ namespace ScheduleDesigner.Authentication
             }
         }
 
-        private AuthenticateResult ValidateToken(int userId)
+        /// <summary>
+        /// Funkcja weryfikująca użytkownika i nadająca mu odpowiednie roszczenia.
+        /// </summary>
+        /// <param name="userId">Identyfikator użytkownika</param>
+        /// <returns>Rezultat procesu uwierzytelniania</returns>
+        private AuthenticateResult Validate(int userId)
         {
             var user = _usosService.GetUserFromDb(userId);
 

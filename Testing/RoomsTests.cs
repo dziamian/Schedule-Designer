@@ -17,12 +17,30 @@ using System.Text;
 
 namespace Testing
 {
+    /// <summary>
+    /// Klasa zawierająca testy jednostkowe dotyczące pokojów.
+    /// </summary>
     public class RoomsTests
     {
+        /// <summary>
+        /// Fałszywy kontekst połączenia z bazą danych.
+        /// </summary>
         private ScheduleDesignerDbContext mockDbContext;
+
+        /// <summary>
+        /// Fałszywa implementacja wzorca UoW.
+        /// </summary>
         private Mock<UnitOfWork> mockUnitOfWork;
+
+        /// <summary>
+        /// Fałszywa tożsamość użytkownika.
+        /// </summary>
         private GenericPrincipal mockUser;
 
+        /// <summary>
+        /// Metoda przygotowująca dane niezbędne do wykonania testów jednostkowych.
+        /// Tworzy fałszywy kontekst połączenia z bazą danych i zasila go.
+        /// </summary>
         private void PrepareData()
         {
             var timestamps = new List<Timestamp>
@@ -95,6 +113,9 @@ namespace Testing
             mockDbContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Metoda tworząca fałszywą tożsamość użytkownika.
+        /// </summary>
         private void PrepareUser()
         {
             var claims = new List<Claim>
@@ -107,6 +128,10 @@ namespace Testing
 
         }
 
+        /// <summary>
+        /// Metoda wywoływana przed każdym testem jednostkowym przygotowująca dane, 
+        /// fałszywą tożsamość użytkownika i fałszywą implementację wzorca UoW.
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -116,6 +141,10 @@ namespace Testing
             mockUnitOfWork = new Mock<UnitOfWork>(mockDbContext);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="SchedulePositionsController.GetRoomsAvailibility"/>
+        /// zwraca poprawne rezultaty - wszystkie zwrócone pokoje powinny być zajęte.
+        /// </summary>
         [Test]
         public void GetRoomsAvailibility_ShouldNotBeAvailable()
         {
@@ -144,6 +173,10 @@ namespace Testing
             }, ((Dictionary<int, RoomAvailability>.ValueCollection)okResult.Value).ToList());
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="SchedulePositionsController.GetRoomsAvailibility"/>
+        /// zwraca poprawne rezultaty - wszystkie zwrócone pokoje powinny być dostępne.
+        /// </summary>
         [Test]
         public void GetRoomsAvailibility_ShouldBeAvailable()
         {

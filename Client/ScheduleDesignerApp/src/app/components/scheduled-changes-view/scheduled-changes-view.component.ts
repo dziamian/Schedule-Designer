@@ -9,6 +9,9 @@ import { ScheduledMoveDetails, ScheduledMoveInfo } from 'src/app/others/Schedule
 import { ScheduleDesignerApiService } from 'src/app/services/ScheduleDesignerApiService/schedule-designer-api.service';
 import { SignalrService } from 'src/app/services/SignalrService/signalr.service';
 
+/**
+ * Komponent okna dialogowego do przeglądania i zarządzania zaplanowanymi zmianami w planie i propozycjami.
+ */
 @Component({
   selector: 'app-scheduled-changes-view',
   templateUrl: './scheduled-changes-view.component.html',
@@ -16,14 +19,18 @@ import { SignalrService } from 'src/app/services/SignalrService/signalr.service'
 })
 export class ScheduledChangesViewComponent implements OnInit {
 
+  /** Informacje o wszystkich ruchach, które należy wyświetlić na ekranie. */
   scheduledMoves:ScheduledMoveDetails[] = [];
   
   isInfoVisible:boolean = false;
+  /** Dodatkowe informacje o wybranym przez użytkownika ruchu. */
   scheduledMoveInfo:ScheduledMoveInfo|null = null;
 
+  /** Informuje czy dane zostały załadowane. */
   loading:boolean = true;
   isConnectedSubscription: Subscription;
 
+  /** Utworzone subskrypcje odbierające powiadomienia z centrum SignalR. */
   signalrSubscriptions: Subscription[];
 
   constructor(
@@ -34,6 +41,11 @@ export class ScheduledChangesViewComponent implements OnInit {
     private snackBar:MatSnackBar
   ) { }
 
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane dotyczące zaplanowanych zmian i propozycji, które należy wyświetlić.
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR dotyczących wybranych pozycji na planie.
+   */
   ngOnInit(): void {
     this.dialogRef.backdropClick().subscribe(event => {
       this.dialogRef.close(ScheduledChangesDialogResult.EMPTY);
@@ -232,6 +244,10 @@ export class ScheduledChangesViewComponent implements OnInit {
     return CourseEdition.ShowFrequency(this.data.Settings, weeks);
   }
 
+  /**
+   * Metoda wyświetlająca dodatkowe informacje na temat wybranej zmiany lub propozycji.
+   * @param selectedScheduledMove Wybrana zmiana lub propozycja
+   */
   ShowInfo(selectedScheduledMove:ScheduledMoveDetails) {
     if (!this.isInfoVisible) {
       this.isInfoVisible = true;
@@ -243,6 +259,10 @@ export class ScheduledChangesViewComponent implements OnInit {
     });
   }
 
+  /**
+   * Metoda wykonuje operację usunięcia zaplanowanej zmiany lub propozycji z systemu.
+   * @param selectedScheduledMove Wybrana zmiana lub propozycja
+   */
   async Remove(selectedScheduledMove:ScheduledMoveDetails) {
     selectedScheduledMove.IsRemoving = true;
     var isLocked = false;
@@ -314,6 +334,10 @@ export class ScheduledChangesViewComponent implements OnInit {
     selectedScheduledMove.IsRemoving = false;
   }
 
+  /**
+   * Metoda wykonuje operację zaakceptowania propozycji w systemie.
+   * @param selectedScheduledMove Wybrana propozycja
+   */
   async Accept(selectedScheduledMove:ScheduledMoveDetails) {
     selectedScheduledMove.IsAccepting = true;
     var isLocked = false;

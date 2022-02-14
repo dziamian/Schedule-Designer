@@ -18,19 +18,47 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="StudentGroup"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("StudentGroups")]
     public class StudentGroupsController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public StudentGroupsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Tworzy nowe wystąpienie <see cref="StudentGroup"/>.
+        /// </summary>
+        /// <param name="studentGroupDto">Obiekt transferu danych</param>
+        /// <returns>Nowo utworzone wystąpienie <see cref="StudentGroup"/></returns>
+        /// <response code="201">Zwrócono nowo utworzone wystąpienie</response>
+        /// <response code="400">
+        /// Błędne dane w obiekcie transferu; 
+        /// plan zajęć jest aktualnie zablokowany;
+        /// wybrany użytkownik nie posiada roli studenta;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie udało się dodać nowo utworzonego wystąpienia do bazy danych</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult CreateStudentGroup([FromBody] StudentGroupDto studentGroupDto)
         {
             if (!ModelState.IsValid)
@@ -74,19 +102,37 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="StudentGroup"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="StudentGroup"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetStudentGroups()
         {
             return Ok(_unitOfWork.StudentGroups.GetAll());
         }
-        
+
+        /// <summary>
+        /// Zwraca pojedyncze wystąpienie <see cref="StudentGroup"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID grupy</param>
+        /// <param name="key2">ID studenta (użytkownika)</param>
+        /// <returns>Znalezione pojedyncze wystąpienie <see cref="StudentGroup"/></returns>
+        /// <response code="200">Zwrócono żądane wystąpienie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet]
+        [HttpGet("{key1},{key2}")]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetStudentGroup([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
@@ -105,8 +151,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca listę grup, do których należy użytkownik.
+        /// </summary>
+        /// <returns>Listę grup, do których należy użytkownik</returns>
+        /// <response code="200">Zwrócono listę grup, do których należy użytkownik</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("Service.GetMyGroups()")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetMyGroups()
         {
             try
@@ -133,9 +187,18 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca listę studentów dla podanych grup.
+        /// </summary>
+        /// <param name="GroupsIds">Kolekcja identyfikatorów grup studenckich</param>
+        /// <returns>Listę studentów, którzy należą do podanych grup</returns>
+        /// <response code="200">Zwrócono listę studentów, którzy należą do danych grup</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpGet]
+        [HttpGet("Service.GetGroupsStudents({GroupsIds})")]
         [CustomEnableQuery]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GetGroupsStudents([FromODataUri] IEnumerable<int> GroupsIds)
         {
             try
@@ -164,8 +227,26 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest("Unexpected error. Please try again later.");
             }
         }
+
+        /// <summary>
+        /// Nadaje lub zabiera rolę starosty grupy studentowi (użytkownikowi).
+        /// </summary>
+        /// <param name="parameters">Wymagane parametry akcji OData
+        /// - UserId (integer): identyfikator użytkownika posiadającego rolę studenta
+        /// - GroupId (integer): identyfikator grupy studenckiej
+        /// - Role (boolean): prawda - nadanie roli starosty, fałsz - odebranie roli starosty</param>
+        /// <returns>Informację o powodzeniu operacji</returns>
+        /// <response code="200"></response>
+        /// <response code="400">
+        /// Błędne dane przekazane jako parametry żądania;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// użytkownik nie posiada roli studenta w systemie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
+        [HttpPost("Service.GiveOrRemoveRepresentativeRole")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult GiveOrRemoveRepresentativeRole(ODataActionParameters parameters)
         {
             if (!ModelState.IsValid)
@@ -231,9 +312,26 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Nadpisuje pojedyncze wystąpienie <see cref="StudentGroup"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID grupy</param>
+        /// <param name="key2">ID studenta (użytkownika)</param>
+        /// <param name="delta">Obiekt śledzący zmiany dla wysłanego wystąpienia</param>
+        /// <returns>Nadpisane zażądane wystąpienie <see cref="StudentGroup"/></returns>
+        /// <response code="200">Nadpisane zażądane wystąpienie</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie przypisania studenta do grupy;
+        /// plan zajęć jest aktualnie zablokowany;
+        /// użytkownik nie posiada roli studenta w systemie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPatch]
+        [HttpPatch("{key1},{key2}")]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult UpdateStudentGroup([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<StudentGroup> delta)
         {
             if (!ModelState.IsValid)
@@ -279,10 +377,22 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest("Unexpected error. Please try again later.");
             }
         }
-        
+
+        /// <summary>
+        /// Usuwa pojedyncze wystąpienie <see cref="StudentGroup"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID grupy</param>
+        /// <param name="key2">ID studenta (użytkownika)</param>
+        /// <returns>Informację o powodzeniu procesu usunięcia</returns>
+        /// <response code="204">Usunięcie powiodło się</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpDelete]
+        [HttpDelete("{key1},{key2}")]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteStudentGroup([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
@@ -303,8 +413,16 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa wszystkie wystąpienia <see cref="StudentGroup"/>.
+        /// </summary>
+        /// <returns>Informację o tym ile rekordów w bazie zostało usuniętych</returns>
+        /// <response code="200">Usunięcie powiodło się</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
+        [HttpPost("Service.ClearStudentGroups")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult ClearStudentGroups()
         {
             try

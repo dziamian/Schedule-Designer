@@ -7,6 +7,9 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
+    /// <summary>
+    /// Interfejs będący rozszerzeniem generycznego repozytorium dla modelu <see cref="Timestamp"/>.
+    /// </summary>
     public interface ITimestampRepo : IRepoBase<Timestamp>
     {
     }

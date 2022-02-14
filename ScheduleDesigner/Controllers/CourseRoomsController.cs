@@ -17,19 +17,45 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="CourseRoom"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("CourseRooms")]
     public class CourseRoomsController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public CourseRoomsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Tworzy nowe wystąpienie <see cref="CourseRoom"/>.
+        /// </summary>
+        /// <param name="courseRoomDto">Obiekt transferu danych</param>
+        /// <returns>Nowo utworzone wystąpienie <see cref="CourseRoom"/></returns>
+        /// <response code="201">Zwrócono nowo utworzone wystąpienie</response>
+        /// <response code="400">
+        /// Błędne dane w obiekcie transferu; 
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie udało się dodać nowo utworzonego wystąpienia do bazy danych</response>
         [Authorize(Policy = "Assistant")]
         [HttpPost]
         [ODataRoute("")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> CreateCourseRoom([FromBody] CourseRoomDto courseRoomDto)
         {
             if (!ModelState.IsValid)
@@ -67,19 +93,37 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="CourseRoom"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="CourseRoom"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetCourseRooms()
         {
             return Ok(_unitOfWork.CourseRooms.GetAll());
         }
 
+        /// <summary>
+        /// Zwraca pojedyncze wystąpienie <see cref="CourseRoom"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID pokoju</param>
+        /// <returns>Znalezione pojedyncze wystąpienie <see cref="CourseRoom"/></returns>
+        /// <response code="200">Zwrócono żądane wystąpienie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("{key1},{key2}")]
         [CustomEnableQuery]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetCourseRoom([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try
@@ -99,9 +143,25 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Nadpisuje pojedyncze wystąpienie <see cref="CourseRoom"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID pokoju</param>
+        /// <param name="delta">Obiekt śledzący zmiany dla wysłanego wystąpienia</param>
+        /// <returns>Nadpisane zażądane wystąpienie <see cref="CourseRoom"/></returns>
+        /// <response code="200">Nadpisane zażądane wystąpienie</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie przypisania pokoju do przedmiotu;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPatch]
+        [HttpPatch("{key1},{key2}")]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateCourseRoom([FromODataUri] int key1, [FromODataUri] int key2, [FromBody] Delta<CourseRoom> delta)
         {
             if (!ModelState.IsValid)
@@ -130,10 +190,24 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Usuwa pojedyncze wystąpienie <see cref="CourseRoom"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key1">ID przedmiotu</param>
+        /// <param name="key2">ID pokoju</param>
+        /// <returns>Informację o powodzeniu procesu usunięcia</returns>
+        /// <response code="204">Usunięcie powiodło się</response>
+        /// <response code="400">
+        /// Nie udało się usunąć danych związanych z przypisaniem pokoju do przedmiotu ze względu na wystąpienie z nim powiązań w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpDelete]
+        [HttpDelete("{key1},{key2}")]
         [ODataRoute("({key1},{key2})")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCourseRoom([FromODataUri] int key1, [FromODataUri] int key2)
         {
             try

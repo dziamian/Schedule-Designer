@@ -1,6 +1,11 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { Settings } from "./Settings";
 
+/**
+ * Funkcja weryfikująca pola w formularzu, w którym należy wprowadzić liczbę minut zajęć do odbycia w ciągu semestru.
+ * @param settings Ustawienia aplikacji
+ * @returns Występujące błędy lub null
+ */
 export function validUnitsMinutes(settings: Settings): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
         const hoursControl = formGroup.get('hours');
@@ -27,6 +32,10 @@ export function validUnitsMinutes(settings: Settings): ValidatorFn {
     };
 }
 
+/**
+ * Funkcja weryfikująca pola w formularzu, w którym należy wprowadzić liczbę minut pojedynczej jednostki zajęciowej i zweryfikować liczbę okienek w ciągu dnia.
+ * @returns Występujące błędy lub null
+ */
 export function validPeriods(): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
         const hoursControl = formGroup.get('courseDurationHours');

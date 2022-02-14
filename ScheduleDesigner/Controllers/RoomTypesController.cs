@@ -16,19 +16,45 @@ using ScheduleDesigner.Dtos;
 
 namespace ScheduleDesigner.Controllers
 {
+    /// <summary>
+    /// Kontroler API przeznaczony do zarządzania <see cref="RoomType"/>.
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ODataRoutePrefix("RoomTypes")]
     public class RoomTypesController : ODataController
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Konstruktor kontrolera wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public RoomTypesController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Tworzy nowe wystąpienie <see cref="RoomType"/>.
+        /// </summary>
+        /// <param name="roomTypeDto">Obiekt transferu danych</param>
+        /// <returns>Nowo utworzone wystąpienie <see cref="RoomType"/></returns>
+        /// <response code="201">Zwrócono nowo utworzone wystąpienie</response>
+        /// <response code="400">
+        /// Błędne dane w obiekcie transferu; 
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie udało się dodać nowo utworzonego wystąpienia do bazy danych</response>
         [Authorize(Policy = "AdministratorOnly")]
         [HttpPost]
         [ODataRoute("")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> CreateRoomType([FromBody] RoomTypeDto roomTypeDto)
         {
             if (!ModelState.IsValid)
@@ -54,19 +80,36 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca wszystkie wystąpienia <see cref="RoomType"/>.
+        /// </summary>
+        /// <returns>Listę wystąpień <see cref="RoomType"/></returns>
+        /// <response code="200">Zwrócono listę wystąpień</response>
         [Authorize]
         [HttpGet]
         [CustomEnableQuery]
         [ODataRoute("")]
+        [ProducesResponseType(200)]
         public IActionResult GetRoomTypes()
         {
             return Ok(_unitOfWork.RoomTypes.GetAll());
         }
 
+        /// <summary>
+        /// Zwraca pojedyncze wystąpienie <see cref="RoomType"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key">ID typu pokoju</param>
+        /// <returns>Znalezione pojedyncze wystąpienie <see cref="RoomType"/></returns>
+        /// <response code="200">Zwrócono żądane wystąpienie</response>
+        /// <response code="400">Nastąpił nieprzewidziany błąd</response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("{key}")]
         [CustomEnableQuery]
         [ODataRoute("({key})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetRoomType([FromODataUri] int key)
         {
             try
@@ -85,9 +128,24 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Nadpisuje pojedyncze wystąpienie <see cref="RoomType"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key">ID typu pokoju</param>
+        /// <param name="delta">Obiekt śledzący zmiany dla wysłanego wystąpienia</param>
+        /// <returns>Nadpisane zażądane wystąpienie <see cref="RoomType"/></returns>
+        /// <response code="200">Nadpisane zażądane wystąpienie</response>
+        /// <response code="400">
+        /// Nieprawidłowe dane w obiekcie typu pokoju;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPatch]
+        [HttpPatch("{key}")]
         [ODataRoute("({key})")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateRoomType([FromODataUri] int key, [FromBody] Delta<RoomType> delta)
         {
             if (!ModelState.IsValid)
@@ -114,10 +172,24 @@ namespace ScheduleDesigner.Controllers
                 return BadRequest("Unexpected error. Please try again later.");
             }
         }
-        
+
+        /// <summary>
+        /// Usuwa pojedyncze wystąpienie <see cref="RoomType"/> na podstawie jego ID.
+        /// </summary>
+        /// <param name="key">ID typu pokoju</param>
+        /// <returns>Informację o powodzeniu procesu usunięcia</returns>
+        /// <response code="204">Usunięcie powiodło się</response>
+        /// <response code="400">
+        /// Nie udało się usunąć danych związanych z typem pokoju ze względu na wystąpienie z nim powiązań w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
+        /// <response code="404">Nie znaleziono żądanego wystąpienia</response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpDelete]
+        [HttpDelete("{key}")]
         [ODataRoute("({key})")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteRoomType([FromODataUri] int key)
         {
             try
@@ -150,8 +222,19 @@ namespace ScheduleDesigner.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa wszystkie wystąpienia <see cref="RoomType"/>.
+        /// </summary>
+        /// <returns>Informację o tym ile rekordów w bazie zostało usuniętych</returns>
+        /// <response code="200">Usunięcie powiodło się</response>
+        /// <response code="400">
+        /// Nie udało się usunąć danych związanych z typami pokojów ze względu na wystąpienie z nimi powiązań w planie;
+        /// nastąpił nieprzewidziany błąd
+        /// </response>
         [Authorize(Policy = "AdministratorOnly")]
-        [HttpPost]
+        [HttpPost("Service.ClearRoomTypes")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult ClearRoomTypes()
         {
             try

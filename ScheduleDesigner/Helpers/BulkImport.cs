@@ -11,8 +11,18 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Helpers
 {
+    /// <summary>
+    /// Klasa przeznaczona do importowania dużej ilości danych do bazy.
+    /// </summary>
+    /// <typeparam name="T">Klasa, dla której dane będą importowane</typeparam>
     public static class BulkImport<T> where T : class
     {
+        /// <summary>
+        /// Funkcja odczytująca dane z pliku CSV.
+        /// </summary>
+        /// <param name="file">Reprezentacja pliku CSV</param>
+        /// <param name="delimiter">Ogranicznik między poszczególnymi danymi w wierszu pliku</param>
+        /// <returns>Asynchroniczną operację przechowującą listę odczytanych rekordów z pliku</returns>
         public static async Task<List<T>> ReadCsv(IFormFile file, string delimiter = "|")
         {
             using var memoryStream = new MemoryStream(new byte[file.Length]);
@@ -27,6 +37,13 @@ namespace ScheduleDesigner.Helpers
             return csvReader.GetRecords<T>().ToList();
         }
 
+        /// <summary>
+        /// Funkcja importująca dużą ilość danych do bazy.
+        /// </summary>
+        /// <param name="connectionString">Wyrażenie wymagane do połączenia się z bazą danych</param>
+        /// <param name="destinationTable">Nazwa tabeli w bazie danych, do której mają zostać załadowane dane</param>
+        /// <param name="records">Lista rekordów do zaimportowania</param>
+        /// <returns>Liczbę zaimportowanych rekordów do bazy</returns>
         public static int Execute(string connectionString, string destinationTable, List<T> records)
         {
             using var connection = new SqlConnection(connectionString);

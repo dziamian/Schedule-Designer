@@ -35,7 +35,6 @@ export class AuthenticatedComponent implements OnInit {
         token => {
           AccessToken.RemoveRequest();
           token.Save();
-          console.log(token);
 
           this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {
             this.store.dispatch(setUserInfo({userInfo}));

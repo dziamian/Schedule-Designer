@@ -7,6 +7,9 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
+    /// <summary>
+    /// Interfejs będący rozszerzeniem generycznego repozytorium dla modelu <see cref="Room"/>.
+    /// </summary>
     public interface IRoomRepo : IRepoBase<Room>
     {
     }

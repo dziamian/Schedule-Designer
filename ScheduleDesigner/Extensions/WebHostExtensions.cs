@@ -12,8 +12,16 @@ using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Extensions
 {
+    /// <summary>
+    /// Klasa zawierająca rozszerzenia wywoływane podczas uruchomienia programu.
+    /// </summary>
     public static class WebHostExtensions
     {
+        /// <summary>
+        /// Metoda odblokowująca wszystkie istniejące zasoby w bazie danych.
+        /// </summary>
+        /// <param name="host">Abstrakcja reprezentująca program</param>
+        /// <returns>Abstrakcję reprezentującą program</returns>
         public static IHost UnlockAllResources(this IHost host)
         {
             using (var scope = host.Services.CreateScope())
@@ -43,6 +51,12 @@ namespace ScheduleDesigner.Extensions
             return host;
         }
 
+        /// <summary>
+        /// Metoda ustawiająca domyślne ustawienia aplikacji, jeżeli żadne nie zostały ustawione.
+        /// </summary>
+        /// <param name="host"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static IHost SetDefaultSettings(this IHost host)
         {
             using (var scope = host.Services.CreateScope())

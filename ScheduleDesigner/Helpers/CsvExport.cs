@@ -7,16 +7,32 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Models
 {
+    /// <summary>
+    /// Klasa przeznaczona do eksportowania danych do plików CSV.
+    /// </summary>
     public class CsvExport : FileResult
     {
+        /// <summary>
+        /// Dane do wyeksportowania.
+        /// </summary>
         private readonly IEnumerable<IExportCsv> _data;
 
+        /// <summary>
+        /// Konstruktor klasy.
+        /// </summary>
+        /// <param name="data">Dane do wyeksportowania</param>
+        /// <param name="fileDownloadName">Nazwa pliku CSV</param>
         public CsvExport(IEnumerable<IExportCsv> data, string fileDownloadName) : base("text/csv")
         {
             _data = data;
             FileDownloadName = fileDownloadName;
         }
 
+        /// <summary>
+        /// Funkcja wypisująca dane do ciała kontekstu będącego częścią żądania HTTP.
+        /// </summary>
+        /// <param name="context">Kontekst będący częścią żądania HTTP</param>
+        /// <returns>Asynchroniczną operację</returns>
         public async override Task ExecuteResultAsync(ActionContext context)
         {
             var response = context.HttpContext.Response;

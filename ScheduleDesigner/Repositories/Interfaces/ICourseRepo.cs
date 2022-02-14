@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
+    /// <summary>
+    /// Interfejs będący rozszerzeniem generycznego repozytorium dla modelu <see cref="Course"/>.
+    /// </summary>
     public interface ICourseRepo : IRepoBase<Course>
     {
 

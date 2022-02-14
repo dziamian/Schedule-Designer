@@ -7,7 +7,10 @@ using ScheduleDesigner.Repositories.Base;
 
 namespace ScheduleDesigner.Repositories.Interfaces
 {
-    public interface ICoordinatorCourseEditionRepo : IRepoBase<Models.CoordinatorCourseEdition>
+    /// <summary>
+    /// Interfejs będący rozszerzeniem generycznego repozytorium dla modelu <see cref="CoordinatorCourseEdition"/>.
+    /// </summary>
+    public interface ICoordinatorCourseEditionRepo : IRepoBase<CoordinatorCourseEdition>
     {
     }
 }

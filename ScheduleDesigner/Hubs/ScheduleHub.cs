@@ -18,31 +18,66 @@ using ScheduleDesigner.Repositories.UnitOfWork;
 
 namespace ScheduleDesigner.Hubs
 {
+    /// <summary>
+    /// Implementacja centrum SignalR obsługująca krytyczną sekcję systemu 
+    /// związaną z układaniem planu zajęć przez wiele połączonych osób jednocześnie.
+    /// </summary>
     [Authorize]
     public class ScheduleHub : Hub<IScheduleClient>
     {
+        /// <summary>
+        /// Instancja klasy wzorca UoW.
+        /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Kolekcja obiektów reprezentujących konkretne edycje zajęć przeznaczonych do blokowania przez wątki połączeń użytkowników.
+        /// </summary>
         public static readonly ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>
             CourseEditionLocks = new ConcurrentDictionary<CourseEditionKey, ConcurrentQueue<object>>();
 
+        /// <summary>
+        /// Kolekcja obiektów reprezentujących konkretne pozycje w planie przeznaczonych do blokowania przez wątki połączeń użytkowników.
+        /// Używana jest do synchronizacji dostępu do pierwszej sekcji krytycznej (zewnętrznej).
+        /// </summary>
         public static readonly ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>
             SchedulePositionLocksL1 = new ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>();
 
+        /// <summary>
+        /// Kolekcja obiektów reprezentujących konkretne pozycje w planie przeznaczonych do blokowania przez wątki połączeń użytkowników.
+        /// Używana jest do synchronizacji dostępu do drugiej sekcji krytycznej (wewnętrznej).
+        /// </summary>
         public static readonly ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>
             SchedulePositionLocksL2 = new ConcurrentDictionary<SchedulePositionKey, ConcurrentQueue<object>>();
 
+        /// <summary>
+        /// Kolekcja obiektów reprezentujących konkretne pozycje w planie (z perspektywy prowadzących) 
+        /// przeznaczonych do blokowania przez wątki połączeń użytkowników.
+        /// </summary>
         private static readonly ConcurrentDictionary<CoordinatorPositionKey, ConcurrentQueue<object>>
             CoordinatorPositionLocks = new ConcurrentDictionary<CoordinatorPositionKey, ConcurrentQueue<object>>();
 
+        /// <summary>
+        /// Kolekcja obiektów reprezentujących konkretne pozycje w planie (z perspektywy grup studenckich) 
+        /// przeznaczonych do blokowania przez wątki połączeń użytkowników.
+        /// </summary>
         private static readonly ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>
             GroupPositionLocks = new ConcurrentDictionary<GroupPositionKey, ConcurrentQueue<object>>();
 
+        /// <summary>
+        /// Konstruktor centrum SignalR wykorzystujący wstrzykiwanie zależności.
+        /// </summary>
+        /// <param name="unitOfWork">Wstrzyknięta instancja klasy wzorca UoW</param>
         public ScheduleHub(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywany w danym momencie obiekt reprezentujący konkretną edycję zajęć.
+        /// </summary>
+        /// <param name="courseEditionQueue">Kolejka z reprezentacjami edycji zajęć</param>
+        /// <param name="courseEditionKey">Identyfikator obiektu będącego reprezentacją edycji zajęć</param>
         public static void RemoveCourseEditionLock(
             ConcurrentQueue<object> courseEditionQueue,
             CourseEditionKey courseEditionKey)
@@ -54,6 +89,10 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące poszczególne edycje zajęć.
+        /// </summary>
+        /// <param name="courseEditions">Kolekcja obiektów reprezentujących edycje zajęć</param>
         public static void RemoveCourseEditionsLocks(
             SortedList<CourseEditionKey, ConcurrentQueue<object>> courseEditions)
         {
@@ -67,6 +106,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywany w danym momencie obiekt reprezentujący konkretną pozycję w planie 
+        /// z kolekcji dotyczącej pierwszej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
+        /// <param name="key">Identyfikator obiektu będącego reprezentacją pozycji w planie</param>
         public static void RemoveSchedulePositionLockL1(
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions,
             SchedulePositionKey key)
@@ -82,6 +127,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące konkretne pozycje w planie 
+        /// z kolekcji dotyczącej pierwszej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositionQueues">Lista kolejek z reprezentacjami pozycji w planie</param>
+        /// <param name="schedulePositionKeys">Identyfikatory obiektów będących reprezentacjami pozycji w planie</param>
         public static void RemoveSchedulePositionsLocksL1(
             List<ConcurrentQueue<object>> schedulePositionQueues,
             List<SchedulePositionKey> schedulePositionKeys)
@@ -96,6 +147,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące konkretne pozycje w planie 
+        /// z kolekcji dotyczącej pierwszej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
         public static void RemoveSchedulePositionsLocksL1(
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
@@ -109,6 +165,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywany w danym momencie obiekt reprezentujący konkretną pozycję w planie 
+        /// z kolekcji dotyczącej drugiej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
+        /// <param name="key">Identyfikator obiektu będącego reprezentacją pozycji w planie</param>
         public static void RemoveSchedulePositionLockL2(
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions,
             SchedulePositionKey key)
@@ -124,6 +186,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące konkretne pozycje w planie 
+        /// z kolekcji dotyczącej drugiej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositionQueues">Lista kolejek z reprezentacjami pozycji w planie</param>
+        /// <param name="schedulePositionKeys">Identyfikatory obiektów będących reprezentacjami pozycji w planie</param>
         public static void RemoveSchedulePositionsLocksL2(
             List<ConcurrentQueue<object>> schedulePositionQueues,
             List<SchedulePositionKey> schedulePositionKeys)
@@ -138,6 +206,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące konkretne pozycje w planie 
+        /// z kolekcji dotyczącej drugiej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
         public static void RemoveSchedulePositionsLocksL2(
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
         {
@@ -151,6 +224,10 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące konkretne pozycje w planie (z perspektywy prowadzących).
+        /// </summary>
+        /// <param name="coordinatorPositions">Kolekcja obiektów reprezentujących pozycje w planie (z perspektywy prowadzących)</param>
         public static void RemoveCoordinatorPositionsLocks(
             SortedList<CoordinatorPositionKey, ConcurrentQueue<object>> coordinatorPositions)
         {
@@ -164,6 +241,10 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwająca niewykorzystywane w danym momencie obiekty reprezentujące konkretne pozycje w planie (z perspektywy grup).
+        /// </summary>
+        /// <param name="groupPositions">Kolekcja obiektów reprezentujących pozycje w planie (z perspektywy grup)</param>
         public static void RemoveGroupPositionsLocks(
             SortedList<GroupPositionKey, ConcurrentQueue<object>> groupPositions)
         {
@@ -177,6 +258,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące edycje zajęć.
+        /// </summary>
+        /// <param name="courseEditionKeys">Identyfikatory obiektów będących reprezentacjami edycji zajęć</param>
+        /// <param name="courseEditionQueues">Kolekcja obiektów reprezentujących edycje zajęć</param>
         public static void AddCourseEditionsLocks(
             List<CourseEditionKey> courseEditionKeys,
             SortedList<CourseEditionKey, ConcurrentQueue<object>> courseEditionQueues)
@@ -189,6 +275,14 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące pozycje w planie 
+        /// na podstawie listy identyfikatorów ram czasowych i identyfikatora pokoju do kolekcji dotyczącej pierwszej sekcji krytycznej.
+        /// </summary>
+        /// <param name="_timestamps">Lista identyfikatorów ram czasowych</param>
+        /// <param name="roomId">Identyfikator pokoju</param>
+        /// <param name="schedulePositionKeys">Identyfikatory obiektów będących reprezentacjami pozycji w planie</param>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
         public static void AddSchedulePositionsLocksL1(
             List<int> _timestamps, int roomId,
             List<SchedulePositionKey> schedulePositionKeys,
@@ -204,6 +298,13 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące pozycje w planie 
+        /// na podstawie listy identyfikatorów ram czasowych i identyfikatora pokoju do kolekcji dotyczącej pierwszej sekcji krytycznej.
+        /// </summary>
+        /// <param name="_timestamps">Lista identyfikatorów ram czasowych</param>
+        /// <param name="roomId">Identyfikator pokoju</param>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
         public static void AddSchedulePositionsLocksL1(
             List<int> _timestamps, int roomId,
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
@@ -217,6 +318,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące pozycje w planie do kolekcji dotyczącej pierwszej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositionKeys">Identyfikatory obiektów będących reprezentacjami pozycji w planie</param>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
         public static void AddSchedulePositionsLocksL1(
             List<SchedulePositionKey> schedulePositionKeys,
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
@@ -229,6 +335,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące pozycje w planie do kolekcji dotyczącej drugiej sekcji krytycznej.
+        /// </summary>
+        /// <param name="schedulePositionKeys">Identyfikatory obiektów będących reprezentacjami pozycji w planie</param>
+        /// <param name="schedulePositions">Kolekcja obiektów reprezentujących pozycje w planie</param>
         public static void AddSchedulePositionsLocksL2(
             List<SchedulePositionKey> schedulePositionKeys,
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> schedulePositions)
@@ -241,6 +352,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące pozycje w planie (z perspektywy prowadzących) na podstawie ramy czasowej.
+        /// </summary>
+        /// <param name="coordinatorsIds">Identyfikatory prowadzących (użytkowników)</param>
+        /// <param name="timestampId">Identyfikator ramy czasowej</param>
+        /// <param name="coordinatorPositionQueues">Kolekcja obiektów reprezentujących pozycje w planie (z perspektywy prowadzących)</param>
         private void AddCoordinatorPositionsLocks(
             int[] coordinatorsIds, int timestampId,
             SortedList<CoordinatorPositionKey, ConcurrentQueue<object>> coordinatorPositionQueues)
@@ -254,6 +371,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodająca obiekty reprezentujące pozycje w planie (z perspektywy grup studenckich) na podstawie ramy czasowej.
+        /// </summary>
+        /// <param name="groupsIds">Identyfikatory grup studenckich</param>
+        /// <param name="timestampId">Identyfikator ramy czasowej</param>
+        /// <param name="groupPositionQueues">Kolekcja obiektów reprezentujących pozycje w planie (z perspektywy grup studenckich)</param>
         private void AddGroupPositionsLocks(
             int[] groupsIds, int timestampId,
             SortedList<GroupPositionKey, ConcurrentQueue<object>> groupPositionQueues)
@@ -267,6 +390,10 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda blokująca zasoby serwera (obiekty reprezentujące edycje zajęć lub pozycje w planie).
+        /// </summary>
+        /// <param name="queues">Lista zasobów do zablokowania</param>
         public static void EnterQueues(IList<ConcurrentQueue<object>> queues)
         {
             foreach (var queue in queues)
@@ -275,6 +402,10 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda odblokowująca zasoby serwera (obiekty reprezentujące edycje zajęć lub pozycje w planie).
+        /// </summary>
+        /// <param name="queues">Lista zasobów do odblokowania</param>
         public static void ExitQueues(IList<ConcurrentQueue<object>> queues)
         {
             foreach (var queue in queues)
@@ -283,6 +414,13 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Funkcja wyszukująca i zwracająca kolejny zaplanowany ruch w systemie możliwy do wykonania (identyfikator).
+        /// </summary>
+        /// <param name="source">Identyfikatory pozycji w planie dla których należy znaleźć ruch możliwy do wykonania</param>
+        /// <param name="skippedMovesIds">Identyfikatory zaplanowanych ruchów, które należy pominąć, ponieważ były już brane pod uwagę</param>
+        /// <param name="possibleMove">Informacje na temat odnalezionego zaplanowanego ruchu potencjalnie możliwego do wykonania (źródło ruchu i jego cel)</param>
+        /// <returns>Identyfikator odnalezionego ruchu możliwego do wykonania</returns>
         private int? GetPossibleMove(List<SchedulePositionKey> source, List<int> skippedMovesIds,
             out Tuple<List<SchedulePositionKey>, List<SchedulePositionKey>> possibleMove)
         {
@@ -342,6 +480,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda wykonująca zaplanowane ruchy możliwe do wykonania po zwolnieniu miejsca na planie.
+        /// </summary>
+        /// <param name="sourceSchedulePositionKeys">Identyfikatory pozycji w planie, które zostały zwolnione</param>
+        /// <param name="L1schedulePositionAllQueues">Kolekcja zasobów, które muszą zostać zwolnione po wykonaniu metody</param>
+        /// <param name="L1KeysToRemove">Identyfikatory zasobów, które mogą zostać usunięte z pamięci</param>
         private void MakeScheduledMoves(List<SchedulePositionKey> sourceSchedulePositionKeys,
             SortedList<SchedulePositionKey, ConcurrentQueue<object>> L1schedulePositionAllQueues, List<SchedulePositionKey> L1KeysToRemove)
         {
@@ -637,26 +781,49 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Funkcja zwracająca identyfikator użytkownika z kontekstu centrum.
+        /// </summary>
+        /// <returns>Identyfikator użytkownika</returns>
         private int GetUserId()
         {
             return int.Parse(Context.User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value!);
         }
 
+        /// <summary>
+        /// Funkcja zwracająca informację czy użytkownik jest administratorem systemu.
+        /// </summary>
+        /// <returns>Prawda jeśli jest administratorem, w przeciwnym wypadku fałsz</returns>
         private bool IsAdmin()
         {
             return Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Administrator");
         }
 
+        /// <summary>
+        /// Funkcja zwracająca informację czy użytkownik posiada rolę prowadzącego w systemie.
+        /// </summary>
+        /// <returns>Prawda jeśli posiada rolę prowadzącego, w przeciwnym wypadku fałsz</returns>
         private bool IsCoordinator()
         {
             return Context.User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Coordinator");
         }
 
+        /// <summary>
+        /// Funkcja zwracająca grupy, których student (użytkownik) jest starostą w systemie.
+        /// </summary>
+        /// <returns>Kolekcja grup, dla których użytkownik posiada rolę starosty</returns>
         private IEnumerable<int> GetRepresentativeGroupsIds()
         {
             return Context.User.Claims.Where(x => x.Type == "representative_group_id").Select(e => int.Parse(e.Value));
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wybranej edycji zajęć (stan blokady przechowywany jest w bazie danych). 
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.LockCourseEdition"/>.
+        /// </summary>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Designer")]
         public MessageObject LockCourseEdition(int courseId, int courseEditionId)
         {
@@ -731,6 +898,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wszystkich edycji zajęć (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.LockCourseEdition"/>.
+        /// </summary>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject LockAllCourseEditions()
         {
@@ -825,6 +997,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wszystkich edycji zajęć dla konkretnego przedmiotu (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.LockCourseEdition"/>.
+        /// </summary>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject LockAllCourseEditionsForCourse(int courseId)
         {
@@ -920,6 +1098,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wszystkich edycji zajęć i pozycji w planie, które dotyczą danego prowadzącego (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metod <see cref="IScheduleClient.LockCourseEdition"/>
+        /// i <see cref="IScheduleClient.LockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="coordinatorId">Identyfikator prowadzącego (użytkownika)</param>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć (też zostanie wzięta pod uwagę podczas blokowania)</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject LockAllCoordinatorCourses(int coordinatorId, int courseId, int courseEditionId)
         {
@@ -1110,6 +1297,16 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wszystkich edycji zajęć i pozycji w planie, które dotyczą danej grupy + jej 
+        /// grup nadrzędnych i podrzędnych (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metod <see cref="IScheduleClient.LockCourseEdition"/>
+        /// i <see cref="IScheduleClient.LockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="groupId">Identyfikator grupy</param>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć (też zostanie wzięta pod uwagę podczas blokowania)</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject LockAllGroupCourses(int groupId, int courseId, int courseEditionId)
         {
@@ -1318,6 +1515,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wszystkich edycji zajęć i pozycji w planie, które dotyczą pierwszej grupy (źródłowej) + jej grup podrzędnych
+        /// oraz drugiej grupy (docelowej) + jej grup nadrzędnych (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metod <see cref="IScheduleClient.LockCourseEdition"/>
+        /// i <see cref="IScheduleClient.LockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="originGroupId">Identyfikator grupy źródłowej</param>
+        /// <param name="destinationGroupId">Identyfikator grupy docelowej</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject LockAllCoursesForGroupChange(int originGroupId, int? destinationGroupId)
         {
@@ -1536,6 +1742,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Blokuje dostęp do wybranych pozycji w planie (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.LockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="roomId">Identyfikator pokoju</param>
+        /// <param name="periodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Indeks dnia tygodnia</param>
+        /// <param name="weeks">Tygodnie, które mają być wzięte pod uwagę</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Proposing")]
         public MessageObject LockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
@@ -1648,6 +1863,13 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wybranej edycji zajęć (stan blokady przechowywany jest w bazie danych). 
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.UnlockCourseEdition"/>.
+        /// </summary>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Designer")]
         public MessageObject UnlockCourseEdition(int courseId, int courseEditionId)
         {
@@ -1714,6 +1936,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wybranych pozycji w planie (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.UnlockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="roomId">Identyfikator pokoju</param>
+        /// <param name="periodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Indeks dnia tygodnia</param>
+        /// <param name="weeks">Tygodnie, które mają być wzięte pod uwagę</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Proposing")]
         public MessageObject UnlockSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
@@ -1819,6 +2050,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wszystkich edycji zajęć (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.UnlockCourseEdition"/>.
+        /// </summary>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject UnlockAllCourseEditions()
         {
@@ -1905,6 +2141,12 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wszystkich edycji zajęć dla konkretnego przedmiotu (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metody <see cref="IScheduleClient.UnlockCourseEdition"/>.
+        /// </summary>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject UnlockAllCourseEditionsForCourse(int courseId)
         {
@@ -1991,6 +2233,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wszystkich edycji zajęć i pozycji w planie, które dotyczą danego prowadzącego (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metod <see cref="IScheduleClient.UnlockCourseEdition"/>
+        /// i <see cref="IScheduleClient.UnlockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="coordinatorId">Identyfikator prowadzącego (użytkownika)</param>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć (też zostanie wzięta pod uwagę podczas odblokowywania)</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject UnlockAllCoordinatorCourses(int coordinatorId, int courseId, int courseEditionId)
         {
@@ -2174,6 +2425,16 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wszystkich edycji zajęć i pozycji w planie, które dotyczą danej grupy + jej 
+        /// grup nadrzędnych i podrzędnych (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metod <see cref="IScheduleClient.UnlockCourseEdition"/>
+        /// i <see cref="IScheduleClient.UnlockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="groupId">Identyfikator grupy</param>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć (też zostanie wzięta pod uwagę podczas odblokowywania)</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject UnlockAllGroupCourses(int groupId, int courseId, int courseEditionId)
         {
@@ -2368,6 +2629,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Odblokowuje dostęp do wszystkich edycji zajęć i pozycji w planie, które dotyczą pierwszej grupy (źródłowej) + jej grup podrzędnych
+        /// oraz drugiej grupy (docelowej) + jej grup nadrzędnych (stan blokady przechowywany jest w bazie danych).
+        /// Inni połączeni użytkownicy otrzymują o tym powiadomienie dzięki wywołaniu metod <see cref="IScheduleClient.UnlockCourseEdition"/>
+        /// i <see cref="IScheduleClient.UnlockSchedulePositions"/>.
+        /// </summary>
+        /// <param name="originGroupId">Identyfikator grupy źródłowej</param>
+        /// <param name="destinationGroupId">Identyfikator grupy docelowej</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "AdministratorOnly")]
         public MessageObject UnlockAllCoursesForGroupChange(int originGroupId, int? destinationGroupId)
         {
@@ -2570,6 +2840,17 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda dodaje nowe pozycje do planu na podstawie przesłanych jej parametrów. 
+        /// Informacja o powodzeniu operacji zostanie przesłana do użytkownika z pomocą metody <see cref="IScheduleClient.SendResponse"/>.
+        /// Inni połączeni użytkownicy otrzymują powiadomienie o powodzeniu operacji dzięki wywołaniu metody <see cref="IScheduleClient.AddedSchedulePositions"/>.
+        /// </summary>
+        /// <param name="courseId">ID przedmiotu</param>
+        /// <param name="courseEditionId">ID edycji zajęć</param>
+        /// <param name="roomId">Identyfikator pokoju</param>
+        /// <param name="periodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Indeks dnia tygodnia</param>
+        /// <param name="weeks">Tygodnie, które będą brane pod uwagę</param>
         [Authorize(Policy = "Designer")]
         public void AddSchedulePositions(int courseId, int courseEditionId, int roomId, int periodIndex, int day, int[] weeks)
         {
@@ -2746,6 +3027,19 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda wprowadza zmiany w planie na podstawie przesłanych jej parametrów. 
+        /// Informacja o powodzeniu operacji zostanie przesłana do użytkownika z pomocą metody <see cref="IScheduleClient.SendResponse"/>.
+        /// Inni połączeni użytkownicy otrzymują powiadomienie o powodzeniu operacji dzięki wywołaniu metody <see cref="IScheduleClient.ModifiedSchedulePositions"/>.
+        /// </summary>
+        /// <param name="roomId">Źródłowy identyfikator pokoju</param>
+        /// <param name="periodIndex">Źródłowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Źródłowy indeks dnia tygodnia</param>
+        /// <param name="weeks">Źródłowe tygodnie, które będą brane pod uwagę</param>
+        /// <param name="destRoomId">Docelowy identyfikator pokoju</param>
+        /// <param name="destPeriodIndex">Docelowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="destDay">Docelowy indeks dnia tygodnia</param>
+        /// <param name="destWeeks">Docelowe tygodnie, które będą brane pod uwagę</param>
         [Authorize(Policy = "Designer")]
         public void ModifySchedulePositions(
             int roomId, int periodIndex, int day, int[] weeks, 
@@ -2991,6 +3285,15 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwa pozycje z planu na podstawie przesłanych jej parametrów. 
+        /// Informacja o powodzeniu operacji zostanie przesłana do użytkownika z pomocą metody <see cref="IScheduleClient.SendResponse"/>.
+        /// Inni połączeni użytkownicy otrzymują powiadomienie o powodzeniu operacji dzięki wywołaniu metody <see cref="IScheduleClient.RemovedSchedulePositions"/>.
+        /// </summary>
+        /// <param name="roomId">Identyfikator pokoju</param>
+        /// <param name="periodIndex">Indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Indeks dnia tygodnia</param>
+        /// <param name="weeks">Tygodnie, które będą brane pod uwagę</param>
         [Authorize(Policy = "Designer")]
         public void RemoveSchedulePositions(int roomId, int periodIndex, int day, int[] weeks)
         {
@@ -3129,7 +3432,21 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-
+        /// <summary>
+        /// Dodaje przesunięcie w planie jako zaplanowany ruch do wykonania lub propozycję ruchu na podstawie parametrów.
+        /// Inni połączeni użytkownicy otrzymują powiadomienie o powodzeniu operacji dzięki wywołaniu metody <see cref="IScheduleClient.AddedScheduledMove"/>.
+        /// </summary>
+        /// <param name="roomId">Źródłowy identyfikator pokoju</param>
+        /// <param name="periodIndex">Źródłowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Źródłowy indeks dnia tygodnia</param>
+        /// <param name="weeks">Źródłowe tygodnie, które będą brane pod uwagę</param>
+        /// <param name="destRoomId">Docelowy identyfikator pokoju</param>
+        /// <param name="destPeriodIndex">Docelowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="destDay">Docelowy indeks dnia tygodnia</param>
+        /// <param name="destWeeks">Docelowe tygodnie, które będą brane pod uwagę</param>
+        /// <param name="isProposition">Czy ruch jest propozycją</param>
+        /// <param name="message">Wiadomość załączona do propozycji</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Proposing")]
         public MessageObject AddScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
@@ -3377,6 +3694,19 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Usuwa przesunięcie w planie z systemu na podstawie parametrów.
+        /// Inni połączeni użytkownicy otrzymują powiadomienie o powodzeniu operacji dzięki wywołaniu metody <see cref="IScheduleClient.RemovedScheduledMove"/>.
+        /// </summary>
+        /// <param name="roomId">Źródłowy identyfikator pokoju</param>
+        /// <param name="periodIndex">Źródłowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Źródłowy indeks dnia tygodnia</param>
+        /// <param name="weeks">Źródłowe tygodnie, które będą brane pod uwagę</param>
+        /// <param name="destRoomId">Docelowy identyfikator pokoju</param>
+        /// <param name="destPeriodIndex">Docelowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="destDay">Docelowy indeks dnia tygodnia</param>
+        /// <param name="destWeeks">Docelowe tygodnie, które będą brane pod uwagę</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Proposing")]
         public MessageObject RemoveScheduledMove(
             int roomId, int periodIndex, int day, int[] weeks, 
@@ -3595,6 +3925,19 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Akceptuje propozycję przesunięcia w planie na podstawie parametrów.
+        /// Inni połączeni użytkownicy otrzymują powiadomienie o powodzeniu operacji dzięki wywołaniu metody <see cref="IScheduleClient.AcceptedScheduledMove"/>.
+        /// </summary>
+        /// <param name="roomId">Źródłowy identyfikator pokoju</param>
+        /// <param name="periodIndex">Źródłowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="day">Źródłowy indeks dnia tygodnia</param>
+        /// <param name="weeks">Źródłowe tygodnie, które będą brane pod uwagę</param>
+        /// <param name="destRoomId">Docelowy identyfikator pokoju</param>
+        /// <param name="destPeriodIndex">Docelowy indeks okienka czasowego w ciągu dnia</param>
+        /// <param name="destDay">Docelowy indeks dnia tygodnia</param>
+        /// <param name="destWeeks">Docelowe tygodnie, które będą brane pod uwagę</param>
+        /// <returns>Obiekt z informacją o powodzeniu operacji (<see cref="MessageObject"/>)</returns>
         [Authorize(Policy = "Designer")]
         public MessageObject AcceptProposition(
             int roomId, int periodIndex, int day, int[] weeks,
@@ -3865,6 +4208,11 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
+        /// <summary>
+        /// Metoda usuwa wszystkie blokady nałożone przez klienta. Wywoływana jest w momencie rozłączenia użytkownika z systemem.
+        /// </summary>
+        /// <param name="userId">Identyfikator użytkownika</param>
+        /// <param name="connectionId">Indetyfikator połączenia użytkownika</param>
         private void RemoveAllClientLocks(int userId, string connectionId)
         {
             var _courseEditions = _unitOfWork.CourseEditions
@@ -3889,19 +4237,14 @@ namespace ScheduleDesigner.Hubs
             }
         }
 
-        public override Task OnConnectedAsync()
-        {
-            var id = int.Parse(Context.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value!);
-
-            Console.WriteLine($"\tConnected {Context.ConnectionId}");
-            return base.OnConnectedAsync();
-        }
-
+        /// <summary>
+        /// Funkcja wywoływana w momencie rozłączenia klienta z serwerem.
+        /// </summary>
+        /// <returns>Asynchroniczna operacja rozłączenia klienta z serwerem</returns>
         public override Task OnDisconnectedAsync(Exception exception)
         {
             var id = int.Parse(Context.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value!);
-
-            Console.WriteLine($"Disconnected {Context.ConnectionId}");
+            
             RemoveAllClientLocks(id, Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }

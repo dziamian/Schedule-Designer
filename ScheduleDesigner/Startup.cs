@@ -29,6 +29,9 @@ using ScheduleDesigner.Repositories;
 using ScheduleDesigner.Repositories.UnitOfWork;
 using ScheduleDesigner.Services;
 using ScheduleDesigner.Helpers;
+using Microsoft.AspNet.OData.Formatter;
+using System.IO;
+using System.Reflection;
 
 namespace ScheduleDesigner
 {
@@ -46,7 +49,6 @@ namespace ScheduleDesigner
             services.AddDbContext<ScheduleDesignerDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("SchedulingDatabase"));
-                //options.ConfigureWarnings(options => options.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
             });
 
             services.Configure<KestrelServerOptions>(options =>
@@ -65,19 +67,31 @@ namespace ScheduleDesigner
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
             services.AddOData();
-            services.AddSignalR(options =>
-            {
-                
-            });
+            services.AddSignalR();
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo 
+                options.SwaggerDoc("v1", new OpenApiInfo 
                 {
                     Version = "v1",
                     Title = "Schedule Designer API",
-                    Description = "ASP.NET Core Web API for designing class schedule by many users simultaneously."
+                    Description = "ASP.NET Core Web API przeznaczone do projektowania planu zajêæ przez wiele zainteresowanych osób jednoczeœnie."
                 });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+            services.AddMvcCore(options =>
+            {
+                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+
+                foreach (var inputFormatters in options.InputFormatters.OfType<ODataInputFormatter>().Where(_ => _.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatters.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -134,9 +148,6 @@ namespace ScheduleDesigner
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
             app.UseODataBatching();
 
             app.UseCors("CorsPolicy");
@@ -170,6 +181,13 @@ namespace ScheduleDesigner
                     batchHandler: defaultBatchHandler
                 );
                 endpoints.MapHub<ScheduleHub>("/scheduleHub");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SupportedSubmitMethods(new Swashbuckle.AspNetCore.SwaggerUI.SubmitMethod[] { });
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Schedule Designer API V1");
             });
         }
 

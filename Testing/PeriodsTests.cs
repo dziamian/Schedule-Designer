@@ -15,12 +15,30 @@ using System.Text;
 
 namespace Testing
 {
+    /// <summary>
+    /// Klasa zawierająca testy jednostkowe dotyczące ram czasowych planu zajęć.
+    /// </summary>
     public class PeriodsTests
     {
+        /// <summary>
+        /// Fałszywy kontekst połączenia z bazą danych.
+        /// </summary>
         private ScheduleDesignerDbContext mockDbContext;
+        
+        /// <summary>
+        /// Fałszywa implementacja wzorca UoW.
+        /// </summary>
         private Mock<UnitOfWork> mockUnitOfWork;
+        
+        /// <summary>
+        /// Fałszywa tożsamość użytkownika.
+        /// </summary>
         private GenericPrincipal mockUser;
 
+        /// <summary>
+        /// Metoda przygotowująca dane niezbędne do wykonania testów jednostkowych.
+        /// Tworzy fałszywy kontekst połączenia z bazą danych i zasila go.
+        /// </summary>
         private void PrepareData()
         {
             var timestamps = new List<Timestamp> 
@@ -117,6 +135,9 @@ namespace Testing
             mockDbContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Metoda tworząca fałszywą tożsamość użytkownika.
+        /// </summary>
         private void PrepareUser()
         {
             var claims = new List<Claim>
@@ -126,9 +147,12 @@ namespace Testing
 
             var identity = new ClaimsIdentity(claims, "mock");
             mockUser = new GenericPrincipal(identity, null);
-
         }
 
+        /// <summary>
+        /// Metoda wywoływana przed każdym testem jednostkowym przygotowująca dane, 
+        /// fałszywą tożsamość użytkownika i fałszywą implementację wzorca UoW.
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -138,6 +162,10 @@ namespace Testing
             mockUnitOfWork = new Mock<UnitOfWork>(mockDbContext);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="CourseEditionsController.IsPeriodBusy"/>
+        /// zwraca poprawne rezultaty - rama czasowa dla podanych parametrów powinna być zajęta.
+        /// </summary>
         [Test]
         public void IsPeriodBusy_ShouldBeBusyTest()
         {
@@ -162,6 +190,10 @@ namespace Testing
             Assert.True((bool)okResult.Value);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="CourseEditionsController.IsPeriodBusy"/>
+        /// zwraca poprawne rezultaty - rama czasowa dla podanych parametrów powinna być dostępna.
+        /// </summary>
         [Test]
         public void IsPeriodBusy_ShouldBeNotBusyTest()
         {
@@ -186,6 +218,10 @@ namespace Testing
             Assert.False((bool)okResult.Value);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="CourseEditionsController.IsPeriodBusy"/>
+        /// zwraca poprawne rezultaty - podana edycja zajęć powinna nie zostać odnaleziona.
+        /// </summary>
         [Test]
         public void IsPeriodBusy_ShouldBeNotFoundTest()
         {
@@ -208,6 +244,10 @@ namespace Testing
             Assert.AreEqual(404, notFoundResult.StatusCode);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="CourseEditionsController.IsPeriodBusy"/>
+        /// zwraca poprawne rezultaty - rama czasowa dla podanych parametrów powinna być dostępna.
+        /// </summary>
         [Test]
         public void IsPeriodBusy_ShouldBeNotBusyTest2()
         {
@@ -232,6 +272,10 @@ namespace Testing
             Assert.False((bool)okResult.Value);
         }
 
+        /// <summary>
+        /// Test jednostkowy polegający na sprawdzeniu, czy funkcja <see cref="SettingsController.GetPeriods"/>
+        /// zwraca poprawne rezultaty - tablica ciągów znaków powinna posiadać poprawne etykiety ram czasowych.
+        /// </summary>
         [Test]
         public void GetPeriods_LabelsShouldBeCorrectTest()
         {

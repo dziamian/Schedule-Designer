@@ -10,15 +10,21 @@ import { SignalrService } from './services/SignalrService/signalr.service';
 import { UsosApiService } from './services/UsosApiService/usos-api.service';
 import { setUserInfo } from './store/userInfo.actions';
 
+/**
+ * Główny komponent aplikacji zawierający pasek górny z menu wyboru opcji.
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  /** Nazwa aplikacji. */
   title:string = 'Schedule Designer';
 
+  /** Informacje o zalogowanym użytkowniku. */
   userInfo:UserInfo;
+  /** Określa czy informacje o zalogowanym użytkowniku zostały ustawione. */
   isUserInfoSet:boolean = false;
 
   constructor(
@@ -50,12 +56,18 @@ export class AppComponent implements OnInit {
     this.tryInitConnection();
   }
 
+  /**
+   * Metoda próbująca nawiązać połączenie z centrum SignalR (jest to możliwe tylko, gdy użytkownik jest zalogowany).
+   */
   private async tryInitConnection() {
     if (this.IsAuthenticated() && (this.signalrService.connection == null && !this.signalrService.connectionInitializing)) {
       await this.signalrService.InitConnection().toPromise();
     }
   }
 
+  /**
+   * Metoda próbująca pozyskać informacje na temat zalogowanego użytkownika.
+   */
   private trySetAccount() {
     if (this.IsAuthenticated()) {
       this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) => {

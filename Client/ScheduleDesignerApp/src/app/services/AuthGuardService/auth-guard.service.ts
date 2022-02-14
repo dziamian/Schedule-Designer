@@ -5,11 +5,15 @@ import { skip } from 'rxjs/operators';
 import { AccessToken } from 'src/app/others/AccessToken';
 import { UserInfo } from 'src/app/others/Accounts';
 
+/**
+ * Serwis zapewniający ochronę przed niepoprawną nawigacją do ścieżek aplikacji wymagających konkretnych uprawnień w aplikacji bądź bycia zalogowanym.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
 
+  /** Informacje o zalogowanym użytkowniku. */
   userInfo: UserInfo;
 
   constructor(
