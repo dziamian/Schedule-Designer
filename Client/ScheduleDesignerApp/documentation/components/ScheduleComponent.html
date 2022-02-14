@@ -1,0 +1,3275 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  ScheduleComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/schedule/schedule.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent odpowiadający za ładowanie i wyświetlanie planu zajęć na ekran.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-schedule</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./schedule.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./schedule.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#loadingSubscription" >loadingSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#schedule" >schedule</a>
+                            </li>
+                            <li>
+                                <a href="#scheduleSlots" >scheduleSlots</a>
+                            </li>
+                            <li>
+                                <a href="#signalrSubscriptions" >signalrSubscriptions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#EditView" >EditView</a>
+                            </li>
+                            <li>
+                                <a href="#GetMaxElementIndexOnDay" >GetMaxElementIndexOnDay</a>
+                            </li>
+                            <li>
+                                <a href="#GetViewDescription" >GetViewDescription</a>
+                            </li>
+                            <li>
+                                <a href="#IsDropDisabled" >IsDropDisabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadMySchedule" >loadMySchedule</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges" >ngOnChanges</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#OnCourseSelect" >OnCourseSelect</a>
+                            </li>
+                            <li>
+                                <a href="#OnDragEnter" >OnDragEnter</a>
+                            </li>
+                            <li>
+                                <a href="#OnDropped" >OnDropped</a>
+                            </li>
+                            <li>
+                                <a href="#OnDropSelect" >OnDropSelect</a>
+                            </li>
+                            <li>
+                                <a href="#OnMouseEnter" >OnMouseEnter</a>
+                            </li>
+                            <li>
+                                <a href="#OnMouseLeave" >OnMouseLeave</a>
+                            </li>
+                            <li>
+                                <a href="#OnReleased" >OnReleased</a>
+                            </li>
+                            <li>
+                                <a href="#OnStarted" >OnStarted</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#PrintSchedule" >PrintSchedule</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setSignalrSubscriptions" >setSignalrSubscriptions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateLockInSchedule" >updateLockInSchedule</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#courseTypes" >courseTypes</a>
+                            </li>
+                            <li>
+                                <a href="#currentFilter" >currentFilter</a>
+                            </li>
+                            <li>
+                                <a href="#isModifying" >isModifying</a>
+                            </li>
+                            <li>
+                                <a href="#labelAfter" >labelAfter</a>
+                            </li>
+                            <li>
+                                <a href="#labelBefore" >labelBefore</a>
+                            </li>
+                            <li>
+                                <a href="#modifyingScheduleData" >modifyingScheduleData</a>
+                            </li>
+                            <li>
+                                <a href="#representativeGroupsIds" >representativeGroupsIds</a>
+                            </li>
+                            <li>
+                                <a href="#settings" >settings</a>
+                            </li>
+                            <li>
+                                <a href="#userInfo" >userInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#onCourseSelect" >onCourseSelect</a>
+                            </li>
+                            <li>
+                                <a href="#onDragEnter" >onDragEnter</a>
+                            </li>
+                            <li>
+                                <a href="#onDrop" >onDrop</a>
+                            </li>
+                            <li>
+                                <a href="#onDropSelect" >onDropSelect</a>
+                            </li>
+                            <li>
+                                <a href="#onLoaded" >onLoaded</a>
+                            </li>
+                            <li>
+                                <a href="#onMouseEnter" >onMouseEnter</a>
+                            </li>
+                            <li>
+                                <a href="#onMouseLeave" >onMouseLeave</a>
+                            </li>
+                            <li>
+                                <a href="#onRelease" >onRelease</a>
+                            </li>
+                            <li>
+                                <a href="#onStart" >onStart</a>
+                            </li>
+                            <li>
+                                <a href="#onViewEdit" >onViewEdit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>, scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/app/components/schedule/schedule.component.ts:86</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="courseTypes"></a>
+                        <b>courseTypes</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Map&lt;number | CourseType&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/schedule/schedule.component.ts:44</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Kolekcja typów przedmiotów.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="currentFilter"></a>
+                        <b>currentFilter</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/components/schedule/schedule.component.ts:48</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Aktualny filtr planu zajęć (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie).</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isModifying"></a>
+                        <b>isModifying</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/schedule/schedule.component.ts:36</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy tryb modyfikacji jest włączony.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="labelAfter"></a>
+                        <b>labelAfter</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/schedule/schedule.component.ts:33</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Etykieta umieszczana po tytule planu zajęć.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="labelBefore"></a>
+                        <b>labelBefore</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/schedule/schedule.component.ts:31</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Etykieta umieszczana przed tytułem planu zajęć.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="modifyingScheduleData"></a>
+                        <b>modifyingScheduleData</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ModifyingScheduleData.html" target="_self" >ModifyingScheduleData</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/components/schedule/schedule.component.ts:46</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Dane trybu modyfikacji.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="representativeGroupsIds"></a>
+                        <b>representativeGroupsIds</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/schedule/schedule.component.ts:40</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Identyfikatory grup studenckich, których użytkownik jest starostą.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="settings"></a>
+                        <b>settings</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Settings.html" target="_self" >Settings</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/schedule/schedule.component.ts:42</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Ustawienia aplikacji.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="userInfo"></a>
+                        <b>userInfo</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/schedule/schedule.component.ts:38</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Informacje o zalogowanym użytkowniku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onCourseSelect"></a>
+                        <b>onCourseSelect</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/components/schedule/schedule.component.ts:59</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia wybrania panelu z zajęciami (wysyłany w momencie kliknięcia na panel).
+Zdarzenie posiada informacje o edycji wybranych zajęć, czy są możliwe do przesuwania w obecnym widoku
+oraz ich pozycji w planie (rama czasowa).</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onDragEnter"></a>
+                        <b>onDragEnter</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragEnter&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/components/schedule/schedule.component.ts:68</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia najechania panelu z zajęciami na strefę planu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onDrop"></a>
+                        <b>onDrop</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragDrop&lt;CourseEdition[]&gt;&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/components/schedule/schedule.component.ts:66</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia interakcji upuszczenia panelu z zajęciami w strefie planu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onDropSelect"></a>
+                        <b>onDropSelect</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/components/schedule/schedule.component.ts:62</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onLoaded"></a>
+                        <b>onLoaded</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/components/schedule/schedule.component.ts:75</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia załadowania planu zajęć.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onMouseEnter"></a>
+                        <b>onMouseEnter</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/components/schedule/schedule.component.ts:70</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onMouseLeave"></a>
+                        <b>onMouseLeave</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/components/schedule/schedule.component.ts:73</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onRelease"></a>
+                        <b>onRelease</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragRelease&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/components/schedule/schedule.component.ts:53</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onStart"></a>
+                        <b>onStart</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragStart&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/components/schedule/schedule.component.ts:51</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onViewEdit"></a>
+                        <b>onViewEdit</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/components/schedule/schedule.component.ts:77</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia zmiany widoku niestandardowego.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EditView"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>EditView</b></span>
+                        <a href="#EditView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>EditView()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="653"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:653</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetMaxElementIndexOnDay"></a>
+                    <span class="name">
+                        <span ><b>GetMaxElementIndexOnDay</b></span>
+                        <a href="#GetMaxElementIndexOnDay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetMaxElementIndexOnDay(dayIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="669"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:669</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dayIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetViewDescription"></a>
+                    <span class="name">
+                        <span ><b>GetViewDescription</b></span>
+                        <a href="#GetViewDescription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetViewDescription()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="661"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:661</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda zwracająca opis wybranego widoku planu zajęć.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Opis widoku (które tygodnie są wyświetlone)</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IsDropDisabled"></a>
+                    <span class="name">
+                        <span ><b>IsDropDisabled</b></span>
+                        <a href="#IsDropDisabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>IsDropDisabled(dayIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, slotIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="677"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:677</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dayIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>slotIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadMySchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>loadMySchedule</b></span>
+                        <a href="#loadMySchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadMySchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="534"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:534</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ładująca plan zajęć z serwera.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <span ><b>ngOnChanges</b></span>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges(changes: <a href="https://angular.io/api/core/SimpleChanges" target="_blank">SimpleChanges</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="511"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:511</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie wystąpienia zmian na wejściu komponentu.
+W przypadku zmian dotyczących filtra planu zajęć powoduje to przeładowanie harmonogramu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>changes</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/core/SimpleChanges" target="_blank" >SimpleChanges</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zachodzące zmiany na wejściu komponentu</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="724"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:724</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="499"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:499</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+Ładuje plan zajęć po raz pierwszy</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnCourseSelect"></a>
+                    <span class="name">
+                        <span ><b>OnCourseSelect</b></span>
+                        <a href="#OnCourseSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnCourseSelect(event: literal type, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="708"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:708</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnDragEnter"></a>
+                    <span class="name">
+                        <span ><b>OnDragEnter</b></span>
+                        <a href="#OnDragEnter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnDragEnter(event: CdkDragEnter<CourseEdition[]>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="685"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:685</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragEnter&lt;CourseEdition[]&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnDropped"></a>
+                    <span class="name">
+                        <span ><b>OnDropped</b></span>
+                        <a href="#OnDropped"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnDropped(event: CdkDragDrop<CourseEdition[]>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="681"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:681</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragDrop&lt;CourseEdition[]&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnDropSelect"></a>
+                    <span class="name">
+                        <span ><b>OnDropSelect</b></span>
+                        <a href="#OnDropSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnDropSelect(day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="717"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:717</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMouseEnter"></a>
+                    <span class="name">
+                        <span ><b>OnMouseEnter</b></span>
+                        <a href="#OnMouseEnter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnMouseEnter(day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="693"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:693</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMouseLeave"></a>
+                    <span class="name">
+                        <span ><b>OnMouseLeave</b></span>
+                        <a href="#OnMouseLeave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnMouseLeave()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="704"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:704</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnReleased"></a>
+                    <span class="name">
+                        <span ><b>OnReleased</b></span>
+                        <a href="#OnReleased"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnReleased(event: CdkDragRelease)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="700"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:700</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragRelease</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnStarted"></a>
+                    <span class="name">
+                        <span ><b>OnStarted</b></span>
+                        <a href="#OnStarted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnStarted(event: CdkDragStart)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="689"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:689</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragStart</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PrintSchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>PrintSchedule</b></span>
+                        <a href="#PrintSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>PrintSchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="587"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:587</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca otworzenie nowego okna z bieżącym widokiem planu w celu wydrukowania go.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSignalrSubscriptions"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>setSignalrSubscriptions</b></span>
+                        <a href="#setSignalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setSignalrSubscriptions()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:134</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda rozpoczynająca odbieranie bieżących informacji dotyczących planu z centrum SignalR.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateLockInSchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>updateLockInSchedule</b></span>
+                        <a href="#updateLockInSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateLockInSchedule(position: <a href="../classes/SchedulePosition.html" target="_self">SchedulePosition</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">src/app/components/schedule/schedule.component.ts:93</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>position</td>
+                                    <td>
+                                                <code><a href="../classes/SchedulePosition.html" target="_self" >SchedulePosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/app/components/schedule/schedule.component.ts:83</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingSubscription"></a>
+                    <span class="name">
+                        <span ><b>loadingSubscription</b></span>
+                        <a href="#loadingSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/app/components/schedule/schedule.component.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="schedule"></a>
+                    <span class="name">
+                        <span ><b>schedule</b></span>
+                        <a href="#schedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[][][]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/app/components/schedule/schedule.component.ts:86</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tablica trójwymiarowa przechowująca plan zajęć.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scheduleSlots"></a>
+                    <span class="name">
+                        <span ><b>scheduleSlots</b></span>
+                        <a href="#scheduleSlots"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>QueryList&lt;DropListRef&lt;CourseEdition[]&gt;&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChildren(&#x27;scheduleDrops&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/schedule/schedule.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strefy do upuszczania paneli z zajęciami w poszczególne miejsca na planie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signalrSubscriptions"></a>
+                    <span class="name">
+                        <span ><b>signalrSubscriptions</b></span>
+                        <a href="#signalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/app/components/schedule/schedule.component.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, CdkDropList, DropListRef } from &#x27;@angular/cdk/drag-drop&#x27;;
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from &#x27;@angular/core&#x27;;
+import { forkJoin, Subscription } from &#x27;rxjs&#x27;;
+import { skip } from &#x27;rxjs/operators&#x27;;
+import { UserInfo } from &#x27;src/app/others/Accounts&#x27;;
+import { SchedulePosition } from &#x27;src/app/others/CommunicationObjects&#x27;;
+import { CourseEdition } from &#x27;src/app/others/CourseEdition&#x27;;
+import { Filter } from &#x27;src/app/others/Filter&#x27;;
+import { Group } from &#x27;src/app/others/Group&#x27;;
+import { ModifyingScheduleData } from &#x27;src/app/others/ModifyingScheduleData&#x27;;
+import { Room } from &#x27;src/app/others/Room&#x27;;
+import { Settings } from &#x27;src/app/others/Settings&#x27;;
+import { CourseType } from &#x27;src/app/others/Types&#x27;;
+import { ScheduleDesignerApiService } from &#x27;src/app/services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { SignalrService } from &#x27;src/app/services/SignalrService/signalr.service&#x27;;
+
+/**
+ * Komponent odpowiadający za ładowanie i wyświetlanie planu zajęć na ekran.
+ */
+@Component({
+  selector: &#x27;app-schedule&#x27;,
+  templateUrl: &#x27;./schedule.component.html&#x27;,
+  styleUrls: [&#x27;./schedule.component.css&#x27;]
+})
+export class ScheduleComponent implements OnInit {
+
+  /** Strefy do upuszczania paneli z zajęciami w poszczególne miejsca na planie. */
+  @ViewChildren(&#x27;scheduleDrops&#x27;) scheduleSlots: QueryList&lt;DropListRef&lt;CourseEdition[]&gt;&gt;;
+
+  /** Etykieta umieszczana przed tytułem planu zajęć. */
+  @Input() labelBefore: string;
+  /** Etykieta umieszczana po tytule planu zajęć. */
+  @Input() labelAfter: string;
+
+  /** Określa czy tryb modyfikacji jest włączony. */
+  @Input() isModifying: boolean;
+  /** Informacje o zalogowanym użytkowniku. */
+  @Input() userInfo: UserInfo;
+  /** Identyfikatory grup studenckich, których użytkownik jest starostą. */
+  @Input() representativeGroupsIds:number[] &#x3D; [];
+  /** Ustawienia aplikacji. */
+  @Input() settings: Settings;
+  /** Kolekcja typów przedmiotów. */
+  @Input() courseTypes: Map&lt;number, CourseType&gt;;
+  /** Dane trybu modyfikacji. */
+  @Input() modifyingScheduleData: ModifyingScheduleData;
+  /** Aktualny filtr planu zajęć (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie). */
+  @Input() currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean, editable: boolean};
+
+  /** Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami. */
+  @Output() onStart: EventEmitter&lt;CdkDragStart&gt; &#x3D; new EventEmitter&lt;CdkDragStart&gt;();
+  /** Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami. */
+  @Output() onRelease: EventEmitter&lt;CdkDragRelease&gt; &#x3D; new EventEmitter&lt;CdkDragRelease&gt;();
+  /** 
+   * Emiter zdarzenia wybrania panelu z zajęciami (wysyłany w momencie kliknięcia na panel).
+   * Zdarzenie posiada informacje o edycji wybranych zajęć, czy są możliwe do przesuwania w obecnym widoku
+   * oraz ich pozycji w planie (rama czasowa).
+   */
+  @Output() onCourseSelect: EventEmitter&lt;{
+    courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number
+  }&gt; &#x3D; new EventEmitter();
+  @Output() onDropSelect: EventEmitter&lt;{
+    day:number, periodIndex:number
+  }&gt; &#x3D; new EventEmitter();
+  /** Emiter zdarzenia interakcji upuszczenia panelu z zajęciami w strefie planu. */
+  @Output() onDrop: EventEmitter&lt;CdkDragDrop&lt;CourseEdition[]&gt;&gt; &#x3D; new EventEmitter&lt;CdkDragDrop&lt;CourseEdition[]&gt;&gt;();
+  /** Emiter zdarzenia najechania panelu z zajęciami na strefę planu. */
+  @Output() onDragEnter: EventEmitter&lt;CdkDragEnter&gt; &#x3D; new EventEmitter&lt;CdkDragEnter&gt;();
+  
+  @Output() onMouseEnter: EventEmitter&lt;{
+    day:number, periodIndex:number
+  }&gt; &#x3D; new EventEmitter();
+  @Output() onMouseLeave: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+  /** Emiter zdarzenia załadowania planu zajęć. */
+  @Output() onLoaded: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+  /** Emiter zdarzenia zmiany widoku niestandardowego. */
+  @Output() onViewEdit: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+
+
+  loadingSubscription: Subscription;
+  signalrSubscriptions: Subscription[];
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean | null &#x3D; null;
+
+  /** Tablica trójwymiarowa przechowująca plan zajęć. */
+  schedule: CourseEdition[][][];
+
+  constructor(
+    private signalrService: SignalrService,
+    private scheduleDesignerApiService:ScheduleDesignerApiService
+  ) { }
+
+  private updateLockInSchedule(position:SchedulePosition) {
+    if (!this.schedule) {
+      return;
+    }
+
+    const courseId &#x3D; position.CourseId;
+    const courseEditionId &#x3D; position.CourseEditionId;
+    const roomId &#x3D; position.RoomId;
+    const day &#x3D; position.Day - 1;
+    const periodIndex &#x3D; position.PeriodIndex - 1;
+    const weeks &#x3D; position.Weeks;
+    const lockedValue &#x3D; position.IsLocked;
+    const lockedByAdmin &#x3D; position.IsLockedByAdmin;
+
+    if (!this.currentFilter.weeks.some(r &#x3D;&gt; weeks.includes(r))) {
+      return;
+    }
+
+    let courseEditions &#x3D; this.schedule[day][periodIndex];
+    courseEditions.forEach((courseEdition) &#x3D;&gt; {
+      if (courseEdition.CourseId &#x3D;&#x3D; courseId &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; courseEditionId 
+        &amp;&amp; courseEdition.Room?.RoomId &#x3D;&#x3D; roomId) {
+          if (!lockedValue) {
+            this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+              position.RoomId, position.PeriodIndex,
+              position.Day, courseEdition.Weeks!
+            ).subscribe((areLocked) &#x3D;&gt; {
+              courseEdition.IsLocked &#x3D; areLocked.value;
+              courseEdition.IsLockedByAdmin &#x3D; areLocked.byAdmin;
+            });
+          } else {
+            courseEdition.IsLocked &#x3D; lockedValue;
+            courseEdition.IsLockedByAdmin &#x3D; lockedByAdmin;
+          }
+      }
+    });
+  }
+
+  /**
+   * Metoda rozpoczynająca odbieranie bieżących informacji dotyczących planu z centrum SignalR.
+   */
+  private setSignalrSubscriptions(): void {
+    this.signalrSubscriptions &#x3D; [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) &#x3D;&gt; {
+      this.updateLockInSchedule(lockedSchedulePositions);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedSchedulePositions.pipe(skip(1)).subscribe((unlockedSchedulePositions) &#x3D;&gt; {
+      this.updateLockInSchedule(unlockedSchedulePositions);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const schedulePosition &#x3D; addedSchedulePositions.SchedulePosition;
+      const commonWeeks &#x3D; schedulePosition.Weeks.filter(week &#x3D;&gt; this.currentFilter.weeks.includes(week));
+
+      //filter for updated board
+      const filter &#x3D; new Filter(addedSchedulePositions.CoordinatorsIds, addedSchedulePositions.GroupsIds, [
+        addedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
+        if (commonWeeks.length &gt; 0) {
+          const existingCourseEditions &#x3D; this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].filter((courseEdition) &#x3D;&gt; 
+            courseEdition.CourseId &#x3D;&#x3D; schedulePosition.CourseId 
+              &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; schedulePosition.CourseEditionId
+              &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; schedulePosition.RoomId
+          );
+
+          if (existingCourseEditions.length &gt; 0) {
+            existingCourseEditions[0].Weeks?.push(
+              ...commonWeeks
+            );
+          } else {
+            const mainGroupsIds &#x3D; addedSchedulePositions.GroupsIds.slice(
+              0, addedSchedulePositions.MainGroupsAmount
+            );
+    
+            forkJoin([
+              this.scheduleDesignerApiService.GetCourseEditionInfo(
+                schedulePosition.CourseId, schedulePosition.CourseEditionId, this.settings),
+              this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
+              this.scheduleDesignerApiService.GetCoordinatorsFromUsers(addedSchedulePositions.CoordinatorsIds),
+              this.scheduleDesignerApiService.GetRoomsNames([schedulePosition.RoomId])
+            ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) &#x3D;&gt; {
+              let groups:Group[] &#x3D; [];
+              for (let i &#x3D; 0; i &lt; mainGroupsIds.length; ++i) {
+                const group &#x3D; new Group(mainGroupsIds[i]);
+                group.FullName &#x3D; groupsNames[i];
+                groups.push(group);
+              }
+              const room &#x3D; new Room(schedulePosition.RoomId);
+              room.Name &#x3D; roomNames[0];
+              
+              const addedCourseEdition &#x3D; new CourseEdition(
+                schedulePosition.CourseId, schedulePosition.CourseEditionId,
+                courseEditionInfo.Name, this.courseTypes.get(courseEditionInfo.CourseTypeId)!,
+                0, groups, coordinators
+              );
+            
+              addedCourseEdition.Room &#x3D; room;
+              addedCourseEdition.Weeks &#x3D; commonWeeks;
+              addedCourseEdition.ScheduleAmount &#x3D; courseEditionInfo.ScheduleAmount;
+              addedCourseEdition.FullAmount &#x3D; courseEditionInfo.FullAmount;
+    
+              this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].push(addedCourseEdition);
+            });
+          }
+        }
+      }
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const srcSchedulePosition &#x3D; modifiedSchedulePositions.SourceSchedulePosition;
+      const dstSchedulePosition &#x3D; modifiedSchedulePositions.DestinationSchedulePosition;
+      const commonWeeks &#x3D; dstSchedulePosition.Weeks.filter(week &#x3D;&gt; this.currentFilter.weeks.includes(week));
+      const movesIds &#x3D; modifiedSchedulePositions.MovesIds;
+
+      //filter for updated board
+      const filter &#x3D; new Filter(modifiedSchedulePositions.CoordinatorsIds, modifiedSchedulePositions.GroupsIds, [
+        srcSchedulePosition.RoomId, dstSchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
+        let srcScheduleSlot &#x3D; this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1];
+        let dstScheduleSlot &#x3D; this.schedule[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1];
+
+        const srcRoomChallenge &#x3D; this.currentFilter.filter.challengeRoom(srcSchedulePosition.RoomId);
+        const dstRoomChallenge &#x3D; this.currentFilter.filter.challengeRoom(dstSchedulePosition.RoomId);
+
+        if (srcRoomChallenge &amp;&amp; dstRoomChallenge
+          &amp;&amp; srcSchedulePosition.PeriodIndex &#x3D;&#x3D; dstSchedulePosition.PeriodIndex &amp;&amp; srcSchedulePosition.Day &#x3D;&#x3D; dstSchedulePosition.Day
+          &amp;&amp; commonWeeks.length &gt; 0) {
+          //update old if only room changed or weeks
+          const existingCourseEditions &#x3D; this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1].filter((courseEdition) &#x3D;&gt; 
+            courseEdition.CourseId &#x3D;&#x3D; srcSchedulePosition.CourseId 
+              &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; srcSchedulePosition.CourseEditionId
+              &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; srcSchedulePosition.RoomId
+          );
+          if (existingCourseEditions.length &gt; 0) {
+            if (srcSchedulePosition.Weeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) !&#x3D;&#x3D; dstSchedulePosition.Weeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;)) {
+              existingCourseEditions[0].Weeks &#x3D; commonWeeks;
+            }
+            if (srcSchedulePosition.RoomId !&#x3D; dstSchedulePosition.RoomId) {
+              this.scheduleDesignerApiService.GetRoomsNames([dstSchedulePosition.RoomId]).subscribe(roomName &#x3D;&gt; {
+                const room &#x3D; new Room(dstSchedulePosition.RoomId);
+                room.Name &#x3D; roomName[0];
+                existingCourseEditions[0].Room &#x3D; room;
+                existingCourseEditions[0].IsLocked &#x3D; false;
+                existingCourseEditions[0].IsLockedByAdmin &#x3D; false;
+              });
+            }
+            this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+              dstSchedulePosition.RoomId, dstSchedulePosition.PeriodIndex,
+              dstSchedulePosition.Day, existingCourseEditions[0].Weeks!
+            ).subscribe((areLocked) &#x3D;&gt; {
+              existingCourseEditions[0].IsLocked &#x3D; areLocked.value;
+              existingCourseEditions[0].IsLockedByAdmin &#x3D; areLocked.byAdmin;
+            });
+            
+            existingCourseEditions[0].ScheduledMoves &#x3D; existingCourseEditions[0].ScheduledMoves
+              .filter((scheduledMove) &#x3D;&gt; !movesIds.includes(scheduledMove.MoveId));
+          }
+        } else {
+          //remove or update old
+          const existingSrcCourseEditions &#x3D; this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1].filter((courseEdition) &#x3D;&gt; 
+            courseEdition.CourseId &#x3D;&#x3D; srcSchedulePosition.CourseId 
+              &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; srcSchedulePosition.CourseEditionId
+              &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; srcSchedulePosition.RoomId
+          );
+          
+          if (srcRoomChallenge &amp;&amp; existingSrcCourseEditions.length &gt; 0) {
+            existingSrcCourseEditions[0].Weeks &#x3D; existingSrcCourseEditions[0].Weeks
+              ?.filter(week &#x3D;&gt; !srcSchedulePosition.Weeks.includes(week)) ?? [];
+            
+            if (existingSrcCourseEditions[0].Weeks.length &#x3D;&#x3D; 0) {
+              this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1] 
+                &#x3D; srcScheduleSlot.filter(courseEdition &#x3D;&gt; courseEdition.Weeks !&#x3D; null 
+                  &amp;&amp; courseEdition.Weeks.length &gt; 0);
+            } else {
+              existingSrcCourseEditions[0].ScheduledMoves &#x3D; existingSrcCourseEditions[0].ScheduledMoves
+                .filter((scheduledMove) &#x3D;&gt; !movesIds.includes(scheduledMove.MoveId));
+
+              this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+                srcSchedulePosition.RoomId, srcSchedulePosition.PeriodIndex,
+                srcSchedulePosition.Day, existingSrcCourseEditions[0].Weeks
+              ).subscribe((areLocked) &#x3D;&gt; {
+                existingSrcCourseEditions[0].IsLocked &#x3D; areLocked.value;
+                existingSrcCourseEditions[0].IsLockedByAdmin &#x3D; areLocked.byAdmin;
+              });
+            }
+          }
+
+          //add or update new
+          if (dstRoomChallenge &amp;&amp; commonWeeks.length &gt; 0) {
+            const existingDstCourseEditions &#x3D; dstScheduleSlot.filter((courseEdition) &#x3D;&gt; 
+              courseEdition.CourseId &#x3D;&#x3D; dstSchedulePosition.CourseId 
+                &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; dstSchedulePosition.CourseEditionId
+                &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; dstSchedulePosition.RoomId
+            );
+
+            if (existingDstCourseEditions.length &gt; 0) {
+              if (existingDstCourseEditions[0].Weeks?.some(week &#x3D;&gt; commonWeeks.includes(week))) {
+                const addedCourseEdition &#x3D; new CourseEdition(
+                  existingDstCourseEditions[0].CourseId, existingDstCourseEditions[0].CourseEditionId,
+                  existingDstCourseEditions[0].Name, existingDstCourseEditions[0].Type,
+                  0, existingDstCourseEditions[0].Groups, existingDstCourseEditions[0].Coordinators
+                );
+                addedCourseEdition.Room &#x3D; existingDstCourseEditions[0].Room;
+                addedCourseEdition.Weeks &#x3D; commonWeeks;
+                addedCourseEdition.ScheduleAmount &#x3D; existingDstCourseEditions[0].ScheduleAmount;
+                addedCourseEdition.FullAmount &#x3D; existingDstCourseEditions[0].FullAmount;
+
+                this.schedule[dstSchedulePosition.Day - 1][dstSchedulePosition.PeriodIndex - 1].push(addedCourseEdition);
+              } else {
+                existingDstCourseEditions[0].Weeks?.push(...commonWeeks);
+                
+                this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+                  dstSchedulePosition.RoomId, dstSchedulePosition.PeriodIndex,
+                  dstSchedulePosition.Day, existingDstCourseEditions[0].Weeks!
+                ).subscribe((areLocked) &#x3D;&gt; {
+                  existingSrcCourseEditions[0].IsLocked &#x3D; areLocked.value;
+                  existingSrcCourseEditions[0].IsLockedByAdmin &#x3D; areLocked.byAdmin;
+                });
+              }
+            } else {
+              const mainGroupsIds &#x3D; modifiedSchedulePositions.GroupsIds.slice(
+                0, modifiedSchedulePositions.MainGroupsAmount
+              );
+
+              forkJoin([
+                this.scheduleDesignerApiService.GetCourseEditionInfo(
+                  dstSchedulePosition.CourseId, dstSchedulePosition.CourseEditionId, this.settings),
+                this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds),
+                this.scheduleDesignerApiService.GetCoordinatorsFromUsers(modifiedSchedulePositions.CoordinatorsIds),
+                this.scheduleDesignerApiService.GetRoomsNames([dstSchedulePosition.RoomId])
+              ]).subscribe(([courseEditionInfo, groupsNames, coordinators, roomNames]) &#x3D;&gt; {
+                let groups:Group[] &#x3D; [];
+                for (let i &#x3D; 0; i &lt; mainGroupsIds.length; ++i) {
+                  const group &#x3D; new Group(mainGroupsIds[i]);
+                  group.FullName &#x3D; groupsNames[i];
+                  groups.push(group);
+                }
+                const room &#x3D; new Room(dstSchedulePosition.RoomId);
+                room.Name &#x3D; roomNames[0];
+                
+                const addedCourseEdition &#x3D; new CourseEdition(
+                  dstSchedulePosition.CourseId, dstSchedulePosition.CourseEditionId,
+                  courseEditionInfo.Name, this.courseTypes.get(courseEditionInfo.CourseTypeId)!,
+                  0, groups, coordinators
+                );
+      
+                addedCourseEdition.Room &#x3D; room;
+                addedCourseEdition.Weeks &#x3D; commonWeeks;
+                addedCourseEdition.ScheduleAmount &#x3D; courseEditionInfo.ScheduleAmount;
+                addedCourseEdition.FullAmount &#x3D; courseEditionInfo.FullAmount;
+      
+                dstScheduleSlot.push(addedCourseEdition);
+              });
+            }
+          }
+        }
+      }
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const schedulePosition &#x3D; removedSchedulePositions.SchedulePosition;
+      const movesIds &#x3D; removedSchedulePositions.MovesIds;
+
+      //filter for updated board
+      const filter &#x3D; new Filter(removedSchedulePositions.CoordinatorsIds, removedSchedulePositions.GroupsIds, [
+        removedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
+        let scheduleSlot &#x3D; this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1];
+        const existingCourseEditions &#x3D; this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1].filter((courseEdition) &#x3D;&gt; 
+          courseEdition.CourseId &#x3D;&#x3D; schedulePosition.CourseId 
+            &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; schedulePosition.CourseEditionId
+            &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; schedulePosition.RoomId
+        );
+        
+        if (existingCourseEditions.length &gt; 0) {
+          existingCourseEditions[0].Weeks &#x3D; existingCourseEditions[0].Weeks
+            ?.filter(week &#x3D;&gt; !schedulePosition.Weeks.includes(week)) ?? [];
+          
+          if (existingCourseEditions[0].Weeks.length &#x3D;&#x3D; 0) {
+            this.schedule[schedulePosition.Day - 1][schedulePosition.PeriodIndex - 1] 
+              &#x3D; scheduleSlot.filter(courseEdition &#x3D;&gt; courseEdition.Weeks !&#x3D; null 
+                &amp;&amp; courseEdition.Weeks.length &gt; 0);
+          } else {
+            existingCourseEditions[0].ScheduledMoves &#x3D; existingCourseEditions[0].ScheduledMoves
+              .filter((scheduledMove) &#x3D;&gt; !movesIds.includes(scheduledMove.MoveId));
+
+            this.scheduleDesignerApiService.AreSchedulePositionsLocked(
+              schedulePosition.RoomId, schedulePosition.PeriodIndex,
+              schedulePosition.Day, existingCourseEditions[0].Weeks
+            ).subscribe((areLocked) &#x3D;&gt; {
+              existingCourseEditions[0].IsLocked &#x3D; areLocked.value;
+              existingCourseEditions[0].IsLockedByAdmin &#x3D; areLocked.byAdmin;
+            });
+          }
+        }
+      }
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastAddedScheduledMove.pipe(skip(1)).subscribe((addedScheduledMove) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+      
+      const srcSchedulePosition &#x3D; addedScheduledMove.sourceSchedulePosition;
+      const commonWeeks &#x3D; srcSchedulePosition.Weeks.filter(week &#x3D;&gt; this.currentFilter.weeks.includes(week));
+
+      if (commonWeeks.length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      const existingCourseEditions &#x3D; this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1]
+        .filter((courseEdition) &#x3D;&gt; 
+            courseEdition.CourseId &#x3D;&#x3D; srcSchedulePosition.CourseId 
+              &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; srcSchedulePosition.CourseEditionId
+              &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; srcSchedulePosition.RoomId
+      );
+
+      if (existingCourseEditions.length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      existingCourseEditions[0].ScheduledMoves.push(addedScheduledMove.scheduledMove);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedScheduledMove.pipe(skip(1)).subscribe((removedScheduledMove) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const srcSchedulePosition &#x3D; removedScheduledMove.sourceSchedulePosition;
+      const commonWeeks &#x3D; srcSchedulePosition.Weeks.filter(week &#x3D;&gt; this.currentFilter.weeks.includes(week));
+
+      if (commonWeeks.length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      const existingCourseEditions &#x3D; this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1]
+        .filter((courseEdition) &#x3D;&gt; 
+            courseEdition.CourseId &#x3D;&#x3D; srcSchedulePosition.CourseId 
+              &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; srcSchedulePosition.CourseEditionId
+              &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; srcSchedulePosition.RoomId
+      );
+
+      if (existingCourseEditions.length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      existingCourseEditions[0].ScheduledMoves &#x3D; existingCourseEditions[0].ScheduledMoves
+        .filter((scheduledMove) &#x3D;&gt; scheduledMove.MoveId !&#x3D; removedScheduledMove.moveId);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastAcceptedScheduledMove.pipe(skip(1)).subscribe((acceptedScheduledMove) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const srcSchedulePosition &#x3D; acceptedScheduledMove.sourceSchedulePosition;
+      const commonWeeks &#x3D; srcSchedulePosition.Weeks.filter(week &#x3D;&gt; this.currentFilter.weeks.includes(week));
+
+      if (commonWeeks.length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      const existingCourseEditions &#x3D; this.schedule[srcSchedulePosition.Day - 1][srcSchedulePosition.PeriodIndex - 1]
+        .filter((courseEdition) &#x3D;&gt; 
+            courseEdition.CourseId &#x3D;&#x3D; srcSchedulePosition.CourseId 
+              &amp;&amp; courseEdition.CourseEditionId &#x3D;&#x3D; srcSchedulePosition.CourseEditionId
+              &amp;&amp; courseEdition.Room!.RoomId &#x3D;&#x3D; srcSchedulePosition.RoomId
+      );
+
+      if (existingCourseEditions.length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      existingCourseEditions[0].ScheduledMoves &#x3D; existingCourseEditions[0].ScheduledMoves
+        .filter((scheduledMove) &#x3D;&gt; {
+          if (scheduledMove.MoveId &#x3D;&#x3D; acceptedScheduledMove.moveId) {
+            scheduledMove.IsConfirmed &#x3D; true;
+          }
+          return true;
+        });
+    }));
+  }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+   * Ładuje plan zajęć po raz pierwszy 
+   */
+  ngOnInit(): void {
+    this.setSignalrSubscriptions();
+    if (this.currentFilter?.weeks.length &gt; 0 &amp;&amp; this.currentFilter.filter) {
+      this.loadMySchedule();
+    }
+  }
+
+  /**
+   * Metoda wywoływana w momencie wystąpienia zmian na wejściu komponentu.
+   * W przypadku zmian dotyczących filtra planu zajęć powoduje to przeładowanie harmonogramu.
+   * @param changes Zachodzące zmiany na wejściu komponentu
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.currentFilter &amp;&amp; changes.currentFilter.currentValue &amp;&amp; !changes.currentFilter.currentValue.tabSwitched 
+      &amp;&amp; changes.currentFilter.currentValue.weeks.length &gt; 0 &amp;&amp; changes.currentFilter.currentValue.filter) {
+        if (changes.currentFilter.isFirstChange()) {
+          return;
+        }
+
+        const currentWeeks: number[] &#x3D; changes.currentFilter.currentValue.weeks;
+        const previousWeeks: number[] &#x3D; changes.currentFilter.previousValue?.weeks ?? [];
+        const currentFilter: Filter &#x3D; changes.currentFilter.currentValue.filter;
+        const previousFilter: Filter &#x3D; changes.currentFilter.previousValue?.filter ?? new Filter([], [], []);
+
+        if (currentWeeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) 
+          !&#x3D;&#x3D; previousWeeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;)
+          || !currentFilter.compare(previousFilter)) {
+            this.loadMySchedule();
+        }
+    }
+  }
+
+  /**
+   * Metoda ładująca plan zajęć z serwera.
+   */
+  private loadMySchedule() {
+    this.loadingSubscription?.unsubscribe();
+    this.loading &#x3D; true;
+
+    this.loadingSubscription &#x3D; this.scheduleDesignerApiService.GetFilteredSchedule(this.currentFilter.weeks, this.currentFilter.filter, this.settings)
+      .subscribe(({schedule: schedule, courseEditions: courseEditions}) &#x3D;&gt; {
+        this.schedule &#x3D; schedule;
+
+        if (courseEditions.length &#x3D;&#x3D; 0) {
+          this.loading &#x3D; false;
+          this.onLoaded.emit();
+          return;
+        }
+
+        courseEditions.sort((a,b) &#x3D;&gt; a.CourseId - b.CourseId);
+        forkJoin([
+          this.scheduleDesignerApiService.GetCoursesForSchedule(courseEditions, this.courseTypes, this.settings),
+          this.scheduleDesignerApiService.GetRoomsNames(courseEditions.map((e) &#x3D;&gt; e.Room?.RoomId!))
+        ]).subscribe(([,roomsNames]) &#x3D;&gt; {
+          for (let i &#x3D; 0; i &lt; courseEditions.length; ++i) {
+            courseEditions[i].Room!.Name &#x3D; roomsNames[i];
+          }
+
+          courseEditions.sort((a,b) &#x3D;&gt; a.CourseEditionId - b.CourseEditionId);
+          forkJoin([
+            this.scheduleDesignerApiService.GetScheduleAmount(courseEditions),
+            this.scheduleDesignerApiService.GetCoordinatorsForCourses(courseEditions),
+            this.scheduleDesignerApiService.GetGroupsForCourses(courseEditions),
+          ]).subscribe(() &#x3D;&gt; {
+            var allGroups &#x3D; new Array&lt;Group&gt;();
+            for (let i &#x3D; 0; i &lt; courseEditions.length; ++i) {
+              for (let j &#x3D; 0; j &lt; courseEditions[i].Groups.length; ++j) {
+                allGroups.push(courseEditions[i].Groups[j]);
+              }
+            }
+
+            this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) &#x3D;&gt; e.GroupId))
+              .subscribe((groupsFullNames) &#x3D;&gt; {
+                for (let i &#x3D; 0; i &lt; groupsFullNames.length; ++i) {
+                  allGroups[i].FullName &#x3D; groupsFullNames[i];
+                }
+
+                this.loading &#x3D; false;
+                this.onLoaded.emit();
+              });
+          });
+        });
+    });
+  }
+
+  /**
+   * Metoda wywołująca otworzenie nowego okna z bieżącym widokiem planu w celu wydrukowania go.
+   */
+  public PrintSchedule(): void {
+    let content &#x3D; document.getElementById(&#x27;chosen-schedule&#x27;)?.innerHTML;
+    let popupWindow &#x3D; window.open(&#x27;&#x27;, &#x27;_blank&#x27;, &#x27;top&#x3D;0,left&#x3D;0,height&#x3D;100%,width&#x3D;auto&#x27;);
+    if (popupWindow &#x3D;&#x3D; null) {
+      return;
+    }
+
+    popupWindow.document.open();
+    popupWindow.document.write(&#x60;
+      &lt;html&gt;
+        &lt;head&gt;
+          &lt;title&gt;${this.labelBefore ?? &#x27;&#x27;} Schedule ${this.labelAfter ?? &#x27;&#x27;} ${this.GetViewDescription()}&lt;/title&gt;
+          &lt;style&gt;
+          .schedule-course-field:last-child:not(:only-child) {
+            border-bottom: none;
+          }
+          .schedule-header {
+            display: none;
+          }
+          .schedule-content {
+            box-sizing: border-box;
+          }
+          .schedule-content table {
+            border: 1px solid #000000;
+          }
+          .schedule-content table td, .schedule-content table th {
+            text-align: center;
+            border: 1px solid #000000;
+          }
+          .schedule-content table td[course&#x3D;&quot;true&quot;] {
+            vertical-align: top;
+          }
+          .course {
+            padding: 2px;
+            position: relative;
+            text-align: center;
+            font-size: 12px;
+            font-family: &quot;Rubik&quot;;
+            box-sizing: border-box;
+            line-height: 1.3;
+          }
+          .course-weeks {
+            display: inline;
+          }
+          .pin {
+            display: none;
+          }
+          .course .mat-badge-medium.mat-badge-above.mat-badge-before .mat-badge-content {
+            display: none;
+          }
+          .course.mat-badge-medium.mat-badge-above.mat-badge-after .mat-badge-content {
+            display: none;
+          }
+          .course.mat-badge-medium.mat-badge-above.mat-badge-after.mat-badge-accent[proposition&#x3D;&quot;true&quot;] .mat-badge-content {
+            display: none;
+          }
+          &lt;/style&gt;
+        &lt;/head&gt;
+        &lt;body onload&#x3D;&quot;window.print();&quot;&gt;
+          ${content ?? &#x27;&#x27;}
+        &lt;/body&gt;
+      &lt;/html&gt;&#x60;
+    );
+    popupWindow.document.close();
+  }
+
+  async EditView(): Promise&lt;void&gt; {
+    this.onViewEdit.emit();
+  }
+
+  /**
+   * Metoda zwracająca opis wybranego widoku planu zajęć.
+   * @returns Opis widoku (które tygodnie są wyświetlone)
+   */
+  GetViewDescription(): string {
+    if (this.currentFilter?.weeks) {
+      const weeks &#x3D; CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks);
+      return weeks &#x3D;&#x3D; &#x27;&#x27; ? &#x27;&#x27; : &#x60;(${CourseEdition.ShowWeeks(this.settings, this.currentFilter.weeks)})&#x60;;
+    }
+    return &#x27;&#x27;;
+  }
+
+  GetMaxElementIndexOnDay(dayIndex: number): number {
+    let dayScheduleLength:number[] &#x3D; [];
+    for (let i &#x3D; 0; i &lt; this.settings.Periods.length - 1; ++i) {
+      dayScheduleLength.push(this.schedule[dayIndex][i].length);
+    }
+    return Math.max(...dayScheduleLength) - 1;
+  }
+
+  IsDropDisabled(dayIndex: number, slotIndex: number): boolean {
+    return this.schedule[dayIndex][slotIndex].length &gt; 1;
+  }
+
+  OnDropped(event:CdkDragDrop&lt;CourseEdition[]&gt;) {
+    this.onDrop.emit(event);
+  }
+
+  OnDragEnter(event:CdkDragEnter&lt;CourseEdition[]&gt;) {
+    this.onDragEnter.emit(event);
+  }
+
+  OnStarted(event: CdkDragStart): void {
+    this.onStart.emit(event);
+  }
+
+  OnMouseEnter(day: number, periodIndex: number) {
+    this.onMouseEnter.emit({
+      day: day,
+      periodIndex: periodIndex
+    });
+  }
+
+  OnReleased(event: CdkDragRelease): void {
+    this.onRelease.emit(event);
+  }
+
+  OnMouseLeave(): void {
+    this.onMouseLeave.emit();
+  }
+
+  OnCourseSelect(event: {courseEdition: CourseEdition, isDisabled: boolean}, day: number, periodIndex: number): void {
+    this.onCourseSelect.emit({
+      courseEdition: event.courseEdition,
+      isDisabled: event.isDisabled,
+      day: day,
+      periodIndex: periodIndex 
+    });
+  }
+
+  OnDropSelect(day: number, periodIndex: number): void {
+    this.onDropSelect.emit({
+      day: day,
+      periodIndex: periodIndex
+    });
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription &#x3D;&gt; subscription.unsubscribe()
+    );
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;schedule&quot; id&#x3D;&quot;chosen-schedule&quot;&gt;
+    &lt;div class&#x3D;&quot;schedule-header&quot;&gt;
+        &lt;div class&#x3D;&quot;schedule-header-left&quot;&gt;&lt;/div&gt;
+        &lt;div class&#x3D;&quot;schedule-header-center&quot;&gt;
+            {{labelBefore}} Schedule {{labelAfter}} {{GetViewDescription()}}
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;schedule-header-right&quot;&gt;
+            &lt;button *ngIf&#x3D;&quot;currentFilter?.editable&quot; mat-icon-button class&#x3D;&quot;edit-icon-button&quot; (click)&#x3D;&quot;EditView()&quot;&gt;
+                &lt;mat-icon&gt;edit&lt;/mat-icon&gt;
+            &lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div *ngIf&#x3D;&quot;loading &#x3D;&#x3D; false; else spinner&quot; class&#x3D;&quot;schedule-content&quot; cdkScrollable&gt;
+        &lt;table class&#x3D;&quot;schedule-table&quot;&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th class&#x3D;&quot;day-column&quot;&gt;&lt;/th&gt;
+                    &lt;th *ngFor&#x3D;&quot;let timeLabel of settings.TimeLabels&quot;&gt;
+                        {{timeLabel}}
+                    &lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+                &lt;tr *ngFor&#x3D;&quot;let dayLabel of settings.DayLabels; let dayIndex &#x3D; index&quot;&gt;
+                    &lt;td class&#x3D;&quot;day-column&quot;&gt;
+                        &lt;b&gt;{{dayLabel}}&lt;/b&gt;
+                    &lt;/td&gt;
+                    &lt;td *ngFor&#x3D;&quot;let timeLabel of settings.TimeLabels; let timeIndex &#x3D; index&quot;
+                        cdkDropList
+                        #scheduleDrops&#x3D;&quot;cdkDropList&quot;
+                        id&#x3D;&quot;{{dayIndex}},{{timeIndex}}&quot;
+                        cdkDropListSortingDisabled
+                        [cdkDropListData]&#x3D;&quot;schedule[dayIndex][timeIndex]&quot;
+                        [cdkDropListDisabled]&#x3D;&quot;IsDropDisabled(dayIndex,timeIndex)&quot;
+                        (cdkDropListEntered)&#x3D;&quot;OnDragEnter($event)&quot;
+                        (cdkDropListDropped)&#x3D;&quot;OnDropped($event)&quot;
+
+                        (mouseenter)&#x3D;&quot;OnMouseEnter(dayIndex,timeIndex)&quot;
+                        (mouseleave)&#x3D;&quot;OnMouseLeave()&quot;
+                        (click)&#x3D;&quot;OnDropSelect(dayIndex,timeIndex)&quot;
+
+                        [attr.valid]&#x3D;&quot;modifyingScheduleData.scheduleSlotsValidity[dayIndex][timeIndex]&quot;
+                        [attr.current]&#x3D;&quot;modifyingScheduleData.currentDragEvent?.source?.dropContainer?.id &#x3D;&#x3D;&#x3D; dayIndex + &#x27;,&#x27; + timeIndex&quot;
+                        [attr.course]&#x3D;&quot;true&quot;
+                        [attr.pointer]&#x3D;&quot;modifyingScheduleData.currentSelectedCourseEdition?.IsMoving&quot;
+                    &gt;
+                        &lt;div *ngFor&#x3D;&quot;let course of schedule[dayIndex][timeIndex]; let courseIndex &#x3D; index&quot; 
+                            class&#x3D;&quot;schedule-course-field&quot;
+                            [style.border-bottom]&#x3D;&quot;courseIndex &#x3D;&#x3D; GetMaxElementIndexOnDay(dayIndex) ? &#x27;none&#x27; : &#x27;1px solid black&#x27;&quot;
+                            
+                            [attr.selected]&#x3D;&quot;course.IsCurrentlyActive &amp;&amp; modifyingScheduleData.currentDragEvent &#x3D;&#x3D; null&quot;
+                        &gt;
+                            &lt;app-course 
+                                [isModifying]&#x3D;&quot;isModifying&quot;
+                                [ignoreUsersLocks]&#x3D;&quot;userInfo.IsStaff &amp;&amp; userInfo.IsAdmin&quot;
+                                [representativeGroupsIds]&#x3D;&quot;representativeGroupsIds&quot;
+                                [course]&#x3D;&quot;course&quot;
+                                [settings]&#x3D;&quot;settings&quot;
+                                [weeksOnTab]&#x3D;&quot;currentFilter.weeks&quot;
+                                [isSelectedMoving]&#x3D;&quot;modifyingScheduleData.currentSelectedCourseEdition?.IsMoving&quot;
+                                (onStart)&#x3D;&quot;OnStarted($event)&quot;
+                                (onRelease)&#x3D;&quot;OnReleased($event)&quot;
+                                (onSelect)&#x3D;&quot;OnCourseSelect($event,dayIndex,timeIndex)&quot;
+                                
+                                [ngClass]&#x3D;&quot;{&#x27;not-grabbing&#x27;: IsDropDisabled(dayIndex, timeIndex)}&quot;
+                            &gt;&lt;/app-course&gt;
+                        &lt;/div&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+
+    &lt;ng-template #spinner&gt;
+        &lt;mat-progress-spinner *ngIf&#x3D;&quot;loading !&#x3D; null&quot;
+            class&#x3D;&quot;spinner&quot;
+            mode&#x3D;&quot;indeterminate&quot;
+            diameter&#x3D;&quot;40&quot;
+        &gt;&lt;/mat-progress-spinner&gt;
+    &lt;/ng-template&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./schedule.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.schedule-course-field[selected&#x3D;&quot;true&quot;] ::ng-deep .course {
+    border: 2px dashed #0043be !important;
+}
+
+.schedule-course-field:last-child:not(:only-child) {
+    border-bottom: none;
+}
+
+.schedule {
+    border: 2px solid black;
+    box-sizing: border-box;
+    margin-left: 1%;
+    width: 84%;
+    height: 73vh;
+    float: left;
+}
+
+.schedule-header {
+    height: 4%;
+    display: flex;
+    border-bottom: 2px solid black;
+    background-color: #43da57;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.schedule-header-left {
+    float: left;
+    width: 20%;
+    height: 100%;
+}
+
+.schedule-header-center {
+    float: left;
+    display: flex;
+    width: 60%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.schedule-header-right {
+    float: left;
+    width: 20%;
+    height: 100%;
+    text-align: right;
+}
+
+.schedule-header-right &gt; * {
+    margin-right: 0.5vw;
+}
+
+.edit-icon-button {
+    transform: scale(0.75);
+    top: -6px;
+}
+
+.schedule-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    box-sizing: border-box;
+    height: 94%;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.schedule-content table {
+    border: 1px solid #000000;
+}
+
+.schedule-content table td.day-column, .schedule-content table th.day-column {
+    min-width: 5vw;
+}
+
+.schedule-content table td, .schedule-content table th {
+    border: 1px solid #000000;
+    min-width: 11.6vw;
+}
+
+.schedule-content table td[course&#x3D;&quot;true&quot;] {
+    height: 10.2vh;
+    vertical-align: top;
+}
+
+.schedule-content table td[valid&#x3D;&quot;true&quot;] {
+    background-color: rgb(180, 180, 180);
+}
+
+.schedule-content table td[pointer&#x3D;&quot;true&quot;]:empty:hover{ 
+    cursor: pointer;
+    border: 3px dashed rgb(102, 102, 102);
+    box-sizing: border-box;
+}
+
+.schedule-content table td[current&#x3D;&quot;true&quot;] {
+    background-color: rgb(255, 255, 255);
+    animation: currentDrop 1.75s infinite;
+}
+
+@keyframes currentDrop {
+    0% {
+        background-color: rgb(255, 255, 255);
+    }
+    50% {
+        background-color: rgb(180, 180, 180);
+    }
+    100% {
+        background-color: rgb(255, 255, 255);
+    }
+}
+
+.schedule-content table td ::ng-deep .course {
+    width: inherit;
+    border: none;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="schedule" id="chosen-schedule">    <div class="schedule-header">        <div class="schedule-header-left"></div>        <div class="schedule-header-center">            {{labelBefore}} Schedule {{labelAfter}} {{GetViewDescription()}}        </div>        <div class="schedule-header-right">            <button *ngIf="currentFilter?.editable" mat-icon-button class="edit-icon-button" (click)="EditView()">                <mat-icon>edit</mat-icon>            </button>        </div>    </div>    <div *ngIf="loading == false; else spinner" class="schedule-content" cdkScrollable>        <table class="schedule-table">            <thead>                <tr>                    <th class="day-column"></th>                    <th *ngFor="let timeLabel of settings.TimeLabels">                        {{timeLabel}}                    </th>                </tr>            </thead>            <tbody>                <tr *ngFor="let dayLabel of settings.DayLabels; let dayIndex = index">                    <td class="day-column">                        <b>{{dayLabel}}</b>                    </td>                    <td *ngFor="let timeLabel of settings.TimeLabels; let timeIndex = index"                        cdkDropList                        #scheduleDrops="cdkDropList"                        id="{{dayIndex}},{{timeIndex}}"                        cdkDropListSortingDisabled                        [cdkDropListData]="schedule[dayIndex][timeIndex]"                        [cdkDropListDisabled]="IsDropDisabled(dayIndex,timeIndex)"                        (cdkDropListEntered)="OnDragEnter($event)"                        (cdkDropListDropped)="OnDropped($event)"                        (mouseenter)="OnMouseEnter(dayIndex,timeIndex)"                        (mouseleave)="OnMouseLeave()"                        (click)="OnDropSelect(dayIndex,timeIndex)"                        [attr.valid]="modifyingScheduleData.scheduleSlotsValidity[dayIndex][timeIndex]"                        [attr.current]="modifyingScheduleData.currentDragEvent?.source?.dropContainer?.id === dayIndex + \',\' + timeIndex"                        [attr.course]="true"                        [attr.pointer]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"                    >                        <div *ngFor="let course of schedule[dayIndex][timeIndex]; let courseIndex = index"                             class="schedule-course-field"                            [style.border-bottom]="courseIndex == GetMaxElementIndexOnDay(dayIndex) ? \'none\' : \'1px solid black\'"                                                        [attr.selected]="course.IsCurrentlyActive && modifyingScheduleData.currentDragEvent == null"                        >                            <app-course                                 [isModifying]="isModifying"                                [ignoreUsersLocks]="userInfo.IsStaff && userInfo.IsAdmin"                                [representativeGroupsIds]="representativeGroupsIds"                                [course]="course"                                [settings]="settings"                                [weeksOnTab]="currentFilter.weeks"                                [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"                                (onStart)="OnStarted($event)"                                (onRelease)="OnReleased($event)"                                (onSelect)="OnCourseSelect($event,dayIndex,timeIndex)"                                                                [ngClass]="{\'not-grabbing\': IsDropDisabled(dayIndex, timeIndex)}"                            ></app-course>                        </div>                    </td>                </tr>            </tbody>        </table>    </div>    <ng-template #spinner>        <mat-progress-spinner *ngIf="loading != null"            class="spinner"            mode="indeterminate"            diameter="40"        ></mat-progress-spinner>    </ng-template></div></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'ScheduleComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ScheduleComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

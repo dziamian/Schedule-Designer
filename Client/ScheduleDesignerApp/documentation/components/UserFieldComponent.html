@@ -1,0 +1,2561 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  UserFieldComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/admin-panel/user-field/user-field.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent zawierający widok obszaru roboczego panelu administracyjnego
+dla sekcji wprowadzania i modyfikowania danych na temat użytkowników.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-user-field</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./user-field.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./user-field.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_data" >_data</a>
+                            </li>
+                            <li>
+                                <a href="#currentPage" >currentPage</a>
+                            </li>
+                            <li>
+                                <a href="#currentQuery" >currentQuery</a>
+                            </li>
+                            <li>
+                                <a href="#isModifying" >isModifying</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#maxPage" >maxPage</a>
+                            </li>
+                            <li>
+                                <a href="#originalUserInfo" >originalUserInfo</a>
+                            </li>
+                            <li>
+                                <a href="#originalValues" >originalValues</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#PAGE_SIZE" >PAGE_SIZE</a>
+                            </li>
+                            <li>
+                                <a href="#resultsLoading" >resultsLoading</a>
+                            </li>
+                            <li>
+                                <a href="#searchForm" >searchForm</a>
+                            </li>
+                            <li>
+                                <a href="#searchResults" >searchResults</a>
+                            </li>
+                            <li>
+                                <a href="#searchStart" >searchStart</a>
+                            </li>
+                            <li>
+                                <a href="#userInfoForm" >userInfoForm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildAccountForm" >buildAccountForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildSearchForm" >buildSearchForm</a>
+                            </li>
+                            <li>
+                                <a href="#Cancel" >Cancel</a>
+                            </li>
+                            <li>
+                                <a href="#Create" >Create</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#disableForm" >disableForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#enableForm" >enableForm</a>
+                            </li>
+                            <li>
+                                <a href="#IsSameAsOriginal" >IsSameAsOriginal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadView" >loadView</a>
+                            </li>
+                            <li>
+                                <a href="#Modify" >Modify</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#Remove" >Remove</a>
+                            </li>
+                            <li>
+                                <a href="#Reset" >Reset</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#Save" >Save</a>
+                            </li>
+                            <li>
+                                <a href="#Search" >Search</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#SearchNextPage" >SearchNextPage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#SearchPreviousPage" >SearchPreviousPage</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#data" >data</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#onCreate" >onCreate</a>
+                            </li>
+                            <li>
+                                <a href="#onRefresh" >onRefresh</a>
+                            </li>
+                            <li>
+                                <a href="#onRemove" >onRemove</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#data" >data</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(administratorApiService: <a href="../injectables/AdministratorApiService.html" target="_self">AdministratorApiService</a>, snackBar: MatSnackBar)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:63</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>administratorApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AdministratorApiService.html" target="_self" >AdministratorApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>snackBar</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatSnackBar</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="data"></a>
+                        <b>data</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:32</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+Po ustawieniu danych następuje załadowanie widoku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onCreate"></a>
+                        <b>onCreate</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:43</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia dodania nowego zasobu do systemu.
+Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onRefresh"></a>
+                        <b>onRefresh</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:47</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia zapisu stanu modyfikacji zasobu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onRemove"></a>
+                        <b>onRemove</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:45</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia usunięcia zasobu z systemu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildAccountForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>buildAccountForm</b></span>
+                        <a href="#buildAccountForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildAccountForm(userInfo: <a href="../classes/UserInfo.html" target="_self">UserInfo</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="102"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:102</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda budująca formularz z danymi początkowymi podanymi w parametrze.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userInfo</td>
+                                    <td>
+                                                <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Dane początkowe zbudowanego formularza</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildSearchForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>buildSearchForm</b></span>
+                        <a href="#buildSearchForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildSearchForm()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:92</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda budująca formularz wyszukiwania użytkowników.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Cancel"></a>
+                    <span class="name">
+                        <span ><b>Cancel</b></span>
+                        <a href="#Cancel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Cancel()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="196"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:196</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Create"></a>
+                    <span class="name">
+                        <span ><b>Create</b></span>
+                        <a href="#Create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Create(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="271"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:271</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie utworzenia nowego konta użytkownika na podstawie identyfikatora w systemie USOS.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator użytkownika w systemie USOS</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="disableForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>disableForm</b></span>
+                        <a href="#disableForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>disableForm()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:118</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wyłączająca możliwość modyfikacji formularzy.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="enableForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>enableForm</b></span>
+                        <a href="#enableForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>enableForm()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:126</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda włączająca możliwość modyfikacji formularzy.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IsSameAsOriginal"></a>
+                    <span class="name">
+                        <span ><b>IsSameAsOriginal</b></span>
+                        <a href="#IsSameAsOriginal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>IsSameAsOriginal()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="170"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:170</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda porównująca aktualny stan pól formularzy z oryginalnymi
+wartościami zasobu pobranymi z serwera.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadView"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>loadView</b></span>
+                        <a href="#loadView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadView()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:137</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+Różnią się one w zależności od trybu widoku - dodawania lub podglądu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Modify"></a>
+                    <span class="name">
+                        <span ><b>Modify</b></span>
+                        <a href="#Modify"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Modify()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="187"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:187</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda uruchamiająca tryb modyfikacji zasobu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:86</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Remove"></a>
+                    <span class="name">
+                        <span ><b>Remove</b></span>
+                        <a href="#Remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Remove()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="253"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:253</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie usunięcia zasobu na serwer.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Reset"></a>
+                    <span class="name">
+                        <span ><b>Reset</b></span>
+                        <a href="#Reset"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Reset()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="192"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:192</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Save"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>Save</b></span>
+                        <a href="#Save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Save()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="204"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:204</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Search"></a>
+                    <span class="name">
+                        <span ><b>Search</b></span>
+                        <a href="#Search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Search()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="290"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:290</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie wyszukania użytkowników spełniających
+kryteria podanych w polu formularza na serwer. Wyświetlona zostanie pierwsza strona
+rezultatów.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SearchNextPage"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>SearchNextPage</b></span>
+                        <a href="#SearchNextPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>SearchNextPage()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="326"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:326</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie wyszukania użytkowników spełniających
+kryteria podanych w polu formularza na serwer. Wyświetlona zostanie kolejna strona
+rezultatów.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SearchPreviousPage"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>SearchPreviousPage</b></span>
+                        <a href="#SearchPreviousPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>SearchPreviousPage()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="356"
+                            class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:356</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie wyszukania użytkowników spełniających
+kryteria podanych w polu formularza na serwer. Wyświetlona zostanie poprzednia strona
+rezultatów.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_data"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_data</b></span>
+                        <a href="#_data"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Dane wymagane do załadowania widoku obszaru roboczego.
+Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentPage"></a>
+                    <span class="name">
+                        <span ><b>currentPage</b></span>
+                        <a href="#currentPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Aktualnie wyświetlona strona.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentQuery"></a>
+                    <span class="name">
+                        <span ><b>currentQuery</b></span>
+                        <a href="#currentQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:79</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Kryteria wyszukiwania użytkowników.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isModifying"></a>
+                    <span class="name">
+                        <span ><b>isModifying</b></span>
+                        <a href="#isModifying"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa czy włączony został tryb modyfikacji zasobu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="maxPage"></a>
+                    <span class="name">
+                        <span ><b>maxPage</b></span>
+                        <a href="#maxPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:77</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Maksymalna liczba istniejących stron rezultatów, o których wiadomo w danym momencie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="originalUserInfo"></a>
+                    <span class="name">
+                        <span ><b>originalUserInfo</b></span>
+                        <a href="#originalUserInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o pobranym zasobie użytkownika z systemu
+(posiada odpowiednie informacje w przypadku trybu podglądu).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="originalValues"></a>
+                    <span class="name">
+                        <span ><b>originalValues</b></span>
+                        <a href="#originalValues"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Wartości początkowe formularza modyfikacji zasobu w celu
+możliwości późniejszego ich zresetowania.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PAGE_SIZE"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>PAGE_SIZE</b></span>
+                        <a href="#PAGE_SIZE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>5</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Liczba odnalezionych użytkowników wyświetlanych na pojedynczej stronie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resultsLoading"></a>
+                    <span class="name">
+                        <span ><b>resultsLoading</b></span>
+                        <a href="#resultsLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy rezultaty wyszukiwania zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchForm"></a>
+                    <span class="name">
+                        <span ><b>searchForm</b></span>
+                        <a href="#searchForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Group.html" target="_self" >FormGroup</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:82</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Formularz wyszukiwania użytkowników w systemie USOS.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchResults"></a>
+                    <span class="name">
+                        <span ><b>searchResults</b></span>
+                        <a href="#searchResults"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>SearchUser | null</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Wynik wyszukiwania użytkowników w systemie USOS.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchStart"></a>
+                    <span class="name">
+                        <span ><b>searchStart</b></span>
+                        <a href="#searchStart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa ilu użytkowników należy pominąć, aby uzyskać odpowiednią stronę rezultatów.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userInfoForm"></a>
+                    <span class="name">
+                        <span ><b>userInfoForm</b></span>
+                        <a href="#userInfoForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Group.html" target="_self" >FormGroup</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:84</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Formularz modyfikacji zasobu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="data"></a>
+                        <span class="name"><b>data</b><a href="#data"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>data()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:35</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>data(value: literal type)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/admin-panel/user-field/user-field.component.ts:32</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+Po ustawieniu danych następuje załadowanie widoku.</p>
+</div>
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>value</td>
+                                                    
+                                                            <td>
+                                                                        <code>literal type</code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, EventEmitter, Input, OnInit, Output } from &#x27;@angular/core&#x27;;
+import { FormControl, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { finalize } from &#x27;rxjs/operators&#x27;;
+import { UserInfo, SearchUser } from &#x27;src/app/others/Accounts&#x27;;
+import { AdministratorApiService } from &#x27;src/app/services/AdministratorApiService/administrator-api.service&#x27;;
+
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji wprowadzania i modyfikowania danych na temat użytkowników.
+ */
+@Component({
+  selector: &#x27;app-user-field&#x27;,
+  templateUrl: &#x27;./user-field.component.html&#x27;,
+  styleUrls: [&#x27;./user-field.component.css&#x27;]
+})
+export class UserFieldComponent implements OnInit {
+
+  /** Liczba odnalezionych użytkowników wyświetlanych na pojedynczej stronie. */
+  readonly PAGE_SIZE: number &#x3D; 5;
+
+  /** 
+   * Dane wymagane do załadowania widoku obszaru roboczego.
+   * Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).
+   */
+  private _data: {id: string|undefined, type: string, actionType: string};
+
+  /**
+   * Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+   * Po ustawieniu danych następuje załadowanie widoku.
+   */
+  @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
+    this._data &#x3D; value;
+    this.loadView();
+  } get data(): {id: string|undefined, type: string, actionType: string} {
+    return this._data;
+  }
+
+  /** 
+   * Emiter zdarzenia dodania nowego zasobu do systemu.
+   * Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.
+  */
+  @Output() onCreate: EventEmitter&lt;string&gt; &#x3D; new EventEmitter();
+  /** Emiter zdarzenia usunięcia zasobu z systemu. */
+  @Output() onRemove: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+  /** Emiter zdarzenia zapisu stanu modyfikacji zasobu. */
+  @Output() onRefresh: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+
+  /** Informacje o pobranym zasobie użytkownika z systemu 
+   * (posiada odpowiednie informacje w przypadku trybu podglądu). 
+   */
+  originalUserInfo: UserInfo;
+
+  /** Wartości początkowe formularza modyfikacji zasobu w celu 
+   * możliwości późniejszego ich zresetowania. */
+  originalValues: any;
+  /** Określa czy włączony został tryb modyfikacji zasobu. */
+  isModifying: boolean &#x3D; false;
+
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean | null &#x3D; null;
+  /** Informuje czy rezultaty wyszukiwania zostały załadowane. */
+  resultsLoading: boolean &#x3D; false;
+
+  constructor(
+    private administratorApiService: AdministratorApiService,
+    private snackBar: MatSnackBar
+  ) { }
+
+  /** Wynik wyszukiwania użytkowników w systemie USOS. */
+  searchResults: SearchUser | null;
+  /** Określa ilu użytkowników należy pominąć, aby uzyskać odpowiednią stronę rezultatów. */
+  searchStart: number &#x3D; 0;
+  /** Aktualnie wyświetlona strona. */
+  currentPage: number &#x3D; 0;
+  /** Maksymalna liczba istniejących stron rezultatów, o których wiadomo w danym momencie. */
+  maxPage: number &#x3D; 0;
+  /** Kryteria wyszukiwania użytkowników. */
+  currentQuery: string;
+
+  /** Formularz wyszukiwania użytkowników w systemie USOS. */
+  searchForm: FormGroup;
+  /** Formularz modyfikacji zasobu. */
+  userInfoForm: FormGroup;
+
+  ngOnInit(): void {
+  }
+
+  /**
+   * Metoda budująca formularz wyszukiwania użytkowników.
+   */
+  private buildSearchForm() {
+    this.searchForm &#x3D; new FormGroup({
+      search: new FormControl(&#x27;&#x27;, [Validators.required])
+    });
+  }
+
+  /**
+   * Metoda budująca formularz z danymi początkowymi podanymi w parametrze.
+   * @param userInfo Dane początkowe zbudowanego formularza
+   */
+  private buildAccountForm(userInfo: UserInfo) {
+    this.userInfoForm &#x3D; new FormGroup({
+      firstName: new FormControl(userInfo.FirstName, [Validators.required]),
+      lastName: new FormControl(userInfo.LastName, [Validators.required]),
+      academicNumber: new FormControl(userInfo.AcademicNumber ?? &#x27;&#x27;),
+      titleBefore: new FormControl(userInfo.TitleBefore ?? &#x27;&#x27;),
+      titleAfter: new FormControl(userInfo.TitleAfter ?? &#x27;&#x27;),
+      staff: new FormControl(userInfo.IsStaff),
+      coordinator: new FormControl(userInfo.IsCoordinator),
+      admin: new FormControl(userInfo.IsAdmin),
+      student: new FormControl(userInfo.IsStudent)
+    });
+    this.originalValues &#x3D; this.userInfoForm.value;
+  }
+
+  /** Metoda wyłączająca możliwość modyfikacji formularzy. */
+  private disableForm() {
+    for (var controlName in this.userInfoForm.controls) {
+      this.userInfoForm.controls[controlName].disable();
+    }
+    this.isModifying &#x3D; false;
+  }
+
+  /** Metoda włączająca możliwość modyfikacji formularzy. */
+  private enableForm() {
+    for (var controlName in this.userInfoForm.controls) {
+      this.userInfoForm.controls[controlName].enable();
+    }
+    this.isModifying &#x3D; true;
+  }
+
+  /**
+   * Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+   * Różnią się one w zależności od trybu widoku - dodawania lub podglądu.
+   */
+  private loadView() {
+    this.loading &#x3D; true;
+
+    if (this._data.actionType &#x3D;&#x3D;&#x3D; &#x27;view&#x27;) {
+      this.administratorApiService.GetUserAccount(Number.parseInt(this._data.id!)).subscribe(userInfo &#x3D;&gt; {
+        this.originalUserInfo &#x3D; userInfo;
+
+        this.buildAccountForm(this.originalUserInfo);
+
+        this.disableForm();
+
+        this.loading &#x3D; false;
+      }, () &#x3D;&gt; {
+        this.snackBar.open(&quot;Could not find user.&quot;, &quot;OK&quot;);
+      });
+    } else if (this._data.actionType &#x3D;&#x3D;&#x3D; &#x27;add&#x27;) {
+      this.searchResults &#x3D; null;
+      this.searchStart &#x3D; 0;
+      this.currentQuery &#x3D; &#x27;&#x27;;
+      
+      this.buildSearchForm();
+      
+      this.loading &#x3D; false;
+    } else {
+      this.loading &#x3D; false;
+    }
+  }
+  
+  /**
+   * Metoda porównująca aktualny stan pól formularzy z oryginalnymi 
+   * wartościami zasobu pobranymi z serwera.
+   * @returns Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu
+   */
+  IsSameAsOriginal(): boolean {
+    return this.originalUserInfo.FirstName &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;firstName&#x27;].value
+      &amp;&amp; this.originalUserInfo.LastName &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;lastName&#x27;].value
+      &amp;&amp; this.originalUserInfo.AcademicNumber &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;academicNumber&#x27;].value
+      &amp;&amp; this.originalUserInfo.TitleBefore &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;titleBefore&#x27;].value
+      &amp;&amp; this.originalUserInfo.TitleAfter &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;titleAfter&#x27;].value
+      &amp;&amp; this.originalUserInfo.IsStaff &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;staff&#x27;].value
+      &amp;&amp; ((this.userInfoForm.controls[&#x27;staff&#x27;].value
+        &amp;&amp; this.originalUserInfo.IsAdmin &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;admin&#x27;].value
+        &amp;&amp; this.originalUserInfo.IsCoordinator &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;coordinator&#x27;].value)
+        || !this.userInfoForm.controls[&#x27;staff&#x27;].value)
+      &amp;&amp; this.originalUserInfo.IsStudent &#x3D;&#x3D;&#x3D; this.userInfoForm.controls[&#x27;student&#x27;].value;
+  }
+
+  /**
+   * Metoda uruchamiająca tryb modyfikacji zasobu.
+   */
+  Modify() {
+    this.Reset();
+    this.enableForm();
+  }
+
+  Reset() {
+    this.userInfoForm.reset(this.originalValues);
+  }
+
+  Cancel() {
+    this.Reset();
+    this.disableForm();
+  }
+
+  /**
+   * Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
+  async Save() {
+    if (!this.userInfoForm.valid) {
+      return;
+    }
+
+    const firstName &#x3D; this.userInfoForm.controls[&#x27;firstName&#x27;].value;
+    const lastName &#x3D; this.userInfoForm.controls[&#x27;lastName&#x27;].value;
+    const academicNumber &#x3D; this.userInfoForm.controls[&#x27;academicNumber&#x27;].value;
+    const titleBefore &#x3D; this.userInfoForm.controls[&#x27;titleBefore&#x27;].value;
+    const titleAfter &#x3D; this.userInfoForm.controls[&#x27;titleAfter&#x27;].value;
+    const staff &#x3D; this.userInfoForm.controls[&#x27;staff&#x27;].value;
+    const coordinator &#x3D; staff ? this.userInfoForm.controls[&#x27;coordinator&#x27;].value : undefined;
+    const admin &#x3D; staff ? this.userInfoForm.controls[&#x27;admin&#x27;].value : undefined;
+    const student &#x3D; this.userInfoForm.controls[&#x27;student&#x27;].value;
+
+    const userInfo &#x3D; {
+      UserId: this.originalUserInfo.UserId,
+      FirstName: this.originalUserInfo.FirstName &#x3D;&#x3D;&#x3D; firstName ? undefined : firstName,
+      LastName: this.originalUserInfo.LastName &#x3D;&#x3D;&#x3D; lastName ? undefined : lastName,
+      AcademicNumber: this.originalUserInfo.AcademicNumber &#x3D;&#x3D;&#x3D; academicNumber ? undefined : academicNumber,
+      TitleBefore: this.originalUserInfo.TitleBefore &#x3D;&#x3D;&#x3D; titleBefore ? undefined : titleBefore,
+      TitleAfter: this.originalUserInfo.TitleAfter &#x3D;&#x3D;&#x3D; titleAfter ? undefined : titleAfter,
+      IsStudent: this.originalUserInfo.IsStudent &#x3D;&#x3D;&#x3D; student ? undefined : student,
+      IsStaff: this.originalUserInfo.IsStaff &#x3D;&#x3D;&#x3D; staff ? undefined : staff,
+      IsCoordinator: this.originalUserInfo.IsCoordinator &#x3D;&#x3D;&#x3D; coordinator ? undefined : coordinator,
+      IsAdmin: this.originalUserInfo.IsAdmin &#x3D;&#x3D;&#x3D; admin ? undefined : admin,
+    }
+
+    this.disableForm();
+    this.administratorApiService.UpdateUser(userInfo).subscribe(() &#x3D;&gt; {
+      this.onRefresh.emit();
+      
+      this.snackBar.open(&quot;Successfully updated user.&quot;, &quot;OK&quot;);
+
+      this.loadView();
+    }, response &#x3D;&gt; {
+      this.enableForm();
+      
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie usunięcia zasobu na serwer.
+   */
+  Remove() {
+    this.administratorApiService.RemoveUser(this.originalUserInfo.UserId).subscribe(() &#x3D;&gt; {
+      this.onRemove.emit();
+      
+      this.snackBar.open(&quot;Successfully removed user.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie utworzenia nowego konta użytkownika na podstawie identyfikatora w systemie USOS.
+   * @param userId Identyfikator użytkownika w systemie USOS
+   */
+  Create(userId: number) {
+    this.administratorApiService.CreateAccountFromUsos(userId).subscribe(response &#x3D;&gt; {
+      this.onCreate.emit(&#x60;${userId}&#x60;);
+      
+      this.snackBar.open(&quot;Successfully created account for this user.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie wyszukania użytkowników spełniających 
+   * kryteria podanych w polu formularza na serwer. Wyświetlona zostanie pierwsza strona
+   * rezultatów.
+   */
+  Search() {
+    if (!this.searchForm.valid) {
+      return;
+    }
+    if (this.currentQuery &#x3D;&#x3D;&#x3D; this.searchForm.controls[&#x27;search&#x27;].value) {
+      return;
+    }
+
+    this.resultsLoading &#x3D; true;
+    this.searchResults &#x3D; null;
+
+    this.currentQuery &#x3D; this.searchForm.controls[&#x27;search&#x27;].value;
+
+    this.administratorApiService.SearchForUserFromUsos(
+      this.currentQuery, this.PAGE_SIZE, 0
+    ).pipe(finalize(() &#x3D;&gt; {
+      this.resultsLoading &#x3D; false;
+    })).subscribe(result &#x3D;&gt; {
+      this.searchResults &#x3D; result;
+      this.searchStart &#x3D; 0;
+      this.currentPage &#x3D; 1;
+      this.maxPage &#x3D; this.searchResults.NextPage ? this.currentPage + 1 : this.currentPage;
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie wyszukania użytkowników spełniających 
+   * kryteria podanych w polu formularza na serwer. Wyświetlona zostanie kolejna strona
+   * rezultatów.
+   */
+  async SearchNextPage() {
+    this.resultsLoading &#x3D; true;
+    this.searchResults &#x3D; null;
+
+    try {
+      const result &#x3D; await this.administratorApiService.SearchForUserFromUsos(
+        this.currentQuery, this.PAGE_SIZE, this.searchStart + this.PAGE_SIZE
+      ).toPromise();
+
+      this.searchResults &#x3D; result;
+      this.searchStart +&#x3D; this.PAGE_SIZE;
+      ++this.currentPage;
+      if (this.maxPage &lt;&#x3D; this.currentPage) {
+        this.maxPage &#x3D; this.searchResults.NextPage ? this.currentPage + 1 : this.currentPage;
+      }
+    } catch (response : any) {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    }
+    this.resultsLoading &#x3D; false;
+  }
+
+  /**
+   * Metoda wysyłająca żądanie wyszukania użytkowników spełniających 
+   * kryteria podanych w polu formularza na serwer. Wyświetlona zostanie poprzednia strona
+   * rezultatów.
+   */
+  async SearchPreviousPage() {
+    this.resultsLoading &#x3D; true;
+    this.searchResults &#x3D; null;
+
+    try {
+      const result &#x3D; await this.administratorApiService.SearchForUserFromUsos(
+        this.currentQuery, this.PAGE_SIZE, this.searchStart - this.PAGE_SIZE
+      ).toPromise();
+
+      this.searchResults &#x3D; result;
+      this.searchStart -&#x3D; this.PAGE_SIZE;
+      --this.currentPage;
+    } catch (response : any) {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    }
+    this.resultsLoading &#x3D; false;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div *ngIf&#x3D;&quot;loading &#x3D;&#x3D; false; else spinner&quot;&gt;
+    &lt;div [ngSwitch]&#x3D;&quot;data?.actionType&quot;&gt;
+        &lt;div *ngSwitchCase&#x3D;&quot;&#x27;add&#x27;&quot; class&#x3D;&quot;content&quot;&gt;
+            &lt;div class&#x3D;&quot;content-header&quot;&gt;
+                &lt;b&gt;Add user from USOS&lt;/b&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;content-inner&quot;&gt;
+                &lt;div class&#x3D;&quot;content-form&quot;&gt;
+                    &lt;form (ngSubmit)&#x3D;&quot;Search()&quot; [formGroup]&#x3D;&quot;searchForm&quot;&gt;
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Search for user...&lt;/mat-label&gt;
+                            &lt;mat-icon matPrefix class&#x3D;&quot;mat-search-icon&quot;&gt;search&lt;/mat-icon&gt;
+                            &lt;input matInput name&#x3D;&quot;search&quot; formControlName&#x3D;&quot;search&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                            &lt;button matSuffix type&#x3D;&quot;submit&quot; class&#x3D;&quot;search-button&quot; mat-raised-button color&#x3D;&quot;primary&quot;&gt;
+                                Search
+                            &lt;/button&gt;
+                        &lt;/mat-form-field&gt;
+                    &lt;/form&gt;
+                &lt;/div&gt;
+                &lt;div *ngIf&#x3D;&quot;!resultsLoading; else spinner&quot;&gt;
+                    &lt;div class&#x3D;&quot;search-buttons&quot;&gt;
+                        &lt;span *ngIf&#x3D;&quot;searchResults !&#x3D; null&quot;&gt;
+                            Page {{currentPage}} of {{maxPage}}
+                        &lt;/span&gt;
+                        &lt;button mat-icon-button [disabled]&#x3D;&quot;searchStart &lt; PAGE_SIZE&quot; (click)&#x3D;&quot;SearchPreviousPage()&quot;&gt;
+                            &lt;mat-icon&gt;arrow_back_ios&lt;/mat-icon&gt;
+                        &lt;/button&gt;
+                        &lt;button mat-icon-button [disabled]&#x3D;&quot;!currentQuery || (searchResults !&#x3D; null &amp;&amp; !searchResults.NextPage)&quot; (click)&#x3D;&quot;SearchNextPage()&quot;&gt;
+                            &lt;mat-icon&gt;arrow_forward_ios&lt;/mat-icon&gt;
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                    &lt;mat-list role&#x3D;&quot;list&quot; *ngIf&#x3D;&quot;(searchResults !&#x3D; null &amp;&amp; searchResults.Users.length &gt; 0); else noResults&quot;&gt;
+                        &lt;mat-divider&gt;&lt;/mat-divider&gt;
+                        &lt;mat-list-item role&#x3D;&quot;listitem&quot; *ngFor&#x3D;&quot;let user of searchResults.Users&quot;&gt;
+                            &lt;div class&#x3D;&quot;item-text&quot; matLine&gt;
+                                &lt;span class&#x3D;&quot;item-text-line&quot;&gt;
+                                    {{user?.TitleBefore}} {{user.FirstName}} {{user.LastName}} {{user?.TitleAfter}} ({{user.UserId}})
+                                &lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class&#x3D;&quot;item-text&quot; matLine&gt;
+                                &lt;span class&#x3D;&quot;item-text-line&quot;&gt;
+                                    &lt;b&gt;Staff&lt;/b&gt;: 
+                                    &lt;mat-icon class&#x3D;&quot;status-icon&quot;&gt;
+                                        {{user.IsStaff ? &#x27;check&#x27; : &#x27;close&#x27;}}
+                                    &lt;/mat-icon&gt;
+                                &lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class&#x3D;&quot;item-text&quot; matLine&gt;
+                                &lt;span class&#x3D;&quot;item-text-line&quot;&gt;
+                                    &lt;b&gt;Coordinator&lt;/b&gt;: 
+                                    &lt;mat-icon class&#x3D;&quot;status-icon&quot;&gt;
+                                        {{user.IsCoordinator ? &#x27;check&#x27; : &#x27;close&#x27;}}
+                                    &lt;/mat-icon&gt;
+                                &lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class&#x3D;&quot;item-text&quot; matLine&gt;
+                                &lt;span class&#x3D;&quot;item-text-line&quot;&gt;
+                                    &lt;b&gt;Student&lt;/b&gt;: 
+                                    &lt;mat-icon class&#x3D;&quot;status-icon&quot;&gt;
+                                        {{user.IsStudent ? &#x27;check&#x27; : &#x27;close&#x27;}}
+                                    &lt;/mat-icon&gt;
+                                &lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div&gt;
+                                &lt;button mat-raised-button color&#x3D;&quot;primary&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                    (click)&#x3D;&quot;Create(user.UserId)&quot;&gt;
+                                    Create Account
+                                &lt;/button&gt;
+                            &lt;/div&gt;
+                            &lt;mat-divider&gt;&lt;/mat-divider&gt;
+                        &lt;/mat-list-item&gt;
+                    &lt;/mat-list&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div *ngSwitchCase&#x3D;&quot;&#x27;view&#x27;&quot; class&#x3D;&quot;content&quot;&gt;
+            &lt;div class&#x3D;&quot;content-header&quot;&gt;
+                &lt;b&gt;User (ID: {{originalUserInfo.UserId}})&lt;/b&gt;
+                &lt;button mat-icon-button class&#x3D;&quot;edit-icon-button&quot; [disabled]&#x3D;&quot;isModifying&quot; (click)&#x3D;&quot;Modify()&quot;&gt;
+                    &lt;mat-icon&gt;edit&lt;/mat-icon&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;content-inner&quot;&gt;
+                &lt;div class&#x3D;&quot;content-form&quot;&gt;
+                    &lt;form (ngSubmit)&#x3D;&quot;Save()&quot; [formGroup]&#x3D;&quot;userInfoForm&quot;&gt;
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;First Name&lt;/mat-label&gt;
+                            &lt;input matInput name&#x3D;&quot;firstName&quot; formControlName&#x3D;&quot;firstName&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                            &lt;mat-error *ngIf&#x3D;&quot;userInfoForm.controls[&#x27;firstName&#x27;].hasError(&#x27;required&#x27;)&quot;&gt;
+                                First name is &lt;strong&gt;required&lt;/strong&gt;.
+                            &lt;/mat-error&gt;
+                        &lt;/mat-form-field&gt;
+                        &lt;br&gt;&lt;br&gt;
+
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Last Name&lt;/mat-label&gt;
+                            &lt;input matInput name&#x3D;&quot;lastName&quot; formControlName&#x3D;&quot;lastName&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                            &lt;mat-error *ngIf&#x3D;&quot;userInfoForm.controls[&#x27;lastName&#x27;].hasError(&#x27;required&#x27;)&quot;&gt;
+                                Last name is &lt;strong&gt;required&lt;/strong&gt;.
+                            &lt;/mat-error&gt;
+                        &lt;/mat-form-field&gt;
+                        &lt;br&gt;&lt;br&gt;
+
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Academic Number&lt;/mat-label&gt;
+                            &lt;input matInput name&#x3D;&quot;academicNumber&quot; formControlName&#x3D;&quot;academicNumber&quot; maxlength&#x3D;&quot;20&quot;&gt;
+                        &lt;/mat-form-field&gt;
+
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Title Before Name&lt;/mat-label&gt;
+                            &lt;input matInput name&#x3D;&quot;titleBefore&quot; formControlName&#x3D;&quot;titleBefore&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                        &lt;/mat-form-field&gt;
+
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Title After Name&lt;/mat-label&gt;
+                            &lt;input matInput name&#x3D;&quot;titleAfter&quot; formControlName&#x3D;&quot;titleAfter&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                        &lt;/mat-form-field&gt;
+
+                        &lt;mat-checkbox color&#x3D;&quot;primary&quot; name&#x3D;&quot;staff&quot; formControlName&#x3D;&quot;staff&quot;&gt;
+                            &lt;b&gt;Staff&lt;/b&gt;
+                        &lt;/mat-checkbox&gt;
+
+                        &lt;div *ngIf&#x3D;&quot;userInfoForm.value[&#x27;staff&#x27;]&quot;&gt;
+                            &lt;mat-checkbox color&#x3D;&quot;primary&quot; name&#x3D;&quot;admin&quot; formControlName&#x3D;&quot;admin&quot;&gt;
+                                &lt;b&gt;Administrator&lt;/b&gt;
+                            &lt;/mat-checkbox&gt;
+                            &lt;br&gt;
+
+                            &lt;mat-checkbox color&#x3D;&quot;primary&quot; name&#x3D;&quot;coordinator&quot; formControlName&#x3D;&quot;coordinator&quot;&gt;
+                                &lt;b&gt;Coordinator&lt;/b&gt;
+                            &lt;/mat-checkbox&gt;
+                        &lt;/div&gt;
+                        &lt;br&gt;
+
+                        &lt;mat-checkbox color&#x3D;&quot;primary&quot; name&#x3D;&quot;student&quot; formControlName&#x3D;&quot;student&quot;&gt;
+                            &lt;b&gt;Student&lt;/b&gt;
+                        &lt;/mat-checkbox&gt;
+
+                        &lt;button type&#x3D;&quot;submit&quot; mat-raised-button color&#x3D;&quot;primary&quot; class&#x3D;&quot;form-submit&quot; 
+                            [disabled]&#x3D;&quot;!isModifying || IsSameAsOriginal()&quot;&gt;
+                            Save
+                        &lt;/button&gt;
+                        
+                        &lt;button type&#x3D;&quot;button&quot; mat-raised-button color&#x3D;&quot;accent&quot; class&#x3D;&quot;form-reset&quot; 
+                            [disabled]&#x3D;&quot;!isModifying&quot; 
+                            (click)&#x3D;&quot;Reset()&quot;&gt;
+                            Reset
+                        &lt;/button&gt;
+                        
+                        &lt;button type&#x3D;&quot;button&quot; mat-raised-button class&#x3D;&quot;form-reset&quot; 
+                            [disabled]&#x3D;&quot;!isModifying&quot; 
+                            (click)&#x3D;&quot;Cancel()&quot;&gt;
+                            Cancel Modification
+                        &lt;/button&gt;
+                    &lt;/form&gt;
+                    &lt;br&gt;&lt;br&gt;
+                    &lt;button mat-raised-button color&#x3D;&quot;warn&quot; class&#x3D;&quot;form-submit&quot; 
+                        [disabled]&#x3D;&quot;!isModifying&quot;
+                        (click)&#x3D;&quot;Remove()&quot;&gt;
+                        Remove
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div *ngSwitchDefault&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;ng-template #spinner&gt;
+    &lt;mat-progress-spinner *ngIf&#x3D;&quot;loading !&#x3D; null&quot;
+        class&#x3D;&quot;spinner&quot;
+        mode&#x3D;&quot;indeterminate&quot;
+        diameter&#x3D;&quot;40&quot;
+    &gt;&lt;/mat-progress-spinner&gt;
+&lt;/ng-template&gt;
+
+&lt;ng-template #noResults&gt;
+    &lt;div class&#x3D;&quot;no-results&quot;&gt;
+        No results found.
+    &lt;/div&gt;
+&lt;/ng-template&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./user-field.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.content {
+    height: 75vh;
+    font-size: 12pt;
+    text-align: left;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.content-header {
+    height: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 1.17em;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.content-subheader {
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 1em;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.search-buttons {
+    margin-top: 1vh;
+    text-align: center;
+}
+
+.no-results {
+    text-align: center;
+}
+
+.edit-icon-button {
+    transform: scale(0.75);
+    top: -3px;
+}
+
+.status-icon {
+    position: relative;
+    top: 5px;
+}
+
+.item-text-line {
+    font-size: 12px;
+}
+
+.search-button {
+    position: relative;
+    top: -7px;
+}
+
+.content-inner {
+    height: 92%;
+    overflow-y: auto;
+}
+
+.content-form {
+    padding-top: 3%;
+    padding-bottom: 7%;
+    padding-left: 3%;
+    padding-right: 3%;
+    border-bottom: 2px solid black;
+}
+
+.form-input {
+    width: 100%;
+}
+
+.form-reset {
+    float: right;
+    min-width: 15%;
+    margin-right: 3%;
+}
+
+.form-submit {
+    float: right;
+    min-width: 15%;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div *ngIf="loading == false; else spinner">    <div [ngSwitch]="data?.actionType">        <div *ngSwitchCase="\'add\'" class="content">            <div class="content-header">                <b>Add user from USOS</b>            </div>            <div class="content-inner">                <div class="content-form">                    <form (ngSubmit)="Search()" [formGroup]="searchForm">                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>Search for user...</mat-label>                            <mat-icon matPrefix class="mat-search-icon">search</mat-icon>                            <input matInput name="search" formControlName="search" maxlength="100">                            <button matSuffix type="submit" class="search-button" mat-raised-button color="primary">                                Search                            </button>                        </mat-form-field>                    </form>                </div>                <div *ngIf="!resultsLoading; else spinner">                    <div class="search-buttons">                        <span *ngIf="searchResults != null">                            Page {{currentPage}} of {{maxPage}}                        </span>                        <button mat-icon-button [disabled]="searchStart < PAGE_SIZE" (click)="SearchPreviousPage()">                            <mat-icon>arrow_back_ios</mat-icon>                        </button>                        <button mat-icon-button [disabled]="!currentQuery || (searchResults != null && !searchResults.NextPage)" (click)="SearchNextPage()">                            <mat-icon>arrow_forward_ios</mat-icon>                        </button>                    </div>                    <mat-list role="list" *ngIf="(searchResults != null && searchResults.Users.length > 0); else noResults">                        <mat-divider></mat-divider>                        <mat-list-item role="listitem" *ngFor="let user of searchResults.Users">                            <div class="item-text" matLine>                                <span class="item-text-line">                                    {{user?.TitleBefore}} {{user.FirstName}} {{user.LastName}} {{user?.TitleAfter}} ({{user.UserId}})                                </span>                            </div>                            <div class="item-text" matLine>                                <span class="item-text-line">                                    <b>Staff</b>:                                     <mat-icon class="status-icon">                                        {{user.IsStaff ? \'check\' : \'close\'}}                                    </mat-icon>                                </span>                            </div>                            <div class="item-text" matLine>                                <span class="item-text-line">                                    <b>Coordinator</b>:                                     <mat-icon class="status-icon">                                        {{user.IsCoordinator ? \'check\' : \'close\'}}                                    </mat-icon>                                </span>                            </div>                            <div class="item-text" matLine>                                <span class="item-text-line">                                    <b>Student</b>:                                     <mat-icon class="status-icon">                                        {{user.IsStudent ? \'check\' : \'close\'}}                                    </mat-icon>                                </span>                            </div>                            <div>                                <button mat-raised-button color="primary" style="margin-right: 1vw;"                                    (click)="Create(user.UserId)">                                    Create Account                                </button>                            </div>                            <mat-divider></mat-divider>                        </mat-list-item>                    </mat-list>                </div>            </div>        </div>        <div *ngSwitchCase="\'view\'" class="content">            <div class="content-header">                <b>User (ID: {{originalUserInfo.UserId}})</b>                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify()">                    <mat-icon>edit</mat-icon>                </button>            </div>            <div class="content-inner">                <div class="content-form">                    <form (ngSubmit)="Save()" [formGroup]="userInfoForm">                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>First Name</mat-label>                            <input matInput name="firstName" formControlName="firstName" maxlength="100">                            <mat-error *ngIf="userInfoForm.controls[\'firstName\'].hasError(\'required\')">                                First name is <strong>required</strong>.                            </mat-error>                        </mat-form-field>                        <br><br>                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>Last Name</mat-label>                            <input matInput name="lastName" formControlName="lastName" maxlength="100">                            <mat-error *ngIf="userInfoForm.controls[\'lastName\'].hasError(\'required\')">                                Last name is <strong>required</strong>.                            </mat-error>                        </mat-form-field>                        <br><br>                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>Academic Number</mat-label>                            <input matInput name="academicNumber" formControlName="academicNumber" maxlength="20">                        </mat-form-field>                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>Title Before Name</mat-label>                            <input matInput name="titleBefore" formControlName="titleBefore" maxlength="100">                        </mat-form-field>                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>Title After Name</mat-label>                            <input matInput name="titleAfter" formControlName="titleAfter" maxlength="100">                        </mat-form-field>                        <mat-checkbox color="primary" name="staff" formControlName="staff">                            <b>Staff</b>                        </mat-checkbox>                        <div *ngIf="userInfoForm.value[\'staff\']">                            <mat-checkbox color="primary" name="admin" formControlName="admin">                                <b>Administrator</b>                            </mat-checkbox>                            <br>                            <mat-checkbox color="primary" name="coordinator" formControlName="coordinator">                                <b>Coordinator</b>                            </mat-checkbox>                        </div>                        <br>                        <mat-checkbox color="primary" name="student" formControlName="student">                            <b>Student</b>                        </mat-checkbox>                        <button type="submit" mat-raised-button color="primary" class="form-submit"                             [disabled]="!isModifying || IsSameAsOriginal()">                            Save                        </button>                                                <button type="button" mat-raised-button color="accent" class="form-reset"                             [disabled]="!isModifying"                             (click)="Reset()">                            Reset                        </button>                                                <button type="button" mat-raised-button class="form-reset"                             [disabled]="!isModifying"                             (click)="Cancel()">                            Cancel Modification                        </button>                    </form>                    <br><br>                    <button mat-raised-button color="warn" class="form-submit"                         [disabled]="!isModifying"                        (click)="Remove()">                        Remove                    </button>                </div>            </div>        </div>        <div *ngSwitchDefault></div>    </div></div><ng-template #spinner>    <mat-progress-spinner *ngIf="loading != null"        class="spinner"        mode="indeterminate"        diameter="40"    ></mat-progress-spinner></ng-template><ng-template #noResults>    <div class="no-results">        No results found.    </div></ng-template></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'UserFieldComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'UserFieldComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

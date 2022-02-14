@@ -1,0 +1,1563 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  RoomSelectionComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/room-selection/room-selection.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent okna dialogowego do wybrania pokoju w celu wykonania operacji na planie.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-room-selection</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./room-selection.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./room-selection.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#actionActivated" >actionActivated</a>
+                            </li>
+                            <li>
+                                <a href="#courseRooms" >courseRooms</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#data" >data</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#dialogRef" >dialogRef</a>
+                            </li>
+                            <li>
+                                <a href="#groupsSize" >groupsSize</a>
+                            </li>
+                            <li>
+                                <a href="#isConnectedSubscription" >isConnectedSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#isProposition" >isProposition</a>
+                            </li>
+                            <li>
+                                <a href="#isRoomOnlyChanging" >isRoomOnlyChanging</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#mappedCourseRooms" >mappedCourseRooms</a>
+                            </li>
+                            <li>
+                                <a href="#message" >message</a>
+                            </li>
+                            <li>
+                                <a href="#selectedRoom" >selectedRoom</a>
+                            </li>
+                            <li>
+                                <a href="#signalrSubscriptions" >signalrSubscriptions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#Action" >Action</a>
+                            </li>
+                            <li>
+                                <a href="#GET_CANCELED_RESULT" >GET_CANCELED_RESULT</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getMappedCourseRooms" >getMappedCourseRooms</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>, data: <a href="../classes/RoomSelectionDialogData.html" target="_self">RoomSelectionDialogData</a>, dialogRef: <a href="../components/RoomSelectionComponent.html" target="_self">MatDialogRef&lt;RoomSelectionComponent&gt;</a>, signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:49</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>data</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/RoomSelectionDialogData.html" target="_self" >RoomSelectionDialogData</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialogRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../components/RoomSelectionComponent.html" target="_self" >MatDialogRef&lt;RoomSelectionComponent&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Action"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>Action</b></span>
+                        <a href="#Action"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Action()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="294"
+                            class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:294</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wykonuje odpowiednią operację na planie w zależności od właściwości dialogu.
+Może to być dodanie nowych pozycji na planie, wprowadzenie zmian w planie,
+zaplanowanie zmiany lub stworzenie propozycji.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GET_CANCELED_RESULT"></a>
+                    <span class="name">
+                        <span ><b>GET_CANCELED_RESULT</b></span>
+                        <a href="#GET_CANCELED_RESULT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GET_CANCELED_RESULT()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="265"
+                            class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:265</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/RoomSelectionDialogResult.html" target="_self" >RoomSelectionDialogResult</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMappedCourseRooms"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>getMappedCourseRooms</b></span>
+                        <a href="#getMappedCourseRooms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMappedCourseRooms()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="273"
+                            class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:273</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda mapująca pokoje do ich typów.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Room.html" target="_self" >Map&lt;number, Room[]&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Zwraca kolekcję pokojów z przypisanym identyfikatorem rodzaju</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="384"
+                            class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:384</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:69</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Pobiera dane dotyczące pokojów możliwych do wybrania (oraz ich dostępności).
+Rozpoczyna odbieranie bieżących informacji z centrum SignalR dotyczących wybranych pozycji na planie.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="actionActivated"></a>
+                    <span class="name">
+                        <span ><b>actionActivated</b></span>
+                        <a href="#actionActivated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa czy naciśnięty został przycisk akcji dialogu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="courseRooms"></a>
+                    <span class="name">
+                        <span ><b>courseRooms</b></span>
+                        <a href="#courseRooms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Room.html" target="_self" >Room[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Pokoje przypisane wybranemu przedmiotowi.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="data"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>data</b></span>
+                        <a href="#data"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/RoomSelectionDialogData.html" target="_self" >RoomSelectionDialogData</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @Inject(MAT_DIALOG_DATA)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dialogRef"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>dialogRef</b></span>
+                        <a href="#dialogRef"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/RoomSelectionComponent.html" target="_self" >MatDialogRef&lt;RoomSelectionComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="groupsSize"></a>
+                    <span class="name">
+                        <span ><b>groupsSize</b></span>
+                        <a href="#groupsSize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Rozmiar grup studenckich wybranych zajęć.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isConnectedSubscription"></a>
+                    <span class="name">
+                        <span ><b>isConnectedSubscription</b></span>
+                        <a href="#isConnectedSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isProposition"></a>
+                    <span class="name">
+                        <span ><b>isProposition</b></span>
+                        <a href="#isProposition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Czy wykonywany ruch może być jedynie propozycją.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isRoomOnlyChanging"></a>
+                    <span class="name">
+                        <span ><b>isRoomOnlyChanging</b></span>
+                        <a href="#isRoomOnlyChanging"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:27</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa czy pozycja zajęć na planie uległa zmianie, czy jednak zmieniany jest tylko pokój.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mappedCourseRooms"></a>
+                    <span class="name">
+                        <span ><b>mappedCourseRooms</b></span>
+                        <a href="#mappedCourseRooms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Room.html" target="_self" >Map&lt;number | Room[]&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Kolekcja pokojów z przypisanym identyfikatorem rodzaju.
+Właściwość używana jest do odpowiedniego wyświetlania listy pokojów.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="message"></a>
+                    <span class="name">
+                        <span ><b>message</b></span>
+                        <a href="#message"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Treść zamieszczonej wiadomości do propozycji przez użytkownika.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedRoom"></a>
+                    <span class="name">
+                        <span ><b>selectedRoom</b></span>
+                        <a href="#selectedRoom"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Room.html" target="_self" >Room | null</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:23</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Pokój wybrany przez użytkownika.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signalrSubscriptions"></a>
+                    <span class="name">
+                        <span ><b>signalrSubscriptions</b></span>
+                        <a href="#signalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/room-selection/room-selection.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Utworzone subskrypcje odbierające powiadomienia z centrum SignalR.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Inject, OnInit } from &#x27;@angular/core&#x27;;
+import { MatDialogRef, MAT_DIALOG_DATA } from &#x27;@angular/material/dialog&#x27;;
+import { forkJoin, Subscription } from &#x27;rxjs&#x27;;
+import { finalize, skip } from &#x27;rxjs/operators&#x27;;
+import { MessageObject } from &#x27;src/app/others/CommunicationObjects&#x27;;
+import { Room } from &#x27;src/app/others/Room&#x27;;
+import { RoomSelectionDialogData, RoomSelectionDialogResult, RoomSelectionDialogStatus } from &#x27;src/app/others/dialogs/RoomSelectionDialog&#x27;;
+import { ScheduleDesignerApiService } from &#x27;src/app/services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { SignalrService } from &#x27;src/app/services/SignalrService/signalr.service&#x27;;
+import { Filter } from &#x27;src/app/others/Filter&#x27;;
+
+/**
+ * Komponent okna dialogowego do wybrania pokoju w celu wykonania operacji na planie.
+ */
+@Component({
+  selector: &#x27;app-room-selection&#x27;,
+  templateUrl: &#x27;./room-selection.component.html&#x27;,
+  styleUrls: [&#x27;./room-selection.component.css&#x27;]
+})
+export class RoomSelectionComponent implements OnInit {
+
+  /** Pokój wybrany przez użytkownika. */
+  selectedRoom:Room|null;
+  /** Określa czy naciśnięty został przycisk akcji dialogu. */
+  actionActivated:boolean &#x3D; false;
+  /** Określa czy pozycja zajęć na planie uległa zmianie, czy jednak zmieniany jest tylko pokój. */
+  isRoomOnlyChanging:boolean;
+  /** Rozmiar grup studenckich wybranych zajęć. */
+  groupsSize:number &#x3D; 0;
+
+  /** Pokoje przypisane wybranemu przedmiotowi. */
+  courseRooms:Room[] &#x3D; [];
+  /** 
+   * Kolekcja pokojów z przypisanym identyfikatorem rodzaju. 
+   * Właściwość używana jest do odpowiedniego wyświetlania listy pokojów.
+  */
+  mappedCourseRooms:Map&lt;number,Room[]&gt;;
+
+  /** Informuje czy dane zostały załadowane. */
+  loading:boolean &#x3D; true;
+  isConnectedSubscription: Subscription;
+
+  /** Utworzone subskrypcje odbierające powiadomienia z centrum SignalR. */
+  signalrSubscriptions: Subscription[];
+
+  /** Czy wykonywany ruch może być jedynie propozycją. */
+  isProposition: boolean;
+  /** Treść zamieszczonej wiadomości do propozycji przez użytkownika. */
+  message: string;
+
+  constructor(
+    private scheduleDesignerApiService:ScheduleDesignerApiService,
+    @Inject(MAT_DIALOG_DATA) public data:RoomSelectionDialogData,
+    public dialogRef:MatDialogRef&lt;RoomSelectionComponent&gt;,
+    private signalrService:SignalrService,
+  ) { 
+    this.isRoomOnlyChanging &#x3D; data.SrcIndexes[0] &#x3D;&#x3D; data.DestIndexes[0] 
+      &amp;&amp; data.SrcIndexes[1] &#x3D;&#x3D; data.DestIndexes[1] 
+      &amp;&amp; data.CourseEdition.Weeks?.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) &#x3D;&#x3D;&#x3D; data.Weeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;);
+
+    this.isProposition &#x3D; !this.data.IsMoveAvailable;
+  }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane dotyczące pokojów możliwych do wybrania (oraz ich dostępności).
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR dotyczących wybranych pozycji na planie.
+   */
+  ngOnInit(): void {
+    this.dialogRef.backdropClick().subscribe(event &#x3D;&gt; {
+      this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+    });
+
+    this.isConnectedSubscription &#x3D; this.signalrService.isConnected.pipe(skip(1)).subscribe((status) &#x3D;&gt; {
+      if (!status &amp;&amp; !this.signalrService.connectionIntentionallyStopped) {
+        this.dialogRef.close(RoomSelectionDialogResult.CANCELED);
+      }
+    });
+    
+    this.signalrSubscriptions &#x3D; [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) &#x3D;&gt; {
+      const coordinatorsIds &#x3D; addedSchedulePositions.CoordinatorsIds;
+      const groupsIds &#x3D; addedSchedulePositions.GroupsIds;
+      const periodIndex &#x3D; addedSchedulePositions.SchedulePosition.PeriodIndex;
+      const day &#x3D; addedSchedulePositions.SchedulePosition.Day;
+      const weeks &#x3D; addedSchedulePositions.SchedulePosition.Weeks;
+      const roomId &#x3D; addedSchedulePositions.SchedulePosition.RoomId;
+
+      if (this.data.DestIndexes[1] + 1 !&#x3D; periodIndex
+        || this.data.DestIndexes[0] + 1 !&#x3D; day || this.data.Weeks.filter((week) &#x3D;&gt; weeks.includes(week)).length &#x3D;&#x3D; 0) {
+        return;
+      }
+
+      const item &#x3D; this.data.CourseEdition;
+      if (item !&#x3D; undefined 
+        &amp;&amp; (item.Coordinators.map(c &#x3D;&gt; c.User.UserId).some(c &#x3D;&gt; coordinatorsIds.includes(c))
+        || item.Groups.map(g &#x3D;&gt; g.GroupId).some(g &#x3D;&gt; groupsIds.includes(g)))) {
+          
+          const filter &#x3D; new Filter(coordinatorsIds, groupsIds, []);
+          if (this.data.Filter.challengeAll(filter) || !this.data.CanBeScheduled) {
+            setTimeout(() &#x3D;&gt; {
+              const result &#x3D; RoomSelectionDialogResult.CANCELED;
+              result.Message &#x3D; &quot;Someone took your chosen position in schedule.&quot;;
+              this.dialogRef.close(result);
+            });
+            return;
+          }
+
+          this.data.IsMoveValid &#x3D; false;
+          
+      }
+
+      const busyRoom &#x3D; this.courseRooms.find(courseRoom &#x3D;&gt; courseRoom.RoomId &#x3D;&#x3D; roomId);
+      if (busyRoom !&#x3D; undefined) {
+        busyRoom.IsBusy &#x3D; true;
+      }
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) &#x3D;&gt; {
+      const coordinatorsIds &#x3D; modifiedSchedulePositions.CoordinatorsIds;
+      const groupsIds &#x3D; modifiedSchedulePositions.GroupsIds;
+      const dstPeriodIndex &#x3D; modifiedSchedulePositions.DestinationSchedulePosition.PeriodIndex;
+      const srcPeriodIndex &#x3D; modifiedSchedulePositions.SourceSchedulePosition.PeriodIndex;
+      const dstDay &#x3D; modifiedSchedulePositions.DestinationSchedulePosition.Day;
+      const srcDay &#x3D; modifiedSchedulePositions.SourceSchedulePosition.Day;
+      const dstWeeks &#x3D; modifiedSchedulePositions.DestinationSchedulePosition.Weeks;
+      const srcWeeks &#x3D; modifiedSchedulePositions.SourceSchedulePosition.Weeks;
+      const dstRoomId &#x3D; modifiedSchedulePositions.DestinationSchedulePosition.RoomId;
+      const srcRoomId &#x3D; modifiedSchedulePositions.SourceSchedulePosition.RoomId;
+
+      if (this.data.DestIndexes[1] + 1 &#x3D;&#x3D; dstPeriodIndex
+        &amp;&amp; this.data.DestIndexes[0] + 1 &#x3D;&#x3D; dstDay 
+        &amp;&amp; this.data.Weeks.filter((week) &#x3D;&gt; dstWeeks.includes(week)).length !&#x3D; 0) {
+          
+          const item &#x3D; this.data.CourseEdition;
+          if (item !&#x3D; undefined 
+            &amp;&amp; (item.Coordinators.map(c &#x3D;&gt; c.User.UserId).some(c &#x3D;&gt; coordinatorsIds.includes(c))
+            || item.Groups.map(g &#x3D;&gt; g.GroupId).some(g &#x3D;&gt; groupsIds.includes(g)))) {
+              
+              const filter &#x3D; new Filter(coordinatorsIds, groupsIds, []);
+              if (this.data.Filter.challengeAll(filter) || !this.data.CanBeScheduled) {
+                setTimeout(() &#x3D;&gt; {
+                  const result &#x3D; RoomSelectionDialogResult.CANCELED;
+                  result.Message &#x3D; &quot;Someone took your chosen position in schedule.&quot;;
+                  this.dialogRef.close(result);
+                });
+                return;
+              }
+    
+              this.data.IsMoveValid &#x3D; false;
+          }
+
+          const busyRoom &#x3D; this.courseRooms.find(courseRoom &#x3D;&gt; courseRoom.RoomId &#x3D;&#x3D; dstRoomId);
+          if (busyRoom !&#x3D; undefined) {
+            busyRoom.IsBusy &#x3D; true;
+          }
+      }
+
+      if (this.data.DestIndexes[1] + 1 &#x3D;&#x3D; srcPeriodIndex
+        &amp;&amp; this.data.DestIndexes[0] + 1 &#x3D;&#x3D; srcDay 
+        &amp;&amp; this.data.Weeks.filter((week) &#x3D;&gt; srcWeeks.includes(week)).length !&#x3D; 0) {
+          
+          const busyRoom &#x3D; this.courseRooms.find(courseRoom &#x3D;&gt; courseRoom.RoomId &#x3D;&#x3D; srcRoomId);
+          if (busyRoom !&#x3D; undefined) {
+            forkJoin([
+              this.scheduleDesignerApiService.IsPeriodBusy(
+                this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId,
+                srcPeriodIndex, srcDay,
+                this.data.Weeks),
+              this.scheduleDesignerApiService.GetRoomsAvailability(
+                [busyRoom.RoomId], this.data.DestIndexes[1] + 1,
+                this.data.DestIndexes[0] + 1, this.data.Weeks)
+            ]).subscribe(([isBusy, rooms]) &#x3D;&gt; {
+              this.data.IsMoveValid &#x3D; !isBusy;
+              
+              const room &#x3D; rooms[0];
+              busyRoom.IsBusy &#x3D; room.IsBusy;
+            });
+          } else {
+            this.scheduleDesignerApiService.IsPeriodBusy(
+              this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId,
+              srcPeriodIndex, srcDay,
+              this.data.Weeks
+            ).subscribe(isBusy &#x3D;&gt; {
+              this.data.IsMoveValid &#x3D; !isBusy;
+            });
+          }
+      }
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) &#x3D;&gt; {
+      const periodIndex &#x3D; removedSchedulePositions.SchedulePosition.PeriodIndex;
+      const day &#x3D; removedSchedulePositions.SchedulePosition.Day;
+      const weeks &#x3D; removedSchedulePositions.SchedulePosition.Weeks;
+      const roomId &#x3D; removedSchedulePositions.SchedulePosition.RoomId;
+
+      if (this.data.DestIndexes[1] + 1 &#x3D;&#x3D; periodIndex
+        &amp;&amp; this.data.DestIndexes[0] + 1 &#x3D;&#x3D; day 
+        &amp;&amp; this.data.Weeks.filter((week) &#x3D;&gt; weeks.includes(week)).length !&#x3D; 0) {
+          
+          const busyRoom &#x3D; this.courseRooms.find(courseRoom &#x3D;&gt; courseRoom.RoomId &#x3D;&#x3D; roomId);
+          if (busyRoom !&#x3D; undefined) {
+            forkJoin([
+              this.scheduleDesignerApiService.IsPeriodBusy(
+                this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId,
+                periodIndex, day,
+                this.data.Weeks),
+              this.scheduleDesignerApiService.GetRoomsAvailability(
+                [busyRoom.RoomId], this.data.DestIndexes[1] + 1,
+                this.data.DestIndexes[0] + 1, this.data.Weeks)
+            ]).subscribe(([isBusy, rooms]) &#x3D;&gt; {
+              this.data.IsMoveValid &#x3D; !isBusy;
+              
+              const room &#x3D; rooms[0];
+              busyRoom.IsBusy &#x3D; room.IsBusy;
+            });
+          } else {
+            this.scheduleDesignerApiService.IsPeriodBusy(
+              this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId,
+              periodIndex, day,
+              this.data.Weeks
+            ).subscribe(isBusy &#x3D;&gt; {
+              this.data.IsMoveValid &#x3D; !isBusy;
+            });
+          }
+      }
+    }));
+
+    this.scheduleDesignerApiService.GetCourseEditionGroupsSize(this.data.CourseEdition.CourseId, this.data.CourseEdition.CourseEditionId).pipe(finalize(() &#x3D;&gt; {
+      this.scheduleDesignerApiService.GetCourseRooms(this.data.CourseEdition.CourseId, this.data.RoomTypes).subscribe(courseRooms &#x3D;&gt; {
+        const filterRoomsIds &#x3D; this.data.Filter.RoomsIds;
+        this.courseRooms &#x3D; (filterRoomsIds.length &gt; 0) ? courseRooms.filter(courseRoom &#x3D;&gt; filterRoomsIds.includes(courseRoom.RoomId)) : courseRooms;
+
+        if (this.courseRooms.length &#x3D;&#x3D; 1) {
+          this.selectedRoom &#x3D; this.courseRooms[0];
+        }
+
+        this.scheduleDesignerApiService.GetRoomsAvailability(
+          this.courseRooms.map((room) &#x3D;&gt; room.RoomId),
+          this.data.DestIndexes[1] + 1,
+          this.data.DestIndexes[0] + 1,
+          this.data.Weeks
+        ).subscribe((rooms) &#x3D;&gt; {
+          for (let i &#x3D; 0; i &lt; rooms.length; ++i) {
+            let courseRoom &#x3D; this.courseRooms[i];
+            let room &#x3D; rooms[i];
+            if (courseRoom.RoomId &#x3D;&#x3D; room.RoomId) {
+              this.courseRooms[i].IsBusy &#x3D; rooms[i].IsBusy;
+            }
+          }
+
+          this.mappedCourseRooms &#x3D; this.getMappedCourseRooms();
+
+          this.loading &#x3D; false;
+        });
+      });
+    })).subscribe(size &#x3D;&gt; {
+      this.groupsSize &#x3D; size;
+    }, () &#x3D;&gt; {
+      this.groupsSize &#x3D; 0;
+    });
+  }
+
+  GET_CANCELED_RESULT():RoomSelectionDialogResult {
+    return RoomSelectionDialogResult.CANCELED;
+  }
+
+  /**
+   * Metoda mapująca pokoje do ich typów.
+   * @returns Zwraca kolekcję pokojów z przypisanym identyfikatorem rodzaju
+   */
+  private getMappedCourseRooms():Map&lt;number,Room[]&gt; {
+    const rooms:Map&lt;number,Room[]&gt; &#x3D; new Map&lt;number,Room[]&gt;();
+    
+    this.courseRooms.forEach((room) &#x3D;&gt; {
+      let currentRooms:Room[]|undefined &#x3D; rooms.get(room.RoomType.RoomTypeId);
+      if (currentRooms &#x3D;&#x3D; undefined) {
+        rooms.set(room.RoomType.RoomTypeId, new Array&lt;Room&gt;(room));
+      } else {
+        currentRooms.push(room);
+        rooms.set(room.RoomType.RoomTypeId, currentRooms);
+      }
+    });
+
+    return rooms;
+  }
+
+  /**
+   * Metoda wykonuje odpowiednią operację na planie w zależności od właściwości dialogu.
+   * Może to być dodanie nowych pozycji na planie, wprowadzenie zmian w planie, 
+   * zaplanowanie zmiany lub stworzenie propozycji. 
+   */
+  async Action() {
+    this.actionActivated &#x3D; true;
+    const selectedRoom &#x3D; this.selectedRoom;
+
+    if (selectedRoom &#x3D;&#x3D; null) {
+      return;
+    }
+
+    const areModified &#x3D; this.data.SrcIndexes[0] !&#x3D; -1;
+    const isMoveValid &#x3D; this.data.IsMoveValid;
+    const courseEdition &#x3D; this.data.CourseEdition;
+    const srcIndexes &#x3D; this.data.SrcIndexes;
+    const destIndexes &#x3D; this.data.DestIndexes;
+    const weeks &#x3D; this.data.Weeks;
+
+    let message:string &#x3D; &#x27;&#x27;;
+    let status:RoomSelectionDialogStatus;
+    try {
+      const result &#x3D; (!areModified) 
+      ? await new Promise&lt;MessageObject&gt;((resolve, reject) &#x3D;&gt; {
+        const responseSubscription &#x3D; this.signalrService.lastResponse.pipe(skip(1))
+        .subscribe((messageObject) &#x3D;&gt; {
+          responseSubscription.unsubscribe();
+          resolve(messageObject);
+        },(errorObject) &#x3D;&gt; {
+          reject(errorObject);
+        });
+        this.signalrService.AddSchedulePositions(
+          courseEdition.CourseId, courseEdition.CourseEditionId,
+          selectedRoom!.RoomId, destIndexes[1] + 1, 
+          destIndexes[0] + 1, weeks
+        );
+        
+        setTimeout(() &#x3D;&gt; {
+          responseSubscription.unsubscribe();
+          const errorObject &#x3D; new MessageObject(400);
+          errorObject.Message &#x3D; &quot;Request timeout.&quot;;
+          reject(errorObject);
+        }, 15000);
+      })
+      : ((isMoveValid &amp;&amp; !selectedRoom.IsBusy &amp;&amp; !this.isProposition) 
+        ? await new Promise&lt;MessageObject&gt;((resolve, reject) &#x3D;&gt; {
+          const responseSubscription &#x3D; this.signalrService.lastResponse.pipe(skip(1))
+          .subscribe((messageObject) &#x3D;&gt; {
+            responseSubscription.unsubscribe();
+            resolve(messageObject);
+          },(errorObject) &#x3D;&gt; {
+            reject(errorObject);
+          });
+          this.signalrService.ModifySchedulePositions(
+            courseEdition.Room!.RoomId, srcIndexes[1] + 1,
+            srcIndexes[0] + 1, courseEdition.Weeks!,
+            selectedRoom!.RoomId, destIndexes[1] + 1,
+            destIndexes[0] + 1, weeks
+          );
+          
+          setTimeout(() &#x3D;&gt; {
+            responseSubscription.unsubscribe(); 
+            const errorObject &#x3D; new MessageObject(400);
+            errorObject.Message &#x3D; &quot;Request timeout.&quot;;
+            reject(errorObject);
+          }, 15000);
+        })
+        : await this.signalrService.AddScheduledMove(
+          courseEdition.Room!.RoomId, srcIndexes[1] + 1,
+          srcIndexes[0] + 1, courseEdition.Weeks!,
+          selectedRoom!.RoomId, destIndexes[1] + 1,
+          destIndexes[0] + 1, weeks,
+          this.isProposition, this.message?.length &gt; 0 ? this.message : null
+        ).toPromise()
+      );
+      if (result.StatusCode &gt;&#x3D; 400) {
+        throw result;
+      }
+      status &#x3D; (isMoveValid &amp;&amp; !selectedRoom?.IsBusy &amp;&amp; !this.isProposition) ? RoomSelectionDialogStatus.ACCEPTED : RoomSelectionDialogStatus.SCHEDULED;
+    }
+    catch (error:any) {
+      status &#x3D; RoomSelectionDialogStatus.FAILED;
+      message &#x3D; error.Message;
+    }
+    
+    const dialogResult &#x3D; new RoomSelectionDialogResult(
+      status,
+      selectedRoom,
+      weeks
+    );
+    dialogResult.Message &#x3D; message;
+    this.dialogRef.close(dialogResult);
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription &#x3D;&gt; subscription.unsubscribe()
+    );
+    this.isConnectedSubscription.unsubscribe();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;h2 *ngIf&#x3D;&quot;!loading&quot; mat-dialog-title&gt;
+    &lt;b *ngIf&#x3D;&quot;!selectedRoom?.IsBusy &amp;&amp; data.IsMoveValid&quot; style&#x3D;&quot;color: green&quot;&gt;You are making a move:&lt;/b&gt;
+    &lt;b *ngIf&#x3D;&quot;selectedRoom?.IsBusy || !data.IsMoveValid&quot; style&#x3D;&quot;color: #FF4800&quot;&gt;You are scheduling a move:&lt;/b&gt;
+    &lt;br&gt;
+    &lt;i&gt;{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}&lt;/i&gt;&lt;br&gt;
+    &lt;u&gt;{{data.DayLabels[data.DestIndexes[0]]}}: {{data.TimeLabels[data.DestIndexes[1]]}}&lt;/u&gt; 
+    &lt;ng-container *ngIf&#x3D;&quot;groupsSize &gt; 0&quot;&gt; ({{groupsSize}} {{groupsSize &gt; 1 ? &#x27;students&#x27; : &#x27;student&#x27;}})&lt;/ng-container&gt;
+&lt;/h2&gt;
+&lt;div *ngIf&#x3D;&quot;!loading&quot; mat-dialog-content&gt;
+    &lt;form&gt;
+        &lt;mat-form-field&gt;
+            &lt;mat-label&gt;Select your room&lt;/mat-label&gt;
+            &lt;mat-select [(ngModel)]&#x3D;&quot;selectedRoom&quot; name&#x3D;&quot;room&quot; required&gt;
+                &lt;mat-optgroup *ngFor&#x3D;&quot;let roomType of mappedCourseRooms | keyvalue&quot; class&#x3D;&quot;option-group&quot;
+                    [label]&#x3D;&quot;data.RoomTypes.get(roomType.key)?.Name!&quot;&gt;
+                    &lt;mat-option *ngFor&#x3D;&quot;let room of roomType.value&quot; class&#x3D;&quot;option&quot; [ngClass]&#x3D;&quot;{&#x27;busy&#x27;: room.IsBusy}&quot;
+                        [value]&#x3D;&quot;room&quot; [disabled]&#x3D;&quot;(!data.CanBeScheduled &amp;&amp; room.IsBusy) || (isRoomOnlyChanging &amp;&amp; room.RoomId &#x3D;&#x3D; data.CourseEdition.Room?.RoomId)&quot;&gt;
+                        {{room.Name}} ({{room.Capacity}} seats)
+                    &lt;/mat-option&gt;
+                &lt;/mat-optgroup&gt;
+            &lt;/mat-select&gt;
+            &lt;mat-hint *ngIf&#x3D;&quot;selectedRoom !&#x3D; null &amp;&amp; selectedRoom.Capacity &lt; groupsSize&quot; style&#x3D;&quot;color: #ff761b;&quot;&gt;&lt;b&gt;Capacity may be too low!&lt;/b&gt;&lt;/mat-hint&gt;
+        &lt;/mat-form-field&gt;
+        &lt;mat-slide-toggle *ngIf&#x3D;&quot;data.CanBeScheduled&quot;
+            style&#x3D;&quot;margin-left: 1vw&quot;
+            color&#x3D;&quot;primary&quot;
+            [disabled]&#x3D;&quot;!data.IsMoveAvailable || !data.IsPropositionAvailable&quot;
+            [(ngModel)]&#x3D;&quot;isProposition&quot;
+            [ngModelOptions]&#x3D;&quot;{standalone: true}&quot;&gt;
+            This is a proposition
+        &lt;/mat-slide-toggle&gt;
+        &lt;br&gt;
+        &lt;mat-form-field *ngIf&#x3D;&quot;isProposition&quot; style&#x3D;&quot;width: 100%&quot;&gt;
+            &lt;mat-label&gt;Leave a message to your proposition&lt;/mat-label&gt;
+            &lt;textarea matInput maxlength&#x3D;&quot;300&quot; placeholder&#x3D;&quot;Justify your proposition...&quot; type&#x3D;&quot;text&quot; [(ngModel)]&#x3D;&quot;message&quot; [ngModelOptions]&#x3D;&quot;{standalone: true}&quot;&gt;&lt;/textarea&gt;
+            &lt;mat-hint align&#x3D;&quot;end&quot;&gt;{{message?.length ?? &#x27;0&#x27;}} / 300&lt;/mat-hint&gt;
+        &lt;/mat-form-field&gt;
+    &lt;/form&gt;
+&lt;/div&gt;
+&lt;mat-dialog-actions align&#x3D;&quot;end&quot;&gt;
+    &lt;button mat-button [mat-dialog-close]&#x3D;&quot;GET_CANCELED_RESULT()&quot;&gt;Cancel&lt;/button&gt;
+    &lt;button 
+        mat-raised-button
+        color&#x3D;&quot;primary&quot;
+        [disabled]&#x3D;&quot;selectedRoom &#x3D;&#x3D; null || actionActivated&quot;
+    
+        (click)&#x3D;&quot;Action()&quot;
+    &gt;Confirm&lt;/button&gt;
+&lt;/mat-dialog-actions&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./room-selection.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">h2[mat-dialog-title] {
+    font-weight: normal;
+    text-align: center;
+}
+
+.option-group {
+    background-color: aqua !important;
+}
+
+.option {
+    border-bottom: 1px solid black;
+    background-color: #ACFFB1;
+}
+
+.option:hover {
+    background-color: #A3F2A9;
+}
+
+.option.mat-selected {
+    background-color: #97E09D !important;
+}
+
+.option:first-of-type {
+    border-top: 1px solid black;
+}
+
+.option.busy {
+    background-color: #FF9090;
+}
+
+.option.busy:hover {
+    background-color: #F28989;
+}
+
+.option.busy.mat-selected {
+    background-color: #E07F7F !important;
+}
+
+.option-group:last-of-type .option:last-of-type {
+    border-bottom: none;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><h2 *ngIf="!loading" mat-dialog-title>    <b *ngIf="!selectedRoom?.IsBusy && data.IsMoveValid" style="color: green">You are making a move:</b>    <b *ngIf="selectedRoom?.IsBusy || !data.IsMoveValid" style="color: #FF4800">You are scheduling a move:</b>    <br>    <i>{{data.CourseEdition.Name}} - {{data.CourseEdition.Type.Name}}</i><br>    <u>{{data.DayLabels[data.DestIndexes[0]]}}: {{data.TimeLabels[data.DestIndexes[1]]}}</u>     <ng-container *ngIf="groupsSize > 0"> ({{groupsSize}} {{groupsSize > 1 ? \'students\' : \'student\'}})</ng-container></h2><div *ngIf="!loading" mat-dialog-content>    <form>        <mat-form-field>            <mat-label>Select your room</mat-label>            <mat-select [(ngModel)]="selectedRoom" name="room" required>                <mat-optgroup *ngFor="let roomType of mappedCourseRooms | keyvalue" class="option-group"                    [label]="data.RoomTypes.get(roomType.key)?.Name!">                    <mat-option *ngFor="let room of roomType.value" class="option" [ngClass]="{\'busy\': room.IsBusy}"                        [value]="room" [disabled]="(!data.CanBeScheduled && room.IsBusy) || (isRoomOnlyChanging && room.RoomId == data.CourseEdition.Room?.RoomId)">                        {{room.Name}} ({{room.Capacity}} seats)                    </mat-option>                </mat-optgroup>            </mat-select>            <mat-hint *ngIf="selectedRoom != null && selectedRoom.Capacity < groupsSize" style="color: #ff761b;"><b>Capacity may be too low!</b></mat-hint>        </mat-form-field>        <mat-slide-toggle *ngIf="data.CanBeScheduled"            style="margin-left: 1vw"            color="primary"            [disabled]="!data.IsMoveAvailable || !data.IsPropositionAvailable"            [(ngModel)]="isProposition"            [ngModelOptions]="{standalone: true}">            This is a proposition        </mat-slide-toggle>        <br>        <mat-form-field *ngIf="isProposition" style="width: 100%">            <mat-label>Leave a message to your proposition</mat-label>            <textarea matInput maxlength="300" placeholder="Justify your proposition..." type="text" [(ngModel)]="message" [ngModelOptions]="{standalone: true}"></textarea>            <mat-hint align="end">{{message?.length ?? \'0\'}} / 300</mat-hint>        </mat-form-field>    </form></div><mat-dialog-actions align="end">    <button mat-button [mat-dialog-close]="GET_CANCELED_RESULT()">Cancel</button>    <button         mat-raised-button        color="primary"        [disabled]="selectedRoom == null || actionActivated"            (click)="Action()"    >Confirm</button></mat-dialog-actions></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'RoomSelectionComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'RoomSelectionComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

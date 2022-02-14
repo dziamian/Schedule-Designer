@@ -1,0 +1,1862 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  AdministratorPanelComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/views/administrator-panel/administrator-panel.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent zawierający widok panelu administracyjnego.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-administrator-panel</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./administrator-panel.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./administrator-panel.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#adminTrees" >adminTrees</a>
+                            </li>
+                            <li>
+                                <a href="#connectionStatus" >connectionStatus</a>
+                            </li>
+                            <li>
+                                <a href="#isConnectedSubscription" >isConnectedSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#operatingFieldData" >operatingFieldData</a>
+                            </li>
+                            <li>
+                                <a href="#selectedResult" >selectedResult</a>
+                            </li>
+                            <li>
+                                <a href="#settings" >settings</a>
+                            </li>
+                            <li>
+                                <a href="#treeDetails" >treeDetails</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#CloseAndRefresh" >CloseAndRefresh</a>
+                            </li>
+                            <li>
+                                <a href="#ForceRefreshSettings" >ForceRefreshSettings</a>
+                            </li>
+                            <li>
+                                <a href="#ForceRefreshTree" >ForceRefreshTree</a>
+                            </li>
+                            <li>
+                                <a href="#ForwardAndRefresh" >ForwardAndRefresh</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#OnListAdd" >OnListAdd</a>
+                            </li>
+                            <li>
+                                <a href="#OnListRemove" >OnListRemove</a>
+                            </li>
+                            <li>
+                                <a href="#SendResult" >SendResult</a>
+                            </li>
+                            <li>
+                                <a href="#SetAdditionalContent" >SetAdditionalContent</a>
+                            </li>
+                            <li>
+                                <a href="#SetInitialContent" >SetInitialContent</a>
+                            </li>
+                            <li>
+                                <a href="#ShowOperatingField" >ShowOperatingField</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>, signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>, snackBar: MatSnackBar)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:58</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>snackBar</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatSnackBar</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CloseAndRefresh"></a>
+                    <span class="name">
+                        <span ><b>CloseAndRefresh</b></span>
+                        <a href="#CloseAndRefresh"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CloseAndRefresh()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:122</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie zakończenia wykonywania operacji usuwania zasobu.
+Przeładowuje pierwsze drzewko zasobów i resetuje widok.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ForceRefreshSettings"></a>
+                    <span class="name">
+                        <span ><b>ForceRefreshSettings</b></span>
+                        <a href="#ForceRefreshSettings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ForceRefreshSettings()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="174"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:174</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ForceRefreshTree"></a>
+                    <span class="name">
+                        <span ><b>ForceRefreshTree</b></span>
+                        <a href="#ForceRefreshTree"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ForceRefreshTree(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="170"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:170</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>index</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ForwardAndRefresh"></a>
+                    <span class="name">
+                        <span ><b>ForwardAndRefresh</b></span>
+                        <a href="#ForwardAndRefresh"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ForwardAndRefresh(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:110</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie zakończenia wykonywania operacji utworzenia nowego zasobu.
+Przeładowuje pierwsze drzewko zasobów i resetuje widok.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator zasobu, który ma zostać wyświetlony w obszarze roboczym</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:70</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Pobiera dane niezbędne do wyświetlenia widoku (ustawienia aplikacji).</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnListAdd"></a>
+                    <span class="name">
+                        <span ><b>OnListAdd</b></span>
+                        <a href="#OnListAdd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnListAdd(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:135</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Odebranie rezultatu wyboru z obszaru roboczego i przesłanie go do drugiego drzewka zasobów.
+Wyłączenie możliwości wybrania po raz drugi tego zasobu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Informacje o identyfikatorach wybranych zasobów oraz ich typ</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnListRemove"></a>
+                    <span class="name">
+                        <span ><b>OnListRemove</b></span>
+                        <a href="#OnListRemove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnListRemove(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="149"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:149</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Odebranie rezultatu wyboru z obszaru roboczego i przesłanie go do drugiego drzewka zasobów.
+Włączenie możliwości wybrania po raz drugi tego zasobu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Informacje o identyfikatorach wybranych zasobów oraz ich typ</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SendResult"></a>
+                    <span class="name">
+                        <span ><b>SendResult</b></span>
+                        <a href="#SendResult"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>SendResult(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="197"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:197</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Odebranie pojedynczego rezultatu wyboru z drugiego drzewka zasobów i przesłanie go do obszaru roboczego.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Informacje o typie wybranego zasobu i obiekt wybranego węzła z drzewka</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SetAdditionalContent"></a>
+                    <span class="name">
+                        <span ><b>SetAdditionalContent</b></span>
+                        <a href="#SetAdditionalContent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>SetAdditionalContent(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="162"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:162</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SetInitialContent"></a>
+                    <span class="name">
+                        <span ><b>SetInitialContent</b></span>
+                        <a href="#SetInitialContent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>SetInitialContent(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, header: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, visible: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:93</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ustawia początkowy widok po wybraniu jednej z dostępnych głównych opcji (Courses, Rooms, Users, itp.).</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Typ wyświetlanych zasobów w pierwszym drzewku</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>header</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Nagłówek pierwszego drzewka</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>visible</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Określa czy pierwsze drzewko powinno być widoczne</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ShowOperatingField"></a>
+                    <span class="name">
+                        <span ><b>ShowOperatingField</b></span>
+                        <a href="#ShowOperatingField"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ShowOperatingField(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="184"
+                            class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:184</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wyświetlająca obszar roboczy z podanymi parametrami.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Informacje o identyfikatorze zasobu, jego typie i akcji jaka będzie wykonywana (&quot;view&quot;/&quot;add&quot;).</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminTrees"></a>
+                    <span class="name">
+                        <span ><b>adminTrees</b></span>
+                        <a href="#adminTrees"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/AdminResourcesComponent.html" target="_self" >QueryList&lt;AdminResourcesComponent&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChildren(AdminResourcesComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:23</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Instancje komponentów wyświetlających drzewka zasobów.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connectionStatus"></a>
+                    <span class="name">
+                        <span ><b>connectionStatus</b></span>
+                        <a href="#connectionStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje o statusie połączenia z centrum.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isConnectedSubscription"></a>
+                    <span class="name">
+                        <span ><b>isConnectedSubscription</b></span>
+                        <a href="#isConnectedSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="operatingFieldData"></a>
+                    <span class="name">
+                        <span ><b>operatingFieldData</b></span>
+                        <a href="#operatingFieldData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:48</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Dane obszaru roboczego (identyfikator wyświetlanego zasobu,
+typ zasobu, rodzaj akcji - &quot;add&quot;/&quot;view&quot;).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedResult"></a>
+                    <span class="name">
+                        <span ><b>selectedResult</b></span>
+                        <a href="#selectedResult"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type | null</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Wybrany rezultat z drugiego drzewka zasobów (typ wybranego zasobu, wybrany węzeł drzewka).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="settings"></a>
+                    <span class="name">
+                        <span ><b>settings</b></span>
+                        <a href="#settings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Settings.html" target="_self" >Settings</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Ustawienia aplikacji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="treeDetails"></a>
+                    <span class="name">
+                        <span ><b>treeDetails</b></span>
+                        <a href="#treeDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {header: &#x27;All Courses&#x27;, type: &#x27;courses&#x27;, visible: true, excludeTypes: [], excludeIds: []},
+    {header: &#x27;&#x27;, type: &#x27;&#x27;, visible: false, excludeTypes: [], excludeIds: []}
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/views/administrator-panel/administrator-panel.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Szczegóły dotyczące wyświetlania komponentu drzewka zasobów
+(nagłówek komponentu, typ zasobu do załadowania, czy jest widoczne,
+typy zasobów, które należy pominąć, identyfikatory węzłów, które należy pominąć).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, QueryList, ViewChildren } from &#x27;@angular/core&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { HubConnectionState } from &#x27;@microsoft/signalr&#x27;;
+import { Subscription } from &#x27;rxjs&#x27;;
+import { skip } from &#x27;rxjs/operators&#x27;;
+import { AdminResourcesComponent } from &#x27;src/app/components/admin-panel/admin-resources/admin-resources.component&#x27;;
+import { ResourceNode } from &#x27;src/app/others/ResourcesTree&#x27;;
+import { Settings } from &#x27;src/app/others/Settings&#x27;;
+import { ScheduleDesignerApiService } from &#x27;src/app/services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { SignalrService } from &#x27;src/app/services/SignalrService/signalr.service&#x27;;
+
+/**
+ * Komponent zawierający widok panelu administracyjnego.
+ */
+@Component({
+  selector: &#x27;app-administrator-panel&#x27;,
+  templateUrl: &#x27;./administrator-panel.component.html&#x27;,
+  styleUrls: [&#x27;./administrator-panel.component.css&#x27;]
+})
+export class AdministratorPanelComponent implements OnInit {
+
+  /** Instancje komponentów wyświetlających drzewka zasobów. */
+  @ViewChildren(AdminResourcesComponent) adminTrees!: QueryList&lt;AdminResourcesComponent&gt;
+
+  /** Ustawienia aplikacji. */
+  settings: Settings;
+
+  /** 
+   * Szczegóły dotyczące wyświetlania komponentu drzewka zasobów 
+   * (nagłówek komponentu, typ zasobu do załadowania, czy jest widoczne, 
+   * typy zasobów, które należy pominąć, identyfikatory węzłów, które należy pominąć).
+  */
+  treeDetails: Array&lt;{
+    header: string,
+    type: string,
+    visible: boolean,
+    excludeTypes: string[], 
+    excludeIds: string[]
+  }&gt; &#x3D; [
+    {header: &#x27;All Courses&#x27;, type: &#x27;courses&#x27;, visible: true, excludeTypes: [], excludeIds: []},
+    {header: &#x27;&#x27;, type: &#x27;&#x27;, visible: false, excludeTypes: [], excludeIds: []}
+  ];
+  
+  /** 
+   * Dane obszaru roboczego (identyfikator wyświetlanego zasobu, 
+   * typ zasobu, rodzaj akcji - &quot;add&quot;/&quot;view&quot;). 
+  */
+  operatingFieldData:{id: string|undefined, type: string, actionType: string};
+
+  /** Wybrany rezultat z drugiego drzewka zasobów (typ wybranego zasobu, wybrany węzeł drzewka). */
+  selectedResult: {type: string, node: ResourceNode} | null;
+  
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean &#x3D; true;
+  /** Informuje o statusie połączenia z centrum. */
+  connectionStatus: boolean &#x3D; false;
+  
+  isConnectedSubscription: Subscription;
+
+  constructor(
+    private scheduleDesignerApiService: ScheduleDesignerApiService,
+    private signalrService: SignalrService,
+    private snackBar:MatSnackBar,
+  ) { }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane niezbędne do wyświetlenia widoku (ustawienia aplikacji).
+   */
+  ngOnInit(): void {
+    this.isConnectedSubscription &#x3D; this.signalrService.isConnected.pipe(skip(1)).subscribe((status) &#x3D;&gt; {
+      this.connectionStatus &#x3D; status;
+      if (!status &amp;&amp; !this.signalrService.connectionIntentionallyStopped) {
+        this.snackBar.open(&quot;Connection with server has been lost. Please refresh the page to possibly reconnect.&quot;, &quot;OK&quot;);
+      }
+    });
+
+    this.connectionStatus &#x3D; this.signalrService.connection?.state &#x3D;&#x3D; HubConnectionState.Connected;
+
+    this.scheduleDesignerApiService.GetSettings().subscribe(settings &#x3D;&gt; {
+      this.settings &#x3D; settings;
+
+      this.loading &#x3D; false;
+    });
+  }
+  
+  /**
+   * Metoda ustawia początkowy widok po wybraniu jednej z dostępnych głównych opcji (Courses, Rooms, Users, itp.).
+   * @param type Typ wyświetlanych zasobów w pierwszym drzewku
+   * @param header Nagłówek pierwszego drzewka
+   * @param visible Określa czy pierwsze drzewko powinno być widoczne
+   */
+  SetInitialContent(type: string, header: string, visible: boolean) {
+    this.selectedResult &#x3D; null;
+    this.treeDetails[0].type &#x3D; type;
+    this.treeDetails[0].header &#x3D; header;
+    this.operatingFieldData &#x3D; {id: undefined, type: &#x27;&#x27;, actionType: &#x27;&#x27;};
+    if (type &#x3D;&#x3D;&#x3D; &#x27;settings&#x27; || type &#x3D;&#x3D;&#x3D; &#x27;import&#x27; || type &#x3D;&#x3D;&#x3D; &#x27;export&#x27; || type &#x3D;&#x3D;&#x3D; &#x27;clear&#x27;) {
+      this.operatingFieldData &#x3D; {id: undefined, type: type, actionType: &#x27;view&#x27;};
+    }
+    this.treeDetails[0].visible &#x3D; visible;
+    this.treeDetails[1].visible &#x3D; false;
+  }
+
+  /**
+   * Metoda wywoływana w momencie zakończenia wykonywania operacji utworzenia nowego zasobu.
+   * Przeładowuje pierwsze drzewko zasobów i resetuje widok.
+   * @param id Identyfikator zasobu, który ma zostać wyświetlony w obszarze roboczym
+   */
+  ForwardAndRefresh(id: string) {
+    this.operatingFieldData &#x3D; {id: id, type: this.operatingFieldData.type, actionType: &#x27;view&#x27;};
+
+    this.treeDetails[1].visible &#x3D; false;
+
+    this.adminTrees.toArray()[0].LoadResources();
+  }
+
+  /**
+   * Metoda wywoływana w momencie zakończenia wykonywania operacji usuwania zasobu.
+   * Przeładowuje pierwsze drzewko zasobów i resetuje widok.
+   */
+  CloseAndRefresh() {
+    this.operatingFieldData &#x3D; {id: undefined, type: &#x27;&#x27;, actionType: &#x27;&#x27;};
+    
+    this.treeDetails[1].visible &#x3D; false;
+    
+    this.adminTrees.toArray()[0].LoadResources();
+  }
+
+  /**
+   * Odebranie rezultatu wyboru z obszaru roboczego i przesłanie go do drugiego drzewka zasobów.
+   * Wyłączenie możliwości wybrania po raz drugi tego zasobu.
+   * @param event Informacje o identyfikatorach wybranych zasobów oraz ich typ
+   */
+  OnListAdd(event: {ids: string[], type: string}) {
+    if (this.treeDetails[1].type !&#x3D;&#x3D; event.type) {
+      return;
+    }
+
+    this.treeDetails[1].excludeIds.push(...event.ids);
+  }
+
+  /**
+   * Odebranie rezultatu wyboru z obszaru roboczego i przesłanie go do drugiego drzewka zasobów.
+   * Włączenie możliwości wybrania po raz drugi tego zasobu.
+   * @param event Informacje o identyfikatorach wybranych zasobów oraz ich typ
+   * @returns 
+   */
+  OnListRemove(event: {ids: string[], type: string}) {
+    if (this.treeDetails[1].type !&#x3D;&#x3D; event.type) {
+      return;
+    }
+    
+    for (var id in event.ids) {
+      const index &#x3D; this.treeDetails[1].excludeIds.findIndex(e &#x3D;&gt; e &#x3D;&#x3D; event.ids[id]);
+      if (index !&#x3D; -1) {
+        this.treeDetails[1].excludeIds.splice(index, 1);
+      }
+    }
+  }
+
+  SetAdditionalContent(event: {type: string, header: string, visible: boolean, excludeTypes: string[], excludeIds: string[]}) {
+    this.treeDetails[1].type &#x3D; event.type;
+    this.treeDetails[1].header &#x3D; event.header;
+    this.treeDetails[1].visible &#x3D; event.visible;
+    this.treeDetails[1].excludeTypes &#x3D; event.excludeTypes;
+    this.treeDetails[1].excludeIds &#x3D; event.excludeIds;
+  }
+
+  ForceRefreshTree(index: number) {
+    this.adminTrees.toArray()[index].LoadResources();
+  }
+
+  ForceRefreshSettings() {
+    this.scheduleDesignerApiService.GetSettings().subscribe(settings &#x3D;&gt; {
+      this.settings &#x3D; settings;
+    });
+  }
+
+  /**
+   * Metoda wyświetlająca obszar roboczy z podanymi parametrami.
+   * @param event Informacje o identyfikatorze zasobu, jego typie i akcji jaka będzie wykonywana (&quot;view&quot;/&quot;add&quot;).
+   */
+  ShowOperatingField(event: {id: string | undefined, type: string, action: string}) {
+    this.operatingFieldData &#x3D; {
+      id: event.id, 
+      type: event.type, 
+      actionType: event.action
+    };
+    this.treeDetails[1].visible &#x3D; false;
+  }
+
+  /**
+   * Odebranie pojedynczego rezultatu wyboru z drugiego drzewka zasobów i przesłanie go do obszaru roboczego.
+   * @param event Informacje o typie wybranego zasobu i obiekt wybranego węzła z drzewka
+   */
+  SendResult(event: {type: string, node: ResourceNode}) {
+    this.selectedResult &#x3D; event;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div *ngIf&#x3D;&quot;!loading &amp;&amp; connectionStatus; else spinner&quot; class&#x3D;&quot;content&quot;&gt;
+    &lt;div class&#x3D;&quot;menu&quot;&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;courses&#x27;, &#x27;All Courses&#x27;, true)&quot;&gt;
+            &lt;mat-icon&gt;book&lt;/mat-icon&gt;
+            Courses
+        &lt;/button&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;groups&#x27;, &#x27;All Groups&#x27;, true)&quot;&gt;
+            &lt;mat-icon&gt;group&lt;/mat-icon&gt;
+            Groups
+        &lt;/button&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;rooms&#x27;, &#x27;All Rooms&#x27;, true)&quot;&gt;
+            &lt;mat-icon&gt;meeting_room&lt;/mat-icon&gt;
+            Rooms
+        &lt;/button&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;users&#x27;, &#x27;All Users&#x27;, true)&quot;&gt;
+            &lt;mat-icon&gt;person_outline&lt;/mat-icon&gt;
+            Users
+        &lt;/button&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;settings&#x27;, &#x27;&#x27;, false)&quot;&gt;
+            &lt;mat-icon&gt;settings&lt;/mat-icon&gt;
+            Settings
+        &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;inner-content&quot;&gt;
+        &lt;app-admin-resources
+            [header]&#x3D;&quot;treeDetails[0].header&quot;
+            [type]&#x3D;&quot;treeDetails[0].type&quot;
+            actionType&#x3D;&quot;add&quot;
+            [visible]&#x3D;&quot;treeDetails[0].visible&quot;
+            [excludeTypes]&#x3D;&quot;treeDetails[0].excludeTypes&quot;
+            [excludeIds]&#x3D;&quot;treeDetails[0].excludeIds&quot;
+            
+            (clicked)&#x3D;&quot;ShowOperatingField($event)&quot;&gt;
+        &lt;/app-admin-resources&gt;
+        &lt;div class&#x3D;&quot;operating-field&quot; [ngSwitch]&#x3D;&quot;operatingFieldData?.type&quot;&gt;
+            &lt;app-course-field *ngSwitchCase&#x3D;&quot;&#x27;course&#x27;&quot;
+                [selectedResult]&#x3D;&quot;selectedResult&quot;
+                [settings]&#x3D;&quot;settings&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onListAdd)&#x3D;&quot;OnListAdd($event)&quot;
+                (onListRemove)&#x3D;&quot;OnListRemove($event)&quot;
+                (onSelect)&#x3D;&quot;SetAdditionalContent($event)&quot;
+                (onChange)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-course-field&gt;
+            &lt;app-course-edition-field *ngSwitchCase&#x3D;&quot;&#x27;course-edition&#x27;&quot;
+                [selectedResult]&#x3D;&quot;selectedResult&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onListAdd)&#x3D;&quot;OnListAdd($event)&quot;
+                (onListRemove)&#x3D;&quot;OnListRemove($event)&quot;
+                (onSelect)&#x3D;&quot;SetAdditionalContent($event)&quot;
+                (onChange)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-course-edition-field&gt;
+            &lt;app-course-type-field *ngSwitchCase&#x3D;&quot;&#x27;course-type&#x27;&quot; 
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onChange)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-course-type-field&gt;
+            &lt;app-group-field *ngSwitchCase&#x3D;&quot;&#x27;group&#x27;&quot;
+                [selectedResult]&#x3D;&quot;selectedResult&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onListAdd)&#x3D;&quot;OnListAdd($event)&quot;
+                (onListRemove)&#x3D;&quot;OnListRemove($event)&quot;
+                (onSelect)&#x3D;&quot;SetAdditionalContent($event)&quot;
+                (onChange)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-group-field&gt;
+            &lt;app-room-field *ngSwitchCase&#x3D;&quot;&#x27;room&#x27;&quot;
+                [selectedResult]&#x3D;&quot;selectedResult&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onSelect)&#x3D;&quot;SetAdditionalContent($event)&quot;
+                (onChange)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-room-field&gt;
+            &lt;app-room-type-field *ngSwitchCase&#x3D;&quot;&#x27;room-type&#x27;&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onChange)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-room-type-field&gt;
+            &lt;app-settings-field *ngSwitchCase&#x3D;&quot;&#x27;settings&#x27;&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onChange)&#x3D;&quot;ForceRefreshSettings()&quot;&gt;
+            &lt;/app-settings-field&gt;
+            &lt;app-user-field *ngSwitchCase&#x3D;&quot;&#x27;user&#x27;&quot;
+                [data]&#x3D;&quot;operatingFieldData&quot;
+                
+                (onRefresh)&#x3D;&quot;ForceRefreshTree(0)&quot;
+                (onCreate)&#x3D;&quot;ForwardAndRefresh($event)&quot;
+                (onRemove)&#x3D;&quot;CloseAndRefresh()&quot;&gt;
+            &lt;/app-user-field&gt;
+            &lt;app-import-field *ngSwitchCase&#x3D;&quot;&#x27;import&#x27;&quot;&gt;&lt;/app-import-field&gt;
+            &lt;app-export-field *ngSwitchCase&#x3D;&quot;&#x27;export&#x27;&quot;&gt;&lt;/app-export-field&gt;
+            &lt;app-clear-field *ngSwitchCase&#x3D;&quot;&#x27;clear&#x27;&quot;&gt;&lt;/app-clear-field&gt;
+            &lt;div *ngSwitchDefault class&#x3D;&quot;no-operating-field-selected&quot;&gt;
+                Please choose some operation to do.
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;app-admin-resources
+            [header]&#x3D;&quot;treeDetails[1].header&quot;
+            [type]&#x3D;&quot;treeDetails[1].type&quot;
+            actionType&#x3D;&quot;select&quot;
+            [visible]&#x3D;&quot;treeDetails[1].visible&quot;
+            [excludeTypes]&#x3D;&quot;treeDetails[1].excludeTypes&quot;
+            [excludeIds]&#x3D;&quot;treeDetails[1].excludeIds&quot;
+
+            (clicked)&#x3D;&quot;SendResult($event)&quot;&gt;
+        &lt;/app-admin-resources&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;menu&quot;&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;import&#x27;, &#x27;&#x27;, false)&quot;&gt;
+            &lt;mat-icon&gt;arrow_upward&lt;/mat-icon&gt;
+            Import
+        &lt;/button&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;export&#x27;, &#x27;&#x27;, false)&quot;&gt;
+            &lt;mat-icon&gt;arrow_downward&lt;/mat-icon&gt;
+            Export
+        &lt;/button&gt;
+        &lt;button mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;SetInitialContent(&#x27;clear&#x27;, &#x27;&#x27;, false)&quot;&gt;
+            &lt;mat-icon&gt;clear&lt;/mat-icon&gt;
+            Clear
+        &lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;ng-template #spinner&gt;
+    &lt;mat-progress-spinner
+        class&#x3D;&quot;spinner&quot;
+        mode&#x3D;&quot;indeterminate&quot;
+        diameter&#x3D;&quot;40&quot;
+    &gt;&lt;/mat-progress-spinner&gt;
+&lt;/ng-template&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./administrator-panel.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.content {
+    text-align: center;
+    display: block;
+}
+
+.menu {
+    margin-top: 1.5vh;
+    margin-left: 30%;
+    margin-right: 30%;
+    padding-bottom: 1vh;
+    margin-bottom: 1vh;
+    width: 40%;
+    height: 6vh;
+    float: left;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: #008b13;
+    overflow-y: auto;
+}
+
+.menu &gt; * {
+    margin-top: 1vh;
+    margin-right: 1vw;
+}
+
+.inner-content {
+    clear: both;
+}
+
+.operating-field {
+    width: 40%;
+    height: 75vh;
+    float: left;
+    margin-top: 0.5%;
+    margin-left: 2%;
+    box-sizing: border-box;
+    border: 2px solid black;
+}
+
+.no-operating-field-selected {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    width: 20%;
+    transform: translateY(-100%);
+    font-weight: bold;
+}
+
+.spinner {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div *ngIf="!loading && connectionStatus; else spinner" class="content">    <div class="menu">        <button mat-raised-button color="accent" (click)="SetInitialContent(\'courses\', \'All Courses\', true)">            <mat-icon>book</mat-icon>            Courses        </button>        <button mat-raised-button color="accent" (click)="SetInitialContent(\'groups\', \'All Groups\', true)">            <mat-icon>group</mat-icon>            Groups        </button>        <button mat-raised-button color="accent" (click)="SetInitialContent(\'rooms\', \'All Rooms\', true)">            <mat-icon>meeting_room</mat-icon>            Rooms        </button>        <button mat-raised-button color="accent" (click)="SetInitialContent(\'users\', \'All Users\', true)">            <mat-icon>person_outline</mat-icon>            Users        </button>        <button mat-raised-button color="accent" (click)="SetInitialContent(\'settings\', \'\', false)">            <mat-icon>settings</mat-icon>            Settings        </button>    </div>    <div class="inner-content">        <app-admin-resources            [header]="treeDetails[0].header"            [type]="treeDetails[0].type"            actionType="add"            [visible]="treeDetails[0].visible"            [excludeTypes]="treeDetails[0].excludeTypes"            [excludeIds]="treeDetails[0].excludeIds"                        (clicked)="ShowOperatingField($event)">        </app-admin-resources>        <div class="operating-field" [ngSwitch]="operatingFieldData?.type">            <app-course-field *ngSwitchCase="\'course\'"                [selectedResult]="selectedResult"                [settings]="settings"                [data]="operatingFieldData"                                (onListAdd)="OnListAdd($event)"                (onListRemove)="OnListRemove($event)"                (onSelect)="SetAdditionalContent($event)"                (onChange)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-course-field>            <app-course-edition-field *ngSwitchCase="\'course-edition\'"                [selectedResult]="selectedResult"                [data]="operatingFieldData"                                (onListAdd)="OnListAdd($event)"                (onListRemove)="OnListRemove($event)"                (onSelect)="SetAdditionalContent($event)"                (onChange)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-course-edition-field>            <app-course-type-field *ngSwitchCase="\'course-type\'"                 [data]="operatingFieldData"                                (onChange)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-course-type-field>            <app-group-field *ngSwitchCase="\'group\'"                [selectedResult]="selectedResult"                [data]="operatingFieldData"                                (onListAdd)="OnListAdd($event)"                (onListRemove)="OnListRemove($event)"                (onSelect)="SetAdditionalContent($event)"                (onChange)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-group-field>            <app-room-field *ngSwitchCase="\'room\'"                [selectedResult]="selectedResult"                [data]="operatingFieldData"                                (onSelect)="SetAdditionalContent($event)"                (onChange)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-room-field>            <app-room-type-field *ngSwitchCase="\'room-type\'"                [data]="operatingFieldData"                                (onChange)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-room-type-field>            <app-settings-field *ngSwitchCase="\'settings\'"                [data]="operatingFieldData"                                (onChange)="ForceRefreshSettings()">            </app-settings-field>            <app-user-field *ngSwitchCase="\'user\'"                [data]="operatingFieldData"                                (onRefresh)="ForceRefreshTree(0)"                (onCreate)="ForwardAndRefresh($event)"                (onRemove)="CloseAndRefresh()">            </app-user-field>            <app-import-field *ngSwitchCase="\'import\'"></app-import-field>            <app-export-field *ngSwitchCase="\'export\'"></app-export-field>            <app-clear-field *ngSwitchCase="\'clear\'"></app-clear-field>            <div *ngSwitchDefault class="no-operating-field-selected">                Please choose some operation to do.            </div>        </div>        <app-admin-resources            [header]="treeDetails[1].header"            [type]="treeDetails[1].type"            actionType="select"            [visible]="treeDetails[1].visible"            [excludeTypes]="treeDetails[1].excludeTypes"            [excludeIds]="treeDetails[1].excludeIds"            (clicked)="SendResult($event)">        </app-admin-resources>    </div>    <div class="menu">        <button mat-raised-button color="accent" (click)="SetInitialContent(\'import\', \'\', false)">            <mat-icon>arrow_upward</mat-icon>            Import        </button>        <button mat-raised-button color="accent" (click)="SetInitialContent(\'export\', \'\', false)">            <mat-icon>arrow_downward</mat-icon>            Export        </button>        <button mat-raised-button color="accent" (click)="SetInitialContent(\'clear\', \'\', false)">            <mat-icon>clear</mat-icon>            Clear        </button>    </div></div><ng-template #spinner>    <mat-progress-spinner        class="spinner"        mode="indeterminate"        diameter="40"    ></mat-progress-spinner></ng-template></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'AdministratorPanelComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AdministratorPanelComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

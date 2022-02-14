@@ -1,0 +1,1737 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  AdminResourcesComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/admin-panel/admin-resources/admin-resources.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent odpowiedzialny za wyświetlanie drzewka zasobów
+w panelu administratora.
+Posiada lokalnie utworzoną instancję serwisu <a href="../injectables/ResourceTreeService.html">ResourceTreeService</a>.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                                <code><a href="../injectables/ResourceTreeService.html" target="_self" >{
+    provide: , useClass: ResourceTreeService
+}</a></code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-admin-resources</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./admin-resources.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./admin-resources.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_type" >_type</a>
+                            </li>
+                            <li>
+                                <a href="#dataSource" >dataSource</a>
+                            </li>
+                            <li>
+                                <a href="#filterChanged" >filterChanged</a>
+                            </li>
+                            <li>
+                                <a href="#filterChangedSub" >filterChangedSub</a>
+                            </li>
+                            <li>
+                                <a href="#filterValue" >filterValue</a>
+                            </li>
+                            <li>
+                                <a href="#hasChild" >hasChild</a>
+                            </li>
+                            <li>
+                                <a href="#isHidden" >isHidden</a>
+                            </li>
+                            <li>
+                                <a href="#isVisible" >isVisible</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#treeControl" >treeControl</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#ClearFilter" >ClearFilter</a>
+                            </li>
+                            <li>
+                                <a href="#Click" >Click</a>
+                            </li>
+                            <li>
+                                <a href="#FilterChanged" >FilterChanged</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LoadResources" >LoadResources</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#actionType" >actionType</a>
+                            </li>
+                            <li>
+                                <a href="#excludeIds" >excludeIds</a>
+                            </li>
+                            <li>
+                                <a href="#excludeTypes" >excludeTypes</a>
+                            </li>
+                            <li>
+                                <a href="#header" >header</a>
+                            </li>
+                            <li>
+                                <a href="#type" >type</a>
+                            </li>
+                            <li>
+                                <a href="#visible" >visible</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#clicked" >clicked</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#type" >type</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(treeService: <a href="../injectables/ResourceTreeService.html" target="_self">ResourceTreeService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:75</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>treeService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ResourceTreeService.html" target="_self" >ResourceTreeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="actionType"></a>
+                        <b>actionType</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;add&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:33</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Rodzaj akcji, która ma zostać wykonana po
+wciśnięciu przycisku dostępnego z węzłem drzewka.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="excludeIds"></a>
+                        <b>excludeIds</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:39</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Identyfikatory zasobów, które mają zostać pominięte w drzewku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="excludeTypes"></a>
+                        <b>excludeTypes</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:37</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Typy zasobów, które mają zostać pominięte w drzewku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="header"></a>
+                        <b>header</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:28</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Nagłówek drzewka.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="type"></a>
+                        <b>type</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:44</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Metoda ustawiająca typ zasobów, które zostaną załadowane do drzewka.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="visible"></a>
+                        <b>visible</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:35</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy drzewko jest widoczne na ekranie.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="clicked"></a>
+                        <b>clicked</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:56</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia wybrania węzła drzewka.
+Posiada ono informacje o identyfikatorze wybranego zasobu, typ zasobu,
+akcję jaka ma zostać wykonana (&quot;add&quot;/&quot;view&quot;) oraz wybrany węzeł.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ClearFilter"></a>
+                    <span class="name">
+                        <span ><b>ClearFilter</b></span>
+                        <a href="#ClearFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ClearFilter()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="183"
+                            class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:183</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda czyszcząca pole wyszukiwania.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Click"></a>
+                    <span class="name">
+                        <span ><b>Click</b></span>
+                        <a href="#Click"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Click(id: string | undefined, type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, action: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, node: <a href="../classes/ResourceNode.html" target="_self">ResourceNode</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="188"
+                            class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:188</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                            <code>string | undefined</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>action</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                                <code><a href="../classes/ResourceNode.html" target="_self" >ResourceNode</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FilterChanged"></a>
+                    <span class="name">
+                        <span ><b>FilterChanged</b></span>
+                        <a href="#FilterChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>FilterChanged(event: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="175"
+                            class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:175</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie wykrycia zmiany w polu wyszukiwania.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/router/Event" target="_blank" >Event</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie wykrycia zmiany w polu wyszukiwania</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoadResources"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LoadResources</b></span>
+                        <a href="#LoadResources"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LoadResources()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:108</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ładująca konkretny rodzaj zasobów do drzewka na podstawie ustawionej
+wartości typu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="192"
+                            class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:192</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:86</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Rozpoczyna odbieranie bieżących informacji o zmianach w polu wyszukiwania.
+Inicjalizuje właściwości wyświetlanego drzewka zasobów.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_type"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_type</b></span>
+                        <a href="#_type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Typ załadowanych zasobów do drzewka.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dataSource"></a>
+                    <span class="name">
+                        <span ><b>dataSource</b></span>
+                        <a href="#dataSource"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MatTreeFlatDataSource&lt;ResourceNode | ResourceFlatNode&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterChanged"></a>
+                    <span class="name">
+                        <span ><b>filterChanged</b></span>
+                        <a href="#filterChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subject&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subject&lt;string&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje informacje o tym czy
+nastąpiła zmiana wartości pola wyszukiwania.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterChangedSub"></a>
+                    <span class="name">
+                        <span ><b>filterChangedSub</b></span>
+                        <a href="#filterChangedSub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterValue"></a>
+                    <span class="name">
+                        <span ><b>filterValue</b></span>
+                        <a href="#filterValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Wartość pola wyszukiwania.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasChild"></a>
+                    <span class="name">
+                        <span ><b>hasChild</b></span>
+                        <a href="#hasChild"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isHidden"></a>
+                    <span class="name">
+                        <span ><b>isHidden</b></span>
+                        <a href="#isHidden"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isVisible"></a>
+                    <span class="name">
+                        <span ><b>isVisible</b></span>
+                        <a href="#isVisible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:69</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="treeControl"></a>
+                    <span class="name">
+                        <span ><b>treeControl</b></span>
+                        <a href="#treeControl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ResourceFlatNode.html" target="_self" >FlatTreeControl&lt;ResourceFlatNode&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="type"></a>
+                        <span class="name"><b>type</b><a href="#type"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>type()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:47</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>type(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/admin-panel/admin-resources/admin-resources.component.ts:44</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Metoda ustawiająca typ zasobów, które zostaną załadowane do drzewka.</p>
+</div>
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>value</td>
+                                                    
+                                                            <td>
+                                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { FlatTreeControl } from &#x27;@angular/cdk/tree&#x27;;
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from &#x27;@angular/core&#x27;;
+import { MatTreeFlatDataSource } from &#x27;@angular/material/tree&#x27;;
+import { Subject, Subscription } from &#x27;rxjs&#x27;;
+import { debounceTime, distinctUntilChanged } from &#x27;rxjs/operators&#x27;;
+import { ResourceFlatNode, ResourceNode } from &#x27;src/app/others/ResourcesTree&#x27;;
+import { ResourceTreeService } from &#x27;src/app/services/ResourceTreeService/resource-tree.service&#x27;;
+
+/**
+ * Komponent odpowiedzialny za wyświetlanie drzewka zasobów 
+ * w panelu administratora.
+ * Posiada lokalnie utworzoną instancję serwisu {@link ResourceTreeService}.
+ */
+@Component({
+  selector: &#x27;app-admin-resources&#x27;,
+  templateUrl: &#x27;./admin-resources.component.html&#x27;,
+  styleUrls: [&#x27;./admin-resources.component.css&#x27;],
+  providers: [{
+    provide: &#x27;treeResource&#x27;, useClass: ResourceTreeService
+  }]
+})
+export class AdminResourcesComponent implements OnInit {
+
+  /** Typ załadowanych zasobów do drzewka. */
+  private _type: string;
+
+  /** Nagłówek drzewka. */
+  @Input() header: string;
+  /** 
+   * Rodzaj akcji, która ma zostać wykonana po 
+   * wciśnięciu przycisku dostępnego z węzłem drzewka. 
+   */
+  @Input() actionType: string &#x3D; &#x27;add&#x27;;
+  /** Określa czy drzewko jest widoczne na ekranie. */
+  @Input() visible: boolean &#x3D; true;
+  /** Typy zasobów, które mają zostać pominięte w drzewku. */
+  @Input() excludeTypes: string[] &#x3D; [];
+  /** Identyfikatory zasobów, które mają zostać pominięte w drzewku. */
+  @Input() excludeIds: string[] &#x3D; [];
+
+  /**
+   * Metoda ustawiająca typ zasobów, które zostaną załadowane do drzewka.
+   */
+  @Input() set type(value: string) {
+    this._type &#x3D; value;
+    this.LoadResources();
+  } get type(): string {
+    return this._type;
+  }
+
+  /** 
+   * Emiter zdarzenia wybrania węzła drzewka. 
+   * Posiada ono informacje o identyfikatorze wybranego zasobu, typ zasobu,
+   * akcję jaka ma zostać wykonana (&quot;add&quot;/&quot;view&quot;) oraz wybrany węzeł.
+   */
+  @Output() clicked: EventEmitter&lt;{
+    id: string | undefined, type: string, action: string, node: ResourceNode
+  }&gt; &#x3D; new EventEmitter();
+
+  /** Wartość pola wyszukiwania. */
+  filterValue: string &#x3D; &#x27;&#x27;;
+  /** Strumień, który przechowuje informacje o tym czy 
+   * nastąpiła zmiana wartości pola wyszukiwania. 
+   */
+  filterChanged: Subject&lt;string&gt; &#x3D; new Subject&lt;string&gt;();
+  filterChangedSub: Subscription;
+
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean | null &#x3D; null;
+
+  treeControl: FlatTreeControl&lt;ResourceFlatNode&gt;;
+  dataSource: MatTreeFlatDataSource&lt;ResourceNode, ResourceFlatNode&gt;;
+  hasChild: (_: number, _nodeData: ResourceFlatNode) &#x3D;&gt; boolean;
+  isHidden: (_: number, _nodeData: ResourceFlatNode) &#x3D;&gt; boolean;
+  isVisible: (_: number, _nodeData: ResourceFlatNode) &#x3D;&gt; boolean;
+
+  constructor(
+    @Inject(&#x27;treeResource&#x27;) private treeService: ResourceTreeService
+  ) { }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji o zmianach w polu wyszukiwania.
+   * Inicjalizuje właściwości wyświetlanego drzewka zasobów.
+   */
+  async ngOnInit(): Promise&lt;void&gt; {
+    this.loading &#x3D; true;
+    this.filterChangedSub &#x3D; this.filterChanged.pipe(debounceTime(200), distinctUntilChanged()).subscribe(value &#x3D;&gt; {
+      if (value) {
+        this.treeService.filterByName(value);
+      } else {
+        this.treeService.clearFilter();
+      }
+    });
+
+    this.treeControl &#x3D; this.treeService.treeControl;
+    this.dataSource &#x3D; this.treeService.dataSource;
+    
+    this.hasChild &#x3D; this.treeService.hasChild;
+    this.isHidden &#x3D; this.treeService.isHidden;
+    this.isVisible &#x3D; this.treeService.isVisible;
+  }
+
+  /**
+   * Metoda ładująca konkretny rodzaj zasobów do drzewka na podstawie ustawionej
+   * wartości typu.
+   */
+  public LoadResources() {
+    this.loading &#x3D; true;
+    
+    this.filterValue &#x3D; &#x27;&#x27;;
+    this.treeService.clearData();
+    switch (this._type.toLowerCase()) {
+      case &#x27;change-group&#x27;: {
+        this.treeService.setAllGroupsForChange(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;coordinators&#x27;: {
+        this.treeService.setAllCoordinators(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;courses&#x27;: {
+        this.treeService.setAllCourses(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;course-types&#x27;: {
+        this.treeService.setAllCourseTypes(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;groups&#x27;: {
+        this.treeService.setAllGroups(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;rooms&#x27;: {
+        this.treeService.setAllRooms(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;rooms-on-types&#x27;: {
+        this.treeService.setAllRoomsOnTypes(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;room-types&#x27;: {
+        this.treeService.setAllRoomTypes(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;students&#x27;: {
+        this.treeService.setAllStudents(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      case &#x27;users&#x27;: {
+        this.treeService.setAllUsers(() &#x3D;&gt; {
+          this.loading &#x3D; false;
+        });
+      } break;
+      default: {
+        this.treeService.setCurrentData();
+        this.loading &#x3D; false;
+      } break;
+    }
+  }
+
+  /**
+   * Metoda wywoływana w momencie wykrycia zmiany w polu wyszukiwania.
+   * @param event Zdarzenie wykrycia zmiany w polu wyszukiwania
+   */
+  FilterChanged(event: Event): void {
+    const value &#x3D; (&lt;HTMLInputElement&gt;event.target).value;
+    this.filterChanged.next(value);
+  }
+
+  /**
+   * Metoda czyszcząca pole wyszukiwania.
+   */
+  ClearFilter() {
+    this.filterValue &#x3D; &#x27;&#x27;;
+    this.filterChanged.next(&#x27;&#x27;);
+  }
+
+  Click(id: string | undefined, type: string, action: string, node: ResourceNode): void {
+    this.clicked.emit({id: id, type: type, action: action, node: node});
+  }
+
+  ngOnDestroy() {
+    this.treeService.clearFilter();
+    this.filterChangedSub.unsubscribe();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;available-resources&quot; [ngStyle]&#x3D;&quot;{&#x27;visibility&#x27;: visible ? &#x27;visible&#x27; : &#x27;hidden&#x27;}&quot;&gt;
+    &lt;div class&#x3D;&quot;available-resources-header&quot;&gt;{{header}}&lt;/div&gt;
+    &lt;div *ngIf&#x3D;&quot;loading &#x3D;&#x3D; false; else spinner&quot; class&#x3D;&quot;available-resources-content&quot;&gt;
+        &lt;form&gt;
+            &lt;mat-form-field class&#x3D;&quot;search-form-field&quot;&gt;
+                &lt;mat-label&gt;Search for resource...&lt;/mat-label&gt;
+                &lt;input
+                    type&#x3D;&quot;search&quot;
+                    matInput
+                    [(ngModel)]&#x3D;&quot;filterValue&quot;
+                    name&#x3D;&quot;filterValue&quot;
+                    (input)&#x3D;&quot;FilterChanged($event)&quot;
+                &gt;
+                &lt;mat-icon matPrefix class&#x3D;&quot;mat-search-icon&quot;&gt;search&lt;/mat-icon&gt;
+                &lt;button *ngIf&#x3D;&quot;filterValue&quot; matSuffix mat-icon-button (click)&#x3D;&quot;ClearFilter()&quot;&gt;
+                    &lt;mat-icon&gt;close&lt;/mat-icon&gt;
+                &lt;/button&gt;
+            &lt;/mat-form-field&gt;
+        &lt;/form&gt;
+        &lt;mat-tree #matTree [dataSource]&#x3D;&quot;dataSource&quot; [treeControl]&#x3D;&quot;treeControl&quot; class&#x3D;&quot;tree&quot;&gt;
+            &lt;mat-tree-node *matTreeNodeDef&#x3D;&quot;let node; when: &quot; matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent&#x3D;&quot;15&quot; class&#x3D;&quot;node&quot;&gt;
+                &lt;button mat-icon-button disabled class&#x3D;&quot;padding-button&quot;&gt;&lt;/button&gt;
+                {{node.item.name}}
+                &lt;button mat-icon-button color&#x3D;&quot;primary&quot; *ngIf&#x3D;&quot;node.item.id !&#x3D; null&quot; 
+                    (click)&#x3D;&quot;Click(node.item.id, node.item.type, actionType &#x3D;&#x3D;&#x3D; &#x27;select&#x27; ? &#x27;select&#x27; : &#x27;view&#x27;, node)&quot;
+                    [disabled]&#x3D;&quot;excludeTypes.includes(node.item.type) || excludeIds.includes(node.item.id)&quot;
+                    [title]&#x3D;&quot;(actionType &#x3D;&#x3D;&#x3D; &#x27;select&#x27; ? &#x27;Select&#x27; : &#x27;Show&#x27;) + &#x27; resource&#x27;&quot;&gt;
+                    &lt;mat-icon&gt;{{actionType &#x3D;&#x3D;&#x3D; &#x27;select&#x27; ? &#x27;add_circle&#x27; : &#x27;visibility&#x27;}}&lt;/mat-icon&gt;
+                &lt;/button&gt;
+                &lt;button mat-icon-button *ngIf&#x3D;&quot;node.item.addActionType !&#x3D; null &amp;&amp; actionType &#x3D;&#x3D; &#x27;add&#x27;&quot; 
+                    (click)&#x3D;&quot;Click(node.item.id, node.item.addActionType, &#x27;add&#x27;, node)&quot; 
+                    title&#x3D;&quot;Add resource&quot;&gt;
+                    &lt;mat-icon&gt;add&lt;/mat-icon&gt;
+                &lt;/button&gt;
+            &lt;/mat-tree-node&gt;
+
+            &lt;mat-tree-node style&#x3D;&quot;display: none;&quot; *matTreeNodeDef&#x3D;&quot;let node; when: isHidden&quot; matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent&#x3D;&quot;15&quot; class&#x3D;&quot;node&quot;&gt;
+
+            &lt;/mat-tree-node&gt;
+            
+            &lt;mat-tree-node *matTreeNodeDef&#x3D;&quot;let node; when: hasChild&quot; matTreeNodePadding matTreeNodePaddingIndent&#x3D;&quot;15&quot; class&#x3D;&quot;node&quot;&gt;
+                &lt;button mat-icon-button matTreeNodeToggle&gt;
+                    &lt;mat-icon&gt;
+                    {{treeControl.isExpanded(node) ? &#x27;expand_more&#x27; : &#x27;chevron_right&#x27;}}
+                    &lt;/mat-icon&gt;
+                &lt;/button&gt;
+                &lt;b&gt;{{node.item.name}}&lt;/b&gt;
+                &lt;button mat-icon-button color&#x3D;&quot;primary&quot; *ngIf&#x3D;&quot;node.item.id !&#x3D; null&quot; 
+                    (click)&#x3D;&quot;Click(node.item.id, node.item.type, actionType &#x3D;&#x3D;&#x3D; &#x27;select&#x27; ? &#x27;select&#x27; : &#x27;view&#x27;, node)&quot;
+                    [disabled]&#x3D;&quot;excludeTypes.includes(node.item.type) || excludeIds.includes(node.item.id)&quot;
+                    [title]&#x3D;&quot;(actionType &#x3D;&#x3D;&#x3D; &#x27;select&#x27; ? &#x27;Select&#x27; : &#x27;Show&#x27;) + &#x27; resource&#x27;&quot;&gt;
+                    &lt;mat-icon&gt;{{actionType &#x3D;&#x3D;&#x3D; &#x27;select&#x27; ? &#x27;add_circle&#x27; : &#x27;visibility&#x27;}}&lt;/mat-icon&gt;
+                &lt;/button&gt;
+                &lt;button mat-icon-button *ngIf&#x3D;&quot;node.item.addActionType !&#x3D; null &amp;&amp; actionType &#x3D;&#x3D; &#x27;add&#x27;&quot; 
+                    (click)&#x3D;&quot;Click(node.item.id, node.item.addActionType, &#x27;add&#x27;, node)&quot; 
+                    title&#x3D;&quot;Add resource&quot;&gt;
+                    &lt;mat-icon&gt;add&lt;/mat-icon&gt;
+                &lt;/button&gt;
+            &lt;/mat-tree-node&gt;
+        &lt;/mat-tree&gt;
+    &lt;/div&gt;
+    &lt;ng-template #spinner&gt;
+        &lt;mat-progress-spinner *ngIf&#x3D;&quot;loading !&#x3D; null&quot;
+            class&#x3D;&quot;spinner&quot;
+            mode&#x3D;&quot;indeterminate&quot;
+            diameter&#x3D;&quot;40&quot;
+        &gt;&lt;/mat-progress-spinner&gt;
+    &lt;/ng-template&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./admin-resources.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.available-resources {
+    border: 2px solid #008700;
+    box-sizing: border-box;
+    padding-bottom: 1vh;
+    width: 26%;
+    height: 75vh;
+    float: left;
+    margin-top: 0.5%;
+    margin-left: 2%;
+}
+
+.available-resources-header {
+    height: 3%;
+    border-bottom: 2px solid #008700;
+    background-color: #81C781;
+    font-weight: bold;
+}
+
+.available-resources-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    box-sizing: border-box;
+    height: 97%;
+    overflow-y: auto;
+}
+
+.search-form-field {
+    display: block;
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
+}
+
+.mat-search-icon {
+    position: relative;
+    top: 6px;
+}
+
+.tree {
+    background-color: #00000000;
+}
+
+.tree .node:first-child {
+    border-top: 1px solid; 
+    border-color: #00000048;
+}
+
+.tree .node {
+    border-bottom: 1px solid;
+    border-color: #00000048;
+}
+
+.node-icon {
+    margin-left: 0.5vw;
+}
+
+.padding-button {
+    background-color: #00000000 !important;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="available-resources" [ngStyle]="{\'visibility\': visible ? \'visible\' : \'hidden\'}">    <div class="available-resources-header">{{header}}</div>    <div *ngIf="loading == false; else spinner" class="available-resources-content">        <form>            <mat-form-field class="search-form-field">                <mat-label>Search for resource...</mat-label>                <input                    type="search"                    matInput                    [(ngModel)]="filterValue"                    name="filterValue"                    (input)="FilterChanged($event)"                >                <mat-icon matPrefix class="mat-search-icon">search</mat-icon>                <button *ngIf="filterValue" matSuffix mat-icon-button (click)="ClearFilter()">                    <mat-icon>close</mat-icon>                </button>            </mat-form-field>        </form>        <mat-tree #matTree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">            <mat-tree-node *matTreeNodeDef="let node; when: " matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">                <button mat-icon-button disabled class="padding-button"></button>                {{node.item.name}}                <button mat-icon-button color="primary" *ngIf="node.item.id != null"                     (click)="Click(node.item.id, node.item.type, actionType === \'select\' ? \'select\' : \'view\', node)"                    [disabled]="excludeTypes.includes(node.item.type) || excludeIds.includes(node.item.id)"                    [title]="(actionType === \'select\' ? \'Select\' : \'Show\') + \' resource\'">                    <mat-icon>{{actionType === \'select\' ? \'add_circle\' : \'visibility\'}}</mat-icon>                </button>                <button mat-icon-button *ngIf="node.item.addActionType != null && actionType == \'add\'"                     (click)="Click(node.item.id, node.item.addActionType, \'add\', node)"                     title="Add resource">                    <mat-icon>add</mat-icon>                </button>            </mat-tree-node>            <mat-tree-node style="display: none;" *matTreeNodeDef="let node; when: isHidden" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">            </mat-tree-node>                        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15" class="node">                <button mat-icon-button matTreeNodeToggle>                    <mat-icon>                    {{treeControl.isExpanded(node) ? \'expand_more\' : \'chevron_right\'}}                    </mat-icon>                </button>                <b>{{node.item.name}}</b>                <button mat-icon-button color="primary" *ngIf="node.item.id != null"                     (click)="Click(node.item.id, node.item.type, actionType === \'select\' ? \'select\' : \'view\', node)"                    [disabled]="excludeTypes.includes(node.item.type) || excludeIds.includes(node.item.id)"                    [title]="(actionType === \'select\' ? \'Select\' : \'Show\') + \' resource\'">                    <mat-icon>{{actionType === \'select\' ? \'add_circle\' : \'visibility\'}}</mat-icon>                </button>                <button mat-icon-button *ngIf="node.item.addActionType != null && actionType == \'add\'"                     (click)="Click(node.item.id, node.item.addActionType, \'add\', node)"                     title="Add resource">                    <mat-icon>add</mat-icon>                </button>            </mat-tree-node>        </mat-tree>    </div>    <ng-template #spinner>        <mat-progress-spinner *ngIf="loading != null"            class="spinner"            mode="indeterminate"            diameter="40"        ></mat-progress-spinner>    </ng-template></div></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'AdminResourcesComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AdminResourcesComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

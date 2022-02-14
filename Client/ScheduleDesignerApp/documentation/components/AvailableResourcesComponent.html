@@ -1,0 +1,1349 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  AvailableResourcesComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/available-resources/available-resources.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent odpowiedzialny za wyświetlanie drzewka zasobów
+w opcjach związanych z planem zajęć.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-available-resources</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./available-resources.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./available-resources.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#dataSource" >dataSource</a>
+                            </li>
+                            <li>
+                                <a href="#filterChanged" >filterChanged</a>
+                            </li>
+                            <li>
+                                <a href="#filterChangedSub" >filterChangedSub</a>
+                            </li>
+                            <li>
+                                <a href="#filterValue" >filterValue</a>
+                            </li>
+                            <li>
+                                <a href="#hasChild" >hasChild</a>
+                            </li>
+                            <li>
+                                <a href="#isHidden" >isHidden</a>
+                            </li>
+                            <li>
+                                <a href="#isVisible" >isVisible</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#treeControl" >treeControl</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#Action" >Action</a>
+                            </li>
+                            <li>
+                                <a href="#ClearFilter" >ClearFilter</a>
+                            </li>
+                            <li>
+                                <a href="#FilterChanged" >FilterChanged</a>
+                            </li>
+                            <li>
+                                <a href="#isRepresentative" >isRepresentative</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#disabled" >disabled</a>
+                            </li>
+                            <li>
+                                <a href="#representativeGroups" >representativeGroups</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#showSchedule" >showSchedule</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(resourceTreeService: <a href="../injectables/ResourceTreeService.html" target="_self">ResourceTreeService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:44</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>resourceTreeService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ResourceTreeService.html" target="_self" >ResourceTreeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="disabled"></a>
+                        <b>disabled</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:24</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy przyciski wyświetlane razem z węzłami drzewka są wyłączone.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="representativeGroups"></a>
+                        <b>representativeGroups</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:22</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Identyfikatory grup studenckich, których student jest starostą.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="showSchedule"></a>
+                        <b>showSchedule</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ResourceItem.html" target="_self" >EventEmitter&lt;ResourceItem&gt;</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:27</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia wyświetlenia planu zajęć dla wybranego zasobu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Action"></a>
+                    <span class="name">
+                        <span ><b>Action</b></span>
+                        <a href="#Action"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Action(node: <a href="../classes/ResourceNode.html" target="_self">ResourceNode</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="100"
+                            class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:100</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                                <code><a href="../classes/ResourceNode.html" target="_self" >ResourceNode</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ClearFilter"></a>
+                    <span class="name">
+                        <span ><b>ClearFilter</b></span>
+                        <a href="#ClearFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ClearFilter()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="95"
+                            class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:95</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda czyszcząca pole wyszukiwania.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FilterChanged"></a>
+                    <span class="name">
+                        <span ><b>FilterChanged</b></span>
+                        <a href="#FilterChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>FilterChanged(event: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="87"
+                            class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:87</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie wykrycia zmiany w polu wyszukiwania.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/router/Event" target="_blank" >Event</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie wykrycia zmiany w polu wyszukiwania</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isRepresentative"></a>
+                    <span class="name">
+                        <span ><b>isRepresentative</b></span>
+                        <a href="#isRepresentative"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isRepresentative(filter: <a href="../classes/Filter.html" target="_self">Filter | null</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:76</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>filter</td>
+                                    <td>
+                                                <code><a href="../classes/Filter.html" target="_self" >Filter | null</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="104"
+                            class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:104</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:55</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Rozpoczyna odbieranie bieżących informacji o zmianach w polu wyszukiwania.
+Inicjalizuje właściwości wyświetlanego drzewka zasobów.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dataSource"></a>
+                    <span class="name">
+                        <span ><b>dataSource</b></span>
+                        <a href="#dataSource"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MatTreeFlatDataSource&lt;ResourceNode | ResourceFlatNode&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterChanged"></a>
+                    <span class="name">
+                        <span ><b>filterChanged</b></span>
+                        <a href="#filterChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subject&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subject&lt;string&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje informacje o tym czy
+nastąpiła zmiana wartości pola wyszukiwania.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterChangedSub"></a>
+                    <span class="name">
+                        <span ><b>filterChangedSub</b></span>
+                        <a href="#filterChangedSub"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterValue"></a>
+                    <span class="name">
+                        <span ><b>filterValue</b></span>
+                        <a href="#filterValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Wartość pola wyszukiwania.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasChild"></a>
+                    <span class="name">
+                        <span ><b>hasChild</b></span>
+                        <a href="#hasChild"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isHidden"></a>
+                    <span class="name">
+                        <span ><b>isHidden</b></span>
+                        <a href="#isHidden"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isVisible"></a>
+                    <span class="name">
+                        <span ><b>isVisible</b></span>
+                        <a href="#isVisible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:38</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="treeControl"></a>
+                    <span class="name">
+                        <span ><b>treeControl</b></span>
+                        <a href="#treeControl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ResourceFlatNode.html" target="_self" >FlatTreeControl&lt;ResourceFlatNode&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/components/available-resources/available-resources.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { FlatTreeControl } from &#x27;@angular/cdk/tree&#x27;;
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from &#x27;@angular/core&#x27;;
+import { MatTreeFlatDataSource } from &#x27;@angular/material/tree&#x27;;
+import { Subject, Subscription } from &#x27;rxjs&#x27;;
+import { debounceTime, distinctUntilChanged } from &#x27;rxjs/operators&#x27;;
+import { Filter } from &#x27;src/app/others/Filter&#x27;;
+import { ResourceFlatNode, ResourceItem, ResourceNode } from &#x27;src/app/others/ResourcesTree&#x27;;
+import { ResourceTreeService } from &#x27;src/app/services/ResourceTreeService/resource-tree.service&#x27;;
+
+/**
+ * Komponent odpowiedzialny za wyświetlanie drzewka zasobów 
+ * w opcjach związanych z planem zajęć.
+ */
+@Component({
+  selector: &#x27;app-available-resources&#x27;,
+  templateUrl: &#x27;./available-resources.component.html&#x27;,
+  styleUrls: [&#x27;./available-resources.component.css&#x27;]
+})
+export class AvailableResourcesComponent implements OnInit {
+
+  /** Identyfikatory grup studenckich, których student jest starostą. */
+  @Input() representativeGroups: number[] &#x3D; [];
+  /** Określa czy przyciski wyświetlane razem z węzłami drzewka są wyłączone. */
+  @Input() disabled: boolean;
+
+  /** Emiter zdarzenia wyświetlenia planu zajęć dla wybranego zasobu. */
+  @Output() showSchedule: EventEmitter&lt;ResourceItem&gt; &#x3D; new EventEmitter();
+  
+  /** Wartość pola wyszukiwania. */
+  filterValue: string &#x3D; &#x27;&#x27;;
+  /** Strumień, który przechowuje informacje o tym czy 
+   * nastąpiła zmiana wartości pola wyszukiwania. 
+   */
+  filterChanged: Subject&lt;string&gt; &#x3D; new Subject&lt;string&gt;();
+  filterChangedSub: Subscription;
+
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean | null &#x3D; null;
+
+  treeControl: FlatTreeControl&lt;ResourceFlatNode&gt;;
+  dataSource: MatTreeFlatDataSource&lt;ResourceNode, ResourceFlatNode&gt;;
+  hasChild: (_: number, _nodeData: ResourceFlatNode) &#x3D;&gt; boolean;
+  isHidden: (_: number, _nodeData: ResourceFlatNode) &#x3D;&gt; boolean;
+  isVisible: (_: number, _nodeData: ResourceFlatNode) &#x3D;&gt; boolean;
+
+  constructor(
+    private resourceTreeService: ResourceTreeService,
+  ) { }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji o zmianach w polu wyszukiwania.
+   * Inicjalizuje właściwości wyświetlanego drzewka zasobów.
+   */
+  ngOnInit(): void {
+    this.loading &#x3D; true;
+
+    this.filterChangedSub &#x3D; this.filterChanged.pipe(debounceTime(200), distinctUntilChanged()).subscribe(value &#x3D;&gt; {
+      if (value) {
+        this.resourceTreeService.filterByName(value);
+      } else {
+        this.resourceTreeService.clearFilter();
+      }
+    });
+
+    this.treeControl &#x3D; this.resourceTreeService.treeControl;
+    this.dataSource &#x3D; this.resourceTreeService.dataSource;
+    
+    this.hasChild &#x3D; this.resourceTreeService.hasChild;
+    this.isHidden &#x3D; this.resourceTreeService.isHidden;
+    this.isVisible &#x3D; this.resourceTreeService.isVisible;
+
+    this.loading &#x3D; false;
+  }
+
+  isRepresentative(filter: Filter | null): boolean {
+    if (filter &#x3D;&#x3D; null) {
+      return false;
+    }
+    return this.representativeGroups.some(groupId &#x3D;&gt; filter.GroupsIds.includes(groupId));
+  }
+
+  /**
+   * Metoda wywoływana w momencie wykrycia zmiany w polu wyszukiwania.
+   * @param event Zdarzenie wykrycia zmiany w polu wyszukiwania
+   */
+  FilterChanged(event: Event): void {
+    const value &#x3D; (&lt;HTMLInputElement&gt;event.target).value;
+    this.filterChanged.next(value);
+  }
+
+  /**
+   * Metoda czyszcząca pole wyszukiwania.
+   */
+  ClearFilter() {
+    this.filterValue &#x3D; &#x27;&#x27;;
+    this.filterChanged.next(&#x27;&#x27;);
+  }
+
+  Action(node: ResourceNode): void {
+    this.showSchedule.emit(node.item);
+  }
+
+  ngOnDestroy() {
+    this.resourceTreeService.clearFilter();
+    this.filterChangedSub.unsubscribe();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;available-resources&quot;&gt;
+    &lt;div class&#x3D;&quot;available-resources-header&quot;&gt;Available resources&lt;/div&gt;
+    &lt;div *ngIf&#x3D;&quot;loading &#x3D;&#x3D; false; else spinner&quot; class&#x3D;&quot;available-resources-content&quot;&gt;
+        &lt;form&gt;
+            &lt;mat-form-field class&#x3D;&quot;search-form-field&quot;&gt;
+                &lt;mat-label&gt;Search for resource...&lt;/mat-label&gt;
+                &lt;input
+                    type&#x3D;&quot;search&quot;
+                    matInput
+                    [(ngModel)]&#x3D;&quot;filterValue&quot;
+                    name&#x3D;&quot;filterValue&quot;
+                    (input)&#x3D;&quot;FilterChanged($event)&quot;
+                &gt;
+                &lt;mat-icon matPrefix class&#x3D;&quot;mat-search-icon&quot;&gt;search&lt;/mat-icon&gt;
+                &lt;button *ngIf&#x3D;&quot;filterValue&quot; matSuffix mat-icon-button (click)&#x3D;&quot;ClearFilter()&quot;&gt;
+                    &lt;mat-icon&gt;close&lt;/mat-icon&gt;
+                &lt;/button&gt;
+            &lt;/mat-form-field&gt;
+        &lt;/form&gt;
+        &lt;mat-tree #matTree [dataSource]&#x3D;&quot;dataSource&quot; [treeControl]&#x3D;&quot;treeControl&quot; class&#x3D;&quot;tree&quot;&gt;
+            &lt;mat-tree-node *matTreeNodeDef&#x3D;&quot;let node; when: &quot; matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent&#x3D;&quot;15&quot; class&#x3D;&quot;node&quot;&gt;
+                &lt;button mat-icon-button disabled class&#x3D;&quot;padding-button&quot;&gt;&lt;/button&gt;
+                {{node.item.name}} 
+                &lt;mat-icon *ngIf&#x3D;&quot;node.item.icon !&#x3D; null &amp;&amp; node.item.icon !&#x3D; &#x27;&#x27;&quot; class&#x3D;&quot;node-icon&quot;&gt;
+                    {{node.item.icon}}
+                &lt;/mat-icon&gt;
+                &lt;button mat-icon-button color&#x3D;&quot;primary&quot; *ngIf&#x3D;&quot;node.item.filter !&#x3D; null&quot; [disabled]&#x3D;&quot;disabled&quot; (click)&#x3D;&quot;Action(node)&quot; title&#x3D;&quot;Show schedule&quot;&gt;
+                    &lt;mat-icon&gt;visibility&lt;/mat-icon&gt;
+                &lt;/button&gt;
+                &lt;mat-icon *ngIf&#x3D;&quot;isRepresentative(node.item.filter)&quot; color&#x3D;&quot;primary&quot; title&#x3D;&quot;You represent this group&quot;&gt;
+                    stars
+                &lt;/mat-icon&gt;
+            &lt;/mat-tree-node&gt;
+
+            &lt;mat-tree-node style&#x3D;&quot;display: none;&quot; *matTreeNodeDef&#x3D;&quot;let node; when: isHidden&quot; matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent&#x3D;&quot;15&quot; class&#x3D;&quot;node&quot;&gt;
+
+            &lt;/mat-tree-node&gt;
+            
+            &lt;mat-tree-node *matTreeNodeDef&#x3D;&quot;let node; when: hasChild&quot; matTreeNodePadding matTreeNodePaddingIndent&#x3D;&quot;15&quot; class&#x3D;&quot;node&quot;&gt;
+                &lt;button mat-icon-button matTreeNodeToggle&gt;
+                    &lt;mat-icon&gt;
+                    {{treeControl.isExpanded(node) ? &#x27;expand_more&#x27; : &#x27;chevron_right&#x27;}}
+                    &lt;/mat-icon&gt;
+                &lt;/button&gt;
+                &lt;b&gt;{{node.item.name}}&lt;/b&gt; 
+                &lt;mat-icon *ngIf&#x3D;&quot;node.item.icon !&#x3D; null &amp;&amp; node.item.icon !&#x3D; &#x27;&#x27;&quot; class&#x3D;&quot;node-icon&quot;&gt;
+                    {{node.item.icon}}
+                &lt;/mat-icon&gt;
+                &lt;button mat-icon-button color&#x3D;&quot;primary&quot; *ngIf&#x3D;&quot;node.item.filter !&#x3D; null&quot; [disabled]&#x3D;&quot;disabled&quot; (click)&#x3D;&quot;Action(node)&quot; title&#x3D;&quot;Show schedule&quot;&gt;
+                    &lt;mat-icon&gt;visibility&lt;/mat-icon&gt;
+                &lt;/button&gt;
+                &lt;mat-icon *ngIf&#x3D;&quot;isRepresentative(node.item.filter)&quot; color&#x3D;&quot;primary&quot; title&#x3D;&quot;You represent this group&quot;&gt;
+                    stars
+                &lt;/mat-icon&gt;
+            &lt;/mat-tree-node&gt;
+        &lt;/mat-tree&gt;
+    &lt;/div&gt;
+    &lt;ng-template #spinner&gt;
+        &lt;mat-progress-spinner *ngIf&#x3D;&quot;loading !&#x3D; null&quot;
+            class&#x3D;&quot;spinner&quot;
+            mode&#x3D;&quot;indeterminate&quot;
+            diameter&#x3D;&quot;40&quot;
+        &gt;&lt;/mat-progress-spinner&gt;
+    &lt;/ng-template&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./available-resources.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.available-resources {
+    border: 2px solid #008700;
+    box-sizing: border-box;
+    padding-bottom: 1vh;
+    width: 15%;
+    height: 80vh;
+    float: left;
+}
+
+.available-resources-header {
+    height: 3%;
+    border-bottom: 2px solid #008700;
+    background-color: #81C781;
+    font-weight: bold;
+}
+
+.available-resources-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    box-sizing: border-box;
+    height: 97%;
+    overflow-y: auto;
+}
+
+.search-form-field {
+    display: block;
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
+}
+
+.mat-search-icon {
+    position: relative;
+    top: 6px;
+}
+
+.tree {
+    background-color: #00000000;
+}
+
+.tree .node:first-child {
+    border-top: 1px solid; 
+    border-color: #00000048;
+}
+
+.tree .node {
+    border-bottom: 1px solid;
+    border-color: #00000048;
+}
+
+.node-icon {
+    margin-left: 0.5vw;
+}
+
+.padding-button {
+    background-color: #00000000 !important;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="available-resources">    <div class="available-resources-header">Available resources</div>    <div *ngIf="loading == false; else spinner" class="available-resources-content">        <form>            <mat-form-field class="search-form-field">                <mat-label>Search for resource...</mat-label>                <input                    type="search"                    matInput                    [(ngModel)]="filterValue"                    name="filterValue"                    (input)="FilterChanged($event)"                >                <mat-icon matPrefix class="mat-search-icon">search</mat-icon>                <button *ngIf="filterValue" matSuffix mat-icon-button (click)="ClearFilter()">                    <mat-icon>close</mat-icon>                </button>            </mat-form-field>        </form>        <mat-tree #matTree [dataSource]="dataSource" [treeControl]="treeControl" class="tree">            <mat-tree-node *matTreeNodeDef="let node; when: " matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">                <button mat-icon-button disabled class="padding-button"></button>                {{node.item.name}}                 <mat-icon *ngIf="node.item.icon != null && node.item.icon != \'\'" class="node-icon">                    {{node.item.icon}}                </mat-icon>                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)" title="Show schedule">                    <mat-icon>visibility</mat-icon>                </button>                <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary" title="You represent this group">                    stars                </mat-icon>            </mat-tree-node>            <mat-tree-node style="display: none;" *matTreeNodeDef="let node; when: isHidden" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="15" class="node">            </mat-tree-node>                        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="15" class="node">                <button mat-icon-button matTreeNodeToggle>                    <mat-icon>                    {{treeControl.isExpanded(node) ? \'expand_more\' : \'chevron_right\'}}                    </mat-icon>                </button>                <b>{{node.item.name}}</b>                 <mat-icon *ngIf="node.item.icon != null && node.item.icon != \'\'" class="node-icon">                    {{node.item.icon}}                </mat-icon>                <button mat-icon-button color="primary" *ngIf="node.item.filter != null" [disabled]="disabled" (click)="Action(node)" title="Show schedule">                    <mat-icon>visibility</mat-icon>                </button>                <mat-icon *ngIf="isRepresentative(node.item.filter)" color="primary" title="You represent this group">                    stars                </mat-icon>            </mat-tree-node>        </mat-tree>    </div>    <ng-template #spinner>        <mat-progress-spinner *ngIf="loading != null"            class="spinner"            mode="indeterminate"            diameter="40"        ></mat-progress-spinner>    </ng-template></div></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'AvailableResourcesComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AvailableResourcesComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

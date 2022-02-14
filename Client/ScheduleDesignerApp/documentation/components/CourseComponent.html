@@ -1,0 +1,1715 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  CourseComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/course/course.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent pojedynczego panelu z zajęciami.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-course</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./course.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./course.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cdkCourse" >cdkCourse</a>
+                            </li>
+                            <li>
+                                <a href="#userInfo" >userInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#Ceil" >Ceil</a>
+                            </li>
+                            <li>
+                                <a href="#CheckIfAnyProposition" >CheckIfAnyProposition</a>
+                            </li>
+                            <li>
+                                <a href="#CheckIfInvalidGroup" >CheckIfInvalidGroup</a>
+                            </li>
+                            <li>
+                                <a href="#CheckIfMatching" >CheckIfMatching</a>
+                            </li>
+                            <li>
+                                <a href="#CheckIfNotMatching" >CheckIfNotMatching</a>
+                            </li>
+                            <li>
+                                <a href="#Click" >Click</a>
+                            </li>
+                            <li>
+                                <a href="#Floor" >Floor</a>
+                            </li>
+                            <li>
+                                <a href="#getBackground" >getBackground</a>
+                            </li>
+                            <li>
+                                <a href="#getScheduledMovesBadge" >getScheduledMovesBadge</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#OnReleased" >OnReleased</a>
+                            </li>
+                            <li>
+                                <a href="#OnStarted" >OnStarted</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#course" >course</a>
+                            </li>
+                            <li>
+                                <a href="#ignoreUsersLocks" >ignoreUsersLocks</a>
+                            </li>
+                            <li>
+                                <a href="#isModifying" >isModifying</a>
+                            </li>
+                            <li>
+                                <a href="#isSelectedMoving" >isSelectedMoving</a>
+                            </li>
+                            <li>
+                                <a href="#representativeGroupsIds" >representativeGroupsIds</a>
+                            </li>
+                            <li>
+                                <a href="#settings" >settings</a>
+                            </li>
+                            <li>
+                                <a href="#weeksOnTab" >weeksOnTab</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#onRelease" >onRelease</a>
+                            </li>
+                            <li>
+                                <a href="#onSelect" >onSelect</a>
+                            </li>
+                            <li>
+                                <a href="#onStart" >onStart</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(store: Store<literal type>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/components/course/course.component.ts:50</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store&lt;literal type&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="course"></a>
+                        <b>course</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/CourseEdition.html" target="_self" >CourseEdition</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/course/course.component.ts:28</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Informacje o edycji zajęć, których panel dotyczy.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ignoreUsersLocks"></a>
+                        <b>ignoreUsersLocks</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/course/course.component.ts:24</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy blokowania zwykłych użytkowników są ignorowane.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isModifying"></a>
+                        <b>isModifying</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/course/course.component.ts:22</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy tryb modyfikacji jest włączony.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isSelectedMoving"></a>
+                        <b>isSelectedMoving</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | undefined</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/components/course/course.component.ts:36</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy aktualnie jest wykonywane jakieś
+przesunięcie w planie przez użytkownika (nie dotyczy interakcji przeciągania i upuszczania).</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="representativeGroupsIds"></a>
+                        <b>representativeGroupsIds</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/course/course.component.ts:26</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Identyfikatory grup studenckich, których student jest starostą.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="settings"></a>
+                        <b>settings</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Settings.html" target="_self" >Settings</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/course/course.component.ts:30</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Ustawienia aplikacji.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="weeksOnTab"></a>
+                        <b>weeksOnTab</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[]</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/course/course.component.ts:32</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Tygodnie dotyczące aktualnego widoku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onRelease"></a>
+                        <b>onRelease</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragRelease&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/components/course/course.component.ts:47</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onSelect"></a>
+                        <b>onSelect</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/course/course.component.ts:43</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia wybrania panelu z zajęciami (wysyłany w momencie kliknięcia na panel).
+Zdarzenie posiada informacje o edycji wybranych zajęć, czy są możliwe do przesuwania w obecnym widoku
+oraz ich pozycji w planie (rama czasowa).</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onStart"></a>
+                        <b>onStart</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragStart&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/components/course/course.component.ts:45</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Ceil"></a>
+                    <span class="name">
+                        <span ><b>Ceil</b></span>
+                        <a href="#Ceil"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Ceil(number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="142"
+                            class="link-to-prism">src/app/components/course/course.component.ts:142</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>number</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CheckIfAnyProposition"></a>
+                    <span class="name">
+                        <span ><b>CheckIfAnyProposition</b></span>
+                        <a href="#CheckIfAnyProposition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CheckIfAnyProposition()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="116"
+                            class="link-to-prism">src/app/components/course/course.component.ts:116</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Funkcja sprawdzająca czy zaplanowane ruchy przypisane do edycji zajęć
+posiadają jakieś propozycje.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Prawdę, jeśli posiadają, w przeciwnym wypadku fałsz.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CheckIfInvalidGroup"></a>
+                    <span class="name">
+                        <span ><b>CheckIfInvalidGroup</b></span>
+                        <a href="#CheckIfInvalidGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CheckIfInvalidGroup()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="123"
+                            class="link-to-prism">src/app/components/course/course.component.ts:123</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CheckIfMatching"></a>
+                    <span class="name">
+                        <span ><b>CheckIfMatching</b></span>
+                        <a href="#CheckIfMatching"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CheckIfMatching()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="105"
+                            class="link-to-prism">src/app/components/course/course.component.ts:105</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Funkcja sprawdzająca czy powinno być możliwe zmienianie pozycji edycji zajęć na planie
+biorąc pod uwagę aktualny widok.
+w przeciwnym wypadku fałsz.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Prawdę, jeśli tygodnie aktualnego widoku zgadzają się z tygodniami pozycji w planie,
+w przeciwnym wypadku fałsz.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CheckIfNotMatching"></a>
+                    <span class="name">
+                        <span ><b>CheckIfNotMatching</b></span>
+                        <a href="#CheckIfNotMatching"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CheckIfNotMatching()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">src/app/components/course/course.component.ts:93</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Funkcja sprawdzająca czy powinno być uniemożliwione zmienianie pozycji edycji zajęć na planie
+biorąc pod uwagę aktualny widok.
+w przeciwnym wypadku fałsz.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Prawdę, jeśli tygodnie aktualnego widoku nie zgadzają się z tygodniami pozycji w planie,
+w przeciwnym wypadku fałsz.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Click"></a>
+                    <span class="name">
+                        <span ><b>Click</b></span>
+                        <a href="#Click"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Click(event: MouseEvent)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">src/app/components/course/course.component.ts:83</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>MouseEvent</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Floor"></a>
+                    <span class="name">
+                        <span ><b>Floor</b></span>
+                        <a href="#Floor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Floor(number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="138"
+                            class="link-to-prism">src/app/components/course/course.component.ts:138</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>number</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBackground"></a>
+                    <span class="name">
+                        <span ><b>getBackground</b></span>
+                        <a href="#getBackground"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getBackground()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">src/app/components/course/course.component.ts:71</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda zwracająca styl tła panelu w zależności od aktualnego stanu.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Styl tła panelu</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getScheduledMovesBadge"></a>
+                    <span class="name">
+                        <span ><b>getScheduledMovesBadge</b></span>
+                        <a href="#getScheduledMovesBadge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getScheduledMovesBadge()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">src/app/components/course/course.component.ts:63</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="80"
+                            class="link-to-prism">src/app/components/course/course.component.ts:80</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnReleased"></a>
+                    <span class="name">
+                        <span ><b>OnReleased</b></span>
+                        <a href="#OnReleased"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnReleased(event: CdkDragRelease)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">src/app/components/course/course.component.ts:134</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragRelease</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnStarted"></a>
+                    <span class="name">
+                        <span ><b>OnStarted</b></span>
+                        <a href="#OnStarted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnStarted(event: CdkDragStart)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="130"
+                            class="link-to-prism">src/app/components/course/course.component.ts:130</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragStart</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cdkCourse"></a>
+                    <span class="name">
+                        <span ><b>cdkCourse</b></span>
+                        <a href="#cdkCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>CdkDrag&lt;CourseEdition&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(CdkDrag)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/app/components/course/course.component.ts:19</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Reprezentacja elementu panelu (przechowującego informacje o edycji zajęć), który może być przeciągany po ekranie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userInfo"></a>
+                    <span class="name">
+                        <span ><b>userInfo</b></span>
+                        <a href="#userInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/components/course/course.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o zalogowanym użytkowniku.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CdkDrag, CdkDragRelease, CdkDragStart } from &#x27;@angular/cdk/drag-drop&#x27;;
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, SimpleChanges } from &#x27;@angular/core&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+import { UserInfo } from &#x27;src/app/others/Accounts&#x27;;
+import { CourseEdition } from &#x27;src/app/others/CourseEdition&#x27;;
+import { Settings } from &#x27;src/app/others/Settings&#x27;;
+
+/**
+ * Komponent pojedynczego panelu z zajęciami.
+ */
+@Component({
+  selector: &#x27;app-course&#x27;,
+  templateUrl: &#x27;./course.component.html&#x27;,
+  styleUrls: [&#x27;./course.component.css&#x27;]
+})
+export class CourseComponent implements OnInit {
+
+  /** Reprezentacja elementu panelu (przechowującego informacje o edycji zajęć), który może być przeciągany po ekranie. */
+  @ViewChild(CdkDrag) cdkCourse : CdkDrag&lt;CourseEdition&gt;;
+
+  /** Określa czy tryb modyfikacji jest włączony. */
+  @Input() isModifying:boolean;
+  /** Określa czy blokowania zwykłych użytkowników są ignorowane. */
+  @Input() ignoreUsersLocks:boolean;
+  /** Identyfikatory grup studenckich, których student jest starostą. */
+  @Input() representativeGroupsIds:number[] &#x3D; [];
+  /** Informacje o edycji zajęć, których panel dotyczy. */
+  @Input() course:CourseEdition;
+  /** Ustawienia aplikacji. */
+  @Input() settings:Settings;
+  /** Tygodnie dotyczące aktualnego widoku. */
+  @Input() weeksOnTab:number[];
+  /** Określa czy aktualnie jest wykonywane jakieś 
+   * przesunięcie w planie przez użytkownika (nie dotyczy interakcji przeciągania i upuszczania). 
+   */
+  @Input() isSelectedMoving:boolean|undefined;
+  
+  /** 
+   * Emiter zdarzenia wybrania panelu z zajęciami (wysyłany w momencie kliknięcia na panel).
+   * Zdarzenie posiada informacje o edycji wybranych zajęć, czy są możliwe do przesuwania w obecnym widoku
+   * oraz ich pozycji w planie (rama czasowa).
+   */
+  @Output() onSelect:EventEmitter&lt;{courseEdition:CourseEdition,isDisabled:boolean}&gt; &#x3D; new EventEmitter&lt;{courseEdition:CourseEdition,isDisabled:boolean}&gt;();
+  /** Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami. */
+  @Output() onStart:EventEmitter&lt;CdkDragStart&gt; &#x3D; new EventEmitter&lt;CdkDragStart&gt;();
+  /** Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami. */
+  @Output() onRelease:EventEmitter&lt;CdkDragRelease&gt; &#x3D; new EventEmitter&lt;CdkDragRelease&gt;();
+  
+  /** Informacje o zalogowanym użytkowniku. */
+  userInfo:UserInfo;
+
+  constructor(
+    private store:Store&lt;{userInfo:UserInfo}&gt;
+  ) {
+    this.store.select(&#x27;userInfo&#x27;).subscribe((userInfo) &#x3D;&gt; {
+      if (userInfo.UserId &#x3D;&#x3D; 0) {
+        return;
+      }
+      this.userInfo &#x3D; userInfo;
+    });
+  }
+
+  getScheduledMovesBadge(): number  {
+    return this.course.getScheduledMovesBadge(this.isModifying);
+  }
+
+  /**
+   * Metoda zwracająca styl tła panelu w zależności od aktualnego stanu.
+   * @returns Styl tła panelu
+   */
+  getBackground(): string {
+    return this.course?.IsLocked
+      ? ((!this.course?.IsLockedByAdmin)
+        ? &#x60;repeating-linear-gradient(90deg, ${this.course?.Type?.Color}, ${this.course?.Type?.Color} 10px, #FFFFFF 10px, #FFFFFF 20px) left / 50% 100% no-repeat,
+        ${this.course?.Type?.Color} right / 50% 100% no-repeat&#x60;
+        : &#x60;repeating-linear-gradient(90deg, ${this.course?.Type?.Color}, ${this.course?.Type?.Color} 10px, #FFFFFF 10px, #FFFFFF 20px)&#x60;)
+      : &#x60;${this.course?.Type?.Color}&#x60;;
+  }
+
+  ngOnInit(): void {
+  }
+
+  Click(event:MouseEvent) {
+    this.onSelect.emit({courseEdition: this.course, isDisabled: this.cdkCourse.disabled});
+  }
+
+  /**
+   * Funkcja sprawdzająca czy powinno być uniemożliwione zmienianie pozycji edycji zajęć na planie
+   * biorąc pod uwagę aktualny widok.
+   * @returns Prawdę, jeśli tygodnie aktualnego widoku nie zgadzają się z tygodniami pozycji w planie,
+   * w przeciwnym wypadku fałsz.
+   */
+  CheckIfNotMatching():boolean {
+    if (this.course.Weeks &#x3D;&#x3D; null) return false;
+    return this.weeksOnTab?.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) 
+      !&#x3D;&#x3D; this.course.Weeks?.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;);
+  }
+
+  /**
+   * Funkcja sprawdzająca czy powinno być możliwe zmienianie pozycji edycji zajęć na planie
+   * biorąc pod uwagę aktualny widok.
+   * @returns Prawdę, jeśli tygodnie aktualnego widoku zgadzają się z tygodniami pozycji w planie,
+   * w przeciwnym wypadku fałsz.
+   */
+  CheckIfMatching():boolean {
+    if (this.course.Weeks &#x3D;&#x3D; null) return false;
+    return this.weeksOnTab?.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) 
+      &#x3D;&#x3D;&#x3D; this.course.Weeks?.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;);
+  }
+
+  /**
+   * Funkcja sprawdzająca czy zaplanowane ruchy przypisane do edycji zajęć
+   * posiadają jakieś propozycje.
+   * @returns Prawdę, jeśli posiadają, w przeciwnym wypadku fałsz.
+   */
+  CheckIfAnyProposition():boolean {
+    if (!this.isModifying) {
+      return false;
+    }
+    return this.course.ScheduledMoves.some((scheduledMove) &#x3D;&gt; !scheduledMove.IsConfirmed);
+  }
+
+  CheckIfInvalidGroup(): boolean {
+    if (this.representativeGroupsIds.length &#x3D;&#x3D; 0) {
+      return false;
+    }
+    return !this.course.Groups.some(group &#x3D;&gt; this.representativeGroupsIds.includes(group.GroupId));
+  }
+
+  OnStarted(event:CdkDragStart) {
+    this.onStart.emit(event);
+  }
+
+  OnReleased(event:CdkDragRelease) {
+    this.onRelease.emit(event);
+  }
+
+  Floor(number:number):number {
+    return Math.floor(number);
+  }
+
+  Ceil(number:number):number {
+    return Math.ceil(number);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;course {{course?.IsLocked ? &#x27;locked&#x27; : &#x27;&#x27;}}&quot;
+    [style.background]&#x3D;&quot;getBackground()&quot;
+    
+    cdkDrag
+    [cdkDragDisabled]&#x3D;&quot;!isModifying || (!ignoreUsersLocks &amp;&amp; course?.IsLocked) || CheckIfNotMatching() 
+        || isSelectedMoving || (ignoreUsersLocks &amp;&amp; course?.IsLockedByAdmin &amp;&amp; course?.IsLocked) || CheckIfInvalidGroup()&quot;
+    [cdkDragData]&#x3D;&quot;course&quot;
+    (cdkDragStarted)&#x3D;&quot;OnStarted($event)&quot;
+    (cdkDragReleased)&#x3D;&quot;OnReleased($event)&quot;
+    (click)&#x3D;&quot;Click($event)&quot;
+    
+    [matTooltip]&#x3D;&quot;course.ShowFrequency(settings)&quot;
+    matTooltipShowDelay&#x3D;&quot;300&quot;
+
+    [matBadge]&#x3D;&quot;(course?.Weeks &#x3D;&#x3D; null) ? course?.CurrentAmount : getScheduledMovesBadge()&quot; 
+    matBadgePosition&#x3D;&quot;after&quot; 
+    [matBadgeColor]&#x3D;&quot;(course?.Weeks &#x3D;&#x3D; null) ? &#x27;primary&#x27; : &#x27;accent&#x27;&quot; 
+    [matBadgeHidden]&#x3D;&quot;course?.Weeks !&#x3D; null &amp;&amp; getScheduledMovesBadge() &#x3D;&#x3D; 0&quot;
+
+    [attr.proposition]&#x3D;&quot;CheckIfAnyProposition()&quot;
+&gt;
+    &lt;div class&#x3D;&quot;course-placeholder&quot; *cdkDragPlaceholder&gt;&lt;/div&gt;
+    &lt;div [matBadge]&#x3D;&quot;course?.ScheduleAmount&quot; matBadgePosition&#x3D;&quot;before&quot; matBadgeColor&#x3D;&quot;warn&quot; [matBadgeHidden]&#x3D;&quot;course?.Weeks !&#x3D; null&quot;
+        [attr.valid]&#x3D;&quot;course?.ScheduleAmount &#x3D;&#x3D; Floor(course!.FullAmount)&quot;
+    &gt;
+        &lt;div *ngIf&#x3D;&quot;isModifying&quot; class&#x3D;&quot;details-field&quot;&gt;
+            &lt;img *ngIf&#x3D;&quot;CheckIfNotMatching()&quot; src&#x3D;&quot;/assets/pin.svg&quot; class&#x3D;&quot;pin&quot;&gt;
+            &lt;img *ngIf&#x3D;&quot;CheckIfMatching()&quot; src&#x3D;&quot;/assets/pin2.svg&quot; class&#x3D;&quot;pin&quot;&gt;
+        &lt;/div&gt;
+        &lt;i *ngIf&#x3D;&quot;course?.Weeks &#x3D;&#x3D; null; else weeksText&quot;&gt;{{course?.Type?.Name}}&lt;br&gt;
+            {{(course!.FullAmount % 1 &#x3D;&#x3D; 0) ? course?.FullAmount : Floor(course!.FullAmount)+&#x27;/&#x27;+Ceil(course!.FullAmount)}} {{(course!.FullAmount &gt; 1) ? &#x27;classes&#x27; : &#x27;class&#x27;}}
+        &lt;/i&gt;
+        &lt;ng-template #weeksText&gt;
+            &lt;i&gt;{{course?.Type?.Name}}, {{course?.Room?.Name}}&lt;/i&gt;
+        &lt;/ng-template&gt;
+        &lt;br/&gt;
+        &lt;span class&#x3D;&quot;course-weeks&quot;&gt;
+            &lt;i&gt;{{course.ShowFrequency(settings)}}&lt;/i&gt;&lt;br/&gt;
+        &lt;/span&gt;
+        &lt;b&gt;{{course?.Name}}&lt;/b&gt;
+        &lt;br/&gt;
+        &lt;div *ngFor&#x3D;&quot;let coordinator of course?.Coordinators&quot;&gt;
+            &lt;span&gt;{{coordinator.Titles.TitleBefore}} {{coordinator.User.LastName | uppercase}} {{coordinator.User.FirstName}} {{coordinator.Titles.TitleAfter}}&lt;/span&gt;
+            &lt;br/&gt;
+        &lt;/div&gt;
+        &lt;div *ngFor&#x3D;&quot;let group of course?.Groups&quot;&gt;
+            {{group?.FullName}}
+            &lt;br/&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./course.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.course {
+    position: relative;
+    height: 10.2vh;
+    width: 11.6vw;
+    text-align: center;
+    font-size: 12px;
+    font-family: &quot;Rubik&quot;;
+    overflow-y: auto;
+    cursor: grab;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+.course-weeks {
+    display: none;
+}
+
+:host.not-grabbing .course {
+    cursor: pointer;
+}
+
+.course.cdk-drag-disabled {
+    cursor: pointer;
+}
+
+.course-placeholder {
+    border: 3px dashed rgb(102, 102, 102);
+    height: 10.2vh;
+    box-sizing: border-box;
+}
+
+.details-field {
+    text-align: left;
+}
+
+.pin {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+.course .mat-badge-medium.mat-badge-above.mat-badge-before .mat-badge-content {
+    top: -3px;
+    left: -2px;
+}
+
+.course .mat-badge-medium.mat-badge-above.mat-badge-before[valid&#x3D;&quot;true&quot;] .mat-badge-content {
+    background: green;
+}
+
+.course.mat-badge-medium.mat-badge-above.mat-badge-after .mat-badge-content {
+    top: -3px;
+    right: 0px;
+}
+
+.course.mat-badge-medium.mat-badge-above.mat-badge-after.mat-badge-accent[proposition&#x3D;&quot;true&quot;] .mat-badge-content {
+    background-color: #FFD740;
+    animation: propositionNotification 1.4s infinite;
+}
+
+@keyframes propositionNotification {
+    0% {
+        background-color: #FFD740;
+    }
+    50% {
+        background-color: #b99614;
+    }
+    100% {
+        background-color: #FFD740;
+    }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="course {{course?.IsLocked ? \'locked\' : \'\'}}"    [style.background]="getBackground()"        cdkDrag    [cdkDragDisabled]="!isModifying || (!ignoreUsersLocks && course?.IsLocked) || CheckIfNotMatching()         || isSelectedMoving || (ignoreUsersLocks && course?.IsLockedByAdmin && course?.IsLocked) || CheckIfInvalidGroup()"    [cdkDragData]="course"    (cdkDragStarted)="OnStarted($event)"    (cdkDragReleased)="OnReleased($event)"    (click)="Click($event)"        [matTooltip]="course.ShowFrequency(settings)"    matTooltipShowDelay="300"    [matBadge]="(course?.Weeks == null) ? course?.CurrentAmount : getScheduledMovesBadge()"     matBadgePosition="after"     [matBadgeColor]="(course?.Weeks == null) ? \'primary\' : \'accent\'"     [matBadgeHidden]="course?.Weeks != null && getScheduledMovesBadge() == 0"    [attr.proposition]="CheckIfAnyProposition()">    <div class="course-placeholder" *cdkDragPlaceholder></div>    <div [matBadge]="course?.ScheduleAmount" matBadgePosition="before" matBadgeColor="warn" [matBadgeHidden]="course?.Weeks != null"        [attr.valid]="course?.ScheduleAmount == Floor(course!.FullAmount)"    >        <div *ngIf="isModifying" class="details-field">            <img *ngIf="CheckIfNotMatching()" src="/assets/pin.svg" class="pin">            <img *ngIf="CheckIfMatching()" src="/assets/pin2.svg" class="pin">        </div>        <i *ngIf="course?.Weeks == null; else weeksText">{{course?.Type?.Name}}<br>            {{(course!.FullAmount % 1 == 0) ? course?.FullAmount : Floor(course!.FullAmount)+\'/\'+Ceil(course!.FullAmount)}} {{(course!.FullAmount > 1) ? \'classes\' : \'class\'}}        </i>        <ng-template #weeksText>            <i>{{course?.Type?.Name}}, {{course?.Room?.Name}}</i>        </ng-template>        <br/>        <span class="course-weeks">            <i>{{course.ShowFrequency(settings)}}</i><br/>        </span>        <b>{{course?.Name}}</b>        <br/>        <div *ngFor="let coordinator of course?.Coordinators">            <span>{{coordinator.Titles.TitleBefore}} {{coordinator.User.LastName | uppercase}} {{coordinator.User.FirstName}} {{coordinator.Titles.TitleAfter}}</span>            <br/>        </div>        <div *ngFor="let group of course?.Groups">            {{group?.FullName}}            <br/>        </div>    </div></div></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'CourseComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'CourseComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

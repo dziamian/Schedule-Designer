@@ -1,0 +1,2131 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  MyCoursesComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/my-courses/my-courses.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent odpowiadający za ładowanie i wyświetlanie nieułożonych jeszcze zajęć w planie.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-my-courses</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./my-courses.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./my-courses.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#loadingSubscription" >loadingSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#myCourses" >myCourses</a>
+                            </li>
+                            <li>
+                                <a href="#myCoursesSlot" >myCoursesSlot</a>
+                            </li>
+                            <li>
+                                <a href="#signalrSubscriptions" >signalrSubscriptions</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#TOP" >TOP</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadMyCourses" >loadMyCourses</a>
+                            </li>
+                            <li>
+                                <a href="#NextPage" >NextPage</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnChanges" >ngOnChanges</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#OnDropEnter" >OnDropEnter</a>
+                            </li>
+                            <li>
+                                <a href="#OnDropped" >OnDropped</a>
+                            </li>
+                            <li>
+                                <a href="#OnReleased" >OnReleased</a>
+                            </li>
+                            <li>
+                                <a href="#OnStarted" >OnStarted</a>
+                            </li>
+                            <li>
+                                <a href="#PreviousPage" >PreviousPage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setSignalrSubscriptions" >setSignalrSubscriptions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateLockInMyCourses" >updateLockInMyCourses</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#courseTypes" >courseTypes</a>
+                            </li>
+                            <li>
+                                <a href="#currentFilter" >currentFilter</a>
+                            </li>
+                            <li>
+                                <a href="#isModifying" >isModifying</a>
+                            </li>
+                            <li>
+                                <a href="#modifyingScheduleData" >modifyingScheduleData</a>
+                            </li>
+                            <li>
+                                <a href="#settings" >settings</a>
+                            </li>
+                            <li>
+                                <a href="#userInfo" >userInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#onDropEnter" >onDropEnter</a>
+                            </li>
+                            <li>
+                                <a href="#onDropped" >onDropped</a>
+                            </li>
+                            <li>
+                                <a href="#onLoaded" >onLoaded</a>
+                            </li>
+                            <li>
+                                <a href="#onRelease" >onRelease</a>
+                            </li>
+                            <li>
+                                <a href="#onStart" >onStart</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>, scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:62</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="courseTypes"></a>
+                        <b>courseTypes</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Map&lt;number | CourseType&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:35</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Kolekcja typów przedmiotów.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="currentFilter"></a>
+                        <b>currentFilter</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:39</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Aktualny filtr widoku (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie).</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isModifying"></a>
+                        <b>isModifying</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:29</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Określa czy tryb modyfikacji jest włączony.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="modifyingScheduleData"></a>
+                        <b>modifyingScheduleData</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ModifyingScheduleData.html" target="_self" >ModifyingScheduleData</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:37</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Dane trybu modyfikacji.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="settings"></a>
+                        <b>settings</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Settings.html" target="_self" >Settings</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:33</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Ustawienia aplikacji.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="userInfo"></a>
+                        <b>userInfo</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:31</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Informacje o zalogowanym użytkowniku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onDropEnter"></a>
+                        <b>onDropEnter</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragEnter&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:42</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia najechania panelu z zajęciami na strefę upuszczania.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onDropped"></a>
+                        <b>onDropped</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragDrop&lt;CourseEdition[]&gt;&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:44</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia interakcji upuszczenia panelu z zajęciami w strefie.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onLoaded"></a>
+                        <b>onLoaded</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:50</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia załadowania nieułożonych zajęć w planie.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onRelease"></a>
+                        <b>onRelease</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragRelease&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:48</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onStart"></a>
+                        <b>onStart</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;CdkDragStart&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:46</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadMyCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>loadMyCourses</b></span>
+                        <a href="#loadMyCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadMyCourses()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="263"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:263</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ładująca nieułożone edycje zajęć z serwera.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="NextPage"></a>
+                    <span class="name">
+                        <span ><b>NextPage</b></span>
+                        <a href="#NextPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>NextPage()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:72</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda aktualizująca widok, wyświetlając kolejną stronę nieułożonych edycji zajęć.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnChanges"></a>
+                    <span class="name">
+                        <span ><b>ngOnChanges</b></span>
+                        <a href="#ngOnChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnChanges(changes: <a href="https://angular.io/api/core/SimpleChanges" target="_blank">SimpleChanges</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="240"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:240</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie wystąpienia zmian na wejściu komponentu.
+W przypadku zmian dotyczących filtra edycji zajęć powoduje to przeładowanie ich danych.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>changes</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/core/SimpleChanges" target="_blank" >SimpleChanges</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zachodzące zmiany na wejściu komponentu</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="317"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:317</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="228"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:228</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+Ładuje edycje zajęć po raz pierwszy.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnDropEnter"></a>
+                    <span class="name">
+                        <span ><b>OnDropEnter</b></span>
+                        <a href="#OnDropEnter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnDropEnter(event: CdkDragEnter)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="301"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:301</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragEnter</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnDropped"></a>
+                    <span class="name">
+                        <span ><b>OnDropped</b></span>
+                        <a href="#OnDropped"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnDropped(event: CdkDragDrop<CourseEdition[]>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="305"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:305</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragDrop&lt;CourseEdition[]&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnReleased"></a>
+                    <span class="name">
+                        <span ><b>OnReleased</b></span>
+                        <a href="#OnReleased"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnReleased(event: CdkDragRelease)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="313"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:313</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragRelease</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnStarted"></a>
+                    <span class="name">
+                        <span ><b>OnStarted</b></span>
+                        <a href="#OnStarted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnStarted(event: CdkDragStart)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="309"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:309</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragStart</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PreviousPage"></a>
+                    <span class="name">
+                        <span ><b>PreviousPage</b></span>
+                        <a href="#PreviousPage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>PreviousPage()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:79</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda aktualizująca widok, wyświetlając poprzednią stronę nieułożonych edycji zajęć.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSignalrSubscriptions"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>setSignalrSubscriptions</b></span>
+                        <a href="#setSignalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setSignalrSubscriptions()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:99</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda rozpoczynająca odbieranie bieżących informacji dotyczących planu z centrum SignalR.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateLockInMyCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>updateLockInMyCourses</b></span>
+                        <a href="#updateLockInMyCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateLockInMyCourses(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, locked: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:83</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>locked</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:55</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingSubscription"></a>
+                    <span class="name">
+                        <span ><b>loadingSubscription</b></span>
+                        <a href="#loadingSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="myCourses"></a>
+                    <span class="name">
+                        <span ><b>myCourses</b></span>
+                        <a href="#myCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>CourseEdition[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tablica nieułożonych edycji zajęć.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="myCoursesSlot"></a>
+                    <span class="name">
+                        <span ><b>myCoursesSlot</b></span>
+                        <a href="#myCoursesSlot"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>DropListRef&lt;CourseEdition[]&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;myCoursesDrop&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strefa do upuszczania paneli z zajęciami w celu usunięcia ich z planu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signalrSubscriptions"></a>
+                    <span class="name">
+                        <span ><b>signalrSubscriptions</b></span>
+                        <a href="#signalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Liczba paneli do pominięcia.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TOP"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>TOP</b></span>
+                        <a href="#TOP"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>6</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/components/my-courses/my-courses.component.ts:58</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Liczba wyświetlanych paneli na stronę.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, DropListRef } from &#x27;@angular/cdk/drag-drop&#x27;;
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild, SimpleChanges } from &#x27;@angular/core&#x27;;
+import { forkJoin, Subscription } from &#x27;rxjs&#x27;;
+import { skip } from &#x27;rxjs/operators&#x27;;
+import { UserInfo } from &#x27;src/app/others/Accounts&#x27;;
+import { CourseEdition } from &#x27;src/app/others/CourseEdition&#x27;;
+import { Filter } from &#x27;src/app/others/Filter&#x27;;
+import { Group } from &#x27;src/app/others/Group&#x27;;
+import { ModifyingScheduleData } from &#x27;src/app/others/ModifyingScheduleData&#x27;;
+import { Settings } from &#x27;src/app/others/Settings&#x27;;
+import { CourseType } from &#x27;src/app/others/Types&#x27;;
+import { ScheduleDesignerApiService } from &#x27;src/app/services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { SignalrService } from &#x27;src/app/services/SignalrService/signalr.service&#x27;;
+
+/**
+ * Komponent odpowiadający za ładowanie i wyświetlanie nieułożonych jeszcze zajęć w planie.
+ */
+@Component({
+  selector: &#x27;app-my-courses&#x27;,
+  templateUrl: &#x27;./my-courses.component.html&#x27;,
+  styleUrls: [&#x27;./my-courses.component.css&#x27;]
+})
+export class MyCoursesComponent implements OnInit {
+
+  /** Strefa do upuszczania paneli z zajęciami w celu usunięcia ich z planu. */
+  @ViewChild(&#x27;myCoursesDrop&#x27;) myCoursesSlot : DropListRef&lt;CourseEdition[]&gt;
+
+  /** Określa czy tryb modyfikacji jest włączony. */
+  @Input() isModifying: boolean;
+  /** Informacje o zalogowanym użytkowniku. */
+  @Input() userInfo: UserInfo;
+  /** Ustawienia aplikacji. */
+  @Input() settings: Settings;
+  /** Kolekcja typów przedmiotów. */
+  @Input() courseTypes: Map&lt;number, CourseType&gt;;
+  /** Dane trybu modyfikacji. */
+  @Input() modifyingScheduleData: ModifyingScheduleData;
+  /** Aktualny filtr widoku (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie). */
+  @Input() currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean};
+
+  /** Emiter zdarzenia najechania panelu z zajęciami na strefę upuszczania. */
+  @Output() onDropEnter: EventEmitter&lt;CdkDragEnter&gt; &#x3D; new EventEmitter&lt;CdkDragEnter&gt;();
+  /** Emiter zdarzenia interakcji upuszczenia panelu z zajęciami w strefie. */
+  @Output() onDropped: EventEmitter&lt;CdkDragDrop&lt;CourseEdition[]&gt;&gt; &#x3D; new EventEmitter&lt;CdkDragDrop&lt;CourseEdition[]&gt;&gt;();
+  /** Emiter zdarzenia rozpoczęcia interakcji przeciągania panelu z zajęciami. */
+  @Output() onStart: EventEmitter&lt;CdkDragStart&gt; &#x3D; new EventEmitter&lt;CdkDragStart&gt;();
+  /** Emiter zdarzenia zakończenia interakcji przeciągania panelu z zajęciami. */
+  @Output() onRelease: EventEmitter&lt;CdkDragRelease&gt; &#x3D; new EventEmitter&lt;CdkDragRelease&gt;();
+  /** Emiter zdarzenia załadowania nieułożonych zajęć w planie. */
+  @Output() onLoaded: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+
+  loadingSubscription: Subscription;
+  signalrSubscriptions: Subscription[];
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean | null &#x3D; null;
+
+  /** Liczba wyświetlanych paneli na stronę. */
+  readonly TOP: number &#x3D; 6;
+  /** Liczba paneli do pominięcia. */
+  skip: number &#x3D; 0;
+  /** Tablica nieułożonych edycji zajęć. */
+  myCourses: CourseEdition[];
+
+  constructor(
+    private signalrService: SignalrService,
+    private scheduleDesignerApiService:ScheduleDesignerApiService
+  ) { }
+
+  /**
+   * Metoda aktualizująca widok, wyświetlając kolejną stronę nieułożonych edycji zajęć.
+   */
+  NextPage() {
+    this.skip +&#x3D; this.TOP;
+  }
+
+  /**
+   * Metoda aktualizująca widok, wyświetlając poprzednią stronę nieułożonych edycji zajęć.
+   */
+  PreviousPage() {
+    this.skip -&#x3D; this.TOP;
+  }
+
+  private updateLockInMyCourses(courseId:number, courseEditionId:number, locked: {value:boolean, byAdmin: boolean}) {
+    if (!this.myCourses) {
+      return;
+    }
+
+    this.myCourses.forEach((myCourse) &#x3D;&gt; {
+      if (myCourse.CourseId &#x3D;&#x3D; courseId &amp;&amp; myCourse.CourseEditionId &#x3D;&#x3D; courseEditionId) {
+        myCourse.IsLocked &#x3D; locked.value;
+        myCourse.IsLockedByAdmin &#x3D; locked.byAdmin;
+      }
+    });
+  }
+
+  /**
+   * Metoda rozpoczynająca odbieranie bieżących informacji dotyczących planu z centrum SignalR.
+   */
+  private setSignalrSubscriptions(): void {
+    this.signalrSubscriptions &#x3D; [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId, byAdmin}) &#x3D;&gt; {
+      this.updateLockInMyCourses(courseId, courseEditionId, {value: true, byAdmin: byAdmin});
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) &#x3D;&gt; {
+      this.updateLockInMyCourses(courseId, courseEditionId, {value: false, byAdmin: false});
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const schedulePosition &#x3D; addedSchedulePositions.SchedulePosition;
+      const addedAmount &#x3D; schedulePosition.Weeks.length;
+
+      //filter for updated board
+      const filter &#x3D; new Filter(addedSchedulePositions.CoordinatorsIds, addedSchedulePositions.GroupsIds, [
+        addedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
+        const courses &#x3D; this.myCourses.filter((course) &#x3D;&gt; 
+          course.CourseId &#x3D;&#x3D; schedulePosition.CourseId 
+          &amp;&amp; course.CourseEditionId &#x3D;&#x3D; schedulePosition.CourseEditionId 
+        );
+
+        if (courses.length !&#x3D; 0) {
+          const firstCourse &#x3D; courses[0];
+          
+          let currentScheduleAmount &#x3D; firstCourse.ScheduleAmount + addedAmount;
+
+          this.myCourses &#x3D; this.myCourses.filter((course) &#x3D;&gt; {
+            if (course.CourseId !&#x3D; schedulePosition.CourseId 
+              || course.CourseEditionId !&#x3D; schedulePosition.CourseEditionId) {
+              return true;
+            }
+            
+            if (currentScheduleAmount + course.CurrentAmount &lt;&#x3D; Math.ceil(course.FullAmount)) {
+              course.ScheduleAmount +&#x3D; addedAmount;
+              currentScheduleAmount +&#x3D; course.CurrentAmount;
+              return true;
+            }
+            
+            return false;
+          });
+        }
+      }
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) &#x3D;&gt; {
+      if (this.loading || this.loading &#x3D;&#x3D; null) {
+        return;
+      }
+
+      const schedulePosition &#x3D; removedSchedulePositions.SchedulePosition;
+      const removedAmount &#x3D; schedulePosition.Weeks.length;
+
+      //filter for updated board
+      const filter &#x3D; new Filter(removedSchedulePositions.CoordinatorsIds, removedSchedulePositions.GroupsIds, [
+        removedSchedulePositions.SchedulePosition.RoomId
+      ]);
+      if (this.currentFilter.filter.challengeAll(filter)) {
+        const courses &#x3D; this.myCourses.filter((course) &#x3D;&gt; {
+          if (course.CourseId &#x3D;&#x3D; schedulePosition.CourseId 
+            &amp;&amp; course.CourseEditionId &#x3D;&#x3D; schedulePosition.CourseEditionId) {
+              course.ScheduleAmount -&#x3D; removedAmount;
+              return true;
+          }
+          return false;
+        });
+
+        if (courses.length &gt; 0) {
+          const firstCourse &#x3D; courses[0];
+          
+          const currentAmount &#x3D; firstCourse.CurrentAmount;
+          const currentScheduleAmount &#x3D; firstCourse.ScheduleAmount + currentAmount * courses.length;
+          const fullAmount &#x3D; Math.ceil(firstCourse.FullAmount);
+
+          const coursesAmountAdded &#x3D; Math.floor((fullAmount - currentScheduleAmount) / currentAmount);
+          let newCourses:CourseEdition[] &#x3D; []; 
+          for (let i &#x3D; 0; i &lt; coursesAmountAdded; ++i) {
+            const courseEdition &#x3D; new CourseEdition(
+              firstCourse.CourseId, firstCourse.CourseEditionId,
+              firstCourse.Name, firstCourse.Type,
+              firstCourse.CurrentAmount, firstCourse.Groups,
+              firstCourse.Coordinators
+            );
+            courseEdition.IsLocked &#x3D; firstCourse.IsLocked;
+            courseEdition.IsLockedByAdmin &#x3D; firstCourse.IsLockedByAdmin;
+            courseEdition.ScheduleAmount &#x3D; firstCourse.ScheduleAmount;
+            courseEdition.FullAmount &#x3D; firstCourse.FullAmount;
+            newCourses.push(courseEdition);
+          }
+          this.myCourses.splice(0,0,...newCourses);
+        } else {
+          const mainGroupsIds &#x3D; removedSchedulePositions.GroupsIds.slice(
+            0, removedSchedulePositions.MainGroupsAmount
+          );
+
+          forkJoin([
+            this.scheduleDesignerApiService.GetFilteredCourseEdition(
+              schedulePosition.CourseId, schedulePosition.CourseEditionId,
+              this.currentFilter.weeks.length, this.currentFilter.filter, 
+              this.courseTypes, this.settings
+            ),
+            this.scheduleDesignerApiService.GetGroupsFullNames(mainGroupsIds)
+          ]).subscribe(([myNewCourses, groupFullNames]) &#x3D;&gt; {
+            if (myNewCourses.length &gt; 0) {
+              myNewCourses.forEach((myNewCourse) &#x3D;&gt; {
+                for (let i &#x3D; 0; i &lt; groupFullNames.length; ++i) {
+                  myNewCourse.Groups[i].FullName &#x3D; groupFullNames[i];
+                }
+              });
+              this.myCourses.splice(0,0,...myNewCourses);
+            }
+          }, () &#x3D;&gt; {});
+        }
+      }
+    }));
+  }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+   * Ładuje edycje zajęć po raz pierwszy.
+   */
+  ngOnInit(): void {
+    this.setSignalrSubscriptions();
+    if (this.currentFilter.weeks.length &gt; 0 &amp;&amp; this.currentFilter.filter) {
+      this.loadMyCourses();
+    }
+  }
+
+  /**
+   * Metoda wywoływana w momencie wystąpienia zmian na wejściu komponentu.
+   * W przypadku zmian dotyczących filtra edycji zajęć powoduje to przeładowanie ich danych.
+   * @param changes Zachodzące zmiany na wejściu komponentu
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.currentFilter &amp;&amp; changes.currentFilter.currentValue &amp;&amp; !changes.currentFilter.currentValue.tabSwitched 
+      &amp;&amp; changes.currentFilter.currentValue.weeks.length &gt; 0 &amp;&amp; changes.currentFilter.currentValue.filter) {
+        if (changes.currentFilter.isFirstChange()) {
+          return;
+        }
+        
+        const currentWeeks: number[] &#x3D; changes.currentFilter.currentValue.weeks;
+        const previousWeeks: number[] &#x3D; changes.currentFilter.previousValue.weeks ?? [];
+        const currentFilter: Filter &#x3D; changes.currentFilter.currentValue.filter;
+        const previousFilter: Filter &#x3D; changes.currentFilter.previousValue.filter;
+
+        if (currentWeeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) 
+          !&#x3D;&#x3D; previousWeeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;)
+          || !currentFilter.compare(previousFilter)) {
+            this.loadMyCourses();
+        }
+    }
+  }
+
+  /**
+   * Metoda ładująca nieułożone edycje zajęć z serwera.
+   */
+  private loadMyCourses(): void {
+    this.loadingSubscription?.unsubscribe();
+    this.loading &#x3D; true;
+
+    this.loadingSubscription &#x3D; this.scheduleDesignerApiService.GetFilteredCourseEditions(this.currentFilter.weeks.length, this.currentFilter.filter, this.courseTypes, this.settings).subscribe((myCourses) &#x3D;&gt; {
+      this.myCourses &#x3D; myCourses;
+
+      if (myCourses.length &#x3D;&#x3D; 0) {
+        this.loading &#x3D; false;
+        this.onLoaded.emit();
+        return;
+      }
+
+      myCourses.sort((a,b) &#x3D;&gt; a.CourseEditionId - b.CourseEditionId);
+
+      forkJoin([
+        this.scheduleDesignerApiService.GetCoordinatorsForCourses(myCourses),
+        this.scheduleDesignerApiService.GetGroupsForCourses(myCourses),
+      ]).subscribe(() &#x3D;&gt; {
+        var allGroups &#x3D; new Array&lt;Group&gt;();
+        for (let i &#x3D; 0; i &lt; this.myCourses.length; ++i) {
+          for (let j &#x3D; 0; j &lt; this.myCourses[i].Groups.length; ++j) {
+            allGroups.push(this.myCourses[i].Groups[j]);
+          }
+        }
+
+        this.scheduleDesignerApiService.GetGroupsFullNames(allGroups.map((e) &#x3D;&gt; e.GroupId)).subscribe((groupsFullNames) &#x3D;&gt; {
+          for (let i &#x3D; 0; i &lt; groupsFullNames.length; ++i) {
+            allGroups[i].FullName &#x3D; groupsFullNames[i];
+          }
+          
+          this.loading &#x3D; false;
+          this.onLoaded.emit();
+        });
+      });
+    });
+  }
+
+  OnDropEnter(event: CdkDragEnter) {
+    this.onDropEnter.emit(event);
+  }
+
+  OnDropped(event: CdkDragDrop&lt;CourseEdition[]&gt;) {
+    this.onDropped.emit(event);
+  }
+
+  OnStarted(event: CdkDragStart) {
+    this.onStart.emit(event);
+  }
+
+  OnReleased(event: CdkDragRelease) {
+    this.onRelease.emit(event);
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription &#x3D;&gt; subscription.unsubscribe()
+    );
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;my-courses&quot;&gt;
+    &lt;div class&#x3D;&quot;my-courses-header&quot;&gt;Your unplanned courses&lt;/div&gt;
+    &lt;div *ngIf&#x3D;&quot;loading &#x3D;&#x3D; false; else spinner&quot; class&#x3D;&quot;my-courses-content&quot;
+        cdkDropList
+        #myCoursesDrop&#x3D;&quot;cdkDropList&quot;
+        id&#x3D;&quot;my-courses&quot;
+        [cdkDropListData]&#x3D;&quot;myCourses&quot;
+        [cdkDropListSortingDisabled]&#x3D;&quot;true&quot;
+        (cdkDropListEntered)&#x3D;&quot;OnDropEnter($event)&quot;
+        (cdkDropListDropped)&#x3D;&quot;OnDropped($event)&quot;
+    &gt;
+        &lt;div *ngFor&#x3D;&quot;let course of myCourses.slice(skip, skip + TOP)&quot; 
+            class&#x3D;&quot;course-field&quot;
+        &gt;
+            &lt;app-course 
+                [isModifying]&#x3D;&quot;isModifying&quot;
+                [ignoreUsersLocks]&#x3D;&quot;userInfo.IsStaff &amp;&amp; userInfo.IsAdmin&quot;
+                [course]&#x3D;&quot;course&quot;
+                [settings]&#x3D;&quot;settings&quot;
+                [isSelectedMoving]&#x3D;&quot;modifyingScheduleData.currentSelectedCourseEdition?.IsMoving&quot;
+                (onStart)&#x3D;&quot;OnStarted($event)&quot;
+                (onRelease)&#x3D;&quot;OnReleased($event)&quot;
+            &gt;&lt;/app-course&gt;
+        &lt;/div&gt;
+        &lt;div *ngIf&#x3D;&quot;myCourses?.length &#x3D;&#x3D; 0&quot; class&#x3D;&quot;no-courses&quot;&gt;
+            There is no unplanned courses for this view.
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;navigator&quot;&gt;
+        &lt;span&gt;
+            Page {{skip / TOP + 1}}
+        &lt;/span&gt;
+        &lt;button mat-icon-button [disabled]&#x3D;&quot;skip - TOP &lt; 0&quot; (click)&#x3D;&quot;PreviousPage()&quot;&gt;
+            &lt;mat-icon&gt;arrow_back_ios&lt;/mat-icon&gt;
+        &lt;/button&gt;
+        &lt;button mat-icon-button [disabled]&#x3D;&quot;skip + TOP &gt;&#x3D; (myCourses?.length ?? 0)&quot; (click)&#x3D;&quot;NextPage()&quot;&gt;
+            &lt;mat-icon&gt;arrow_forward_ios&lt;/mat-icon&gt;
+        &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;ng-template #spinner&gt;
+        &lt;mat-progress-spinner *ngIf&#x3D;&quot;loading !&#x3D; null&quot;
+            class&#x3D;&quot;spinner&quot;
+            mode&#x3D;&quot;indeterminate&quot;
+            diameter&#x3D;&quot;40&quot;
+        &gt;&lt;/mat-progress-spinner&gt;
+    &lt;/ng-template&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./my-courses.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.my-courses {
+    border: 2px solid #008700;
+    box-sizing: border-box;
+    padding-bottom: 1vh;
+    width: 15%;
+    height: 80vh;
+    float: left;
+}
+
+.my-courses-header {
+    height: 3%;
+    border-bottom: 2px solid #008700;
+    background-color: #81C781;
+    font-weight: bold;
+}
+
+.my-courses-content {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    box-sizing: border-box;
+    height: 90%;
+    overflow-y: auto;
+}
+
+.course-field + .course-field {
+    margin-top: 0.8vh;
+}
+
+.my-courses-content ::ng-deep .course {
+    margin: auto;
+}
+
+.my-courses-content ::ng-deep .course-placeholder {
+    margin: auto;
+}
+
+.no-courses {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    width: 50%;
+    transform: translateY(-100%);
+    font-weight: bold;
+}
+
+.navigator {
+    height: 7%;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="my-courses">    <div class="my-courses-header">Your unplanned courses</div>    <div *ngIf="loading == false; else spinner" class="my-courses-content"        cdkDropList        #myCoursesDrop="cdkDropList"        id="my-courses"        [cdkDropListData]="myCourses"        [cdkDropListSortingDisabled]="true"        (cdkDropListEntered)="OnDropEnter($event)"        (cdkDropListDropped)="OnDropped($event)"    >        <div *ngFor="let course of myCourses.slice(skip, skip + TOP)"             class="course-field"        >            <app-course                 [isModifying]="isModifying"                [ignoreUsersLocks]="userInfo.IsStaff && userInfo.IsAdmin"                [course]="course"                [settings]="settings"                [isSelectedMoving]="modifyingScheduleData.currentSelectedCourseEdition?.IsMoving"                (onStart)="OnStarted($event)"                (onRelease)="OnReleased($event)"            ></app-course>        </div>        <div *ngIf="myCourses?.length == 0" class="no-courses">            There is no unplanned courses for this view.        </div>    </div>    <div class="navigator">        <span>            Page {{skip / TOP + 1}}        </span>        <button mat-icon-button [disabled]="skip - TOP < 0" (click)="PreviousPage()">            <mat-icon>arrow_back_ios</mat-icon>        </button>        <button mat-icon-button [disabled]="skip + TOP >= (myCourses?.length ?? 0)" (click)="NextPage()">            <mat-icon>arrow_forward_ios</mat-icon>        </button>    </div>    <ng-template #spinner>        <mat-progress-spinner *ngIf="loading != null"            class="spinner"            mode="indeterminate"            diameter="40"        ></mat-progress-spinner>    </ng-template></div></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'MyCoursesComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'MyCoursesComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

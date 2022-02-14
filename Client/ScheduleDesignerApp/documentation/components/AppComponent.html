@@ -1,0 +1,1192 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  AppComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/app.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Główny komponent aplikacji zawierający pasek górny z menu wyboru opcji.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-root</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./app.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./app.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#isUserInfoSet" >isUserInfoSet</a>
+                            </li>
+                            <li>
+                                <a href="#title" >title</a>
+                            </li>
+                            <li>
+                                <a href="#userInfo" >userInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#AdminPanel" >AdminPanel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#FullSchedule" >FullSchedule</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#IsAuthenticated" >IsAuthenticated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#Logout" >Logout</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#MyGroupsSchedule" >MyGroupsSchedule</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#PersonalSchedule" >PersonalSchedule</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#Profile" >Profile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#tryInitConnection" >tryInitConnection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#trySetAccount" >trySetAccount</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>, scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>, usosApiService: <a href="../injectables/UsosApiService.html" target="_self">UsosApiService</a>, signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>, snackBar: MatSnackBar, store: Store<literal type>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/app.component.ts:28</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>usosApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UsosApiService.html" target="_self" >UsosApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>snackBar</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatSnackBar</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store&lt;literal type&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AdminPanel"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>AdminPanel</b></span>
+                        <a href="#AdminPanel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>AdminPanel()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/app/app.component.ts:115</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FullSchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>FullSchedule</b></span>
+                        <a href="#FullSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>FullSchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="111"
+                            class="link-to-prism">src/app/app.component.ts:111</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IsAuthenticated"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>IsAuthenticated</b></span>
+                        <a href="#IsAuthenticated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>IsAuthenticated()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="88"
+                            class="link-to-prism">src/app/app.component.ts:88</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Logout"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>Logout</b></span>
+                        <a href="#Logout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Logout()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/app/app.component.ts:92</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MyGroupsSchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>MyGroupsSchedule</b></span>
+                        <a href="#MyGroupsSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>MyGroupsSchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">src/app/app.component.ts:107</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">src/app/app.component.ts:54</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PersonalSchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>PersonalSchedule</b></span>
+                        <a href="#PersonalSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>PersonalSchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">src/app/app.component.ts:103</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Profile"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>Profile</b></span>
+                        <a href="#Profile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Profile()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/app/app.component.ts:99</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tryInitConnection"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>tryInitConnection</b></span>
+                        <a href="#tryInitConnection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>tryInitConnection()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="62"
+                            class="link-to-prism">src/app/app.component.ts:62</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda próbująca nawiązać połączenie z centrum SignalR (jest to możliwe tylko, gdy użytkownik jest zalogowany).</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trySetAccount"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>trySetAccount</b></span>
+                        <a href="#trySetAccount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>trySetAccount()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="71"
+                            class="link-to-prism">src/app/app.component.ts:71</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda próbująca pozyskać informacje na temat zalogowanego użytkownika.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isUserInfoSet"></a>
+                    <span class="name">
+                        <span ><b>isUserInfoSet</b></span>
+                        <a href="#isUserInfoSet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/app.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa czy informacje o zalogowanym użytkowniku zostały ustawione.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="title"></a>
+                    <span class="name">
+                        <span ><b>title</b></span>
+                        <a href="#title"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;Schedule Designer&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/app.component.ts:23</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Nazwa aplikacji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userInfo"></a>
+                    <span class="name">
+                        <span ><b>userInfo</b></span>
+                        <a href="#userInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/app.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o zalogowanym użytkowniku.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit } from &#x27;@angular/core&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { NavigationEnd, Router } from &#x27;@angular/router&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+
+import { AccessToken } from &#x27;./others/AccessToken&#x27;;
+import { UserInfo } from &#x27;./others/Accounts&#x27;;
+import { ScheduleDesignerApiService } from &#x27;./services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { SignalrService } from &#x27;./services/SignalrService/signalr.service&#x27;;
+import { UsosApiService } from &#x27;./services/UsosApiService/usos-api.service&#x27;;
+import { setUserInfo } from &#x27;./store/userInfo.actions&#x27;;
+
+/**
+ * Główny komponent aplikacji zawierający pasek górny z menu wyboru opcji.
+ */
+@Component({
+  selector: &#x27;app-root&#x27;,
+  templateUrl: &#x27;./app.component.html&#x27;,
+  styleUrls: [&#x27;./app.component.css&#x27;]
+})
+export class AppComponent implements OnInit {
+  /** Nazwa aplikacji. */
+  title:string &#x3D; &#x27;Schedule Designer&#x27;;
+
+  /** Informacje o zalogowanym użytkowniku. */
+  userInfo:UserInfo;
+  /** Określa czy informacje o zalogowanym użytkowniku zostały ustawione. */
+  isUserInfoSet:boolean &#x3D; false;
+
+  constructor(
+    private router:Router,
+    private scheduleDesignerApiService:ScheduleDesignerApiService,
+    private usosApiService:UsosApiService, 
+    private signalrService:SignalrService,
+    private snackBar:MatSnackBar,
+    private store:Store&lt;{userInfo:UserInfo}&gt;
+  ) { 
+    this.router.events.subscribe((value) &#x3D;&gt; {
+      if (!this.isUserInfoSet &amp;&amp; value instanceof NavigationEnd) {
+        this.trySetAccount();
+        this.tryInitConnection();
+      }
+    });
+    this.store.select(&#x27;userInfo&#x27;).subscribe((userInfo) &#x3D;&gt; {
+      if (userInfo.UserId &#x3D;&#x3D; 0) {
+        return;
+      }
+      this.userInfo &#x3D; userInfo;
+      this.isUserInfoSet &#x3D; true;
+      this.tryInitConnection();
+    });
+  }
+
+  ngOnInit() {
+    this.trySetAccount();
+    this.tryInitConnection();
+  }
+
+  /**
+   * Metoda próbująca nawiązać połączenie z centrum SignalR (jest to możliwe tylko, gdy użytkownik jest zalogowany).
+   */
+  private async tryInitConnection() {
+    if (this.IsAuthenticated() &amp;&amp; (this.signalrService.connection &#x3D;&#x3D; null &amp;&amp; !this.signalrService.connectionInitializing)) {
+      await this.signalrService.InitConnection().toPromise();
+    }
+  }
+
+  /**
+   * Metoda próbująca pozyskać informacje na temat zalogowanego użytkownika.
+   */
+  private trySetAccount() {
+    if (this.IsAuthenticated()) {
+      this.scheduleDesignerApiService.GetMyAccount().subscribe((userInfo) &#x3D;&gt; {
+        this.store.dispatch(setUserInfo({userInfo}));
+        this.userInfo &#x3D; userInfo;
+        this.isUserInfoSet &#x3D; true;
+      }, (error) &#x3D;&gt; {
+        if (error?.status &#x3D;&#x3D; 401) {
+          this.usosApiService.Deauthorize();
+  
+          this.snackBar.open(&#x27;Session expired. Please log in again.&#x27;, &#x27;OK&#x27;);
+          this.router.navigate([&#x27;login&#x27;]);
+        }
+      });
+    }
+  }
+
+  public IsAuthenticated():boolean {
+    return AccessToken.isAuthenticated();
+  }
+
+  public Logout():void {
+    this.signalrService.Disconnect();
+    AccessToken.Remove();
+    this.router.navigate([&#x27;login&#x27;]);
+    this.usosApiService.Logout(document);
+  }
+
+  public Profile():void {
+    this.router.navigate([&#x27;profile&#x27;]);
+  }
+
+  public PersonalSchedule(): void {
+    this.router.navigate([&#x27;personal-schedule&#x27;]);
+  }
+
+  public MyGroupsSchedule(): void {
+    this.router.navigate([&#x27;student-schedule&#x27;]);
+  }
+
+  public FullSchedule(): void {
+    this.router.navigate([&#x27;full-schedule&#x27;]);
+  }
+
+  public AdminPanel(): void {
+    this.router.navigate([&#x27;admin-panel&#x27;]);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;toolbar&quot;&gt;
+    &lt;div class&#x3D;&quot;toolbar-left&quot;&gt;
+        &lt;a routerLink&#x3D;&quot;/profile&quot; class&#x3D;&quot;toolbar-title&quot;&gt;{{title}}&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;toolbar-middle&quot;&gt;
+        &lt;button *ngIf&#x3D;&quot;IsAuthenticated()&quot; class&#x3D;&quot;toolbar-coordinator-schedule&quot; mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;PersonalSchedule()&quot; [disabled]&#x3D;&quot;!userInfo?.IsCoordinator&quot;&gt;
+            &lt;mat-icon&gt;school&lt;/mat-icon&gt;
+            Coordinator Schedule
+        &lt;/button&gt;
+        
+        &lt;button *ngIf&#x3D;&quot;IsAuthenticated()&quot; class&#x3D;&quot;toolbar-student-schedule&quot; mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;MyGroupsSchedule()&quot; [disabled]&#x3D;&quot;!userInfo?.IsStudent&quot;&gt;
+            &lt;mat-icon&gt;group&lt;/mat-icon&gt;
+            Student Schedule
+        &lt;/button&gt;
+
+        &lt;button *ngIf&#x3D;&quot;IsAuthenticated()&quot; class&#x3D;&quot;toolbar-full-schedule&quot; mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;FullSchedule()&quot;&gt;
+            &lt;mat-icon&gt;event_note&lt;/mat-icon&gt;
+            Full Schedule
+        &lt;/button&gt;
+
+        &lt;button *ngIf&#x3D;&quot;IsAuthenticated()&quot; class&#x3D;&quot;toolbar-admin-panel&quot; mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;AdminPanel()&quot; [disabled]&#x3D;&quot;!userInfo?.IsAdmin&quot;&gt;
+            &lt;mat-icon&gt;settings_applications&lt;/mat-icon&gt;
+            Admin Panel
+        &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;toolbar-right&quot;&gt;
+        &lt;button *ngIf&#x3D;&quot;IsAuthenticated()&quot; class&#x3D;&quot;toolbar-logout&quot; mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;Logout()&quot;&gt;
+            Logout
+        &lt;/button&gt;
+        
+        &lt;button *ngIf&#x3D;&quot;IsAuthenticated()&quot; class&#x3D;&quot;toolbar-profile&quot; mat-raised-button color&#x3D;&quot;accent&quot; (click)&#x3D;&quot;Profile()&quot;&gt;
+            &lt;mat-icon&gt;person&lt;/mat-icon&gt;
+            Profile
+        &lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;router-outlet&gt;&lt;/router-outlet&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./app.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host {
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 6vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1976d2;
+    color: white;
+    font-weight: 700;
+    font-size: 26px;
+}
+
+.toolbar-left {
+    float: left;
+    width: 20%;
+}
+
+.toolbar-title {
+    padding-left: 3vw;
+}
+
+.toolbar-middle {
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+}
+
+.toolbar-right {
+    float: left;
+    width: 20%;
+}
+
+.toolbar-admin-panel {
+    margin-right: 1vw;
+}
+
+.toolbar-full-schedule {
+    margin-right: 1vw;
+}
+
+.toolbar-student-schedule {
+    margin-right: 1vw;
+}
+
+.toolbar-coordinator-schedule {
+    margin-right: 1vw;
+}
+
+.toolbar-profile {
+    float: right;
+    margin-right: 1vw;
+}
+
+.toolbar-logout {
+    float: right;
+    margin-right: 2vw;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="toolbar">    <div class="toolbar-left">        <a routerLink="/profile" class="toolbar-title">{{title}}</a>    </div>    <div class="toolbar-middle">        <button *ngIf="IsAuthenticated()" class="toolbar-coordinator-schedule" mat-raised-button color="accent" (click)="PersonalSchedule()" [disabled]="!userInfo?.IsCoordinator">            <mat-icon>school</mat-icon>            Coordinator Schedule        </button>                <button *ngIf="IsAuthenticated()" class="toolbar-student-schedule" mat-raised-button color="accent" (click)="MyGroupsSchedule()" [disabled]="!userInfo?.IsStudent">            <mat-icon>group</mat-icon>            Student Schedule        </button>        <button *ngIf="IsAuthenticated()" class="toolbar-full-schedule" mat-raised-button color="accent" (click)="FullSchedule()">            <mat-icon>event_note</mat-icon>            Full Schedule        </button>        <button *ngIf="IsAuthenticated()" class="toolbar-admin-panel" mat-raised-button color="accent" (click)="AdminPanel()" [disabled]="!userInfo?.IsAdmin">            <mat-icon>settings_applications</mat-icon>            Admin Panel        </button>    </div>    <div class="toolbar-right">        <button *ngIf="IsAuthenticated()" class="toolbar-logout" mat-raised-button color="accent" (click)="Logout()">            Logout        </button>                <button *ngIf="IsAuthenticated()" class="toolbar-profile" mat-raised-button color="accent" (click)="Profile()">            <mat-icon>person</mat-icon>            Profile        </button>    </div></div><router-outlet></router-outlet></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'AppComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AppComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

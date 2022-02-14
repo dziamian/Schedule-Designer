@@ -1,0 +1,3180 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  GroupFieldComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/admin-panel/group-field/group-field.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent zawierający widok obszaru roboczego panelu administracyjnego
+dla sekcji wprowadzania i modyfikowania danych na temat grupy studenckiej.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-group-field</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./group-field.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./group-field.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_data" >_data</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_selectedResult" >_selectedResult</a>
+                            </li>
+                            <li>
+                                <a href="#childGroupsStudents" >childGroupsStudents</a>
+                            </li>
+                            <li>
+                                <a href="#groupForm" >groupForm</a>
+                            </li>
+                            <li>
+                                <a href="#groupStudents" >groupStudents</a>
+                            </li>
+                            <li>
+                                <a href="#isModifying" >isModifying</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#modifiableParentGroupId" >modifiableParentGroupId</a>
+                            </li>
+                            <li>
+                                <a href="#originalGroup" >originalGroup</a>
+                            </li>
+                            <li>
+                                <a href="#originalValues" >originalValues</a>
+                            </li>
+                            <li>
+                                <a href="#treeVisible" >treeVisible</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#AddStudent" >AddStudent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildForm" >buildForm</a>
+                            </li>
+                            <li>
+                                <a href="#Cancel" >Cancel</a>
+                            </li>
+                            <li>
+                                <a href="#Create" >Create</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#disableForm" >disableForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#enableForm" >enableForm</a>
+                            </li>
+                            <li>
+                                <a href="#GetParentName" >GetParentName</a>
+                            </li>
+                            <li>
+                                <a href="#GiveRepresentativeRole" >GiveRepresentativeRole</a>
+                            </li>
+                            <li>
+                                <a href="#IsSameAsOriginal" >IsSameAsOriginal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadView" >loadView</a>
+                            </li>
+                            <li>
+                                <a href="#Modify" >Modify</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#Remove" >Remove</a>
+                            </li>
+                            <li>
+                                <a href="#RemoveStudent" >RemoveStudent</a>
+                            </li>
+                            <li>
+                                <a href="#Reset" >Reset</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#Save" >Save</a>
+                            </li>
+                            <li>
+                                <a href="#SelectParentGroup" >SelectParentGroup</a>
+                            </li>
+                            <li>
+                                <a href="#SelectStudent" >SelectStudent</a>
+                            </li>
+                            <li>
+                                <a href="#TakeAwayRepresentativeRole" >TakeAwayRepresentativeRole</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#data" >data</a>
+                            </li>
+                            <li>
+                                <a href="#selectedResult" >selectedResult</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#onChange" >onChange</a>
+                            </li>
+                            <li>
+                                <a href="#onCreate" >onCreate</a>
+                            </li>
+                            <li>
+                                <a href="#onListAdd" >onListAdd</a>
+                            </li>
+                            <li>
+                                <a href="#onListRemove" >onListRemove</a>
+                            </li>
+                            <li>
+                                <a href="#onRemove" >onRemove</a>
+                            </li>
+                            <li>
+                                <a href="#onSelect" >onSelect</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#data" >data</a>
+                                </li>
+                                <li>
+                                    <a href="#selectedResult" >selectedResult</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>, administratorApiService: <a href="../injectables/AdministratorApiService.html" target="_self">AdministratorApiService</a>, signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>, snackBar: MatSnackBar)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:138</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>administratorApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AdministratorApiService.html" target="_self" >AdministratorApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>snackBar</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatSnackBar</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="data"></a>
+                        <b>data</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:39</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+Po ustawieniu danych następuje załadowanie widoku.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selectedResult"></a>
+                        <b>selectedResult</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:52</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Metoda ustawiająca rezultat wyboru pochodzący z drugiego drzewka zasobów.
+Po ustawieniu rezultatu wywoływana jest odpowiednia metoda</p>
+<ul>
+<li>przypisania studenta do grupy lub wyboru grupy nadrzędnej.</li>
+</ul>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section>
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onChange"></a>
+                        <b>onChange</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:106</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia zapisu stanu modyfikacji zasobu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onCreate"></a>
+                        <b>onCreate</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;string&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:111</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia dodania nowego zasobu do systemu.
+Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onListAdd"></a>
+                        <b>onListAdd</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:97</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia dodania do listy rezultatu wybranego z drugiego drzewka zasobów.
+Zdarzenie posiada informacje o identyfikatorach dodanych zasobów oraz ich typ.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onListRemove"></a>
+                        <b>onListRemove</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:103</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia usunięcia z listy rezultatu, który może być
+teraz dostępny do wyboru w drugim drzewku zasobów.
+Zdarzenie posiada informacje o identyfikatorach usuniętych zasobów oraz ich typ.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onRemove"></a>
+                        <b>onRemove</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;void&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:113</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia usunięcia zasobu z systemu.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="onSelect"></a>
+                        <b>onSelect</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:85</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emiter zdarzenia wyświetlenia (bądź ukrycia) i załadowania drugiego drzewka zasobów.
+Zdarzenie posiada informacje o typie ładowanych zasobów, nagłówku drzewka,
+czy powinno zostać wyświetlone na ekranie, które typy zasobów powinny zostać pominięte (wykluczone) w drzewku
+oraz identyfikatory węzłów, które powinny zostać pominięte (wykluczone).</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AddStudent"></a>
+                    <span class="name">
+                        <span ><b>AddStudent</b></span>
+                        <a href="#AddStudent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>AddStudent(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userFullName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="334"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:334</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie przypisania studenta do grupy na serwer.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator studenta do przypisania</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>userFullName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>buildForm</b></span>
+                        <a href="#buildForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildForm(group: <a href="../classes/GroupInfo.html" target="_self">GroupInfo</a>, isView: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="162"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:162</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda budująca formularz z danymi początkowymi podanymi w parametrze.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>group</td>
+                                    <td>
+                                                <code><a href="../classes/GroupInfo.html" target="_self" >GroupInfo</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Dane początkowe zbudowanego formularza</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>isView</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Cancel"></a>
+                    <span class="name">
+                        <span ><b>Cancel</b></span>
+                        <a href="#Cancel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Cancel()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="439"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:439</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Create"></a>
+                    <span class="name">
+                        <span ><b>Create</b></span>
+                        <a href="#Create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Create()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="531"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:531</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie utworzenia nowego zasobu na serwer (zgodnie z danymi podanymi w formularzu).</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="disableForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>disableForm</b></span>
+                        <a href="#disableForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>disableForm()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="174"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:174</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wyłączająca możliwość modyfikacji formularza.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="enableForm"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>enableForm</b></span>
+                        <a href="#enableForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>enableForm(isView: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="182"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:182</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda włączająca możliwość modyfikacji formularza.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>isView</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetParentName"></a>
+                    <span class="name">
+                        <span ><b>GetParentName</b></span>
+                        <a href="#GetParentName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GetParentName()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="154"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:154</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GiveRepresentativeRole"></a>
+                    <span class="name">
+                        <span ><b>GiveRepresentativeRole</b></span>
+                        <a href="#GiveRepresentativeRole"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>GiveRepresentativeRole(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="383"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:383</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie nadania studentowi roli starosty grupy na serwer.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator studenta</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IsSameAsOriginal"></a>
+                    <span class="name">
+                        <span ><b>IsSameAsOriginal</b></span>
+                        <a href="#IsSameAsOriginal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>IsSameAsOriginal()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="273"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:273</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda porównująca aktualny stan pól formularzy z oryginalnymi
+wartościami zasobu pobranymi z serwera.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadView"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>loadView</b></span>
+                        <a href="#loadView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadView()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="196"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:196</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+Różnią się one w zależności od trybu widoku - dodawania lub podglądu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Modify"></a>
+                    <span class="name">
+                        <span ><b>Modify</b></span>
+                        <a href="#Modify"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Modify(isView: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="281"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:281</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda uruchamiająca tryb modyfikacji zasobu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>isView</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="150"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:150</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Remove"></a>
+                    <span class="name">
+                        <span ><b>Remove</b></span>
+                        <a href="#Remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Remove()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="560"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:560</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie usunięcia zasobu na serwer.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RemoveStudent"></a>
+                    <span class="name">
+                        <span ><b>RemoveStudent</b></span>
+                        <a href="#RemoveStudent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>RemoveStudent(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="358"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:358</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie usunięcia przypisania studenta do grupy na serwer.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator przypisanego studenta</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Reset"></a>
+                    <span class="name">
+                        <span ><b>Reset</b></span>
+                        <a href="#Reset"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>Reset()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="435"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:435</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Save"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>Save</b></span>
+                        <a href="#Save"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Save()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="447"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:447</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SelectParentGroup"></a>
+                    <span class="name">
+                        <span ><b>SelectParentGroup</b></span>
+                        <a href="#SelectParentGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>SelectParentGroup()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="291"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:291</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie)
+i załadowanie drugiego drzewka zasobów informacjami o grupach,
+które mogą zostać wybrane jako nadrzędne.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SelectStudent"></a>
+                    <span class="name">
+                        <span ><b>SelectStudent</b></span>
+                        <a href="#SelectStudent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>SelectStudent()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="312"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:312</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie)
+i załadowanie drugiego drzewka zasobów informacjami o studentach,
+których można przypisać do grupy.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TakeAwayRepresentativeRole"></a>
+                    <span class="name">
+                        <span ><b>TakeAwayRepresentativeRole</b></span>
+                        <a href="#TakeAwayRepresentativeRole"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>TakeAwayRepresentativeRole(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="411"
+                            class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:411</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wysyłająca żądanie odebrania studentowi roli starosty grupy na serwer.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator studenta</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_data"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_data</b></span>
+                        <a href="#_data"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Dane wymagane do załadowania widoku obszaru roboczego.
+Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_selectedResult"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_selectedResult</b></span>
+                        <a href="#_selectedResult"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type | null</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Rezultat wyboru pochodzący z drugiego drzewka zasobów.
+Zawiera informacje na temat identyfikatora zasobu oraz wybranego węzła drzewka.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="childGroupsStudents"></a>
+                    <span class="name">
+                        <span ><b>childGroupsStudents</b></span>
+                        <a href="#childGroupsStudents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>StudentBasic[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:124</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o studentach przypisanych do grup podrzędnych.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="groupForm"></a>
+                    <span class="name">
+                        <span ><b>groupForm</b></span>
+                        <a href="#groupForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Group.html" target="_self" >FormGroup</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="148" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:148</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Formularz modyfikacji oraz dodawania zasobu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="groupStudents"></a>
+                    <span class="name">
+                        <span ><b>groupStudents</b></span>
+                        <a href="#groupStudents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>StudentBasic[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:122</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o studentach przypisanych do grupy.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isModifying"></a>
+                    <span class="name">
+                        <span ><b>isModifying</b></span>
+                        <a href="#isModifying"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:130</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa czy włączony został tryb modyfikacji zasobu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:138</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modifiableParentGroupId"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>modifiableParentGroupId</b></span>
+                        <a href="#modifiableParentGroupId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="120" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:120</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Identyfikator wybranej grupy nadrzędnej.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="originalGroup"></a>
+                    <span class="name">
+                        <span ><b>originalGroup</b></span>
+                        <a href="#originalGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/GroupInfo.html" target="_self" >GroupInfo</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="118" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:118</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o pobranym zasobie grupy studenckiej z systemu
+(posiada odpowiednie informacje w przypadku trybu podglądu).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="originalValues"></a>
+                    <span class="name">
+                        <span ><b>originalValues</b></span>
+                        <a href="#originalValues"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Wartości początkowe formularza modyfikacji zasobu w celu
+możliwości późniejszego ich zresetowania.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="treeVisible"></a>
+                    <span class="name">
+                        <span ><b>treeVisible</b></span>
+                        <a href="#treeVisible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{type: &#x27;&#x27;, value: false}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:135</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa aktualny stan widoczności drugiego drzewka zasobów
+(oraz aktualnie wyświetlany typ zasobów).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="data"></a>
+                        <span class="name"><b>data</b><a href="#data"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>data()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:43</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>data(value: literal type)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:39</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+Po ustawieniu danych następuje załadowanie widoku.</p>
+</div>
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>value</td>
+                                                    
+                                                            <td>
+                                                                        <code>literal type</code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="selectedResult"></a>
+                        <span class="name"><b>selectedResult</b><a href="#selectedResult"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>selectedResult()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:75</a></div>
+                                </td>
+                            </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>set</b><code>selectedResult(value: literal type | null)</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/components/admin-panel/group-field/group-field.component.ts:52</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Metoda ustawiająca rezultat wyboru pochodzący z drugiego drzewka zasobów.
+Po ustawieniu rezultatu wywoływana jest odpowiednia metoda</p>
+<ul>
+<li>przypisania studenta do grupy lub wyboru grupy nadrzędnej.</li>
+</ul>
+</div>
+
+                                <div class="io-description">
+                                        <b>Parameters :</b>
+                                        <table class="params">
+                                            <thead>
+                                                <tr>
+                                                    <td>Name</td>
+                                                        <td>Type</td>
+                                                    <td>Optional</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                            <td>value</td>
+                                                    
+                                                            <td>
+                                                                        <code>literal type | null</code>
+                                                            </td>
+                                                    
+                                                        <td>
+                                                                No
+                                                        </td>
+                                                        
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                                <div>
+                                </div>
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, EventEmitter, Input, OnInit, Output } from &#x27;@angular/core&#x27;;
+import { ResourceNode } from &#x27;src/app/others/ResourcesTree&#x27;;
+import { GroupInfo } from &#x27;src/app/others/Group&#x27;;
+import { Student, StudentBasic } from &#x27;src/app/others/Accounts&#x27;;
+import { ScheduleDesignerApiService } from &#x27;src/app/services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { AdministratorApiService } from &#x27;src/app/services/AdministratorApiService/administrator-api.service&#x27;;
+import { SignalrService } from &#x27;src/app/services/SignalrService/signalr.service&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { FormControl, FormGroup, Validators } from &#x27;@angular/forms&#x27;;
+import { finalize } from &#x27;rxjs/operators&#x27;;
+import { forkJoin } from &#x27;rxjs&#x27;;
+
+/**
+ * Komponent zawierający widok obszaru roboczego panelu administracyjnego
+ * dla sekcji wprowadzania i modyfikowania danych na temat grupy studenckiej.
+ */
+@Component({
+  selector: &#x27;app-group-field&#x27;,
+  templateUrl: &#x27;./group-field.component.html&#x27;,
+  styleUrls: [&#x27;./group-field.component.css&#x27;]
+})
+export class GroupFieldComponent implements OnInit {
+
+  /** 
+   * Rezultat wyboru pochodzący z drugiego drzewka zasobów.
+   * Zawiera informacje na temat identyfikatora zasobu oraz wybranego węzła drzewka.
+   */
+  private _selectedResult: {type: string, node: ResourceNode} | null;
+  /** 
+   * Dane wymagane do załadowania widoku obszaru roboczego.
+   * Zawiera informacje o identyfikatorze zasobu, typie zasobu oraz rodzaju wykonywanej akcji (dodawania lub podglądu).
+   */
+  private _data: {id: string|undefined, type: string, actionType: string};
+
+  /**
+   * Metoda ustawiająca dane wymagane do załadowania widoku obszaru roboczego.
+   * Po ustawieniu danych następuje załadowanie widoku.
+   */
+  @Input() set data(value: {id: string|undefined, type: string, actionType: string}) {
+    this._data &#x3D; value;
+    this.treeVisible &#x3D; {type: &#x27;&#x27;, value: false};
+    this.loadView();
+  } get data(): {id: string|undefined, type: string, actionType: string} {
+    return this._data;
+  }
+
+  /**
+   * Metoda ustawiająca rezultat wyboru pochodzący z drugiego drzewka zasobów.
+   * Po ustawieniu rezultatu wywoływana jest odpowiednia metoda 
+   * - przypisania studenta do grupy lub wyboru grupy nadrzędnej.
+   */
+  @Input() set selectedResult(value: {type: string, node: ResourceNode} | null) {
+    if (value &#x3D;&#x3D; null || value &#x3D;&#x3D; undefined) {
+      return;
+    }
+    
+    this._selectedResult &#x3D; value;
+
+    switch (value.type) {
+      case &#x27;user&#x27;: {
+        this.AddStudent(Number.parseInt(value.node.item.id!), value.node.item.name);
+      } break;
+      case &#x27;group&#x27;: {
+        if (this.groupForm) {
+          this.groupForm.controls[&#x27;parent&#x27;].setValue(value.node.item.id &#x3D;&#x3D;&#x3D; &#x27;root&#x27; ? &#x27;&#x27; : value.node.item.name);
+        }
+        this.modifiableParentGroupId &#x3D; value.node.item.id &#x3D;&#x3D;&#x3D; &#x27;root&#x27; ? undefined : Number.parseInt(value.node.item.id!);
+
+        this.treeVisible &#x3D; {type: &#x27;group&#x27;, value: false};
+        setTimeout(() &#x3D;&gt; {
+          this.onSelect.emit({type: &#x27;&#x27;, header: &#x27;&#x27;, visible: this.treeVisible.value, excludeTypes: [], excludeIds: []});
+        });
+      } break;
+    }
+  } get selectedResult(): {type: string, node: ResourceNode} | null { 
+    return this._selectedResult;
+  }
+
+  /**
+   * Emiter zdarzenia wyświetlenia (bądź ukrycia) i załadowania drugiego drzewka zasobów.
+   * Zdarzenie posiada informacje o typie ładowanych zasobów, nagłówku drzewka,
+   * czy powinno zostać wyświetlone na ekranie, które typy zasobów powinny zostać pominięte (wykluczone) w drzewku
+   * oraz identyfikatory węzłów, które powinny zostać pominięte (wykluczone).
+   */
+  @Output() onSelect: EventEmitter&lt;{
+    type: string, 
+    header: string,
+    visible: boolean,
+    excludeTypes: string[],
+    excludeIds: string[]
+  }&gt; &#x3D; new EventEmitter();
+
+  /** 
+   * Emiter zdarzenia dodania do listy rezultatu wybranego z drugiego drzewka zasobów.
+   * Zdarzenie posiada informacje o identyfikatorach dodanych zasobów oraz ich typ.
+   */
+  @Output() onListAdd: EventEmitter&lt;{ids: string[], type: string}&gt; &#x3D; new EventEmitter();
+  /**
+   * Emiter zdarzenia usunięcia z listy rezultatu, który może być 
+   * teraz dostępny do wyboru w drugim drzewku zasobów.
+   * Zdarzenie posiada informacje o identyfikatorach usuniętych zasobów oraz ich typ.
+   */
+  @Output() onListRemove: EventEmitter&lt;{ids: string[], type: string}&gt; &#x3D; new EventEmitter();
+
+  /** Emiter zdarzenia zapisu stanu modyfikacji zasobu. */
+  @Output() onChange: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+  /** 
+   * Emiter zdarzenia dodania nowego zasobu do systemu.
+   * Zdarzenie przechowuje informacje o identyfikatorach powstałego zasobu.
+  */
+  @Output() onCreate: EventEmitter&lt;string&gt; &#x3D; new EventEmitter();
+  /** Emiter zdarzenia usunięcia zasobu z systemu. */
+  @Output() onRemove: EventEmitter&lt;void&gt; &#x3D; new EventEmitter();
+
+  /** Informacje o pobranym zasobie grupy studenckiej z systemu 
+   * (posiada odpowiednie informacje w przypadku trybu podglądu). 
+   */
+  originalGroup: GroupInfo;
+  /** Identyfikator wybranej grupy nadrzędnej. */
+  modifiableParentGroupId?: number;
+  /** Informacje o studentach przypisanych do grupy. */
+  groupStudents: StudentBasic[];
+  /** Informacje o studentach przypisanych do grup podrzędnych. */
+  childGroupsStudents: StudentBasic[];
+
+  /** Wartości początkowe formularza modyfikacji zasobu w celu 
+   * możliwości późniejszego ich zresetowania. */
+  originalValues: any;
+  /** Określa czy włączony został tryb modyfikacji zasobu. */
+  isModifying: boolean &#x3D; false;
+
+  /** Określa aktualny stan widoczności drugiego drzewka zasobów 
+   * (oraz aktualnie wyświetlany typ zasobów). 
+   */
+  treeVisible: {type: string, value: boolean} &#x3D; {type: &#x27;&#x27;, value: false};
+
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean | null &#x3D; null;
+
+  constructor(
+    private scheduleDesignerApiService: ScheduleDesignerApiService,
+    private administratorApiService: AdministratorApiService,
+    private signalrService: SignalrService,
+    private snackBar: MatSnackBar
+  ) { }
+
+  /** Formularz modyfikacji oraz dodawania zasobu. */
+  groupForm: FormGroup;
+
+  ngOnInit(): void {
+
+  }
+
+  GetParentName(): string {
+    return this.groupForm.controls[&#x27;parent&#x27;].value;
+  }
+
+  /**
+   * Metoda budująca formularz z danymi początkowymi podanymi w parametrze.
+   * @param group Dane początkowe zbudowanego formularza
+   */
+  private buildForm(group: GroupInfo, isView: boolean) {
+    this.groupForm &#x3D; new FormGroup({
+      parent: new FormControl(group.FullName.replace(group.BasicName, &#x27;&#x27;)),
+      name: new FormControl(group.BasicName, [Validators.required]),
+    });
+    this.originalValues &#x3D; this.groupForm.value;
+    if (!isView) {
+      this.groupForm.controls[&#x27;parent&#x27;].disable();
+    }
+  }
+
+  /** Metoda wyłączająca możliwość modyfikacji formularza. */
+  private disableForm() {
+    for (var controlName in this.groupForm.controls) {
+      this.groupForm.controls[controlName].disable();
+    }
+    this.isModifying &#x3D; false;
+  }
+
+  /** Metoda włączająca możliwość modyfikacji formularza. */
+  private enableForm(isView: boolean) {
+    for (var controlName in this.groupForm.controls) {
+      this.groupForm.controls[controlName].enable();
+    }
+    if (!isView) {
+      this.groupForm.controls[&#x27;parent&#x27;].disable();
+    }
+    this.isModifying &#x3D; true;
+  }
+
+  /**
+   * Metoda ładująca dane wymagane do wyświetlenia obszaru roboczego.
+   * Różnią się one w zależności od trybu widoku - dodawania lub podglądu.
+   */
+  private loadView() {
+    this.loading &#x3D; true;
+
+    if (this._data.actionType &#x3D;&#x3D;&#x3D; &#x27;view&#x27;) {
+      this.scheduleDesignerApiService.GetGroupInfo(Number.parseInt(this._data.id!)).subscribe(group &#x3D;&gt; {
+        forkJoin([
+          this.administratorApiService.GetGroupsStudents(group.ChildIds.slice(1)),
+          this.administratorApiService.GetGroupsStudents([group.GroupId]),
+          this.administratorApiService.GetGroupRepresentativeRoles(group.GroupId)
+        ]).subscribe(([childGroupsStudents, groupStudents, representativeIds]) &#x3D;&gt; {
+          this.originalGroup &#x3D; group;
+          this.modifiableParentGroupId &#x3D; group.ParentIds[1];
+          this.childGroupsStudents &#x3D; childGroupsStudents;
+          
+          const childGroupsStudentIds &#x3D; this.childGroupsStudents.map(e &#x3D;&gt; e.UserId);
+          this.groupStudents &#x3D; groupStudents.filter(groupStudent &#x3D;&gt; !childGroupsStudentIds.includes(groupStudent.UserId));
+          
+          this.childGroupsStudents.forEach(v &#x3D;&gt; {
+            if (representativeIds.includes(v.UserId)) {
+              v.IsRepresentative &#x3D; true;
+            }
+          });
+          this.groupStudents.forEach(v &#x3D;&gt; {
+            if (representativeIds.includes(v.UserId)) {
+              v.IsRepresentative &#x3D; true;
+            }
+          });
+          
+          this.buildForm(this.originalGroup, true);
+
+          this.disableForm();
+
+          this.loading &#x3D; false;
+        }, () &#x3D;&gt; {
+          this.snackBar.open(&quot;Could not find group.&quot;, &quot;OK&quot;);
+        });
+      }, () &#x3D;&gt; {
+        this.snackBar.open(&quot;Could not find group.&quot;, &quot;OK&quot;);
+      });
+      
+    } else if (this._data.actionType &#x3D;&#x3D;&#x3D; &#x27;add&#x27;) {
+      const groupId &#x3D; Number.parseInt(this._data.id!);
+      if (Number.isNaN(groupId)) {
+        this.originalGroup &#x3D; new GroupInfo(
+          0, &#x27;&#x27;, &#x27;&#x27;, [0], [0]
+        );
+        this.modifiableParentGroupId &#x3D; undefined;
+        this.childGroupsStudents &#x3D; [];
+        this.groupStudents &#x3D; [];
+        
+        this.buildForm(this.originalGroup, false);
+
+        this.loading &#x3D; false;
+      } else {
+        this.scheduleDesignerApiService.GetGroupInfo(groupId).subscribe(group &#x3D;&gt; {
+          this.originalGroup &#x3D; new GroupInfo(
+            group.GroupId, &#x27;&#x27;, group.FullName, group.ParentIds, group.ChildIds
+          );
+          this.modifiableParentGroupId &#x3D; group.ParentIds[0];
+          this.childGroupsStudents &#x3D; [];
+          this.groupStudents &#x3D; [];
+
+          this.buildForm(this.originalGroup, false);
+
+          this.loading &#x3D; false;
+        });
+      }
+    } else {
+      this.loading &#x3D; false;
+    }
+  }
+
+  /**
+   * Metoda porównująca aktualny stan pól formularzy z oryginalnymi 
+   * wartościami zasobu pobranymi z serwera.
+   * @returns Prawdę jeśli dane w formularzu są identyczne z oryginalnymi wartościami zasobu
+   */
+  IsSameAsOriginal(): boolean {
+    return this.originalGroup.BasicName &#x3D;&#x3D;&#x3D; this.groupForm.controls[&#x27;name&#x27;].value
+      &amp;&amp; this.originalGroup.FullName.replace(this.originalGroup.BasicName, &#x27;&#x27;) &#x3D;&#x3D;&#x3D; this.groupForm.controls[&#x27;parent&#x27;].value;
+  }
+
+  /**
+   * Metoda uruchamiająca tryb modyfikacji zasobu.
+   */
+  Modify(isView: boolean) {
+    this.Reset();
+    this.enableForm(isView);
+  }
+
+  /**
+   * Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie) 
+   * i załadowanie drugiego drzewka zasobów informacjami o grupach,
+   * które mogą zostać wybrane jako nadrzędne.
+   */
+  SelectParentGroup() {
+    if (this.treeVisible.type &#x3D;&#x3D;&#x3D; &#x27;group&#x27;) {
+      this.treeVisible.value &#x3D; !this.treeVisible.value;
+    } else {
+      this.treeVisible.type &#x3D; &#x27;group&#x27;;
+      this.treeVisible.value &#x3D; true;
+    }
+    this.onSelect.emit({
+      type: &#x27;change-group&#x27;, 
+      header: &#x27;Change parent of the group:&#x27;, 
+      visible: this.treeVisible.value, 
+      excludeTypes: [], 
+      excludeIds: this.originalGroup.ChildIds.map(e &#x3D;&gt; e.toString())
+    });
+  }
+
+  /**
+   * Metoda wysyłająca zdarzenie powodujące wyświetlenie (bądź ukrycie) 
+   * i załadowanie drugiego drzewka zasobów informacjami o studentach,
+   * których można przypisać do grupy.
+   */
+  SelectStudent() {
+    if (this.treeVisible.type &#x3D;&#x3D;&#x3D; &#x27;student&#x27;) {
+      this.treeVisible.value &#x3D; !this.treeVisible.value;
+    } else {
+      this.treeVisible.type &#x3D; &#x27;student&#x27;;
+      this.treeVisible.value &#x3D; true;
+    }
+    this.onSelect.emit({
+      type: &#x27;students&#x27;, 
+      header: &#x27;Add new student for this group:&#x27;, 
+      visible: this.treeVisible.value, 
+      excludeTypes: [], 
+      excludeIds: this.groupStudents.map(s &#x3D;&gt; s.UserId.toString())
+        .concat(...this.childGroupsStudents.map(s &#x3D;&gt; s.UserId.toString()))
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie przypisania studenta do grupy na serwer.
+   * @param userId Identyfikator studenta do przypisania
+   * @param userName Pełna nazwa studenta do przypisania
+   */
+  AddStudent(userId: number, userFullName: string) {
+    this.administratorApiService.AddStudentToGroup(
+      this.originalGroup.GroupId, userId
+    ).subscribe(response &#x3D;&gt; {
+      const student &#x3D; new StudentBasic(userId, userFullName);
+      this.groupStudents.push(student);
+      this.groupStudents.sort((a,b) &#x3D;&gt; a.UserId - b.UserId);
+
+      this.onListAdd.emit({ids: [userId.toString()], type: &#x27;students&#x27;});
+      
+      this.snackBar.open(&quot;Successfully added student for this group.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie usunięcia przypisania studenta do grupy na serwer.
+   * @param userId Identyfikator przypisanego studenta
+   */
+  RemoveStudent(userId: number) {
+    this.administratorApiService.RemoveStudentFromGroup(
+      this.originalGroup.GroupId, userId
+    ).subscribe(response &#x3D;&gt; {
+      const index &#x3D; this.groupStudents.findIndex(s &#x3D;&gt; s.UserId &#x3D;&#x3D; userId);
+      if (index !&#x3D; -1) {
+        this.groupStudents.splice(index, 1);
+      }
+
+      this.onListRemove.emit({ids: [userId.toString()], type: &#x27;students&#x27;});
+      
+      this.snackBar.open(&quot;Successfully removed student from this group.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie nadania studentowi roli starosty grupy na serwer.
+   * @param userId Identyfikator studenta
+   */
+  GiveRepresentativeRole(userId: number) {
+    this.administratorApiService.GiveOrRemoveRepresentativeRole(
+      this.originalGroup.GroupId, userId, true
+    ).subscribe(response &#x3D;&gt; {
+      const index &#x3D; this.groupStudents.findIndex(s &#x3D;&gt; s.UserId &#x3D;&#x3D; userId);
+      if (index !&#x3D; -1) {
+        this.groupStudents[index].IsRepresentative &#x3D; true;
+      } else {
+        const index2 &#x3D; this.childGroupsStudents.findIndex(s &#x3D;&gt; s.UserId &#x3D;&#x3D; userId);
+        if (index2 !&#x3D; -1) {
+          this.childGroupsStudents[index2].IsRepresentative &#x3D; true;
+        }
+      }
+      
+      this.snackBar.open(&quot;Successfully given representative role for this student.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie odebrania studentowi roli starosty grupy na serwer.
+   * @param userId Identyfikator studenta
+   */
+  TakeAwayRepresentativeRole(userId: number) {
+    this.administratorApiService.GiveOrRemoveRepresentativeRole(
+      this.originalGroup.GroupId, userId, false
+    ).subscribe(response &#x3D;&gt; {
+      const index &#x3D; this.groupStudents.findIndex(s &#x3D;&gt; s.UserId &#x3D;&#x3D; userId);
+      if (index !&#x3D; -1) {
+        this.groupStudents[index].IsRepresentative &#x3D; false;
+      } else {
+        const index2 &#x3D; this.childGroupsStudents.findIndex(s &#x3D;&gt; s.UserId &#x3D;&#x3D; userId);
+        if (index2 !&#x3D; -1) {
+          this.childGroupsStudents[index2].IsRepresentative &#x3D; false;
+        }
+      }
+      
+      this.snackBar.open(&quot;Successfully took away representative role from this student.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  Reset() {
+    this.groupForm.reset(this.originalValues);
+  }
+
+  Cancel() {
+    this.Reset();
+    this.disableForm();
+  }
+
+  /**
+   * Metoda wysyłająca żądanie modyfikacji zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
+  async Save() {
+    if (!this.groupForm.valid) {
+      return;
+    }
+
+    const parentId &#x3D; this.modifiableParentGroupId ?? null;
+    const originalParentId &#x3D; this.originalGroup.ParentIds[1] ?? null;
+    const parentName &#x3D; this.groupForm.controls[&#x27;parent&#x27;].value;
+    const name &#x3D; this.groupForm.controls[&#x27;name&#x27;].value;
+
+    const group &#x3D; {
+      GroupId: this.originalGroup.GroupId,
+      Name: this.originalGroup.BasicName &#x3D;&#x3D;&#x3D; name ? undefined : name,
+      ParentGroupId: originalParentId &#x3D;&#x3D;&#x3D; parentId ? undefined : parentId
+    };
+
+    const connectionId &#x3D; this.signalrService.connection.connectionId;
+    var isLocked &#x3D; false;
+    if (group.ParentGroupId || group.ParentGroupId &#x3D;&#x3D; null) {
+      if (!connectionId) {
+        return;
+      }
+
+      try {
+        const lockingResult &#x3D; await this.signalrService.LockAllCoursesForGroupChange(this.originalGroup.GroupId, parentId !&#x3D; null ? parentId : undefined).toPromise();
+        
+        if (lockingResult.StatusCode &gt;&#x3D; 400) {
+          throw lockingResult;
+        }
+        isLocked &#x3D; true;
+      } catch (error: any) {
+        if (error.Message !&#x3D; undefined) {
+          this.snackBar.open(error.Message, &quot;OK&quot;);
+        } else if (error.error !&#x3D; undefined) {
+          this.snackBar.open(error.error, &quot;OK&quot;);
+        } else {
+          this.snackBar.open(&quot;You are not authorized to do this.&quot;, &quot;OK&quot;);
+        }
+        return;
+      }
+    }
+    this.disableForm();
+    this.administratorApiService.UpdateGroup(group, connectionId ?? &#x27;&#x27;).pipe(finalize(async () &#x3D;&gt; {
+      if (isLocked) {
+        try {
+          const unlockingResult &#x3D; await this.signalrService.UnlockAllCoursesForGroupChange(this.originalGroup.GroupId, parentId !&#x3D; null ? parentId : undefined).toPromise();
+    
+          if (unlockingResult.StatusCode &gt;&#x3D; 400) {
+            throw unlockingResult;
+          }
+  
+        } catch (error:any) {
+  
+        }
+      }
+    })).subscribe(() &#x3D;&gt; {
+      if (group.ParentGroupId) {
+        this.loadView();
+      } else {
+        this.originalGroup &#x3D; new GroupInfo(
+          this.originalGroup.GroupId, name, parentName + name, 
+          this.originalGroup.ParentIds, this.originalGroup.ChildIds
+        );
+        this.buildForm(this.originalGroup, true);
+        this.disableForm();
+      }
+      
+      this.onChange.emit();
+      
+      this.snackBar.open(&quot;Successfully updated group.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      this.enableForm(true);
+      
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie utworzenia nowego zasobu na serwer (zgodnie z danymi podanymi w formularzu).
+   */
+  Create() {
+    if (!this.groupForm.valid) {
+      return;
+    }
+
+    const parentId &#x3D; this.modifiableParentGroupId ?? null;
+    const name &#x3D; this.groupForm.controls[&#x27;name&#x27;].value;
+    const group &#x3D; {
+      GroupId: this.originalGroup.GroupId,
+      Name: this.originalGroup.BasicName &#x3D;&#x3D;&#x3D; name ? undefined : name,
+      ParentGroupId: parentId
+    };
+
+    this.administratorApiService.CreateGroup(group).subscribe((response) &#x3D;&gt; {
+      this.onCreate.emit(response.GroupId);
+      
+      this.snackBar.open(&quot;Successfully created group.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wysyłająca żądanie usunięcia zasobu na serwer.
+   */
+  Remove() {
+    this.administratorApiService.RemoveGroup(this.originalGroup.GroupId).subscribe(() &#x3D;&gt; {
+      this.onRemove.emit();
+      
+      this.snackBar.open(&quot;Successfully removed group.&quot;, &quot;OK&quot;);
+    }, response &#x3D;&gt; {
+      if (response.error?.error?.message !&#x3D; undefined) {
+        this.snackBar.open(response.error.error.message, &quot;OK&quot;);
+      } else if (typeof response.error !&#x3D;&#x3D; &#x27;object&#x27;) {
+        this.snackBar.open(response.error, &quot;OK&quot;);
+      }
+    });
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div *ngIf&#x3D;&quot;loading &#x3D;&#x3D; false; else spinner&quot;&gt;
+    &lt;div [ngSwitch]&#x3D;&quot;data?.actionType&quot;&gt;
+        &lt;div *ngSwitchCase&#x3D;&quot;&#x27;add&#x27;&quot; class&#x3D;&quot;content&quot;&gt;
+            &lt;div class&#x3D;&quot;content-header&quot;&gt;
+                &lt;b&gt;New Group&lt;/b&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;content-form&quot;&gt;
+                &lt;form (ngSubmit)&#x3D;&quot;Create()&quot; [formGroup]&#x3D;&quot;groupForm&quot;&gt;
+                    &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                        &lt;mat-label&gt;Parent Group&lt;/mat-label&gt;
+                        &lt;input matInput name&#x3D;&quot;parent&quot; formControlName&#x3D;&quot;parent&quot; maxlength&#x3D;&quot;100&quot; readonly&gt;
+                        &lt;button matSuffix type&#x3D;&quot;button&quot; mat-icon-button [disabled]&#x3D;&quot;true&quot; (click)&#x3D;&quot;SelectParentGroup()&quot;&gt;
+                            &lt;mat-icon&gt;edit&lt;/mat-icon&gt;
+                        &lt;/button&gt;
+                    &lt;/mat-form-field&gt;
+
+                    &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                        &lt;mat-label&gt;Group Name&lt;/mat-label&gt;
+                        &lt;span matPrefix&gt;{{GetParentName()}} &amp;nbsp;&lt;/span&gt;
+                        &lt;input matInput name&#x3D;&quot;name&quot; formControlName&#x3D;&quot;name&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                        &lt;mat-error *ngIf&#x3D;&quot;groupForm.controls[&#x27;name&#x27;].hasError(&#x27;required&#x27;)&quot;&gt;
+                            Name is &lt;strong&gt;required&lt;/strong&gt;.
+                        &lt;/mat-error&gt;
+                    &lt;/mat-form-field&gt;
+                    &lt;br&gt;&lt;br&gt;
+
+                    &lt;button type&#x3D;&quot;submit&quot; mat-raised-button color&#x3D;&quot;primary&quot; class&#x3D;&quot;form-submit&quot;&gt;
+                        Create
+                    &lt;/button&gt;
+                    
+                    &lt;button type&#x3D;&quot;button&quot; mat-raised-button color&#x3D;&quot;accent&quot; class&#x3D;&quot;form-reset&quot;
+                        (click)&#x3D;&quot;Reset()&quot;&gt;
+                        Reset
+                    &lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div *ngSwitchCase&#x3D;&quot;&#x27;view&#x27;&quot; class&#x3D;&quot;content&quot;&gt;
+            &lt;div class&#x3D;&quot;content-header&quot;&gt;
+                &lt;b&gt;Group (ID: {{originalGroup.GroupId}})&lt;/b&gt;
+                &lt;button mat-icon-button class&#x3D;&quot;edit-icon-button&quot; [disabled]&#x3D;&quot;isModifying&quot; (click)&#x3D;&quot;Modify(true)&quot;&gt;
+                    &lt;mat-icon&gt;edit&lt;/mat-icon&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;content-inner&quot;&gt;
+                &lt;div class&#x3D;&quot;content-form&quot;&gt;
+                    &lt;form (ngSubmit)&#x3D;&quot;Save()&quot; [formGroup]&#x3D;&quot;groupForm&quot;&gt;
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Parent Group&lt;/mat-label&gt;
+                            &lt;input matInput name&#x3D;&quot;parent&quot; formControlName&#x3D;&quot;parent&quot; maxlength&#x3D;&quot;100&quot; readonly&gt;
+                            &lt;button matSuffix type&#x3D;&quot;button&quot; [disabled]&#x3D;&quot;!isModifying&quot; mat-icon-button (click)&#x3D;&quot;SelectParentGroup()&quot;&gt;
+                                &lt;mat-icon&gt;edit&lt;/mat-icon&gt;
+                            &lt;/button&gt;
+                        &lt;/mat-form-field&gt;
+    
+                        &lt;mat-form-field class&#x3D;&quot;form-input&quot; appearance&#x3D;&quot;fill&quot;&gt;
+                            &lt;mat-label&gt;Group Name&lt;/mat-label&gt;
+                            &lt;span matPrefix&gt;{{GetParentName()}} &amp;nbsp;&lt;/span&gt;
+                            &lt;input matInput name&#x3D;&quot;name&quot; formControlName&#x3D;&quot;name&quot; maxlength&#x3D;&quot;100&quot;&gt;
+                            &lt;mat-error *ngIf&#x3D;&quot;groupForm.controls[&#x27;name&#x27;].hasError(&#x27;required&#x27;)&quot;&gt;
+                                Name is &lt;strong&gt;required&lt;/strong&gt;.
+                            &lt;/mat-error&gt;
+                        &lt;/mat-form-field&gt;
+                        &lt;br&gt;&lt;br&gt;
+    
+                        &lt;button type&#x3D;&quot;submit&quot; mat-raised-button color&#x3D;&quot;primary&quot; class&#x3D;&quot;form-submit&quot; 
+                            [disabled]&#x3D;&quot;!isModifying || IsSameAsOriginal()&quot;&gt;
+                            Save
+                        &lt;/button&gt;
+                        
+                        &lt;button type&#x3D;&quot;button&quot; mat-raised-button color&#x3D;&quot;accent&quot; class&#x3D;&quot;form-reset&quot; 
+                            [disabled]&#x3D;&quot;!isModifying&quot; 
+                            (click)&#x3D;&quot;Reset()&quot;&gt;
+                            Reset
+                        &lt;/button&gt;
+                        
+                        &lt;button type&#x3D;&quot;button&quot; mat-raised-button class&#x3D;&quot;form-reset&quot; 
+                            [disabled]&#x3D;&quot;!isModifying&quot; 
+                            (click)&#x3D;&quot;Cancel()&quot;&gt;
+                            Cancel Modification
+                        &lt;/button&gt;
+                    &lt;/form&gt;
+                    &lt;br&gt;&lt;br&gt;
+                    &lt;button mat-raised-button color&#x3D;&quot;warn&quot; class&#x3D;&quot;form-submit&quot; 
+                        [disabled]&#x3D;&quot;!isModifying&quot;
+                        (click)&#x3D;&quot;Remove()&quot;&gt;
+                        Remove
+                    &lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    &lt;div class&#x3D;&quot;content-subheader&quot;&gt;
+                        &lt;b&gt;Assign new student: &lt;/b&gt;
+                        &lt;button mat-icon-button class&#x3D;&quot;add-icon-button&quot; [disabled]&#x3D;&quot;!isModifying&quot; (click)&#x3D;&quot;SelectStudent()&quot;&gt;
+                            &lt;mat-icon&gt;add_circle&lt;/mat-icon&gt;
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                    &lt;mat-accordion multi&gt;
+                        &lt;mat-expansion-panel&gt;
+                            &lt;mat-expansion-panel-header&gt;
+                                &lt;mat-panel-title&gt;
+                                    Manage students assigned for this group:
+                                &lt;/mat-panel-title&gt;
+                            &lt;/mat-expansion-panel-header&gt;
+                            &lt;div class&#x3D;&quot;content-list&quot;&gt;
+                                &lt;mat-list role&#x3D;&quot;list&quot;&gt;
+                                    &lt;mat-divider&gt;&lt;/mat-divider&gt;
+                                    &lt;mat-list-item role&#x3D;&quot;listitem&quot; *ngFor&#x3D;&quot;let student of groupStudents&quot;&gt;
+                                        &lt;div class&#x3D;&quot;item-text&quot; matLine&gt;
+                                            &lt;span class&#x3D;&quot;item-text-line&quot;&gt;
+                                                {{student.FullName}} ({{student.UserId}})
+                                            &lt;/span&gt;
+                                            &lt;mat-icon *ngIf&#x3D;&quot;student.IsRepresentative&quot; class&#x3D;&quot;star-icon&quot; color&#x3D;&quot;primary&quot; title&#x3D;&quot;Student represents this group&quot;&gt;
+                                                stars
+                                            &lt;/mat-icon&gt;
+                                        &lt;/div&gt;
+                                        &lt;div&gt;
+                                            &lt;button *ngIf&#x3D;&quot;!student.IsRepresentative&quot; mat-raised-button color&#x3D;&quot;primary&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                                [disabled]&#x3D;&quot;!isModifying&quot;
+                                                (click)&#x3D;&quot;GiveRepresentativeRole(student.UserId)&quot;&gt;
+                                                + Representative
+                                            &lt;/button&gt;
+                                            &lt;button *ngIf&#x3D;&quot;student.IsRepresentative&quot; mat-raised-button color&#x3D;&quot;warn&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                                [disabled]&#x3D;&quot;!isModifying&quot;
+                                                (click)&#x3D;&quot;TakeAwayRepresentativeRole(student.UserId)&quot;&gt;
+                                                – Representative
+                                            &lt;/button&gt;
+                                            &lt;button mat-raised-button color&#x3D;&quot;warn&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                                [disabled]&#x3D;&quot;!isModifying&quot;
+                                                (click)&#x3D;&quot;RemoveStudent(student.UserId)&quot;&gt;
+                                                Remove
+                                            &lt;/button&gt;
+                                        &lt;/div&gt;
+                                        &lt;mat-divider&gt;&lt;/mat-divider&gt;
+                                    &lt;/mat-list-item&gt;
+                                &lt;/mat-list&gt;
+                            &lt;/div&gt;
+                        &lt;/mat-expansion-panel&gt;
+                        &lt;mat-expansion-panel&gt;
+                            &lt;mat-expansion-panel-header&gt;
+                                &lt;mat-panel-title&gt;
+                                    Manage students assigned for child groups:
+                                &lt;/mat-panel-title&gt;
+                            &lt;/mat-expansion-panel-header&gt;
+                            &lt;div class&#x3D;&quot;content-list&quot;&gt;
+                                &lt;mat-list role&#x3D;&quot;list&quot;&gt;
+                                    &lt;mat-divider&gt;&lt;/mat-divider&gt;
+                                    &lt;mat-list-item role&#x3D;&quot;listitem&quot; *ngFor&#x3D;&quot;let student of childGroupsStudents&quot;&gt;
+                                        &lt;div class&#x3D;&quot;item-text&quot; matLine&gt;
+                                            &lt;span class&#x3D;&quot;item-text-line&quot;&gt;
+                                                {{student.FullName}} ({{student.UserId}})
+                                            &lt;/span&gt;
+                                            &lt;mat-icon *ngIf&#x3D;&quot;student.IsRepresentative&quot; class&#x3D;&quot;star-icon&quot; color&#x3D;&quot;primary&quot; title&#x3D;&quot;Student represents this group&quot;&gt;
+                                                stars
+                                            &lt;/mat-icon&gt;
+                                        &lt;/div&gt;
+                                        &lt;div&gt;
+                                            &lt;button *ngIf&#x3D;&quot;!student.IsRepresentative&quot; mat-raised-button color&#x3D;&quot;primary&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                                [disabled]&#x3D;&quot;!isModifying&quot;
+                                                (click)&#x3D;&quot;GiveRepresentativeRole(student.UserId)&quot;&gt;
+                                                + Representative
+                                            &lt;/button&gt;
+                                            &lt;button *ngIf&#x3D;&quot;student.IsRepresentative&quot; mat-raised-button color&#x3D;&quot;warn&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                                [disabled]&#x3D;&quot;!isModifying&quot;
+                                                (click)&#x3D;&quot;TakeAwayRepresentativeRole(student.UserId)&quot;&gt;
+                                                – Representative
+                                            &lt;/button&gt;
+                                        &lt;/div&gt;
+                                        &lt;mat-divider&gt;&lt;/mat-divider&gt;
+                                    &lt;/mat-list-item&gt;
+                                &lt;/mat-list&gt;
+                            &lt;/div&gt;
+                        &lt;/mat-expansion-panel&gt;
+                    &lt;/mat-accordion&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div *ngSwitchDefault&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;ng-template #spinner&gt;
+    &lt;mat-progress-spinner *ngIf&#x3D;&quot;loading !&#x3D; null&quot;
+        class&#x3D;&quot;spinner&quot;
+        mode&#x3D;&quot;indeterminate&quot;
+        diameter&#x3D;&quot;40&quot;
+    &gt;&lt;/mat-progress-spinner&gt;
+&lt;/ng-template&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./group-field.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.content {
+    height: 75vh;
+    font-size: 12pt;
+    text-align: left;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.content-header {
+    height: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 1.17em;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.content-subheader {
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-size: 1em;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+.edit-icon-button {
+    transform: scale(0.75);
+    top: -3px;
+}
+
+.add-icon-button {
+    transform: scale(1);
+    top: -3px;
+}
+
+.star-icon {
+    top: 6px;
+    position: relative;
+}
+
+.item-text-line {
+    font-size: 12px;
+}
+
+.content-inner {
+    height: 92%;
+    overflow-y: auto;
+}
+
+.content-form {
+    padding-top: 3%;
+    padding-bottom: 7%;
+    padding-left: 3%;
+    padding-right: 3%;
+    border-bottom: 2px solid black;
+}
+
+.content-list {
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.form-input {
+    width: 100%;
+}
+
+.form-reset {
+    float: right;
+    min-width: 15%;
+    margin-right: 3%;
+}
+
+.form-submit {
+    float: right;
+    min-width: 15%;
+}
+
+.spinner {
+    position: relative;
+    top: 50%;
+    margin: auto;
+    transform: translateY(-100%);
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div *ngIf="loading == false; else spinner">    <div [ngSwitch]="data?.actionType">        <div *ngSwitchCase="\'add\'" class="content">            <div class="content-header">                <b>New Group</b>            </div>            <div class="content-form">                <form (ngSubmit)="Create()" [formGroup]="groupForm">                    <mat-form-field class="form-input" appearance="fill">                        <mat-label>Parent Group</mat-label>                        <input matInput name="parent" formControlName="parent" maxlength="100" readonly>                        <button matSuffix type="button" mat-icon-button [disabled]="true" (click)="SelectParentGroup()">                            <mat-icon>edit</mat-icon>                        </button>                    </mat-form-field>                    <mat-form-field class="form-input" appearance="fill">                        <mat-label>Group Name</mat-label>                        <span matPrefix>{{GetParentName()}} &nbsp;</span>                        <input matInput name="name" formControlName="name" maxlength="100">                        <mat-error *ngIf="groupForm.controls[\'name\'].hasError(\'required\')">                            Name is <strong>required</strong>.                        </mat-error>                    </mat-form-field>                    <br><br>                    <button type="submit" mat-raised-button color="primary" class="form-submit">                        Create                    </button>                                        <button type="button" mat-raised-button color="accent" class="form-reset"                        (click)="Reset()">                        Reset                    </button>                </form>            </div>        </div>        <div *ngSwitchCase="\'view\'" class="content">            <div class="content-header">                <b>Group (ID: {{originalGroup.GroupId}})</b>                <button mat-icon-button class="edit-icon-button" [disabled]="isModifying" (click)="Modify(true)">                    <mat-icon>edit</mat-icon>                </button>            </div>            <div class="content-inner">                <div class="content-form">                    <form (ngSubmit)="Save()" [formGroup]="groupForm">                        <mat-form-field class="form-input" appearance="fill">                            <mat-label>Parent Group</mat-label>                            <input matInput name="parent" formControlName="parent" maxlength="100" readonly>                            <button matSuffix type="button" [disabled]="!isModifying" mat-icon-button (click)="SelectParentGroup()">                                <mat-icon>edit</mat-icon>                            </button>                        </mat-form-field>                            <mat-form-field class="form-input" appearance="fill">                            <mat-label>Group Name</mat-label>                            <span matPrefix>{{GetParentName()}} &nbsp;</span>                            <input matInput name="name" formControlName="name" maxlength="100">                            <mat-error *ngIf="groupForm.controls[\'name\'].hasError(\'required\')">                                Name is <strong>required</strong>.                            </mat-error>                        </mat-form-field>                        <br><br>                            <button type="submit" mat-raised-button color="primary" class="form-submit"                             [disabled]="!isModifying || IsSameAsOriginal()">                            Save                        </button>                                                <button type="button" mat-raised-button color="accent" class="form-reset"                             [disabled]="!isModifying"                             (click)="Reset()">                            Reset                        </button>                                                <button type="button" mat-raised-button class="form-reset"                             [disabled]="!isModifying"                             (click)="Cancel()">                            Cancel Modification                        </button>                    </form>                    <br><br>                    <button mat-raised-button color="warn" class="form-submit"                         [disabled]="!isModifying"                        (click)="Remove()">                        Remove                    </button>                </div>                <div>                    <div class="content-subheader">                        <b>Assign new student: </b>                        <button mat-icon-button class="add-icon-button" [disabled]="!isModifying" (click)="SelectStudent()">                            <mat-icon>add_circle</mat-icon>                        </button>                    </div>                    <mat-accordion multi>                        <mat-expansion-panel>                            <mat-expansion-panel-header>                                <mat-panel-title>                                    Manage students assigned for this group:                                </mat-panel-title>                            </mat-expansion-panel-header>                            <div class="content-list">                                <mat-list role="list">                                    <mat-divider></mat-divider>                                    <mat-list-item role="listitem" *ngFor="let student of groupStudents">                                        <div class="item-text" matLine>                                            <span class="item-text-line">                                                {{student.FullName}} ({{student.UserId}})                                            </span>                                            <mat-icon *ngIf="student.IsRepresentative" class="star-icon" color="primary" title="Student represents this group">                                                stars                                            </mat-icon>                                        </div>                                        <div>                                            <button *ngIf="!student.IsRepresentative" mat-raised-button color="primary" style="margin-right: 1vw;"                                                [disabled]="!isModifying"                                                (click)="GiveRepresentativeRole(student.UserId)">                                                + Representative                                            </button>                                            <button *ngIf="student.IsRepresentative" mat-raised-button color="warn" style="margin-right: 1vw;"                                                [disabled]="!isModifying"                                                (click)="TakeAwayRepresentativeRole(student.UserId)">                                                – Representative                                            </button>                                            <button mat-raised-button color="warn" style="margin-right: 1vw;"                                                [disabled]="!isModifying"                                                (click)="RemoveStudent(student.UserId)">                                                Remove                                            </button>                                        </div>                                        <mat-divider></mat-divider>                                    </mat-list-item>                                </mat-list>                            </div>                        </mat-expansion-panel>                        <mat-expansion-panel>                            <mat-expansion-panel-header>                                <mat-panel-title>                                    Manage students assigned for child groups:                                </mat-panel-title>                            </mat-expansion-panel-header>                            <div class="content-list">                                <mat-list role="list">                                    <mat-divider></mat-divider>                                    <mat-list-item role="listitem" *ngFor="let student of childGroupsStudents">                                        <div class="item-text" matLine>                                            <span class="item-text-line">                                                {{student.FullName}} ({{student.UserId}})                                            </span>                                            <mat-icon *ngIf="student.IsRepresentative" class="star-icon" color="primary" title="Student represents this group">                                                stars                                            </mat-icon>                                        </div>                                        <div>                                            <button *ngIf="!student.IsRepresentative" mat-raised-button color="primary" style="margin-right: 1vw;"                                                [disabled]="!isModifying"                                                (click)="GiveRepresentativeRole(student.UserId)">                                                + Representative                                            </button>                                            <button *ngIf="student.IsRepresentative" mat-raised-button color="warn" style="margin-right: 1vw;"                                                [disabled]="!isModifying"                                                (click)="TakeAwayRepresentativeRole(student.UserId)">                                                – Representative                                            </button>                                        </div>                                        <mat-divider></mat-divider>                                    </mat-list-item>                                </mat-list>                            </div>                        </mat-expansion-panel>                    </mat-accordion>                </div>            </div>        </div>        <div *ngSwitchDefault></div>    </div></div><ng-template #spinner>    <mat-progress-spinner *ngIf="loading != null"        class="spinner"        mode="indeterminate"        diameter="40"    ></mat-progress-spinner></ng-template></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'GroupFieldComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'GroupFieldComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

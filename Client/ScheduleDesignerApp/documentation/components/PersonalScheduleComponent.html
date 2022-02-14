@@ -1,0 +1,3661 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  PersonalScheduleComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/views/personal-schedule/personal-schedule.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Komponent zawierający widok opcji Personal Schedule.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-personal-schedule</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./personal-schedule.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./personal-schedule.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#connectionStatus" >connectionStatus</a>
+                            </li>
+                            <li>
+                                <a href="#courseTypes" >courseTypes</a>
+                            </li>
+                            <li>
+                                <a href="#currentFilter" >currentFilter</a>
+                            </li>
+                            <li>
+                                <a href="#currentTabIndex" >currentTabIndex</a>
+                            </li>
+                            <li>
+                                <a href="#data" >data</a>
+                            </li>
+                            <li>
+                                <a href="#filter" >filter</a>
+                            </li>
+                            <li>
+                                <a href="#isConnectedSubscription" >isConnectedSubscription</a>
+                            </li>
+                            <li>
+                                <a href="#isModifying" >isModifying</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                <a href="#myCoursesComponent" >myCoursesComponent</a>
+                            </li>
+                            <li>
+                                <a href="#roomTypes" >roomTypes</a>
+                            </li>
+                            <li>
+                                <a href="#scheduleComponent" >scheduleComponent</a>
+                            </li>
+                            <li>
+                                <a href="#settings" >settings</a>
+                            </li>
+                            <li>
+                                <a href="#signalrSubscriptions" >signalrSubscriptions</a>
+                            </li>
+                            <li>
+                                <a href="#tabLabels" >tabLabels</a>
+                            </li>
+                            <li>
+                                <a href="#tabWeeks" >tabWeeks</a>
+                            </li>
+                            <li>
+                                <a href="#userInfo" >userInfo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#AddRoom" >AddRoom</a>
+                            </li>
+                            <li>
+                                <a href="#CancelSelection" >CancelSelection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ChangeRoom" >ChangeRoom</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#initialize" >initialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#initializeTabs" >initializeTabs</a>
+                            </li>
+                            <li>
+                                <a href="#ModifySchedule" >ModifySchedule</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#Move" >Move</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnEditView" >OnEditView</a>
+                            </li>
+                            <li>
+                                <a href="#OnMouseEnter" >OnMouseEnter</a>
+                            </li>
+                            <li>
+                                <a href="#OnMouseLeave" >OnMouseLeave</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnMyCoursesDrop" >OnMyCoursesDrop</a>
+                            </li>
+                            <li>
+                                <a href="#OnMyCoursesEnter" >OnMyCoursesEnter</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnMyCoursesStart" >OnMyCoursesStart</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnRelease" >OnRelease</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnRoomSelect" >OnRoomSelect</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnScheduleDrop" >OnScheduleDrop</a>
+                            </li>
+                            <li>
+                                <a href="#OnScheduleEnter" >OnScheduleEnter</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnScheduleStart" >OnScheduleStart</a>
+                            </li>
+                            <li>
+                                <a href="#OnSelect" >OnSelect</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#OnTabChange" >OnTabChange</a>
+                            </li>
+                            <li>
+                                <a href="#OnTabLoaded" >OnTabLoaded</a>
+                            </li>
+                            <li>
+                                <a href="#PrintSchedule" >PrintSchedule</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#selectCourseIfPossible" >selectCourseIfPossible</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setSignalrSubscriptions" >setSignalrSubscriptions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ShowScheduledChanges" >ShowScheduledChanges</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateBusyPeriods" >updateBusyPeriods</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateLockInMyCourses" >updateLockInMyCourses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#updateLockInSchedule" >updateLockInSchedule</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(store: Store<literal type>, signalrService: <a href="../injectables/SignalrService.html" target="_self">SignalrService</a>, scheduleDesignerApiService: <a href="../injectables/ScheduleDesignerApiService.html" target="_self">ScheduleDesignerApiService</a>, usosApiService: <a href="../injectables/UsosApiService.html" target="_self">UsosApiService</a>, scheduleInteractionService: <a href="../injectables/ScheduleInteractionService.html" target="_self">ScheduleInteractionService</a>, snackBar: MatSnackBar, dialogService: MatDialog, router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:74</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store&lt;literal type&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>signalrService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SignalrService.html" target="_self" >SignalrService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>scheduleDesignerApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleDesignerApiService.html" target="_self" >ScheduleDesignerApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>usosApiService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UsosApiService.html" target="_self" >UsosApiService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>scheduleInteractionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ScheduleInteractionService.html" target="_self" >ScheduleInteractionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>snackBar</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatSnackBar</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>dialogService</td>
+                                                  
+                                                        <td>
+                                                                    <code>MatDialog</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AddRoom"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>AddRoom</b></span>
+                        <a href="#AddRoom"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>AddRoom()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="474"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:474</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CancelSelection"></a>
+                    <span class="name">
+                        <span ><b>CancelSelection</b></span>
+                        <a href="#CancelSelection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>CancelSelection()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="507"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:507</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ChangeRoom"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>ChangeRoom</b></span>
+                        <a href="#ChangeRoom"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ChangeRoom()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="483"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:483</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initialize"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>initialize</b></span>
+                        <a href="#initialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>initialize()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="146"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:146</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda inicjalizująca tabelę planu zajęć.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initializeTabs"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>initializeTabs</b></span>
+                        <a href="#initializeTabs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>initializeTabs()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="124"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:124</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda inicjalizująca pasek wyboru widoków planu.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ModifySchedule"></a>
+                    <span class="name">
+                        <span ><b>ModifySchedule</b></span>
+                        <a href="#ModifySchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ModifySchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="364"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:364</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Move"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>Move</b></span>
+                        <a href="#Move"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Move()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="501"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:501</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="525"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:525</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="231"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:231</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda przygotowująca komponent.
+Pobiera dane niezbędne do wyświetlenia widoku opcji (ustawienia aplikacji, typy przedmiotów, etykiety ram czasowych itp.).
+Rozpoczyna odbieranie bieżących informacji z centrum SignalR.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnEditView"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnEditView</b></span>
+                        <a href="#OnEditView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnEditView()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="331"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:331</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda uruchamiająca okno dialogowe w celu zmiany utworzonego wcześniej widoku niestandardowego.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMouseEnter"></a>
+                    <span class="name">
+                        <span ><b>OnMouseEnter</b></span>
+                        <a href="#OnMouseEnter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnMouseEnter(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="513"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:513</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMouseLeave"></a>
+                    <span class="name">
+                        <span ><b>OnMouseLeave</b></span>
+                        <a href="#OnMouseLeave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnMouseLeave()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="519"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:519</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMyCoursesDrop"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnMyCoursesDrop</b></span>
+                        <a href="#OnMyCoursesDrop"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnMyCoursesDrop(event: CdkDragDrop<CourseEdition[] | CourseEdition[] | CourseEdition>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="383"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:383</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragDrop&lt;CourseEdition[] | CourseEdition[] | CourseEdition&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie upuszczenia panelu z zajęciami w strefie</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMyCoursesEnter"></a>
+                    <span class="name">
+                        <span ><b>OnMyCoursesEnter</b></span>
+                        <a href="#OnMyCoursesEnter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnMyCoursesEnter(drag: CdkDragEnter<CourseEdition[]>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="393"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:393</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>drag</td>
+                                    <td>
+                                            <code>CdkDragEnter&lt;CourseEdition[]&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie najechania panelu z zajęciami na strefę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnMyCoursesStart"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnMyCoursesStart</b></span>
+                        <a href="#OnMyCoursesStart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnMyCoursesStart(event: CdkDragStart<CourseEdition>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="403"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:403</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragStart&lt;CourseEdition&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie przeciągania panelu z zajęciami ze strefy</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnRelease"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnRelease</b></span>
+                        <a href="#OnRelease"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnRelease(event: CdkDragRelease<CourseEdition>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="444"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:444</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragRelease&lt;CourseEdition&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie zakończenia przeciągania panelu z zajęciami</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnRoomSelect"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnRoomSelect</b></span>
+                        <a href="#OnRoomSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnRoomSelect(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="464"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:464</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Informacje o wybranej przez użytkownika ramy czasowej na planie</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnScheduleDrop"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnScheduleDrop</b></span>
+                        <a href="#OnScheduleDrop"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnScheduleDrop(event: CdkDragDrop<CourseEdition[] | CourseEdition[] | CourseEdition>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="413"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:413</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragDrop&lt;CourseEdition[] | CourseEdition[] | CourseEdition&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie upuszczenia panelu z zajęciami w strefie</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnScheduleEnter"></a>
+                    <span class="name">
+                        <span ><b>OnScheduleEnter</b></span>
+                        <a href="#OnScheduleEnter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnScheduleEnter(drag: CdkDragEnter<CourseEdition[]>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="424"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:424</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>drag</td>
+                                    <td>
+                                            <code>CdkDragEnter&lt;CourseEdition[]&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie najechania panelu z zajęciami na strefę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnScheduleStart"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnScheduleStart</b></span>
+                        <a href="#OnScheduleStart"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnScheduleStart(event: CdkDragStart<CourseEdition>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="434"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:434</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>CdkDragStart&lt;CourseEdition&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Zdarzenie przeciągania panelu z zajęciami ze strefy</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnSelect"></a>
+                    <span class="name">
+                        <span ><b>OnSelect</b></span>
+                        <a href="#OnSelect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnSelect(event: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="454"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:454</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Informacje o wybranych zajęciach, ich stanie (czy są możliwe do modyfikowania w bieżącym widoku) i pozycji na planie</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnTabChange"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>OnTabChange</b></span>
+                        <a href="#OnTabChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>OnTabChange(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, isFirst: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="278"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:278</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w trakcie zmiany widoku planu.
+Powoduje zmianę filtra wyświetlanego planu oraz jego przeładowanie.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>index</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks zakładki w pasku</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>isFirst</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Określa czy dla załadowanego planu widok zmienia się po raz pierwszy</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OnTabLoaded"></a>
+                    <span class="name">
+                        <span ><b>OnTabLoaded</b></span>
+                        <a href="#OnTabLoaded"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>OnTabLoaded()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="323"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:323</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywoływana w momencie załadowania widoku planu zajęć.
+Jeśli potrzeba to nadpisuje stan pól w planie powodujących konflikty.
+Jeśli to możliwe to próbuje odszukać zaznaczone wcześniej zajęcia przez użytkownika.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PrintSchedule"></a>
+                    <span class="name">
+                        <span ><b>PrintSchedule</b></span>
+                        <a href="#PrintSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>PrintSchedule()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="373"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:373</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca otworzenie nowego okna z bieżącym widokiem planu w celu wydrukowania go.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectCourseIfPossible"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>selectCourseIfPossible</b></span>
+                        <a href="#selectCourseIfPossible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>selectCourseIfPossible()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:115</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSignalrSubscriptions"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>setSignalrSubscriptions</b></span>
+                        <a href="#setSignalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setSignalrSubscriptions()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="192"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:192</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda rozpoczynająca odbieranie bieżących informacji z centrum SignalR.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ShowScheduledChanges"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>ShowScheduledChanges</b></span>
+                        <a href="#ShowScheduledChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ShowScheduledChanges()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="492"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:492</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateBusyPeriods"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>updateBusyPeriods</b></span>
+                        <a href="#updateBusyPeriods"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateBusyPeriods()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="106"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:106</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateLockInMyCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>updateLockInMyCourses</b></span>
+                        <a href="#updateLockInMyCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateLockInMyCourses(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="171"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:171</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateLockInSchedule"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>updateLockInSchedule</b></span>
+                        <a href="#updateLockInSchedule"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateLockInSchedule(position: <a href="../classes/SchedulePosition.html" target="_self">SchedulePosition</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="183"
+                            class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:183</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca jej odpowiednik z serwisu <a href="../injectables/ScheduleInteractionService.html">ScheduleInteractionService</a>.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>position</td>
+                                    <td>
+                                                <code><a href="../classes/SchedulePosition.html" target="_self" >SchedulePosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connectionStatus"></a>
+                    <span class="name">
+                        <span ><b>connectionStatus</b></span>
+                        <a href="#connectionStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:70</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje o statusie połączenia z centrum.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="courseTypes"></a>
+                    <span class="name">
+                        <span ><b>courseTypes</b></span>
+                        <a href="#courseTypes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Map&lt;number | CourseType&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Kolekcja typów przedmiotów.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentFilter"></a>
+                    <span class="name">
+                        <span ><b>currentFilter</b></span>
+                        <a href="#currentFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:65</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Aktualny filtr widoku (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentTabIndex"></a>
+                    <span class="name">
+                        <span ><b>currentTabIndex</b></span>
+                        <a href="#currentTabIndex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:63</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indeks wybranego widoku.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="data"></a>
+                    <span class="name">
+                        <span ><b>data</b></span>
+                        <a href="#data"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ModifyingScheduleData.html" target="_self" >ModifyingScheduleData</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new ModifyingScheduleData()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Dane trybu modyfikacji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filter"></a>
+                    <span class="name">
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Filter.html" target="_self" >Filter</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Filtr początkowy</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isConnectedSubscription"></a>
+                    <span class="name">
+                        <span ><b>isConnectedSubscription</b></span>
+                        <a href="#isConnectedSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isModifying"></a>
+                    <span class="name">
+                        <span ><b>isModifying</b></span>
+                        <a href="#isModifying"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:46</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Określa czy tryb modyfikacji jest włączony.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:68</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informuje czy dane zostały załadowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="myCoursesComponent"></a>
+                    <span class="name">
+                        <span ><b>myCoursesComponent</b></span>
+                        <a href="#myCoursesComponent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Course.html" target="_self" >MyCoursesComponent</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(MyCoursesComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Instancja komponentu wyświetlającego nieułożone zajęcia na planie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="roomTypes"></a>
+                    <span class="name">
+                        <span ><b>roomTypes</b></span>
+                        <a href="#roomTypes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Map&lt;number | RoomType&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Kolekcja typów pokojów.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scheduleComponent"></a>
+                    <span class="name">
+                        <span ><b>scheduleComponent</b></span>
+                        <a href="#scheduleComponent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/ScheduleComponent.html" target="_self" >ScheduleComponent</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(ScheduleComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Instancja komponentu wyświetlającego bieżący plan zajęć.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="settings"></a>
+                    <span class="name">
+                        <span ><b>settings</b></span>
+                        <a href="#settings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/Settings.html" target="_self" >Settings</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Ustawienia aplikacji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signalrSubscriptions"></a>
+                    <span class="name">
+                        <span ><b>signalrSubscriptions</b></span>
+                        <a href="#signalrSubscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Utworzone subskrypcje odbierające powiadomienia z centrum SignalR.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tabLabels"></a>
+                    <span class="name">
+                        <span ><b>tabLabels</b></span>
+                        <a href="#tabLabels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:61</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tablica przechowująca etykiety poszczególnych widoków.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tabWeeks"></a>
+                    <span class="name">
+                        <span ><b>tabWeeks</b></span>
+                        <a href="#tabWeeks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[][]</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userInfo"></a>
+                    <span class="name">
+                        <span ><b>userInfo</b></span>
+                        <a href="#userInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/UserInfo.html" target="_self" >UserInfo</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/views/personal-schedule/personal-schedule.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Informacje o zalogowanym użytkowniku.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CdkDragDrop, CdkDragEnter, CdkDragRelease, CdkDragStart, transferArrayItem } from &#x27;@angular/cdk/drag-drop&#x27;;
+import { Component, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
+import { MatDialog } from &#x27;@angular/material/dialog&#x27;;
+import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+import { forkJoin, Subscription } from &#x27;rxjs&#x27;;
+import { skip } from &#x27;rxjs/operators&#x27;;
+import { MyCoursesComponent } from &#x27;src/app/components/my-courses/my-courses.component&#x27;;
+import { ScheduleComponent } from &#x27;src/app/components/schedule/schedule.component&#x27;;
+import { UserInfo } from &#x27;src/app/others/Accounts&#x27;;
+import { SchedulePosition } from &#x27;src/app/others/CommunicationObjects&#x27;;
+import { CourseEdition } from &#x27;src/app/others/CourseEdition&#x27;;
+import { ModifyingScheduleData } from &#x27;src/app/others/ModifyingScheduleData&#x27;;
+import { Settings } from &#x27;src/app/others/Settings&#x27;;
+import { CourseType, RoomType } from &#x27;src/app/others/Types&#x27;;
+import { ScheduleDesignerApiService } from &#x27;src/app/services/ScheduleDesignerApiService/schedule-designer-api.service&#x27;;
+import { SignalrService } from &#x27;src/app/services/SignalrService/signalr.service&#x27;;
+import { UsosApiService } from &#x27;src/app/services/UsosApiService/usos-api.service&#x27;;
+import { SelectViewComponent } from &#x27;src/app/components/select-view/select-view.component&#x27;;
+import { SelectViewDialogData, SelectViewDialogResult } from &#x27;src/app/others/dialogs/SelectViewDialogData&#x27;;
+import { Filter } from &#x27;src/app/others/Filter&#x27;;
+import { ScheduleInteractionService } from &#x27;src/app/services/ScheduleInteractionService/schedule-interaction.service&#x27;;
+import { HubConnectionState } from &#x27;@microsoft/signalr&#x27;;
+
+/**
+ * Komponent zawierający widok opcji Personal Schedule.
+ */
+@Component({
+  selector: &#x27;app-personal-schedule&#x27;,
+  templateUrl: &#x27;./personal-schedule.component.html&#x27;,
+  styleUrls: [&#x27;./personal-schedule.component.css&#x27;]
+})
+export class PersonalScheduleComponent implements OnInit {
+
+  /** Instancja komponentu wyświetlającego nieułożone zajęcia na planie. */
+  @ViewChild(MyCoursesComponent) myCoursesComponent!: MyCoursesComponent;
+  /** Instancja komponentu wyświetlającego bieżący plan zajęć. */
+  @ViewChild(ScheduleComponent) scheduleComponent!: ScheduleComponent;
+
+  /** Informacje o zalogowanym użytkowniku. */
+  userInfo: UserInfo
+  /** Dane trybu modyfikacji. */
+  data: ModifyingScheduleData &#x3D; new ModifyingScheduleData();
+  /** Określa czy tryb modyfikacji jest włączony. */
+  isModifying: boolean &#x3D; false;
+
+  /** Ustawienia aplikacji. */
+  settings: Settings;
+  /** Kolekcja typów przedmiotów. */
+  courseTypes: Map&lt;number, CourseType&gt;;
+  /** Kolekcja typów pokojów. */
+  roomTypes: Map&lt;number, RoomType&gt;;
+
+  /** Filtr początkowy */
+  filter: Filter;
+
+  /** Tablica przechowująca tygodnie, które dotyczą poszczególnych widoków. */
+  tabWeeks: number[][];
+  /** Tablica przechowująca etykiety poszczególnych widoków. */
+  tabLabels: string[];
+  /** Indeks wybranego widoku. */
+  currentTabIndex: number &#x3D; 0;
+  /** Aktualny filtr widoku (przechowuje informacje także o tym, czy widok powinien zostać przeładowany czy nie). */
+  currentFilter: {weeks: number[], filter: Filter, tabSwitched: boolean, editable: boolean};
+  
+  /** Informuje czy dane zostały załadowane. */
+  loading: boolean &#x3D; true;
+  /** Informuje o statusie połączenia z centrum. */
+  connectionStatus: boolean &#x3D; false;
+
+  /** Utworzone subskrypcje odbierające powiadomienia z centrum SignalR. */
+  signalrSubscriptions: Subscription[];
+  isConnectedSubscription: Subscription;
+
+  constructor(
+    private store: Store&lt;{userInfo: UserInfo}&gt;,
+    private signalrService: SignalrService,
+    private scheduleDesignerApiService: ScheduleDesignerApiService,
+    private usosApiService: UsosApiService,
+    private scheduleInteractionService: ScheduleInteractionService,
+    private snackBar: MatSnackBar,
+    private dialogService: MatDialog,
+    private router: Router
+  ) {
+    this.store.select(&#x27;userInfo&#x27;).subscribe((userInfo) &#x3D;&gt; {
+      if (userInfo.UserId &#x3D;&#x3D; 0) {
+        return;
+      }
+      this.userInfo &#x3D; userInfo;
+      this.filter &#x3D; new Filter([this.userInfo.UserId], [], []);
+      if (this.currentFilter) {
+        this.currentFilter &#x3D; {
+          weeks: this.currentFilter.weeks,
+          filter: this.filter,
+          tabSwitched: this.currentFilter.tabSwitched,
+          editable: this.currentFilter.editable
+        };
+      }
+    });
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  private updateBusyPeriods(): void {
+    this.scheduleInteractionService.updateBusyPeriods(
+      this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  private selectCourseIfPossible(): void {
+    this.scheduleInteractionService.selectCourseIfPossible(
+      this.data, this.tabWeeks, this.currentTabIndex, this.scheduleComponent
+    );
+  }
+
+  /**
+   * Metoda inicjalizująca pasek wyboru widoków planu.
+   */
+  private initializeTabs(): void {
+    this.tabLabels &#x3D; [&#x27;Semester&#x27;, &#x27;Even Weeks&#x27;, &#x27;Odd Weeks&#x27;, &#x27;Custom (1)&#x27;, &#x27;Custom (2)&#x27;];
+    this.tabWeeks &#x3D; [[],[],[],[],[]];
+    
+    for (let i:number &#x3D; 0; i &lt; this.settings.TermDurationWeeks; ++i) {
+      const weekNumber &#x3D; i + 1;
+      
+      this.tabLabels.push(&#x27;Week &#x27; + weekNumber);
+      
+      this.tabWeeks[0].push(weekNumber);
+      this.tabWeeks.push([weekNumber]);
+      if (weekNumber % 2 &#x3D;&#x3D; 0) {
+        this.tabWeeks[1].push(weekNumber);
+      } else {
+        this.tabWeeks[2].push(weekNumber);
+      }
+    }
+  }
+
+  /**
+   * Metoda inicjalizująca tabelę planu zajęć.
+   */
+  private initialize(): void {
+    const periods &#x3D; this.settings.Periods;
+    const numberOfSlots &#x3D; periods.length - 1;
+
+    this.settings.DayLabels &#x3D; [&#x27;Monday&#x27;, &#x27;Tuesday&#x27;, &#x27;Wednesday&#x27;, &#x27;Thursday&#x27;, &#x27;Friday&#x27;];
+    this.settings.TimeLabels &#x3D; [];
+    
+    for (let i:number &#x3D; 0; i &lt; numberOfSlots; ++i) {
+      this.settings.TimeLabels.push(
+        periods[i] + &#x27; - &#x27; + periods[i + 1]
+      );
+    }
+
+    this.data.scheduleSlotsValidity &#x3D; [];
+    for (let j:number &#x3D; 0; j &lt; 5; ++j) {
+      this.data.scheduleSlotsValidity.push([]);
+      for (let i:number &#x3D; 0; i &lt; numberOfSlots; ++i) {
+        this.data.scheduleSlotsValidity[j].push(false);
+      }
+    }
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  private updateLockInMyCourses(
+    courseId: number,
+    courseEditionId: number
+  ) {
+    this.scheduleInteractionService.updateLockInMyCourses(
+      courseId, courseEditionId, this.data, this.loading, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  private updateLockInSchedule(position:SchedulePosition) {
+    this.scheduleInteractionService.updateLockInSchedule(
+      position, this.data, this.isModifying, this.settings, this.scheduleComponent, this.loading, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda rozpoczynająca odbieranie bieżących informacji z centrum SignalR.
+   */
+  private setSignalrSubscriptions(): void {
+    this.signalrSubscriptions &#x3D; [];
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId, byAdmin}) &#x3D;&gt; {
+      this.updateLockInMyCourses(courseId, courseEditionId);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastUnlockedCourseEdition.pipe(skip(1)).subscribe(({courseId, courseEditionId}) &#x3D;&gt; {
+      this.updateLockInMyCourses(courseId, courseEditionId);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastLockedSchedulePositions.pipe(skip(1)).subscribe((lockedSchedulePositions) &#x3D;&gt; {
+      this.updateLockInSchedule(lockedSchedulePositions);
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastAddedSchedulePositions.pipe(skip(1)).subscribe((addedSchedulePositions) &#x3D;&gt; {
+      this.scheduleInteractionService.lastAddedSchedulePositionsReaction(
+        addedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
+      );
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastModifiedSchedulePositions.pipe(skip(1)).subscribe((modifiedSchedulePositions) &#x3D;&gt; {
+      this.scheduleInteractionService.lastModifiedSchedulePositionsReaction(
+        modifiedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.scheduleComponent, this.loading, this.snackBar
+      );
+    }));
+
+    this.signalrSubscriptions.push(this.signalrService.lastRemovedSchedulePositions.pipe(skip(1)).subscribe((removedSchedulePositions) &#x3D;&gt; {
+      this.scheduleInteractionService.lastRemovedSchedulePositionsReaction(
+        removedSchedulePositions, this.data, this.tabWeeks, this.currentTabIndex, this.loading
+      );
+    }));
+  }
+
+  /**
+   * Metoda przygotowująca komponent.
+   * Pobiera dane niezbędne do wyświetlenia widoku opcji (ustawienia aplikacji, typy przedmiotów, etykiety ram czasowych itp.).
+   * Rozpoczyna odbieranie bieżących informacji z centrum SignalR.
+   */
+  ngOnInit(): void {
+    this.isConnectedSubscription &#x3D; this.signalrService.isConnected.pipe(skip(1)).subscribe((status) &#x3D;&gt; {
+      this.connectionStatus &#x3D; status;
+      if (!status &amp;&amp; !this.signalrService.connectionIntentionallyStopped) {
+        this.snackBar.open(&quot;Connection with server has been lost. Please refresh the page to possibly reconnect.&quot;, &quot;OK&quot;);
+      }
+    });
+
+    this.setSignalrSubscriptions();
+
+    forkJoin([
+      this.scheduleDesignerApiService.GetSettings(),
+      this.scheduleDesignerApiService.GetPeriods(),
+      this.scheduleDesignerApiService.GetCourseTypes(),
+      this.scheduleDesignerApiService.GetRoomTypes()
+    ]).subscribe(([settings,periods,courseTypes,roomTypes]) &#x3D;&gt; {
+      this.connectionStatus &#x3D; this.signalrService.connection?.state &#x3D;&#x3D; HubConnectionState.Connected;
+
+      this.settings &#x3D; settings;
+      this.settings.Periods &#x3D; periods;
+      this.courseTypes &#x3D; courseTypes;
+      this.roomTypes &#x3D; roomTypes;
+
+      this.initializeTabs();
+      this.initialize();
+
+      this.loading &#x3D; false;
+
+      this.OnTabChange(0, true);
+    }, (error) &#x3D;&gt; {
+      if (error?.status &#x3D;&#x3D; 401) {
+        this.usosApiService.Deauthorize();
+
+        this.snackBar.open(&#x27;Session expired. Please log in again.&#x27;, &#x27;OK&#x27;);
+        this.router.navigate([&#x27;login&#x27;]);
+      } else if (!this.isConnectedSubscription.closed) {
+        this.snackBar.open(&quot;Connection with server failed. Please refresh the page to try again.&quot;, &quot;OK&quot;);
+      }
+    });
+  }
+
+  /**
+   * Metoda wywoływana w trakcie zmiany widoku planu.
+   * Powoduje zmianę filtra wyświetlanego planu oraz jego przeładowanie.
+   * @param index Indeks zakładki w pasku
+   * @param isFirst Określa czy dla załadowanego planu widok zmienia się po raz pierwszy
+   */
+  async OnTabChange(index: number, isFirst: boolean): Promise&lt;void&gt; {
+    var tabSwitched &#x3D; !isFirst;
+    this.currentFilter &#x3D; {
+      weeks: [],
+      filter: this.filter,
+      tabSwitched: tabSwitched, 
+      editable: false
+    };
+    
+    const previousIndex &#x3D; this.currentTabIndex;
+    this.currentTabIndex &#x3D; index;
+    
+    if (this.tabWeeks[index].length &#x3D;&#x3D; 0) {
+      var dialogData &#x3D; new SelectViewDialogData(
+        this.settings
+      );
+      
+      var dialog &#x3D; this.dialogService.open(SelectViewComponent, {
+        disableClose: true,
+        data: dialogData
+      });
+      var dialogResult: SelectViewDialogResult &#x3D; await dialog.afterClosed().toPromise();
+
+      if (dialogResult.SelectedWeeks.length &#x3D;&#x3D; 0) {
+        this.currentTabIndex &#x3D; previousIndex;
+        return;
+      }
+
+      this.tabWeeks[this.currentTabIndex] &#x3D; dialogResult.SelectedWeeks;
+      tabSwitched &#x3D; false;
+    }
+
+    this.currentFilter &#x3D; {
+      weeks: this.tabWeeks[this.currentTabIndex], 
+      filter: this.filter,
+      tabSwitched: tabSwitched, 
+      editable: (index &#x3D;&#x3D; 3 || index &#x3D;&#x3D; 4)
+    };
+  }
+
+  /**
+   * Metoda wywoływana w momencie załadowania widoku planu zajęć.
+   * Jeśli potrzeba to nadpisuje stan pól w planie powodujących konflikty.
+   * Jeśli to możliwe to próbuje odszukać zaznaczone wcześniej zajęcia przez użytkownika.
+   */
+  OnTabLoaded(): void {
+    this.updateBusyPeriods();
+    this.selectCourseIfPossible();
+  }
+
+  /**
+   * Metoda uruchamiająca okno dialogowe w celu zmiany utworzonego wcześniej widoku niestandardowego.
+   */
+  async OnEditView(): Promise&lt;void&gt; {
+    var dialogData &#x3D; new SelectViewDialogData(
+      this.settings
+    );
+    
+    var dialog &#x3D; this.dialogService.open(SelectViewComponent, {
+      disableClose: true,
+      data: dialogData
+    });
+    var dialogResult: SelectViewDialogResult &#x3D; await dialog.afterClosed().toPromise();
+
+    if (dialogResult.SelectedWeeks.length &#x3D;&#x3D; 0) {
+      return;
+    }
+
+    if (this.currentFilter.weeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;) 
+        &#x3D;&#x3D;&#x3D; dialogResult.SelectedWeeks.sort((a,b) &#x3D;&gt; a - b).join(&#x27;,&#x27;)) {
+          return;
+    }
+
+    this.tabWeeks[this.currentTabIndex] &#x3D; dialogResult.SelectedWeeks;
+
+    this.currentFilter &#x3D; {
+      weeks: dialogResult.SelectedWeeks,
+      filter: this.filter,
+      tabSwitched: false, 
+      editable: true
+    };
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  ModifySchedule() {
+    this.isModifying &#x3D; this.scheduleInteractionService.ModifySchedule(
+      this.data, this.isModifying
+    );
+  }
+
+  /**
+   * Metoda wywołująca otworzenie nowego okna z bieżącym widokiem planu w celu wydrukowania go.
+   */
+  PrintSchedule() {
+    if (this.scheduleComponent !&#x3D; null) {
+      this.scheduleComponent.PrintSchedule();
+    }
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie upuszczenia panelu z zajęciami w strefie
+   */
+  async OnMyCoursesDrop(event: CdkDragDrop&lt;CourseEdition[], CourseEdition[], CourseEdition&gt;): Promise&lt;void&gt; {
+    this.scheduleInteractionService.onMyCoursesDrop(
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.myCoursesComponent, this.scheduleComponent, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param drag Zdarzenie najechania panelu z zajęciami na strefę
+   */
+  OnMyCoursesEnter(drag: CdkDragEnter&lt;CourseEdition[]&gt;): void {
+    this.scheduleInteractionService.onMyCoursesEnter(
+      drag, this.data
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie przeciągania panelu z zajęciami ze strefy
+   */
+  async OnMyCoursesStart(event: CdkDragStart&lt;CourseEdition&gt;): Promise&lt;void&gt; {
+    this.scheduleInteractionService.onMyCoursesStart(
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, this.settings, this.myCoursesComponent, this.scheduleComponent, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie upuszczenia panelu z zajęciami w strefie
+   */
+  async OnScheduleDrop(event:CdkDragDrop&lt;CourseEdition[], CourseEdition[], CourseEdition&gt;): Promise&lt;void&gt; {
+    this.scheduleInteractionService.onScheduleDrop(
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, this.roomTypes, true, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin,
+      this.currentFilter.filter, this.scheduleComponent, this.myCoursesComponent, this.dialogService, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param drag Zdarzenie najechania panelu z zajęciami na strefę
+   */
+  OnScheduleEnter(drag: CdkDragEnter&lt;CourseEdition[]&gt;): void {
+    this.scheduleInteractionService.onScheduleEnter(
+      drag, this.data
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie przeciągania panelu z zajęciami ze strefy
+   */
+  async OnScheduleStart(event: CdkDragStart&lt;CourseEdition&gt;): Promise&lt;void&gt; {
+    this.scheduleInteractionService.onScheduleStart(
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, false, this.settings, this.scheduleComponent, this.snackBar
+    )
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Zdarzenie zakończenia przeciągania panelu z zajęciami
+   */
+  async OnRelease(event: CdkDragRelease&lt;CourseEdition&gt;): Promise&lt;void&gt; {
+    this.scheduleInteractionService.onRelease(
+      event, this.data, this.settings, this.scheduleComponent
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Informacje o wybranych zajęciach, ich stanie (czy są możliwe do modyfikowania w bieżącym widoku) i pozycji na planie
+   */
+  OnSelect(event: {courseEdition: CourseEdition, isDisabled: boolean, day: number, periodIndex: number}): void {
+    this.scheduleInteractionService.onSelect(
+      event, this.data, this.isModifying
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   * @param event Informacje o wybranej przez użytkownika ramy czasowej na planie
+   */
+  async OnRoomSelect(event: {day: number, periodIndex: number}): Promise&lt;void&gt; {
+    this.scheduleInteractionService.onRoomSelect(
+      event, this.data, this.tabWeeks, this.currentTabIndex, this.settings, 
+      this.roomTypes, true, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, this.currentFilter.filter, this.scheduleComponent, this.dialogService, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  async AddRoom(): Promise&lt;void&gt; {
+    this.scheduleInteractionService.addRoom(
+      this.data, this.roomTypes, this.dialogService, this.snackBar
+    )
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  async ChangeRoom(): Promise&lt;void&gt; {
+    this.scheduleInteractionService.changeRoom(
+      this.data, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, this.settings, this.roomTypes, true, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, this.currentFilter.filter, this.dialogService, this.snackBar
+    );
+  }
+  
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  async ShowScheduledChanges(): Promise&lt;void&gt; {
+    this.scheduleInteractionService.showScheduledChanges(
+      this.data, this.settings, null, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, this.isModifying, this.roomTypes, this.dialogService, this.snackBar
+    );
+  }
+
+  /**
+   * Metoda wywołująca jej odpowiednik z serwisu {@link ScheduleInteractionService}.
+   */
+  async Move(): Promise&lt;void&gt; {
+    this.scheduleInteractionService.move(
+      this.data, this.tabWeeks, this.currentTabIndex, this.userInfo.IsStaff &amp;&amp; this.userInfo.IsAdmin, this.settings, this.scheduleComponent, this.snackBar
+    );
+  }
+
+  CancelSelection(): void {
+    this.scheduleInteractionService.cancelSelection(
+      this.data
+    );
+  }
+
+  OnMouseEnter(event: {day: number, periodIndex: number}): void {
+    this.scheduleInteractionService.onMouseEnter(
+      event, this.data
+    )
+  }
+
+  OnMouseLeave(): void {
+    this.scheduleInteractionService.onMouseLeave(
+      this.data
+    );
+  }
+
+  ngOnDestroy() {
+    this.signalrSubscriptions.forEach(
+      subscription &#x3D;&gt; subscription.unsubscribe()
+    );
+    this.isConnectedSubscription.unsubscribe();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div *ngIf&#x3D;&quot;!loading &amp;&amp; connectionStatus; else spinner&quot;&gt;
+    &lt;mat-tab-group mat-align-tabs&#x3D;&quot;center&quot;
+        animationDuration&#x3D;&quot;0ms&quot; 
+        [selectedIndex]&#x3D;&quot;currentTabIndex&quot;
+        (selectedIndexChange)&#x3D;&quot;OnTabChange($event,false)&quot;
+    &gt;
+        &lt;mat-tab *ngFor&#x3D;&quot;let tabLabel of tabLabels; let tabIndex &#x3D; index&quot; label&#x3D;&quot;{{tabLabel}}&quot;
+            [disabled]&#x3D;&quot;data.currentSelectedCourseEdition !&#x3D; null &amp;&amp; data.currentSelectedCourseEdition?.CourseEdition?.Weeks?.length !&#x3D; tabWeeks[tabIndex].length&quot;
+        &gt;
+            &lt;ng-template matTabContent&gt;
+                &lt;div *ngIf&#x3D;&quot;!loading &amp;&amp; connectionStatus; else spinner&quot; class&#x3D;&quot;tabContent&quot;&gt;
+                    &lt;div class&#x3D;&quot;board&quot;&gt;
+                        &lt;app-my-courses
+                            [isModifying]&#x3D;&quot;isModifying&quot;
+                            [userInfo]&#x3D;&quot;userInfo&quot;
+                            [settings]&#x3D;&quot;settings&quot;
+                            [courseTypes]&#x3D;&quot;courseTypes&quot;
+                            [modifyingScheduleData]&#x3D;&quot;data&quot;
+                            [currentFilter]&#x3D;&quot;currentFilter&quot;
+
+                            (onDropEnter)&#x3D;&quot;OnMyCoursesEnter($event)&quot;
+                            (onDropped)&#x3D;&quot;OnMyCoursesDrop($event)&quot;
+                            (onStart)&#x3D;&quot;OnMyCoursesStart($event)&quot;
+                            (onRelease)&#x3D;&quot;OnRelease($event)&quot;
+                        &gt;&lt;/app-my-courses&gt;
+                        
+                        &lt;div class&#x3D;&quot;schedule-menu&quot;&gt;
+                            &lt;button mat-raised-button color&#x3D;&quot;accent&quot; 
+                                [disabled]&#x3D;&quot;!isModifying || data.currentDragEvent !&#x3D; null 
+                                    || data.currentRoomSelectionDialog !&#x3D; null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanAddRoom&quot;
+                                (click)&#x3D;&quot;AddRoom()&quot;
+                                &gt;
+                                    Add Room
+                            &lt;/button&gt;
+                            &lt;button mat-raised-button color&#x3D;&quot;accent&quot; 
+                                [disabled]&#x3D;&quot;!isModifying || data.currentDragEvent !&#x3D; null 
+                                    || data.currentRoomSelectionDialog !&#x3D; null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanChangeRoom&quot;
+                                (click)&#x3D;&quot;ChangeRoom()&quot;
+                                &gt;
+                                    Change Room
+                            &lt;/button&gt;
+                            &lt;button mat-raised-button color&#x3D;&quot;accent&quot; 
+                                [disabled]&#x3D;&quot;data.currentDragEvent !&#x3D; null 
+                                    || data.currentRoomSelectionDialog !&#x3D; null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanShowScheduledChanges&quot;
+                                (click)&#x3D;&quot;ShowScheduledChanges()&quot;
+                                &gt;
+                                    &lt;mat-icon&gt;schedule&lt;/mat-icon&gt;
+                                    {{isModifying ? &#x27;Manage&#x27; : &#x27;Show&#x27;}} Changes
+                            &lt;/button&gt;
+                            &lt;button mat-raised-button color&#x3D;&quot;accent&quot; 
+                                [disabled]&#x3D;&quot;!isModifying || data.currentDragEvent !&#x3D; null 
+                                    || data.currentRoomSelectionDialog !&#x3D; null 
+                                    || !data.currentSelectedCourseEdition?.CanMakeMove&quot;
+                                (click)&#x3D;&quot;Move()&quot;
+                                &gt;
+                                    {{data.currentSelectedCourseEdition?.IsMoving ? &#x27;Cancel&#x27; : &#x27;Make&#x27;}} Move
+                            &lt;/button&gt;
+                            &lt;button mat-raised-button color&#x3D;&quot;accent&quot; 
+                                [disabled]&#x3D;&quot;data.currentDragEvent !&#x3D; null 
+                                    || data.currentRoomSelectionDialog !&#x3D; null 
+                                    || data.currentSelectedCourseEdition?.IsMoving 
+                                    || !data.currentSelectedCourseEdition?.CanCancel&quot;
+                                (click)&#x3D;&quot;CancelSelection()&quot;
+                                &gt;
+                                    &lt;mat-icon&gt;cancel&lt;/mat-icon&gt;
+                                    Cancel Selection
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                        &lt;div class&#x3D;&quot;slot-selected&quot; [style.background]&#x3D;&quot;data.currentSelectedCourseEdition?.CourseEdition?.Type?.Color&quot;&gt;
+                            &lt;ng-container *ngIf&#x3D;&quot;data.currentSelectedCourseEdition !&#x3D; null&quot;&gt;
+                                {{data.currentSelectedCourseEdition.CourseEdition.Name}} - {{data.currentSelectedCourseEdition.CourseEdition.Type.Name}}&lt;br&gt;
+                                &lt;ng-container *ngIf&#x3D;&quot;data.currentSelectedCourseEdition.PeriodIndex &gt; -1 &amp;&amp; data.currentSelectedCourseEdition.Day &gt; -1&quot;&gt;
+                                    {{settings.DayLabels[data.currentSelectedCourseEdition.Day]}}: 
+                                    {{settings.TimeLabels[data.currentSelectedCourseEdition.PeriodIndex]}}
+                                    &lt;ng-container *ngIf&#x3D;&quot;data.currentSelectedCourseEdition.CourseEdition.Room !&#x3D; null&quot;&gt;
+                                        ({{data.currentSelectedCourseEdition.CourseEdition.Room.Name}})
+                                    &lt;/ng-container&gt;&lt;br&gt;
+                                &lt;/ng-container&gt;
+                                &lt;ng-container *ngIf&#x3D;&quot;data.currentSelectedCourseEdition.CourseEdition.Weeks !&#x3D; null&quot;&gt;
+                                    {{data.currentSelectedCourseEdition.CourseEdition.ShowFrequency(settings)}}
+                                &lt;/ng-container&gt;
+                            &lt;/ng-container&gt;
+                        &lt;/div&gt;
+                        &lt;div class&#x3D;&quot;slot-status&quot; [style.background]&#x3D;&quot;data.isCurrentMoveValid ? &#x27;#6ef84c&#x27; : ((data.isCurrentMoveValid !&#x3D; null) ? &#x27;#f86e4c&#x27; : &#x27;none&#x27;)&quot;&gt;
+                            {{data.isCurrentMoveValid ? &#x27;Correct movement&#x27; : ((data.isCurrentMoveValid !&#x3D; null) ? &#x27;Only scheduling&#x27; : &#x27;&#x27;)}}
+                        &lt;/div&gt;
+
+                        &lt;app-schedule
+                            labelBefore&#x3D;&quot;Personal&quot;
+
+                            [isModifying]&#x3D;&quot;isModifying&quot;
+                            [userInfo]&#x3D;&quot;userInfo&quot;
+                            [settings]&#x3D;&quot;settings&quot;
+                            [courseTypes]&#x3D;&quot;courseTypes&quot;
+                            [modifyingScheduleData]&#x3D;&quot;data&quot;
+                            [currentFilter]&#x3D;&quot;currentFilter&quot;
+
+                            (onStart)&#x3D;&quot;OnScheduleStart($event)&quot;
+                            (onRelease)&#x3D;&quot;OnRelease($event)&quot;
+                            (onCourseSelect)&#x3D;&quot;OnSelect($event)&quot;
+                            (onDropSelect)&#x3D;&quot;OnRoomSelect($event)&quot;
+                            (onDrop)&#x3D;&quot;OnScheduleDrop($event)&quot;
+                            (onDragEnter)&#x3D;&quot;OnScheduleEnter($event)&quot;
+                            (onMouseEnter)&#x3D;&quot;OnMouseEnter($event)&quot;
+                            (onMouseLeave)&#x3D;&quot;OnMouseLeave()&quot;
+
+                            (onLoaded)&#x3D;&quot;OnTabLoaded()&quot;
+                            (onViewEdit)&#x3D;&quot;OnEditView()&quot;
+                        &gt;&lt;/app-schedule&gt;
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;footer&quot;&gt;
+                        &lt;div class&#x3D;&quot;footer-resource&quot;&gt;
+                            &lt;b&gt;Selected resource: {{userInfo?.TitleBefore}} {{userInfo?.FirstName}} {{userInfo?.LastName}} {{userInfo?.TitleAfter}}&lt;/b&gt;
+                        &lt;/div&gt;
+                        &lt;div class&#x3D;&quot;footer-schedule-menu&quot;&gt;
+                            &lt;button mat-mini-fab color&#x3D;&quot;accent&quot; style&#x3D;&quot;margin-right: 1vw;&quot;
+                                (click)&#x3D;&quot;PrintSchedule()&quot;
+                                &gt;
+                                    &lt;mat-icon&gt;print&lt;/mat-icon&gt;
+                            &lt;/button&gt;
+                            &lt;button mat-raised-button color&#x3D;&quot;accent&quot;
+                                [disabled]&#x3D;&quot;data.currentSelectedCourseEdition?.IsMoving&quot;
+                                (click)&#x3D;&quot;ModifySchedule()&quot;
+                                &gt;
+                                    &lt;mat-icon&gt;{{isModifying ? &#x27;visibility&#x27; : &#x27;edit&#x27;}}&lt;/mat-icon&gt;
+                                    {{isModifying ? &#x27;View-Only Mode&#x27; : &#x27;Modification Mode&#x27;}}
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/ng-template&gt;
+        &lt;/mat-tab&gt;
+    &lt;/mat-tab-group&gt;
+&lt;/div&gt;
+
+&lt;ng-template #spinner&gt;
+    &lt;mat-progress-spinner
+        class&#x3D;&quot;spinner&quot;
+        mode&#x3D;&quot;indeterminate&quot;
+        diameter&#x3D;&quot;40&quot;
+    &gt;&lt;/mat-progress-spinner&gt;
+&lt;/ng-template&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./personal-schedule.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.tabContent {
+    text-align: center;
+    margin-top: 1.5vh;
+}
+
+.board {
+    height: 80vh;
+    margin-top: 1vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    margin-bottom: 1vh;
+}
+
+.schedule-menu {
+    text-align: center;
+    margin-left: 1%;
+    margin-right: 1%;
+    padding-bottom: 1vh;
+    margin-bottom: 1vh;
+    width: 50%;
+    height: 6vh;
+    float: left;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: #008b13;
+    overflow-y: auto;
+}
+
+.schedule-menu &gt; * {
+    margin-top: 1vh;
+    margin-right: 1vw;
+}
+
+.slot-selected {
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    padding-left: 1vw;
+    font-size: 11px;
+    border: 2px solid black;
+    color: black;
+    width: 25%;
+    height: 6vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.slot-status {
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    margin: auto;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    color: black;
+    width: 8%;
+    height: 6vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.footer {
+    display: inline;
+}
+
+.footer-resource {
+    display: flex;
+    float: left;
+    align-items: center;
+    justify-content: center;
+    width: 76%;
+    height: 5.5vh;
+    margin-left: 2vw;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: #43da57;
+    overflow-y: auto;
+}
+
+.footer-schedule-menu {
+    display: flex;
+    float: right;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 5.5vh;
+    margin-right: 2vw;
+    border: 2px solid black;
+    border-left: none;
+    box-sizing: border-box;
+    background-color: #008b13;
+    overflow-y: auto;
+}
+
+.spinner {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div *ngIf="!loading && connectionStatus; else spinner">    <mat-tab-group mat-align-tabs="center"        animationDuration="0ms"         [selectedIndex]="currentTabIndex"        (selectedIndexChange)="OnTabChange($event,false)"    >        <mat-tab *ngFor="let tabLabel of tabLabels; let tabIndex = index" label="{{tabLabel}}"            [disabled]="data.currentSelectedCourseEdition != null && data.currentSelectedCourseEdition?.CourseEdition?.Weeks?.length != tabWeeks[tabIndex].length"        >            <ng-template matTabContent>                <div *ngIf="!loading && connectionStatus; else spinner" class="tabContent">                    <div class="board">                        <app-my-courses                            [isModifying]="isModifying"                            [userInfo]="userInfo"                            [settings]="settings"                            [courseTypes]="courseTypes"                            [modifyingScheduleData]="data"                            [currentFilter]="currentFilter"                            (onDropEnter)="OnMyCoursesEnter($event)"                            (onDropped)="OnMyCoursesDrop($event)"                            (onStart)="OnMyCoursesStart($event)"                            (onRelease)="OnRelease($event)"                        ></app-my-courses>                                                <div class="schedule-menu">                            <button mat-raised-button color="accent"                                 [disabled]="!isModifying || data.currentDragEvent != null                                     || data.currentRoomSelectionDialog != null                                     || data.currentSelectedCourseEdition?.IsMoving                                     || !data.currentSelectedCourseEdition?.CanAddRoom"                                (click)="AddRoom()"                                >                                    Add Room                            </button>                            <button mat-raised-button color="accent"                                 [disabled]="!isModifying || data.currentDragEvent != null                                     || data.currentRoomSelectionDialog != null                                     || data.currentSelectedCourseEdition?.IsMoving                                     || !data.currentSelectedCourseEdition?.CanChangeRoom"                                (click)="ChangeRoom()"                                >                                    Change Room                            </button>                            <button mat-raised-button color="accent"                                 [disabled]="data.currentDragEvent != null                                     || data.currentRoomSelectionDialog != null                                     || data.currentSelectedCourseEdition?.IsMoving                                     || !data.currentSelectedCourseEdition?.CanShowScheduledChanges"                                (click)="ShowScheduledChanges()"                                >                                    <mat-icon>schedule</mat-icon>                                    {{isModifying ? \'Manage\' : \'Show\'}} Changes                            </button>                            <button mat-raised-button color="accent"                                 [disabled]="!isModifying || data.currentDragEvent != null                                     || data.currentRoomSelectionDialog != null                                     || !data.currentSelectedCourseEdition?.CanMakeMove"                                (click)="Move()"                                >                                    {{data.currentSelectedCourseEdition?.IsMoving ? \'Cancel\' : \'Make\'}} Move                            </button>                            <button mat-raised-button color="accent"                                 [disabled]="data.currentDragEvent != null                                     || data.currentRoomSelectionDialog != null                                     || data.currentSelectedCourseEdition?.IsMoving                                     || !data.currentSelectedCourseEdition?.CanCancel"                                (click)="CancelSelection()"                                >                                    <mat-icon>cancel</mat-icon>                                    Cancel Selection                            </button>                        </div>                        <div class="slot-selected" [style.background]="data.currentSelectedCourseEdition?.CourseEdition?.Type?.Color">                            <ng-container *ngIf="data.currentSelectedCourseEdition != null">                                {{data.currentSelectedCourseEdition.CourseEdition.Name}} - {{data.currentSelectedCourseEdition.CourseEdition.Type.Name}}<br>                                <ng-container *ngIf="data.currentSelectedCourseEdition.PeriodIndex > -1 && data.currentSelectedCourseEdition.Day > -1">                                    {{settings.DayLabels[data.currentSelectedCourseEdition.Day]}}:                                     {{settings.TimeLabels[data.currentSelectedCourseEdition.PeriodIndex]}}                                    <ng-container *ngIf="data.currentSelectedCourseEdition.CourseEdition.Room != null">                                        ({{data.currentSelectedCourseEdition.CourseEdition.Room.Name}})                                    </ng-container><br>                                </ng-container>                                <ng-container *ngIf="data.currentSelectedCourseEdition.CourseEdition.Weeks != null">                                    {{data.currentSelectedCourseEdition.CourseEdition.ShowFrequency(settings)}}                                </ng-container>                            </ng-container>                        </div>                        <div class="slot-status" [style.background]="data.isCurrentMoveValid ? \'#6ef84c\' : ((data.isCurrentMoveValid != null) ? \'#f86e4c\' : \'none\')">                            {{data.isCurrentMoveValid ? \'Correct movement\' : ((data.isCurrentMoveValid != null) ? \'Only scheduling\' : \'\')}}                        </div>                        <app-schedule                            labelBefore="Personal"                            [isModifying]="isModifying"                            [userInfo]="userInfo"                            [settings]="settings"                            [courseTypes]="courseTypes"                            [modifyingScheduleData]="data"                            [currentFilter]="currentFilter"                            (onStart)="OnScheduleStart($event)"                            (onRelease)="OnRelease($event)"                            (onCourseSelect)="OnSelect($event)"                            (onDropSelect)="OnRoomSelect($event)"                            (onDrop)="OnScheduleDrop($event)"                            (onDragEnter)="OnScheduleEnter($event)"                            (onMouseEnter)="OnMouseEnter($event)"                            (onMouseLeave)="OnMouseLeave()"                            (onLoaded)="OnTabLoaded()"                            (onViewEdit)="OnEditView()"                        ></app-schedule>                    </div>                    <div class="footer">                        <div class="footer-resource">                            <b>Selected resource: {{userInfo?.TitleBefore}} {{userInfo?.FirstName}} {{userInfo?.LastName}} {{userInfo?.TitleAfter}}</b>                        </div>                        <div class="footer-schedule-menu">                            <button mat-mini-fab color="accent" style="margin-right: 1vw;"                                (click)="PrintSchedule()"                                >                                    <mat-icon>print</mat-icon>                            </button>                            <button mat-raised-button color="accent"                                [disabled]="data.currentSelectedCourseEdition?.IsMoving"                                (click)="ModifySchedule()"                                >                                    <mat-icon>{{isModifying ? \'visibility\' : \'edit\'}}</mat-icon>                                    {{isModifying ? \'View-Only Mode\' : \'Modification Mode\'}}                            </button>                        </div>                    </div>                </div>            </ng-template>        </mat-tab>    </mat-tab-group></div><ng-template #spinner>    <mat-progress-spinner        class="spinner"        mode="indeterminate"        diameter="40"    ></mat-progress-spinner></ng-template></div>'
+    var COMPONENTS = [{'name': 'AddRoomSelectionComponent', 'selector': 'app-add-room-selection'},{'name': 'AdministratorPanelComponent', 'selector': 'app-administrator-panel'},{'name': 'AdminResourcesComponent', 'selector': 'app-admin-resources'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AuthenticatedComponent', 'selector': 'app-authenticated'},{'name': 'AvailableResourcesComponent', 'selector': 'app-available-resources'},{'name': 'ClearFieldComponent', 'selector': 'app-clear-field'},{'name': 'CourseComponent', 'selector': 'app-course'},{'name': 'CourseEditionFieldComponent', 'selector': 'app-course-edition-field'},{'name': 'CourseFieldComponent', 'selector': 'app-course-field'},{'name': 'CourseTypeFieldComponent', 'selector': 'app-course-type-field'},{'name': 'ExportFieldComponent', 'selector': 'app-export-field'},{'name': 'FullScheduleComponent', 'selector': 'app-full-schedule'},{'name': 'GroupFieldComponent', 'selector': 'app-group-field'},{'name': 'ImportFieldComponent', 'selector': 'app-import-field'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'MyCoursesComponent', 'selector': 'app-my-courses'},{'name': 'PersonalScheduleComponent', 'selector': 'app-personal-schedule'},{'name': 'ProfileComponent', 'selector': 'app-profile'},{'name': 'RoomFieldComponent', 'selector': 'app-room-field'},{'name': 'RoomSelectionComponent', 'selector': 'app-room-selection'},{'name': 'RoomTypeFieldComponent', 'selector': 'app-room-type-field'},{'name': 'ScheduleComponent', 'selector': 'app-schedule'},{'name': 'ScheduledChangesViewComponent', 'selector': 'app-scheduled-changes-view'},{'name': 'SelectViewComponent', 'selector': 'app-select-view'},{'name': 'SettingsFieldComponent', 'selector': 'app-settings-field'},{'name': 'StudentScheduleComponent', 'selector': 'app-student-schedule'},{'name': 'UserFieldComponent', 'selector': 'app-user-field'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'PersonalScheduleComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'PersonalScheduleComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,4288 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>schedule-designer-app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">schedule-designer-app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >SignalrService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/services/SignalrService/signalr.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Serwis odpowiadający za połączenie z centrum SignalR serwera.</p>
+
+            </p>
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#connection" >connection</a>
+                            </li>
+                            <li>
+                                <a href="#connectionInitializing" >connectionInitializing</a>
+                            </li>
+                            <li>
+                                <a href="#connectionIntentionallyStopped" >connectionIntentionallyStopped</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#connectionUrl" >connectionUrl</a>
+                            </li>
+                            <li>
+                                <a href="#isConnected" >isConnected</a>
+                            </li>
+                            <li>
+                                <a href="#lastAcceptedScheduledMove" >lastAcceptedScheduledMove</a>
+                            </li>
+                            <li>
+                                <a href="#lastAddedScheduledMove" >lastAddedScheduledMove</a>
+                            </li>
+                            <li>
+                                <a href="#lastAddedSchedulePositions" >lastAddedSchedulePositions</a>
+                            </li>
+                            <li>
+                                <a href="#lastLockedCourseEdition" >lastLockedCourseEdition</a>
+                            </li>
+                            <li>
+                                <a href="#lastLockedSchedulePositions" >lastLockedSchedulePositions</a>
+                            </li>
+                            <li>
+                                <a href="#lastModifiedSchedulePositions" >lastModifiedSchedulePositions</a>
+                            </li>
+                            <li>
+                                <a href="#lastRemovedScheduledMove" >lastRemovedScheduledMove</a>
+                            </li>
+                            <li>
+                                <a href="#lastRemovedSchedulePositions" >lastRemovedSchedulePositions</a>
+                            </li>
+                            <li>
+                                <a href="#lastResponse" >lastResponse</a>
+                            </li>
+                            <li>
+                                <a href="#lastUnlockedCourseEdition" >lastUnlockedCourseEdition</a>
+                            </li>
+                            <li>
+                                <a href="#lastUnlockedSchedulePositions" >lastUnlockedSchedulePositions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#AcceptProposition" >AcceptProposition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#AddScheduledMove" >AddScheduledMove</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#AddSchedulePositions" >AddSchedulePositions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#Disconnect" >Disconnect</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#GetAuthorizationHeader" >GetAuthorizationHeader</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#InitConnection" >InitConnection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockAllCoordinatorCourses" >LockAllCoordinatorCourses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockAllCourseEditions" >LockAllCourseEditions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockAllCourseEditionsForCourse" >LockAllCourseEditionsForCourse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockAllCoursesForGroupChange" >LockAllCoursesForGroupChange</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockAllGroupCourses" >LockAllGroupCourses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockCourseEdition" >LockCourseEdition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#LockSchedulePositions" >LockSchedulePositions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ModifySchedulePositions" >ModifySchedulePositions</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#RemoveScheduledMove" >RemoveScheduledMove</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#RemoveSchedulePositions" >RemoveSchedulePositions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#SetClientMethods" >SetClientMethods</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockAllCoordinatorCourses" >UnlockAllCoordinatorCourses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockAllCourseEditions" >UnlockAllCourseEditions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockAllCourseEditionsForCourse" >UnlockAllCourseEditionsForCourse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockAllCoursesForGroupChange" >UnlockAllCoursesForGroupChange</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockAllGroupCourses" >UnlockAllGroupCourses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockCourseEdition" >UnlockCourseEdition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#UnlockSchedulePositions" >UnlockSchedulePositions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:51</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>Konstruktor ustawiający początkowe wartości obiektów, które emitują zdarzenia w momencie zmiany ich wartości.</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AcceptProposition"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>AcceptProposition</b></span>
+                        <a href="#AcceptProposition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>AcceptProposition(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[], destRoomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destPeriodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destDay: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destWeeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="366"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:366</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zaakceptowania propozycji w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destRoomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destPeriodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destDay</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destWeeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/MessageObject.html" target="_self" >Observable&lt;MessageObject&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AddScheduledMove"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>AddScheduledMove</b></span>
+                        <a href="#AddScheduledMove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>AddScheduledMove(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[], destRoomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destPeriodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destDay: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destWeeks: number[], isProposition: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, message: string | null)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="302"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:302</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji dodania zaplanowanej zmiany lub propozycji w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destRoomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destPeriodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destDay</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destWeeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>isProposition</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Czy ruch jest propozycją</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>message</td>
+                                    <td>
+                                            <code>string | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Wiadomość załączona do propozycji</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/MessageObject.html" target="_self" >Observable&lt;MessageObject&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AddSchedulePositions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>AddSchedulePositions</b></span>
+                        <a href="#AddSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>AddSchedulePositions(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="234"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:234</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji dodania nowych pozycji na planie w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Disconnect"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>Disconnect</b></span>
+                        <a href="#Disconnect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Disconnect()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="548"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:548</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda rozłączająca z centrum SignalR.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GetAuthorizationHeader"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>GetAuthorizationHeader</b></span>
+                        <a href="#GetAuthorizationHeader"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>GetAuthorizationHeader(token: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:115</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Pobranie nagłówka autoryzującego.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Token dostępu</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/AccessToken.html" target="_self" >{ AccessToken: any; AccessTokenSecret: any; }</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Nagłówek autoryzujący</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="InitConnection"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>InitConnection</b></span>
+                        <a href="#InitConnection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>InitConnection()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:126</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ustanawiająca połączenie z centrum SignalR.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;void&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockAllCoordinatorCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockAllCoordinatorCourses</b></span>
+                        <a href="#LockAllCoordinatorCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockAllCoordinatorCourses(coordinatorId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="448"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:448</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania edycji zajęć i ich pozycji na planie, które dotyczą danego prowadzącego w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>coordinatorId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator prowadzącego</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockAllCourseEditions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockAllCourseEditions</b></span>
+                        <a href="#LockAllCourseEditions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockAllCourseEditions()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="389"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:389</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania wszystkich edycji zajęć w centrum.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockAllCourseEditionsForCourse"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockAllCourseEditionsForCourse</b></span>
+                        <a href="#LockAllCourseEditionsForCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockAllCourseEditionsForCourse(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="416"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:416</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania edycji zajęć dla konkretnego przedmiotu w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockAllCoursesForGroupChange"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockAllCoursesForGroupChange</b></span>
+                        <a href="#LockAllCoursesForGroupChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockAllCoursesForGroupChange(originGroupId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destinationGroupId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="518"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:518</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania edycji zajęć i ich pozycji na planie,
+które dotyczą pierwszej grupy i jej grup podrzędnych oraz drugiej grupy i jej grup nadrzędnych w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>originGroupId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator grupy źródłowej</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destinationGroupId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator grupy docelowej</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockAllGroupCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockAllGroupCourses</b></span>
+                        <a href="#LockAllGroupCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockAllGroupCourses(groupId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="483"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:483</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania edycji zajęć i ich pozycji na planie,
+które dotyczą danego grupy (i jej grup nadrzędnych i podrzędnych) w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>groupId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator grupy</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockCourseEdition"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockCourseEdition</b></span>
+                        <a href="#LockCourseEdition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockCourseEdition(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="167"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:167</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania edycji zajęć w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/MessageObject.html" target="_self" >Observable&lt;MessageObject&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LockSchedulePositions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>LockSchedulePositions</b></span>
+                        <a href="#LockSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>LockSchedulePositions(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="184"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:184</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji zablokowania pozycji na planie w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Tygodnie, które mają być wzięte pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ModifySchedulePositions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ModifySchedulePositions</b></span>
+                        <a href="#ModifySchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ModifySchedulePositions(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[], destRoomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destPeriodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destDay: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destWeeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="257"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:257</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji wprowadzenia zmian na planie w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destRoomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destPeriodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destDay</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destWeeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="737"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:737</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RemoveScheduledMove"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>RemoveScheduledMove</b></span>
+                        <a href="#RemoveScheduledMove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>RemoveScheduledMove(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[], destRoomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destPeriodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destDay: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destWeeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="335"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:335</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji usunięcia zaplanowanej zmiany lub propozycji w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Źródłowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destRoomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destPeriodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destDay</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowy indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destWeeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Docelowe tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/MessageObject.html" target="_self" >Observable&lt;MessageObject&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RemoveSchedulePositions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>RemoveSchedulePositions</b></span>
+                        <a href="#RemoveSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>RemoveSchedulePositions(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="278"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:278</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji usunięcia pozycji z planu w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Tygodnie, które będą brane pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SetClientMethods"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>SetClientMethods</b></span>
+                        <a href="#SetClientMethods"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>SetClientMethods()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="558"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:558</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda ustawiająca reakcje na odebranie poszczególnych informacji z centrum SignalR.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockAllCoordinatorCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockAllCoordinatorCourses</b></span>
+                        <a href="#UnlockAllCoordinatorCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockAllCoordinatorCourses(coordinatorId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="465"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:465</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania edycji zajęć i ich pozycji na planie, które dotyczą danego prowadzącego w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>coordinatorId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator prowadzącego</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockAllCourseEditions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockAllCourseEditions</b></span>
+                        <a href="#UnlockAllCourseEditions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockAllCourseEditions()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="402"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:402</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania wszystkich edycji zajęć w centrum.</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockAllCourseEditionsForCourse"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockAllCourseEditionsForCourse</b></span>
+                        <a href="#UnlockAllCourseEditionsForCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockAllCourseEditionsForCourse(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="431"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:431</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania edycji zajęć dla konkretnego przedmiotu w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockAllCoursesForGroupChange"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockAllCoursesForGroupChange</b></span>
+                        <a href="#UnlockAllCoursesForGroupChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockAllCoursesForGroupChange(originGroupId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, destinationGroupId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="535"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:535</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania edycji zajęć i ich pozycji na planie,
+które dotyczą pierwszej grupy i jej grup podrzędnych oraz drugiej grupy i jej grup nadrzędnych w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>originGroupId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator grupy źródłowej</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>destinationGroupId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator grupy docelowej</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockAllGroupCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockAllGroupCourses</b></span>
+                        <a href="#UnlockAllGroupCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockAllGroupCourses(groupId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="501"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:501</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania edycji zajęć i ich pozycji na planie,
+które dotyczą danego grupy (i jej grup nadrzędnych i podrzędnych) w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>groupId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator grupy</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockCourseEdition"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockCourseEdition</b></span>
+                        <a href="#UnlockCourseEdition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockCourseEdition(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, courseEditionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="199"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:199</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania edycji zajęć w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID przedmiotu</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>courseEditionId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>ID edycji zajęć</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/MessageObject.html" target="_self" >Observable&lt;MessageObject&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UnlockSchedulePositions"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>UnlockSchedulePositions</b></span>
+                        <a href="#UnlockSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>UnlockSchedulePositions(roomId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, periodIndex: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, day: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, weeks: number[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="216"
+                            class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:216</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Metoda wywołująca wykonanie operacji odblokowania pozycji na planie w centrum.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>roomId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Identyfikator pokoju</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>periodIndex</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks okienka czasowego w ciągu dnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>day</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Indeks dnia tygodnia</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>weeks</td>
+                                    <td>
+                                            <code>number[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Tygodnie, które mają być wzięte pod uwagę</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Strumień emitujący odpowiedź centrum na wywołanie operacji</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connection"></a>
+                    <span class="name">
+                        <span ><b>connection</b></span>
+                        <a href="#connection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>signalr.HubConnection</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:20</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Reprezentacja połączenia z centrum SignalR.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connectionInitializing"></a>
+                    <span class="name">
+                        <span ><b>connectionInitializing</b></span>
+                        <a href="#connectionInitializing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:24</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Czy połączenie z centrum jest inicjowane.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connectionIntentionallyStopped"></a>
+                    <span class="name">
+                        <span ><b>connectionIntentionallyStopped</b></span>
+                        <a href="#connectionIntentionallyStopped"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:22</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Czy rozłączenie z centrum było celowe.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="connectionUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>connectionUrl</b></span>
+                        <a href="#connectionUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>environment.baseSignalrUrl</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isConnected"></a>
+                    <span class="name">
+                        <span ><b>isConnected</b></span>
+                        <a href="#isConnected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;boolean&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:27</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat stanu połączenia z centrum.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastAcceptedScheduledMove"></a>
+                    <span class="name">
+                        <span ><b>lastAcceptedScheduledMove</b></span>
+                        <a href="#lastAcceptedScheduledMove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:48</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio zaakceptowanej propozycji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastAddedScheduledMove"></a>
+                    <span class="name">
+                        <span ><b>lastAddedScheduledMove</b></span>
+                        <a href="#lastAddedScheduledMove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:44</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio dodanego zaplanowanego ruchu lub propozycji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastAddedSchedulePositions"></a>
+                    <span class="name">
+                        <span ><b>lastAddedSchedulePositions</b></span>
+                        <a href="#lastAddedSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;AddedSchedulePositions&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio dodanych pozycji na planie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastLockedCourseEdition"></a>
+                    <span class="name">
+                        <span ><b>lastLockedCourseEdition</b></span>
+                        <a href="#lastLockedCourseEdition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:29</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio zablokowanej edycji zajęć.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastLockedSchedulePositions"></a>
+                    <span class="name">
+                        <span ><b>lastLockedSchedulePositions</b></span>
+                        <a href="#lastLockedSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/SchedulePosition.html" target="_self" >BehaviorSubject&lt;SchedulePosition&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:31</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio zablokowanych pozycji w planie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastModifiedSchedulePositions"></a>
+                    <span class="name">
+                        <span ><b>lastModifiedSchedulePositions</b></span>
+                        <a href="#lastModifiedSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;ModifiedSchedulePositions&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:39</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnich zmian w planie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastRemovedScheduledMove"></a>
+                    <span class="name">
+                        <span ><b>lastRemovedScheduledMove</b></span>
+                        <a href="#lastRemovedScheduledMove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:46</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio usuniętego zaplanowanego ruchu lub propozycji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastRemovedSchedulePositions"></a>
+                    <span class="name">
+                        <span ><b>lastRemovedSchedulePositions</b></span>
+                        <a href="#lastRemovedSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;RemovedSchedulePositions&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:41</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio usuniętych zajęciach z planu.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastResponse"></a>
+                    <span class="name">
+                        <span ><b>lastResponse</b></span>
+                        <a href="#lastResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/MessageObject.html" target="_self" >BehaviorSubject&lt;MessageObject&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:51</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatniej odpowiedzi o statusie wykonanej operacji.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastUnlockedCourseEdition"></a>
+                    <span class="name">
+                        <span ><b>lastUnlockedCourseEdition</b></span>
+                        <a href="#lastUnlockedCourseEdition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>BehaviorSubject&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:33</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio odblokowanej edycji zajęć.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastUnlockedSchedulePositions"></a>
+                    <span class="name">
+                        <span ><b>lastUnlockedSchedulePositions</b></span>
+                        <a href="#lastUnlockedSchedulePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/SchedulePosition.html" target="_self" >BehaviorSubject&lt;SchedulePosition&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/services/SignalrService/signalr.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Strumień, który przechowuje najnowszą informację na temat ostatnio odblokowanych pozycji w planie.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, OnDestroy } from &#x27;@angular/core&#x27;;
+import * as signalr from &#x27;@microsoft/signalr&#x27;;
+import { BehaviorSubject, from, Observable } from &#x27;rxjs&#x27;;
+import { map } from &#x27;rxjs/operators&#x27;;
+import { AccessToken } from &#x27;src/app/others/AccessToken&#x27;;
+import { AddedSchedulePositions, MessageObject, ModifiedSchedulePositions, RemovedSchedulePositions, SchedulePosition } from &#x27;src/app/others/CommunicationObjects&#x27;;
+import { ScheduledMove } from &#x27;src/app/others/ScheduledMove&#x27;;
+import { environment } from &#x27;src/environments/environment&#x27;;
+
+/**
+ * Serwis odpowiadający za połączenie z centrum SignalR serwera.
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;
+})
+export class SignalrService implements OnDestroy {
+  readonly connectionUrl &#x3D; environment.baseSignalrUrl;
+  
+  /** Reprezentacja połączenia z centrum SignalR. */
+  connection:signalr.HubConnection;
+  /** Czy rozłączenie z centrum było celowe. */
+  connectionIntentionallyStopped:boolean &#x3D; false;
+  /** Czy połączenie z centrum jest inicjowane. */
+  connectionInitializing:boolean &#x3D; false;
+  
+  /** Strumień, który przechowuje najnowszą informację na temat stanu połączenia z centrum. */
+  isConnected:BehaviorSubject&lt;boolean&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio zablokowanej edycji zajęć. */
+  lastLockedCourseEdition:BehaviorSubject&lt;{courseId:number, courseEditionId:number, byAdmin:boolean}&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio zablokowanych pozycji w planie. */
+  lastLockedSchedulePositions:BehaviorSubject&lt;SchedulePosition&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio odblokowanej edycji zajęć. */
+  lastUnlockedCourseEdition:BehaviorSubject&lt;{courseId:number, courseEditionId:number}&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio odblokowanych pozycji w planie. */
+  lastUnlockedSchedulePositions:BehaviorSubject&lt;SchedulePosition&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio dodanych pozycji na planie. */
+  lastAddedSchedulePositions:BehaviorSubject&lt;AddedSchedulePositions&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnich zmian w planie. */
+  lastModifiedSchedulePositions:BehaviorSubject&lt;ModifiedSchedulePositions&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio usuniętych zajęciach z planu. */
+  lastRemovedSchedulePositions:BehaviorSubject&lt;RemovedSchedulePositions&gt;
+
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio dodanego zaplanowanego ruchu lub propozycji. */
+  lastAddedScheduledMove:BehaviorSubject&lt;{scheduledMove:ScheduledMove, sourceSchedulePosition:SchedulePosition}&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio usuniętego zaplanowanego ruchu lub propozycji. */
+  lastRemovedScheduledMove:BehaviorSubject&lt;{moveId:number, sourceSchedulePosition:SchedulePosition}&gt;
+  /** Strumień, który przechowuje najnowszą informację na temat ostatnio zaakceptowanej propozycji. */
+  lastAcceptedScheduledMove:BehaviorSubject&lt;{moveId:number, sourceSchedulePosition:SchedulePosition}&gt;
+
+  /** Strumień, który przechowuje najnowszą informację na temat ostatniej odpowiedzi o statusie wykonanej operacji. */
+  lastResponse:BehaviorSubject&lt;MessageObject&gt;
+
+  /**
+   * Konstruktor ustawiający początkowe wartości obiektów, które emitują zdarzenia w momencie zmiany ich wartości.
+   */
+  constructor() {
+    this.isConnected &#x3D; new BehaviorSubject&lt;boolean&gt;(false);
+    
+    this.lastLockedCourseEdition &#x3D; new BehaviorSubject&lt;{courseId:number, courseEditionId:number, byAdmin:boolean}&gt;(
+      {courseId: -1,courseEditionId: -1,byAdmin: false}
+    );
+    
+    this.lastLockedSchedulePositions &#x3D; new BehaviorSubject&lt;SchedulePosition&gt;(
+      new SchedulePosition(-1,-1,-1,-1,-1,[])
+    );
+    
+    this.lastUnlockedCourseEdition &#x3D; new BehaviorSubject&lt;{courseId:number, courseEditionId:number}&gt;(
+      {courseId: -1,courseEditionId: -1}
+    );
+
+    this.lastUnlockedSchedulePositions &#x3D; new BehaviorSubject&lt;SchedulePosition&gt;(
+      new SchedulePosition(-1,-1,-1,-1,-1,[])
+    );
+    
+    this.lastAddedSchedulePositions &#x3D; new BehaviorSubject&lt;AddedSchedulePositions&gt;(
+      new AddedSchedulePositions([],-1,[], new SchedulePosition(-1,-1,-1,-1,-1,[]))
+    );
+    
+    this.lastModifiedSchedulePositions &#x3D; new BehaviorSubject&lt;ModifiedSchedulePositions&gt;(
+      new ModifiedSchedulePositions([],-1,[],
+      new SchedulePosition(-1,-1,-1,-1,-1,[]),
+      new SchedulePosition(-1,-1,-1,-1,-1,[]),
+      [])
+    );
+    
+    this.lastRemovedSchedulePositions &#x3D; new BehaviorSubject&lt;RemovedSchedulePositions&gt;(
+      new RemovedSchedulePositions(
+        [],-1,[],
+        new SchedulePosition(-1,-1,-1,-1,-1,[]),
+        [])
+    );
+
+    this.lastAddedScheduledMove &#x3D; new BehaviorSubject&lt;{scheduledMove:ScheduledMove, sourceSchedulePosition:SchedulePosition}&gt;(
+      {scheduledMove: new ScheduledMove(-1,-1,true),sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
+    );
+
+    this.lastRemovedScheduledMove &#x3D; new BehaviorSubject&lt;{moveId:number, sourceSchedulePosition:SchedulePosition}&gt;(
+      {moveId: -1,sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
+    );
+
+    this.lastAcceptedScheduledMove &#x3D; new BehaviorSubject&lt;{moveId:number, sourceSchedulePosition:SchedulePosition}&gt;(
+      {moveId: -1,sourceSchedulePosition: new SchedulePosition(-1,-1,-1,-1,-1,[])}
+    );
+
+    this.lastResponse &#x3D; new BehaviorSubject&lt;MessageObject&gt;(
+      new MessageObject(-1)
+    );
+  }
+
+  /**
+   * Pobranie nagłówka autoryzującego.
+   * @param token Token dostępu
+   * @returns Nagłówek autoryzujący
+   */
+  private GetAuthorizationHeader(token:any) {
+    return {
+      &quot;AccessToken&quot;: token.key,
+      &quot;AccessTokenSecret&quot;: token.secret
+    };
+  }
+
+  /**
+   * Metoda ustanawiająca połączenie z centrum SignalR.
+   * @returns 
+   */
+  public InitConnection(): Observable&lt;void&gt; {
+    return new Observable((observer) &#x3D;&gt; {
+      this.connectionIntentionallyStopped &#x3D; false;
+      this.connectionInitializing &#x3D; true;
+      
+      if (this.connection?.state &#x3D;&#x3D; &quot;Connected&quot;) {
+        observer.next();
+        observer.complete();
+        return;
+      }
+      var accessToken &#x3D; AccessToken.Retrieve();
+
+      this.connection &#x3D; new signalr.HubConnectionBuilder()
+        .withUrl(this.connectionUrl, {
+          transport: signalr.HttpTransportType.LongPolling,
+          headers: this.GetAuthorizationHeader(accessToken),
+        }).build();
+
+      this.SetClientMethods();
+
+      this.connection
+        .start()
+        .then(() &#x3D;&gt; {
+          this.isConnected.next(true);
+          this.connectionInitializing &#x3D; false;
+          observer.next();
+          observer.complete();
+        })
+        .catch(() &#x3D;&gt; {
+          this.connectionInitializing &#x3D; false;
+          observer.error({status: -1});
+        });
+    });
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania edycji zajęć w centrum.
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockCourseEdition(courseId:number, courseEditionId:number):Observable&lt;MessageObject&gt; {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockCourseEdition&#x27;, courseId, courseEditionId))
+    .pipe(map((result : any) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(result.statusCode);
+      message.Message &#x3D; result.message;
+      return message;
+    }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania pozycji na planie w centrum.
+   * @param roomId Identyfikator pokoju
+   * @param periodIndex Indeks okienka czasowego w ciągu dnia
+   * @param day Indeks dnia tygodnia
+   * @param weeks Tygodnie, które mają być wzięte pod uwagę
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockSchedulePositions(roomId:number, periodIndex:number, day:number, weeks:number[]) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockSchedulePositions&#x27;, roomId, periodIndex, day, weeks))
+    .pipe(map((result : any) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(result.statusCode);
+      message.Message &#x3D; result.message;
+      return message;
+    }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania edycji zajęć w centrum.
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockCourseEdition(courseId:number, courseEditionId:number):Observable&lt;MessageObject&gt; {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockCourseEdition&#x27;, courseId, courseEditionId))
+    .pipe(map((result : any) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(result.statusCode);
+      message.Message &#x3D; result.message;
+      return message;
+    }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania pozycji na planie w centrum.
+   * @param roomId Identyfikator pokoju
+   * @param periodIndex Indeks okienka czasowego w ciągu dnia
+   * @param day Indeks dnia tygodnia
+   * @param weeks Tygodnie, które mają być wzięte pod uwagę
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockSchedulePositions(roomId:number, periodIndex:number, day:number, weeks:number[]) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockSchedulePositions&#x27;, roomId, periodIndex, day, weeks))
+    .pipe(map((result : any) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(result.statusCode);
+      message.Message &#x3D; result.message;
+      return message;
+    }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji dodania nowych pozycji na planie w centrum.
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @param roomId Identyfikator pokoju
+   * @param periodIndex Indeks okienka czasowego w ciągu dnia
+   * @param day Indeks dnia tygodnia
+   * @param weeks Tygodnie, które będą brane pod uwagę
+   */
+  public AddSchedulePositions(
+    courseId:number,
+    courseEditionId:number,
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[]
+  ):void {
+    this.connection.invoke(&#x27;AddSchedulePositions&#x27;, 
+      courseId, courseEditionId, roomId, periodIndex, day, weeks);
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji wprowadzenia zmian na planie w centrum.
+   * @param roomId Źródłowy identyfikator pokoju
+   * @param periodIndex Źródłowy indeks okienka czasowego w ciągu dnia
+   * @param day Źródłowy indeks dnia tygodnia
+   * @param weeks Źródłowe tygodnie, które będą brane pod uwagę
+   * @param destRoomId Docelowy identyfikator pokoju
+   * @param destPeriodIndex Docelowy indeks okienka czasowego w ciągu dnia
+   * @param destDay Docelowy indeks dnia tygodnia
+   * @param destWeeks Docelowe tygodnie, które będą brane pod uwagę
+   */
+  public ModifySchedulePositions(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[]
+  ):void {
+    this.connection.invoke(&#x27;ModifySchedulePositions&#x27;,
+      roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks);
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji usunięcia pozycji z planu w centrum.
+   * @param roomId Identyfikator pokoju
+   * @param periodIndex Indeks okienka czasowego w ciągu dnia
+   * @param day Indeks dnia tygodnia
+   * @param weeks Tygodnie, które będą brane pod uwagę
+   */
+  public RemoveSchedulePositions(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[]
+  ):void {
+    this.connection.invoke(&#x27;RemoveSchedulePositions&#x27;,
+      roomId, periodIndex, day, weeks);
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji dodania zaplanowanej zmiany lub propozycji w centrum.
+   * @param roomId Źródłowy identyfikator pokoju
+   * @param periodIndex Źródłowy indeks okienka czasowego w ciągu dnia
+   * @param day Źródłowy indeks dnia tygodnia
+   * @param weeks Źródłowe tygodnie, które będą brane pod uwagę
+   * @param destRoomId Docelowy identyfikator pokoju
+   * @param destPeriodIndex Docelowy indeks okienka czasowego w ciągu dnia
+   * @param destDay Docelowy indeks dnia tygodnia
+   * @param destWeeks Docelowe tygodnie, które będą brane pod uwagę
+   * @param isProposition Czy ruch jest propozycją
+   * @param message Wiadomość załączona do propozycji
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public AddScheduledMove(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[],
+    isProposition:boolean,
+    message:string|null
+  ):Observable&lt;MessageObject&gt; {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;AddScheduledMove&#x27;, 
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks, isProposition, message))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji usunięcia zaplanowanej zmiany lub propozycji w centrum.
+   * @param roomId Źródłowy identyfikator pokoju
+   * @param periodIndex Źródłowy indeks okienka czasowego w ciągu dnia
+   * @param day Źródłowy indeks dnia tygodnia
+   * @param weeks Źródłowe tygodnie, które będą brane pod uwagę
+   * @param destRoomId Docelowy identyfikator pokoju
+   * @param destPeriodIndex Docelowy indeks okienka czasowego w ciągu dnia
+   * @param destDay Docelowy indeks dnia tygodnia
+   * @param destWeeks Docelowe tygodnie, które będą brane pod uwagę
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public RemoveScheduledMove(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[]
+  ):Observable&lt;MessageObject&gt; {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;RemoveScheduledMove&#x27;, 
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zaakceptowania propozycji w centrum.
+   * @param roomId Źródłowy identyfikator pokoju
+   * @param periodIndex Źródłowy indeks okienka czasowego w ciągu dnia
+   * @param day Źródłowy indeks dnia tygodnia
+   * @param weeks Źródłowe tygodnie, które będą brane pod uwagę
+   * @param destRoomId Docelowy identyfikator pokoju
+   * @param destPeriodIndex Docelowy indeks okienka czasowego w ciągu dnia
+   * @param destDay Docelowy indeks dnia tygodnia
+   * @param destWeeks Docelowe tygodnie, które będą brane pod uwagę
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public AcceptProposition(
+    roomId:number,
+    periodIndex:number,
+    day:number,
+    weeks:number[],
+    destRoomId:number,
+    destPeriodIndex:number,
+    destDay:number,
+    destWeeks:number[]
+  ):Observable&lt;MessageObject&gt; {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;AcceptProposition&#x27;, 
+    roomId, periodIndex, day, weeks, destRoomId, destPeriodIndex, destDay, destWeeks))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania wszystkich edycji zajęć w centrum.
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockAllCourseEditions() {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockAllCourseEditions&#x27;))
+    .pipe(map((result : any) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(result.statusCode);
+      message.Message &#x3D; result.message;
+      return message;
+    }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania wszystkich edycji zajęć w centrum.
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockAllCourseEditions() {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockAllCourseEditions&#x27;))
+    .pipe(map((result : any) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(result.statusCode);
+      message.Message &#x3D; result.message;
+      return message;
+    }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania edycji zajęć dla konkretnego przedmiotu w centrum.
+   * @param courseId ID przedmiotu
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockAllCourseEditionsForCourse(courseId: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockAllCourseEditionsForCourse&#x27;, 
+    courseId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania edycji zajęć dla konkretnego przedmiotu w centrum.
+   * @param courseId ID przedmiotu
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockAllCourseEditionsForCourse(courseId: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockAllCourseEditionsForCourse&#x27;, 
+    courseId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania edycji zajęć i ich pozycji na planie, które dotyczą danego prowadzącego w centrum.
+   * @param coordinatorId Identyfikator prowadzącego
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockAllCoordinatorCourses(coordinatorId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockAllCoordinatorCourses&#x27;, 
+    coordinatorId, courseId, courseEditionId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania edycji zajęć i ich pozycji na planie, które dotyczą danego prowadzącego w centrum.
+   * @param coordinatorId Identyfikator prowadzącego
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockAllCoordinatorCourses(coordinatorId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockAllCoordinatorCourses&#x27;, 
+    coordinatorId, courseId, courseEditionId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania edycji zajęć i ich pozycji na planie, 
+   * które dotyczą danego grupy (i jej grup nadrzędnych i podrzędnych) w centrum.
+   * @param groupId Identyfikator grupy
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockAllGroupCourses(groupId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockAllGroupCourses&#x27;, 
+    groupId, courseId, courseEditionId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania edycji zajęć i ich pozycji na planie, 
+   * które dotyczą danego grupy (i jej grup nadrzędnych i podrzędnych) w centrum.
+   * @param groupId Identyfikator grupy
+   * @param courseId ID przedmiotu
+   * @param courseEditionId ID edycji zajęć
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockAllGroupCourses(groupId: number, courseId: number, courseEditionId: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockAllGroupCourses&#x27;, 
+    groupId, courseId, courseEditionId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji zablokowania edycji zajęć i ich pozycji na planie, 
+   * które dotyczą pierwszej grupy i jej grup podrzędnych oraz drugiej grupy i jej grup nadrzędnych w centrum.
+   * @param originGroupId Identyfikator grupy źródłowej
+   * @param destinationGroupId Identyfikator grupy docelowej
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public LockAllCoursesForGroupChange(originGroupId: number, destinationGroupId?: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;LockAllCoursesForGroupChange&#x27;, 
+    originGroupId, destinationGroupId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda wywołująca wykonanie operacji odblokowania edycji zajęć i ich pozycji na planie, 
+   * które dotyczą pierwszej grupy i jej grup podrzędnych oraz drugiej grupy i jej grup nadrzędnych w centrum.
+   * @param originGroupId Identyfikator grupy źródłowej
+   * @param destinationGroupId Identyfikator grupy docelowej
+   * @returns Strumień emitujący odpowiedź centrum na wywołanie operacji
+   */
+  public UnlockAllCoursesForGroupChange(originGroupId: number, destinationGroupId?: number) {
+    return from(this.connection.invoke&lt;MessageObject&gt;(&#x27;UnlockAllCoursesForGroupChange&#x27;, 
+    originGroupId, destinationGroupId))
+      .pipe(map((result : any) &#x3D;&gt; {
+        const message &#x3D; new MessageObject(result.statusCode);
+        message.Message &#x3D; result.message;
+        return message;
+      }));
+  }
+
+  /**
+   * Metoda rozłączająca z centrum SignalR.
+   */
+  public Disconnect() {
+    if (this.connection?.state &#x3D;&#x3D; &quot;Connected&quot;) {
+      this.connectionIntentionallyStopped &#x3D; true;
+      this.connection.stop();
+    }
+  }
+
+  /**
+   * Metoda ustawiająca reakcje na odebranie poszczególnych informacji z centrum SignalR.
+   */
+  private SetClientMethods(): void {
+    this.connection.onclose((error) &#x3D;&gt; {
+      this.connectionIntentionallyStopped &#x3D; false;
+      this.isConnected.next(false);
+    });
+    
+    this.connection.on(&#x27;LockCourseEdition&#x27;, (courseId, courseEditionId, byAdmin) &#x3D;&gt; {
+      this.lastLockedCourseEdition.next({
+        courseId: courseId,
+        courseEditionId: courseEditionId,
+        byAdmin: byAdmin
+      });
+    });
+
+    this.connection.on(&#x27;LockSchedulePositions&#x27;, (
+      courseId, courseEditionId,
+      roomId, periodIndex, 
+      day, weeks, byAdmin
+    ) &#x3D;&gt; {
+      const schedulePosition &#x3D; new SchedulePosition(
+        courseId, courseEditionId,
+        roomId, periodIndex, 
+        day, weeks
+      );
+      schedulePosition.IsLocked &#x3D; true;
+      schedulePosition.IsLockedByAdmin &#x3D; byAdmin;
+      this.lastLockedSchedulePositions.next(schedulePosition);
+    });
+
+    this.connection.on(&#x27;UnlockCourseEdition&#x27;, (courseId, courseEditionId) &#x3D;&gt; {
+      this.lastUnlockedCourseEdition.next({
+        courseId: courseId,
+        courseEditionId: courseEditionId
+      });
+    });
+
+    this.connection.on(&#x27;UnlockSchedulePositions&#x27;, (
+      courseId, courseEditionId,
+      roomId, periodIndex, 
+      day, weeks
+    ) &#x3D;&gt; {
+      const schedulePosition &#x3D; new SchedulePosition(
+        courseId, courseEditionId,
+        roomId, periodIndex, 
+        day, weeks
+      );
+      schedulePosition.IsLocked &#x3D; false;
+      schedulePosition.IsLockedByAdmin &#x3D; false;
+      this.lastUnlockedSchedulePositions.next(schedulePosition);
+    });
+
+    this.connection.on(&#x27;AddedSchedulePositions&#x27;, (
+      courseId, courseEditionId,
+      groupsIds, mainGroupsAmount, coordinatorsIds,
+      roomId, periodIndex,
+      day, weeks
+    ) &#x3D;&gt; {
+      this.lastAddedSchedulePositions.next(
+        new AddedSchedulePositions(
+          groupsIds, mainGroupsAmount, coordinatorsIds, 
+          new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        )
+      );
+    });
+
+    this.connection.on(&#x27;ModifiedSchedulePositions&#x27;, (
+      courseId, courseEditionId,
+      groupsIds, mainGroupsAmount, coordinatorsIds,
+      previousRoomId, newRoomId,
+      previousPeriodIndex, newPeriodIndex,
+      previousDay, newDay,
+      previousWeeks, newWeeks,
+      movesIds
+    ) &#x3D;&gt; {
+      this.lastModifiedSchedulePositions.next(
+        new ModifiedSchedulePositions(
+          groupsIds, mainGroupsAmount, coordinatorsIds,
+          new SchedulePosition(
+            courseId, courseEditionId,
+            previousRoomId, previousPeriodIndex,
+            previousDay, previousWeeks
+          ),
+          new SchedulePosition(
+            courseId, courseEditionId,
+            newRoomId, newPeriodIndex,
+            newDay, newWeeks
+          ),
+          movesIds
+        )
+      );
+    });
+
+    this.connection.on(&#x27;RemovedSchedulePositions&#x27;, (
+      courseId, courseEditionId,
+      groupsIds, mainGroupsAmount, coordinatorsIds,
+      roomId, periodIndex,
+      day, weeks,
+      movesIds
+    ) &#x3D;&gt; {
+      this.lastRemovedSchedulePositions.next(
+        new RemovedSchedulePositions(
+          groupsIds, mainGroupsAmount, coordinatorsIds, 
+          new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          ),
+          movesIds
+        )
+      );
+    });
+
+    this.connection.on(&#x27;AddedScheduledMove&#x27;, (
+      moveId, userId, isConfirmed,
+      courseId, courseEditionId,
+      roomId, periodIndex,
+      day, weeks
+    ) &#x3D;&gt; {
+      this.lastAddedScheduledMove.next(
+        {
+          scheduledMove: new ScheduledMove(
+            moveId, userId, isConfirmed
+          ),
+          sourceSchedulePosition: new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        }
+      );
+    });
+
+    this.connection.on(&#x27;RemovedScheduledMove&#x27;, (
+      moveId,
+      courseId, courseEditionId,
+      roomId, periodIndex,
+      day, weeks
+    ) &#x3D;&gt; {
+      this.lastRemovedScheduledMove.next(
+        {
+          moveId: moveId,
+          sourceSchedulePosition: new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        }
+      );
+    });
+
+    this.connection.on(&#x27;AcceptedScheduledMove&#x27;, (
+      moveId,
+      courseId, courseEditionId,
+      roomId, periodIndex,
+      day, weeks
+    ) &#x3D;&gt; {
+      this.lastAcceptedScheduledMove.next(
+        {
+          moveId: moveId,
+          sourceSchedulePosition: new SchedulePosition(
+            courseId, courseEditionId,
+            roomId, periodIndex,
+            day, weeks
+          )
+        }
+      );
+    });
+
+    this.connection.on(&#x27;SendResponse&#x27;, (messageObject) &#x3D;&gt; {
+      const message &#x3D; new MessageObject(messageObject.statusCode);
+      message.Message &#x3D; messageObject.message;
+      this.lastResponse.next(message);
+    });
+  }
+
+  ngOnDestroy() {
+    this.Disconnect();
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'SignalrService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
