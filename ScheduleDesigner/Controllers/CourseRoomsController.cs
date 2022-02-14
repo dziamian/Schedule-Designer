@@ -50,7 +50,7 @@ namespace ScheduleDesigner.Controllers
         /// nastąpił nieprzewidziany błąd
         /// </response>
         /// <response code="404">Nie udało się dodać nowo utworzonego wystąpienia do bazy danych</response>
-        [Authorize(Policy = "Assistant")]
+        [Authorize(Policy = "Proposing")]
         [HttpPost]
         [ODataRoute("")]
         [ProducesResponseType(201)]
